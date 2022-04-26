@@ -1,25 +1,55 @@
 package de.uniks.pioneers;
 
+import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.controller.LoginScreenController;
+import de.uniks.pioneers.services.LoginService;
+import de.uniks.pioneers.services.UserService;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class App extends Application {
+import static de.uniks.pioneers.Constants.LOGIN_SCREEN_TITLE;
 
+
+public class App extends Application {
     private Stage stage;
+    private Controller controller;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+
         this.stage = primaryStage;
-        stage.setWidth(640);
-        stage.setHeight(480);
-        stage.setTitle("Pioneers");
-
-        final Scene scene = new Scene(new Label("Loading..."));
-        stage.setScene(scene);
-
-        primaryStage.show();
+        stage.setTitle(LOGIN_SCREEN_TITLE);
+        final LoginService loginService = new LoginService();
+        final UserService userService = new UserService();
+        show(new LoginScreenController(this, loginService, userService));
+        stage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        cleanup();
+    }
+
+    public void cleanup() {
+        if (controller != null) {
+            controller.stop();
+            controller = null;
+        }
+    }
+
+    public void show(Controller controller) {
+        cleanup();
+        this.controller = controller;
+        stage.setScene(new Scene(controller.render()));
+        controller.init();
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
 }
+
+

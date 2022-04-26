@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
+   <children>
+      <VBox fx:id="vBoxParent" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="30.0">
+         <children>
+            <Label fx:id="pioneersLabel" text="Pioneers">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </Label>
+            <TextField fx:id="nicknameTextField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="username">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="passwordTextField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="password">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="-25.0" />
+               </VBox.margin>
+            </TextField>
+            <CheckBox fx:id="rememberMeCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#rememberMe" prefHeight="30.0" prefWidth="100.0" text="remember me">
+               <VBox.margin>
+                  <Insets right="-0.0" top="-25.0" />
+               </VBox.margin>
+            </CheckBox>
+            <Label fx:id="signUpLabel" onMouseClicked="#signUp" text="You dont have an account ? Become part of a growing community now !" underline="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="60.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="goToRulesLabel" onMouseClicked="#goToRules" text="wait, i  don't know the rules ...">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="-30.0" />
+               </VBox.margin>
+            </Label>
+            <Button fx:id="loginButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#login" prefHeight="30.0" prefWidth="100.0" text="login" textAlignment="CENTER">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
