@@ -65,14 +65,15 @@ public class SignUpScreenController implements Controller{
     private int signUpStatus;
 
     @Inject
-    public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider) {
+    public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider,App app) {
         this.userService = userService;
-        this.loginScreenControllerProvider = loginScreenControllerProvider,
-
+        this.loginScreenControllerProvider = loginScreenControllerProvider;
+        this.app = app;
     }
 
     @Override
     public void init() {
+
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
         stage.setOnCloseRequest(event -> {
@@ -124,7 +125,7 @@ public class SignUpScreenController implements Controller{
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Sign Up Succesfull");
             alert.setContentText("Welcome to the pioneers community");
-            alert.setOnCloseRequest(event -> app.show(loginScreenControllerProvider.get());
+            alert.setOnCloseRequest(event -> app.show(loginScreenControllerProvider.get()));
             alert.showAndWait();
         } else if (signUpStatus == 400) {
             new Alert(Alert.AlertType.ERROR, "Validation failed!").showAndWait();

@@ -45,7 +45,6 @@ public class LoginScreenController implements Controller {
 
     @Inject
     public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController>signUpScreenControllerProvider) {
-
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
