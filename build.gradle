@@ -29,6 +29,16 @@ dependencies {
     // https://mvnrepository.com/artifact/org.openjfx/javafx-controls
     implementation group: 'org.openjfx', name: 'javafx-controls', version: '19-ea+5'
 
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
+
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-jackson
+    implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.9.0'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
+
+
 
     // -------------------- Degger (Dependency Injetion) -------------------------
     implementation 'com.google.dagger:dagger:2.35.1'

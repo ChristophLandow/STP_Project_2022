@@ -141,7 +141,7 @@ public class SignUpScreenController implements Controller{
         if (!newUsernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()
                 &&!repeatPasswordTextField.getText().isBlank()
                 && repeatPasswordTextField.getText().equals(passwordTextField.getText())) {
-            //signUpStatus = RestService.signUp(newUsernameTextField.getText(),avatarStr, passwordTextField.getText());
+            userService.register(newUsernameTextField.getText(),passwordTextField.getText());
             checkResponseCode(signUpStatus);
         }
     }

@@ -23,7 +23,6 @@ public class App extends Application {
         this.stage = primaryStage;
         stage.setTitle(LOGIN_SCREEN_TITLE);
         final LoginService loginService = new LoginService();
-        final UserService userService = new UserService();
         show(mainComponent.loginController());
         stage.show();
     }
