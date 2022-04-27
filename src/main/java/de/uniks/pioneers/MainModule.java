@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
+import de.uniks.pioneers.rest.AuthApiService;
 import de.uniks.pioneers.rest.UserApiService;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -43,6 +44,10 @@ public class MainModule {
         return retrofit.create(UserApiService.class);
     }
 
+    @Provides
+    static AuthApiService authApiService(Retrofit retrofit){
+        return retrofit.create(AuthApiService.class);
+    }
 
 
 

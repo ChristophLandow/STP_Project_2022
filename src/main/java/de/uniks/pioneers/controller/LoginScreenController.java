@@ -87,7 +87,7 @@ public class LoginScreenController implements Controller {
         String password = passwordTextField.getText();
 
         if (nickname != null && !nickname.isBlank() && password != null && !password.isBlank()) {
-            //RestService.login(nicknameTextField.getText(), passwordTextField.getText());
+            loginService.login(nicknameTextField.getText(), passwordTextField.getText());
         } else {
             // we can edit this alert, function, buttons etc. !!
             new Alert(Alert.AlertType.ERROR, "need username and password").showAndWait();

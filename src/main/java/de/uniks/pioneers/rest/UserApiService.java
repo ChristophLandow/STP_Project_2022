@@ -7,7 +7,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Body;
 
 public interface UserApiService {
-
     @POST("users")
     Call<User> create(@Body CreateUserDto dto);
 }

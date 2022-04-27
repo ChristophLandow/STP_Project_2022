@@ -18,11 +18,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         MainComponent mainComponent = DaggerMainComponent.builder().mainApp(this).build();
         this.stage = primaryStage;
         stage.setTitle(LOGIN_SCREEN_TITLE);
-        final LoginService loginService = new LoginService();
         show(mainComponent.loginController());
         stage.show();
     }
