@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -87,7 +88,11 @@ public class LoginScreenController implements Controller {
         String password = passwordTextField.getText();
 
         if (nickname != null && !nickname.isBlank() && password != null && !password.isBlank()) {
-            loginService.login(nicknameTextField.getText(), passwordTextField.getText());
+            loginService.login(nicknameTextField.getText(), passwordTextField.getText(), loginResult -> {
+                Platform.runLater(() -> {
+                    loginResult.status();
+                };
+            });
         } else {
             // we can edit this alert, function, buttons etc. !!
             new Alert(Alert.AlertType.ERROR, "need username and password").showAndWait();
