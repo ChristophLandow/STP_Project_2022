@@ -9,7 +9,8 @@
 <?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.pioneers.controller.LobbyScreenController">
    <ImageView fx:id="AvatarImageView" fitHeight="64.0" fitWidth="64.0" layoutX="44.0" layoutY="24.0" pickOnBounds="true"
               preserveRatio="true"/>
    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="66.0" layoutX="43.0" layoutY="23.0" stroke="BLACK"
@@ -23,9 +24,9 @@
               layoutY="46.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
       <Image url="@../question_mark_icon.jpg"/>
    </ImageView>
-   <Button fx:id="EditProfileButton" layoutX="87.0" layoutY="350.0" mnemonicParsing="false" text="Edit Profile"/>
-   <Button fx:id="LogoutButton" layoutX="267.0" layoutY="350.0" mnemonicParsing="false" text="Logout"/>
-   <Button fx:id="NewGameButton" layoutX="423.0" layoutY="350.0" mnemonicParsing="false" text="New Game"/>
+   <Button fx:id="EditProfileButton" layoutX="87.0" layoutY="350.0" mnemonicParsing="false" onAction="#editProfile" text="Edit Profile"/>
+   <Button fx:id="LogoutButton" layoutX="267.0" layoutY="350.0" mnemonicParsing="false" onAction="#logout" text="Logout"/>
+   <Button fx:id="NewGameButton" layoutX="423.0" layoutY="350.0" mnemonicParsing="false" onAction="#newGame" text="New Game"/>
    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="200.0" layoutX="16.0" layoutY="116.0"
               stroke="BLACK" strokeType="INSIDE" width="235.0"/>
    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="200.0" layoutX="338.0" layoutY="116.0"
