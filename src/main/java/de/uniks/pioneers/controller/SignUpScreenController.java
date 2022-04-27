@@ -18,11 +18,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 
 import static de.uniks.pioneers.Constants.SIGNUP_SCREEN_TITLE;
 
 public class SignUpScreenController implements Controller{
+
     @FXML
     public AnchorPane root;
     @FXML
@@ -49,9 +52,10 @@ public class SignUpScreenController implements Controller{
     public Label errorLabel;
 
     private App app;
-    private LoginScreenController loginScreenController;
+    private final Provider<LoginScreenController> loginScreenControllerProvider;
+
     private UserService userService;
-    private final LoginService loginService;
+
 
     public final SimpleStringProperty username = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
@@ -60,11 +64,11 @@ public class SignUpScreenController implements Controller{
     private Alert alert;
     private int signUpStatus;
 
-    public SignUpScreenController(App app, LoginScreenController loginScreenController, UserService userService, LoginService loginService) {
-        this.app=app;
-        this.loginScreenController = loginScreenController;
+    @Inject
+    public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider) {
         this.userService = userService;
-        this.loginService = loginService;
+        this.loginScreenControllerProvider = loginScreenControllerProvider,
+
     }
 
     @Override
@@ -74,7 +78,7 @@ public class SignUpScreenController implements Controller{
         stage.setOnCloseRequest(event -> {
             if (stage.getTitle().equals(SIGNUP_SCREEN_TITLE)) {
                 event.consume();
-                app.show(loginScreenController);
+                app.show(loginScreenControllerProvider.get());
             }
         });
         //Spinner Code
@@ -120,7 +124,7 @@ public class SignUpScreenController implements Controller{
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Sign Up Succesfull");
             alert.setContentText("Welcome to the pioneers community");
-            alert.setOnCloseRequest(event -> app.show(new LoginScreenController(app,loginService,userService)));
+            alert.setOnCloseRequest(event -> app.show(loginScreenControllerProvider.get());
             alert.showAndWait();
         } else if (signUpStatus == 400) {
             new Alert(Alert.AlertType.ERROR, "Validation failed!").showAndWait();

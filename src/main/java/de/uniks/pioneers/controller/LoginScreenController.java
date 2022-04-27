@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 
 import static de.uniks.pioneers.Constants.LOGIN_SCREEN_TITLE;
@@ -39,13 +40,15 @@ public class LoginScreenController implements Controller {
 
     private App app;
     private final LoginService loginService;
-    private final UserService userService;
+    private final Provider<SignUpScreenController> signUpScreenControllerProvider;
+
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, UserService userService) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController>signUpScreenControllerProvider) {
+
         this.app = app;
         this.loginService = loginService;
-        this.userService = userService;
+        this.signUpScreenControllerProvider = signUpScreenControllerProvider;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class LoginScreenController implements Controller {
     }
 
     public void signUp(MouseEvent mouseEvent) {
-        SignUpScreenController controller = new SignUpScreenController(app, this, userService, loginService);
+        SignUpScreenController controller = signUpScreenControllerProvider.get();
         controller.username.set(nicknameTextField.getText());
         controller.password.set(passwordTextField.getText());
         app.show(controller);
