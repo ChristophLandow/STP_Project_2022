@@ -23,13 +23,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.testfx/openjfx-monocle
     testImplementation group: 'org.testfx', name: 'openjfx-monocle', version: 'jdk-12.0.1+2'
 
-    // https://mvnrepository.com/artifact/org.openjfx/javafx-base
-    implementation group: 'org.openjfx', name: 'javafx-base', version: '19-ea+5'
-
-    // https://mvnrepository.com/artifact/org.openjfx/javafx-controls
-    implementation group: 'org.openjfx', name: 'javafx-controls', version: '19-ea+5'
-
-
     // -------------------- Degger (Dependency Injetion) -------------------------
     implementation 'com.google.dagger:dagger:2.35.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.35.1'
@@ -37,7 +30,7 @@ dependencies {
 }
 
 javafx {
-    version = '17'
+    version = '17.0.2'
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml' ]
 }
 
