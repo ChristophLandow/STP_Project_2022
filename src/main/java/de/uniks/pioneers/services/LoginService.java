@@ -19,11 +19,11 @@ public class LoginService {
         this.authApiService = authApiService;
     }
 
-    public void login(String name, String password, Consumer<? super LoginResult> callback){
+    public void login(String name, String password, Consumer<Response<LoginResult>> callback){
         authApiService.login(new LoginDto(name,password)).enqueue(new Callback<LoginResult>() {
             @Override
             public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
-                callback.accept(response.body());
+                callback.accept(response);
             }
 
             @Override
@@ -34,4 +34,4 @@ public class LoginService {
 
         };
     }
-}
+

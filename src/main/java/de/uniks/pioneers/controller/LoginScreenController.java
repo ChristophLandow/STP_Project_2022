@@ -1,8 +1,8 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.services.LoginService;
-import de.uniks.pioneers.services.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import retrofit2.Response;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -45,7 +46,7 @@ public class LoginScreenController implements Controller {
 
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController>signUpScreenControllerProvider) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
@@ -53,9 +54,9 @@ public class LoginScreenController implements Controller {
 
     @Override
     public Parent render() {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("views/LoginScreen.fxml"));
-            loader.setControllerFactory(c -> this);
-            final Parent view;
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("views/LoginScreen.fxml"));
+        loader.setControllerFactory(c -> this);
+        final Parent view;
         try {
             view = loader.load();
         } catch (IOException e) {
@@ -90,14 +91,35 @@ public class LoginScreenController implements Controller {
         if (nickname != null && !nickname.isBlank() && password != null && !password.isBlank()) {
             loginService.login(nicknameTextField.getText(), passwordTextField.getText(), loginResult -> {
                 Platform.runLater(() -> {
-                    loginResult.status();
-                };
+                    Response<LoginResult> response = loginResult;
+                    int code = response.code();
+                    if (code == 201) {
+                        //build model Data from response body and show Lobby screen
+                        // this code is for test purpose
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText("Login successfull !");
+                        alert.setContentText("here comes the lobby Screen");
+                        alert.setOnCloseRequest(event -> app.show(this));
+                        alert.showAndWait();
+                    } else {
+                        try {
+                            displayInvalidLogin(response);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             });
         } else {
             // we can edit this alert, function, buttons etc. !!
             new Alert(Alert.AlertType.ERROR, "need username and password").showAndWait();
         }
     }
+
+    private void displayInvalidLogin(Response<LoginResult> response) throws IOException {
+        new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
+    }
+
 
     public void rememberMe(MouseEvent mouseEvent) {
     }
