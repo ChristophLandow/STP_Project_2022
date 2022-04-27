@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.subcontroller.SignUpSpinnerController;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -126,9 +127,15 @@ public class SignUpScreenController implements Controller{
         // we can do this with a binding, might be more clean
         if (!newUsernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()
                 &&!repeatPasswordTextField.getText().isBlank()){
-            Response<User> response = userService.register(newUsernameTextField.getText(),passwordTextField.getText());
-            checkResponseCode(response);
-            //save User and return to it to LoginScreen
+            userService.register(newUsernameTextField.getText(),passwordTextField.getText(), userResponse -> {
+                Platform.runLater(() -> {
+                    try {
+                        checkResponseCode(userResponse);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            });
         }
     }
     private void checkResponseCode(Response<User> response) throws IOException {
