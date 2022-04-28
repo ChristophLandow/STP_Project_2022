@@ -2,8 +2,10 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.SignUpSpinnerController;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import retrofit2.Response;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -86,8 +89,7 @@ public class SignUpScreenController implements Controller{
         SignUpSpinnerController spinnerValueFactory = new SignUpSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(avatarImageView);
         chooseAvatarSpinner.setValueFactory(spinnerValueFactory);
-        //signUpButton
-        signUpButton.setOnMouseClicked(this::signUp);
+
 
     }
 
@@ -120,29 +122,35 @@ public class SignUpScreenController implements Controller{
     public void stop() {
     }
 
-    private void checkResponseCode(int signUpStatus) {
-        if (signUpStatus == 201) {
+
+    public void signUp(MouseEvent mouseEvent) throws IOException {
+        // we can do this with a binding, might be more clean
+        if (!newUsernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()
+                &&!repeatPasswordTextField.getText().isBlank()){
+            userService.register(newUsernameTextField.getText(),passwordTextField.getText(), userResponse -> {
+                Platform.runLater(() -> {
+                    try {
+                        checkResponseCode(userResponse);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            });
+        }
+    }
+    private void checkResponseCode(Response<User> response) throws IOException {
+        if (response.code() == 201) {
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Sign Up Succesfull");
             alert.setContentText("Welcome to the pioneers community");
             alert.setOnCloseRequest(event -> app.show(loginScreenControllerProvider.get()));
             alert.showAndWait();
-        } else if (signUpStatus == 400) {
-            new Alert(Alert.AlertType.ERROR, "Validation failed!").showAndWait();
-        } else if (signUpStatus == 429) {
-            new Alert(Alert.AlertType.ERROR, "Rate limit reached").showAndWait();
+        } else if (response.code() == 400) {
+            new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
+        } else if (response.code() == 401) {
+            new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
         } else {
-            new Alert(Alert.AlertType.ERROR, "Rate limit reached").showAndWait();
-        }
-    }
-
-
-    public void signUp(MouseEvent mouseEvent) {
-        if (!newUsernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()
-                &&!repeatPasswordTextField.getText().isBlank()
-                && repeatPasswordTextField.getText().equals(passwordTextField.getText())) {
-            //signUpStatus = RestService.signUp(newUsernameTextField.getText(),avatarStr, passwordTextField.getText());
-            checkResponseCode(signUpStatus);
+            new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
         }
     }
 

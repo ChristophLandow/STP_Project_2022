@@ -4,6 +4,7 @@ public class Constants {
     // application
     public static final String LOGIN_SCREEN_TITLE = "Pioneers - Login";
     public static final String SIGNUP_SCREEN_TITLE = "Pioneers - Create new account";
+    public static final String LOBBY_SCREEN_TITLE = "Pioneers - Lobby";
 
     public static final String CHAT_SCREEN_TITLE = "Pioneers - Chat";
 
