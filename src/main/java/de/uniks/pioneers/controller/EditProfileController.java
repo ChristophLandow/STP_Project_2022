@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
+import de.uniks.pioneers.services.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,10 +27,12 @@ public class EditProfileController implements Controller {
     @FXML public Spinner chooseAvatarSpinner;
 
     private App app;
+    private UserService userService;
     private String avatarStr;
 
-    public EditProfileController(App app) {
-
+    public EditProfileController(UserService userService, App app) {
+        this.userService = userService;
+        this.app = app;
     }
 
     @Override
@@ -55,13 +58,16 @@ public class EditProfileController implements Controller {
         spinnerValueFactory.init(avatarImage);
         chooseAvatarSpinner.setValueFactory(spinnerValueFactory);
 
+        // add action event
+        saveLeaveButton.setOnAction(this::edit);
+
     }
 
     @Override
     public void stop() {
     }
 
-    public void editUsername(ActionEvent event) {
+    public void edit(ActionEvent event) {
     }
 
     private void updateAvatarString(String newAvatar){

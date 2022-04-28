@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.CreateUserDto;
+import de.uniks.pioneers.dto.UpdateUserDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.UserApiService;
 import javafx.scene.control.Alert;
@@ -34,6 +35,20 @@ public class UserService {
             }
         });
 
+    }
+
+    public void editProfile(String name, String password, String avatar, Consumer<Response<User>> responseConsumer) {
+        userApiService.update(new UpdateUserDto(name, avatar, password)).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                responseConsumer.accept(response);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }
 
