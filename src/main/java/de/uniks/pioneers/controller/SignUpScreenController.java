@@ -1,9 +1,8 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.controller.subcontroller.SignUpSpinnerController;
+import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -86,7 +85,7 @@ public class SignUpScreenController implements Controller{
             }
         });
         //Spinner Code
-        SignUpSpinnerController spinnerValueFactory = new SignUpSpinnerController(this::updateAvatarString);
+        AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(avatarImageView);
         chooseAvatarSpinner.setValueFactory(spinnerValueFactory);
 
