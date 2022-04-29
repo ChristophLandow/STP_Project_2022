@@ -11,13 +11,13 @@ import java.util.function.Consumer;
 
 ;
 
-public class SignUpSpinnerController extends SpinnerValueFactory<Integer> {
+public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
 
     private Map<Integer, Pair<Image,String>> images = new LinkedHashMap<>();
     private ImageView avatarImageView;
     public Consumer<String> changeAvatar;
 
-    public SignUpSpinnerController(Consumer<String> changeAvatar) {
+    public AvatarSpinnerController(Consumer<String> changeAvatar) {
         this.changeAvatar=changeAvatar;
     }
 

@@ -14,14 +14,17 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     // https://mvnrepository.com/artifact/org.testfx/testfx-junit5
     testImplementation group: 'org.testfx', name: 'testfx-junit5', version: '4.0.16-alpha'
 
     // https://mvnrepository.com/artifact/org.testfx/openjfx-monocle
     testImplementation group: 'org.testfx', name: 'openjfx-monocle', version: 'jdk-12.0.1+2'
+
+    // https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.5.1'
 
     // https://mvnrepository.com/artifact/org.openjfx/javafx-base
     implementation group: 'org.openjfx', name: 'javafx-base', version: '19-ea+5'
@@ -38,10 +41,22 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
 
+    // https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava
+    implementation group: 'io.reactivex.rxjava3', name: 'rxjava', version: '3.1.4'
+
+    // https://mvnrepository.com/artifact/com.github.akarnokd/rxjava3-retrofit-adapter
+    implementation group: 'com.github.akarnokd', name: 'rxjava3-retrofit-adapter', version: '3.0.0'
+
+    compileOnly group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
+    compileOnly group: 'javax.json', name: 'javax.json-api', version: '1.1.4'
+    implementation group: 'org.glassfish', name: 'javax.json', version: '1.1.4'
+    implementation group: 'org.glassfish.tyrus', name: 'tyrus-client', version: '2.0.2'
+    implementation group: 'org.glassfish.tyrus', name: 'tyrus-container-grizzly-client', version: '2.0.2'
+
     // -------------------- Degger (Dependency Injetion) -------------------------
-    implementation 'com.google.dagger:dagger:2.35.1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.35.1'
-    testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.35.1'
+    implementation 'com.google.dagger:dagger:2.41'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.41'
+    testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.41'
 }
 
 javafx {
