@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 public class UserService {
 
     private final UserApiService userApiService;
+    private User currentUser;
 
     @Inject
     public UserService(UserApiService userApiService) {
@@ -49,6 +50,14 @@ public class UserService {
                 t.printStackTrace();
             }
         });
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }
 
