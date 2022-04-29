@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
    <children>
       <VBox fx:id="vBoxParent" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="30.0">
          <children>
@@ -31,9 +31,17 @@
                   <Insets top="-25.0" />
                </VBox.margin>
             </TextField>
-            <CheckBox fx:id="rememberMeCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#rememberMe" prefHeight="30.0" prefWidth="100.0" text="remember me">
+            <Label fx:id="IncorrectInputLabel" prefHeight="17.0" prefWidth="156.0" text="incorrect username or password" textAlignment="CENTER" textFill="RED" visible="false">
                <VBox.margin>
-                  <Insets right="-0.0" top="-25.0" />
+                  <Insets top="-25.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            <CheckBox fx:id="rememberMeCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#rememberMe" prefHeight="26.0" prefWidth="100.0" text="remember me">
+               <VBox.margin>
+                  <Insets right="-0.0" top="-50.0" />
                </VBox.margin>
             </CheckBox>
             <Label fx:id="signUpLabel" onMouseClicked="#signUp" text="You dont have an account ? Become part of a growing community now !" underline="true">
