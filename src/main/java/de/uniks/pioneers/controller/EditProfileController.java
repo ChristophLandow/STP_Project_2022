@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 import static de.uniks.pioneers.Constants.EDIT_PROFILE_SCREEN_TITLE;
@@ -30,6 +31,7 @@ public class EditProfileController implements Controller {
     private UserService userService;
     private String avatarStr;
 
+    @Inject
     public EditProfileController(UserService userService, App app) {
         this.userService = userService;
         this.app = app;
