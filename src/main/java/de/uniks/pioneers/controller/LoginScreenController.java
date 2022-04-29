@@ -31,6 +31,7 @@ public class LoginScreenController implements Controller {
     public TextField nicknameTextField;
     @FXML
     public TextField passwordTextField;
+    public Label IncorrectInputLabel;
     @FXML
     public CheckBox rememberMeCheckBox;
     @FXML
@@ -44,12 +45,16 @@ public class LoginScreenController implements Controller {
     private final LoginService loginService;
     private final Provider<SignUpScreenController> signUpScreenControllerProvider;
 
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider,
+                                 Provider<LobbyScreenController> lobbyScreenControllerProvider) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
     @Override
