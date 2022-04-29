@@ -4,27 +4,22 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.pioneers.controller.EditProfileController">
-   <TextField fx:id="newUsernameInput" layoutX="36.0" layoutY="70.0" promptText="new username"/>
-   <Text layoutX="36.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="current username:"/>
-   <Text layoutX="36.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0"
-         text="Do you want to edit your password?"/>
-   <Button fx:id="saveLeaveButton" layoutX="257.0" layoutY="334.0" mnemonicParsing="false" text="save &amp; leave"/>
-   <ImageView fx:id="avatarImage" fitHeight="100.0" fitWidth="100.0" layoutX="455.0" layoutY="201.0"
-              pickOnBounds="true" preserveRatio="true">
-      <Image/>
-   </ImageView>
-   <Button fx:id="uploadAvatarButton" layoutX="335.0" layoutY="269.0" mnemonicParsing="false" text="upload avatar"/>
-   <PasswordField fx:id="oldPasswordInput" layoutX="36.0" layoutY="164.0" promptText="old password"/>
-   <PasswordField fx:id="newPasswordInput" layoutX="36.0" layoutY="226.0" promptText="new password"/>
-   <PasswordField fx:id="repeatNewPasswordInput" layoutX="36.0" layoutY="269.0" promptText="repeat new password"/>
-   <ChoiceBox fx:id="avatarChoiceBox" layoutX="374.0" layoutY="226.0" prefHeight="25.0" prefWidth="53.0"/>
-   <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user_394"/>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.EditProfileController">
+   <children>
+      <TextField fx:id="newUsernameInput" layoutX="36.0" layoutY="70.0" promptText="new username" />
+      <Text layoutX="36.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="current username:" />
+      <Text layoutX="36.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to edit your password?" />
+      <Button fx:id="saveLeaveButton" layoutX="257.0" layoutY="334.0" mnemonicParsing="false" text="save &amp; leave" />
+      <ImageView fx:id="avatarImage" fitHeight="100.0" fitWidth="100.0" layoutX="455.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="uploadAvatarButton" layoutX="335.0" layoutY="269.0" mnemonicParsing="false" text="upload avatar" />
+      <PasswordField fx:id="oldPasswordInput" layoutX="36.0" layoutY="164.0" promptText="old password" />
+      <PasswordField fx:id="newPasswordInput" layoutX="36.0" layoutY="226.0" promptText="new password" />
+      <PasswordField fx:id="repeatNewPasswordInput" layoutX="36.0" layoutY="269.0" promptText="repeat new password" />
+      <ChoiceBox fx:id="avatarChoiceBox" layoutX="374.0" layoutY="226.0" prefHeight="25.0" prefWidth="53.0" />
+      <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user_394" />
+   </children>
 </Pane>
