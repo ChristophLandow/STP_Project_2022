@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -38,7 +39,10 @@ public class ChatController implements Controller {
 
     public final SimpleStringProperty userid = new SimpleStringProperty();
 
-    public final SimpleStringProperty newchatusername = new SimpleStringProperty();
+    public final SimpleStringProperty newUsername = new SimpleStringProperty();
+
+    public final SimpleStringProperty newUserid = new SimpleStringProperty();
+
 
     @Inject
     public ChatController(App app, MessageService messageService, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
@@ -59,19 +63,35 @@ public class ChatController implements Controller {
             return null;
         }
 
-        this.chatTabPane.getTabs().get(0).setText(this.newchatusername.get());
-
         return view;
     }
 
     @Override
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
+
+        addUser(new User(newUserid.get(), newUsername.get(), "", ""));
     }
 
 
     @Override
     public void stop() {
+    }
+
+    public void addUser(User user){
+        this.messageService.getchatUserList().add(user);
+
+        if(this.chatTabPane.getTabs().get(0).getText().equals("Chat One")){
+            this.chatTabPane.getTabs().get(0).setText(user.name());
+        }
+        else{
+            ScrollPane newChatScrollPane = new ScrollPane(new VBox());
+            newChatScrollPane.setPrefHeight(579);
+            Tab newUserTab = new Tab(user.name(), newChatScrollPane);
+            newUserTab.setClosable(true);
+            this.chatTabPane.getTabs().add(newUserTab);
+            this.chatTabPane.getSelectionModel().select(newUserTab);
+        }
     }
 
     public void leave(ActionEvent event) {

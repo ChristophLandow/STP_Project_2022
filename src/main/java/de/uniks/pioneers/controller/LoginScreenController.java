@@ -74,8 +74,6 @@ public class LoginScreenController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
-
-        app.show(lobbyScreenControllerProvider.get());
     }
 
 

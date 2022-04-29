@@ -6,6 +6,8 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -34,8 +40,7 @@ public class LobbyScreenController implements Controller {
     @FXML public VBox GameVbox;
     @FXML public Button EditProfileButton;
     @FXML public Button LogoutButton;
-    @FXML
-    public Button NewGameButton;
+    @FXML public Button NewGameButton;
 
     private App app;
 
@@ -97,7 +102,11 @@ public class LobbyScreenController implements Controller {
         imgView.setFitHeight(40);
         imgView.setFitWidth(40);
 
-        gridPane.addRow(0, username, imgView);
+        Label userid = new Label(user._id());
+        userid.setVisible(false);
+        userid.setFont(new Font(0));
+
+        gridPane.addRow(0, username, imgView, userid);
 
         gridPane.getColumnConstraints().addAll(new ColumnConstraints(140),new ColumnConstraints(45));
 
@@ -105,12 +114,16 @@ public class LobbyScreenController implements Controller {
     }
 
     public void openChat(MouseEvent event){
-        Label chatWithUsername = (Label) event.getSource();
+        GridPane newChatUserParent = (GridPane) ((Node) event.getSource()).getParent();
+        Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
+        Label chatWithUserid = (Label) newChatUserParent.getChildren().get(2);
 
         ChatController chatController = chatControllerProvider.get();
         chatController.username.set(this.username.get());
         chatController.userid.set(this.userid.get());
-        chatController.newchatusername.set(chatWithUsername.getText());
+        chatController.newUsername.set(chatWithUsername.getText());
+        chatController.newUserid.set(chatWithUserid.getText());
+
         app.show(chatController);
     }
 
