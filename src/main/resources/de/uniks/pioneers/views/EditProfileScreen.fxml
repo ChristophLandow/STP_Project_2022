@@ -19,7 +19,7 @@
       <PasswordField fx:id="oldPasswordInput" layoutX="36.0" layoutY="164.0" promptText="old password" />
       <PasswordField fx:id="newPasswordInput" layoutX="36.0" layoutY="226.0" promptText="new password" />
       <PasswordField fx:id="repeatNewPasswordInput" layoutX="36.0" layoutY="269.0" promptText="repeat new password" />
-      <Spinner fx:id="avatarChoiceBox" layoutX="374.0" layoutY="226.0" prefHeight="25.0" prefWidth="53.0" />
+      <Spinner fx:id="chooseAvatarSpinner" layoutX="374.0" layoutY="226.0" prefHeight="25.0" prefWidth="53.0" />
       <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user_394" />
    </children>
 </Pane>

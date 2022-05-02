@@ -12,6 +12,7 @@ import retrofit2.Response;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class UserService {
@@ -29,18 +30,8 @@ public class UserService {
         return userApiService.create(new CreateUserDto(userName, password));
     }
 
-    public void editProfile(String name, String password, String avatar, Consumer<Response<User>> responseConsumer) {
-        userApiService.update(new UpdateUserDto(name, avatar, password)).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                responseConsumer.accept(response);
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+    public Observable<User> editProfile(String id, String name, String avatar, String password) {
+        return userApiService.update(id, new UpdateUserDto(name, avatar, password));
     }
 
     public User getCurrentUser() {

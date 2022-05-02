@@ -43,18 +43,19 @@ public class LobbyScreenController implements Controller {
 
     private final Provider<ChatController> chatControllerProvider;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
-
+    private final Provider<EditProfileController> editProfileControllerProvider;
     private final LobbyService lobbyService;
 
     public final SimpleStringProperty username = new SimpleStringProperty();
     public final SimpleStringProperty userid = new SimpleStringProperty();
 
     @Inject
-    public LobbyScreenController(App app, LobbyService lobbyService, Provider<ChatController> chatControllerProvider, Provider<LoginScreenController> loginScreenControllerProvider){
+    public LobbyScreenController(App app, LobbyService lobbyService, Provider<ChatController> chatControllerProvider, Provider<LoginScreenController> loginScreenControllerProvider, Provider<EditProfileController> editProfileControllerProvider){
         this.app = app;
         this.lobbyService = lobbyService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
+        this.editProfileControllerProvider = editProfileControllerProvider;
     }
 
     @Override
@@ -71,6 +72,7 @@ public class LobbyScreenController implements Controller {
         }
 
         this.UsersVBox.getChildren().clear();
+        this.EditProfileButton.setOnAction(this::editProfile);
 
         List<User> users = lobbyService.userList();
         for(User user : users){
@@ -125,6 +127,7 @@ public class LobbyScreenController implements Controller {
     }
 
     public void editProfile(ActionEvent actionEvent) {
+        this.app.show(editProfileControllerProvider.get());
     }
 
 
