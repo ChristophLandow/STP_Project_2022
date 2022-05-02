@@ -3,35 +3,26 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.dto.LoginDto;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.rest.AuthApiService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.rxjava3.core.Observable;
+
 
 import javax.inject.Inject;
-import java.util.function.Consumer;
+
 
 public class LoginService {
-
     private final AuthApiService authApiService;
+    private final TokenStorage tokenStorage;
 
     @Inject
-    public LoginService(AuthApiService authApiService  ) {
+    public LoginService(AuthApiService authApiService, TokenStorage tokenStorage){
+
         this.authApiService = authApiService;
+        this.tokenStorage = tokenStorage;
     }
+    public Observable<LoginResult> login(String userName, String password) {
 
-    public void login(String name, String password, Consumer<Response<LoginResult>> callback){
-        authApiService.login(new LoginDto(name,password)).enqueue(new Callback<LoginResult>() {
-            @Override
-            public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
-                callback.accept(response);
-            }
 
-            @Override
-            public void onFailure(Call<LoginResult> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-        };
+        return authApiService.login(new LoginDto(userName, password))
+                .doOnNext(result -> tokenStorage.setToken(result.accessToken()));
     }
-
+}

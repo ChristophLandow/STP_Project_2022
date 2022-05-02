@@ -1,22 +1,26 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.UserService;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import retrofit2.Response;
 
@@ -24,47 +28,39 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 
-import static de.uniks.pioneers.Constants.SIGNUP_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.*;
 
 public class SignUpScreenController implements Controller{
 
-    @FXML
-    public AnchorPane root;
-    @FXML
-    public VBox vBoxParent;
-    @FXML
-    public TextField newUsernameTextField;
-    @FXML
-    public TextField passwordTextField;
-    @FXML
-    public TextField repeatPasswordTextField;
-    @FXML
-    public HBox avatarHbox;
-    @FXML
-    public VBox uploadAvatarVbox;
-    @FXML
-    public Spinner chooseAvatarSpinner;
-    @FXML
-    public Button uploadAvatarButton;
-    @FXML
-    public ImageView avatarImageView;
-    @FXML
-    public Button signUpButton;
-    @FXML
-    public Label errorLabel;
+    public final SimpleStringProperty userName = new SimpleStringProperty();
 
-    private App app;
-    private final Provider<LoginScreenController> loginScreenControllerProvider;
-
-    private UserService userService;
-
-
-    public final SimpleStringProperty username = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
 
-    private String avatarStr;
-    private Alert alert;
-    private int signUpStatus;
+    @FXML
+    public TextField textFieldUserName;
+    @FXML
+    public TextField passwordField;
+    @FXML
+    public TextField passwordFieldConfirmation;
+    @FXML
+    public Spinner avatarSelector;
+    @FXML
+    public Button buttonUploadAvatar;
+    @FXML
+    public ImageView imageViewAvatar;
+    @FXML
+    public Button buttonRegister;
+    @FXML
+    public Text userNameStatusText;
+    @FXML
+    public Text passwordStatusText;
+
+    private final App app;
+    private final Provider<LoginScreenController> loginScreenControllerProvider;
+    private final UserService userService;
+
+    private String avatar;
+
 
     @Inject
     public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider,App app) {
@@ -86,35 +82,45 @@ public class SignUpScreenController implements Controller{
         });
         //Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
-        spinnerValueFactory.init(avatarImageView);
-        chooseAvatarSpinner.setValueFactory(spinnerValueFactory);
+        spinnerValueFactory.init(imageViewAvatar);
+        avatarSelector.setValueFactory(spinnerValueFactory);
 
 
     }
 
     @Override
     public Parent render() {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("views/SignUpScreen.fxml"));
-            loader.setControllerFactory(c -> this);
-            final Parent view;
+
+        Parent parent;
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/SignUpScreen.fxml"));
+        loader.setControllerFactory(c -> this);
         try {
-            view = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            parent = loader.load();
+            textFieldUserName.textProperty().bindBidirectional(userName);
+            passwordField.textProperty().bindBidirectional(password);
+
+
+            //Bindings displaying status information on password validity. Password length takes precedent over math with confirmation field.
+            final IntegerBinding userNameLength = Bindings.length(textFieldUserName.textProperty());
+
+            final IntegerBinding passwordLength = Bindings.length(passwordField.textProperty());
+            final BooleanBinding passwordMatch = Bindings.equal(passwordField.textProperty(), passwordFieldConfirmation.textProperty());
+            passwordStatusText.textProperty().bind(Bindings
+                    .when(passwordLength.greaterThan(7)).then(Bindings.when(passwordMatch).then("")
+                            .otherwise("Passwords do not match")).otherwise("Password must be at least 8 characters long"));
+
+            buttonRegister.disableProperty().bind(passwordMatch.not().or(passwordLength.greaterThan(7).not().or(userNameLength.greaterThan(0).not())));
+
+
+            this.textFieldUserName.setOnMouseClicked(this::resetStatus);
+
+            return parent;
+
+        } catch (Exception e) {
+            System.err.println("Error loading Register Screen.");
             return null;
         }
-
-        newUsernameTextField.textProperty().bindBidirectional(username);
-        passwordTextField.textProperty().bindBidirectional(password);
-
-        final BooleanBinding match = Bindings.equal(passwordTextField.textProperty(),repeatPasswordTextField.textProperty());
-        errorLabel.textProperty().bind(
-                Bindings.when(match)
-                        .then("")
-                        .otherwise("passwords do not match"));
-        signUpButton.disableProperty().bind(match.not());
-
-        return view;
     }
 
     @Override
@@ -122,41 +128,65 @@ public class SignUpScreenController implements Controller{
     }
 
 
-    public void signUp(MouseEvent mouseEvent) throws IOException {
-        // we can do this with a binding, might be more clean
-        if (!newUsernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()
-                &&!repeatPasswordTextField.getText().isBlank()){
-            userService.register(newUsernameTextField.getText(),passwordTextField.getText(), userResponse -> {
-                Platform.runLater(() -> {
-                    try {
-                        checkResponseCode(userResponse);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            });
-        }
-    }
-    private void checkResponseCode(Response<User> response) throws IOException {
-        if (response.code() == 201) {
-            alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Sign Up Succesfull");
-            alert.setContentText("Welcome to the pioneers community");
-            alert.setOnCloseRequest(event -> app.show(loginScreenControllerProvider.get()));
-            alert.showAndWait();
-        } else if (response.code() == 400) {
-            new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
-        } else if (response.code() == 401) {
-            new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
-        } else {
-            new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
-        }
-    }
-
     private void updateAvatarString(String newAvatar){
-        avatarStr = newAvatar;
+        avatar = newAvatar;
     }
 
     public void uploadAvatar(MouseEvent mouseEvent) {
+    }
+
+    private void resetStatus(MouseEvent mouseEvent) {
+
+        this.userNameStatusText.setText("");
+    }
+
+    public void register(ActionEvent actionEvent) {
+
+        this.userService.register(this.textFieldUserName.getText(), this.passwordField.getText())
+                .observeOn(FX_SCHEDULER)
+                .doOnError(e -> this.userNameStatusText.setText("Username already taken"))
+                .doOnComplete(this::registrationComplete)
+                .subscribe(new Observer<>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull User user) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void registrationComplete(){
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Registration Successful!");
+        alert.setHeaderText(null);
+        alert.setContentText("You can now log into your new account.");
+
+        alert.showAndWait();
+        toLogin(new ActionEvent());
+
+    }
+
+    public void toLogin(ActionEvent actionEvent) {
+
+        LoginScreenController loginController = this.loginScreenControllerProvider.get();
+
+        loginController.userName.set(textFieldUserName.getText());
+
+        this.app.show(loginController);
     }
 }
