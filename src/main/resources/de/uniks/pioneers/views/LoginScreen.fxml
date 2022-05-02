@@ -1,71 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
-   <children>
-      <VBox fx:id="vBoxParent" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="30.0">
-         <children>
-            <Label fx:id="pioneersLabel" text="Pioneers">
-               <font>
-                  <Font size="35.0" />
-               </font>
-            </Label>
-            <TextField fx:id="nicknameTextField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="username">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="passwordTextField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="password">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="-25.0" />
-               </VBox.margin>
-            </TextField>
-            <Label fx:id="IncorrectInputLabel" prefHeight="17.0" prefWidth="156.0" text="incorrect username or password" textAlignment="CENTER" textFill="RED" visible="false">
-               <VBox.margin>
-                  <Insets top="-25.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <CheckBox fx:id="rememberMeCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#rememberMe" prefHeight="26.0" prefWidth="100.0" text="remember me">
-               <VBox.margin>
-                  <Insets right="-0.0" top="-50.0" />
-               </VBox.margin>
-            </CheckBox>
-            <Label fx:id="signUpLabel" onMouseClicked="#signUp" text="You dont have an account ? Become part of a growing community now !" underline="true">
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="60.0" />
-               </VBox.margin>
-            </Label>
-            <Label fx:id="goToRulesLabel" onMouseClicked="#goToRules" text="wait, i  don't know the rules ...">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="-30.0" />
-               </VBox.margin>
-            </Label>
-            <Button fx:id="loginButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#login" prefHeight="30.0" prefWidth="100.0" text="login" textAlignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-         </children>
-      </VBox>
-   </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.pioneers.controller.LoginScreenController">
+   <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="30.0">
+      <Pane prefHeight="409.0" prefWidth="600.0">
+         <Text layoutX="202.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pioneers"
+               textAlignment="CENTER" wrappingWidth="195.263671875">
+            <font>
+               <Font size="42.0"/>
+            </font>
+         </Text>
+         <TextField fx:id="textFieldUserName" layoutX="199.0" layoutY="78.0" prefHeight="36.0" prefWidth="202.0"
+                    promptText="User Name"/>
+         <PasswordField fx:id="passwordField" layoutX="199.0" layoutY="137.0" prefHeight="36.0" prefWidth="202.0"
+                        promptText="Password"/>
+         <CheckBox fx:id="checkRememberMe" layoutX="202.0" layoutY="194.0" mnemonicParsing="false"
+                   prefHeight="36.0" prefWidth="130.0" text="Remember Me">
+            <font>
+               <Font size="15.0"/>
+            </font>
+         </CheckBox>
+         <Text fx:id="userNameStatusLabel" fill="RED" layoutX="202.0" layoutY="127.0" strokeType="OUTSIDE"
+               strokeWidth="0.0" wrappingWidth="195.263671875"/>
+         <Text fx:id="passwordStatusLabel" fill="RED" layoutX="202.0" layoutY="186.0" strokeType="OUTSIDE"
+               strokeWidth="0.0" wrappingWidth="195.263671875"/>
+         <Text fx:id="textRegister" layoutX="63.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0"
+               text="You don't have an account? Become part of a growing community now!" textAlignment="CENTER"
+               underline="true">
+            <font>
+               <Font size="15.0"/>
+            </font>
+         </Text>
+         <Text fx:id="textRules" layoutX="202.0" layoutY="306.0" strokeType="OUTSIDE" strokeWidth="0.0"
+               text="Wait, I don't know the Rules..." textAlignment="CENTER" underline="true">
+            <font>
+               <Font size="15.0"/>
+            </font>
+         </Text>
+         <Button fx:id="buttonLogin" layoutX="226.0" layoutY="331.0" mnemonicParsing="false" onAction="#login"
+                 prefHeight="44.0" prefWidth="146.0" text="Login">
+            <font>
+               <Font size="22.0"/>
+            </font>
+         </Button>
+      </Pane>
+   </VBox>
 </AnchorPane>

@@ -57,6 +57,12 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.41'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.41'
     testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.41'
+
+    //RXJava
+
+    implementation group: 'io.reactivex.rxjava3', name: 'rxjava', version: '3.1.4'
+
+    implementation group: 'com.github.akarnokd', name: 'rxjava3-retrofit-adapter', version: '3.0.0'
 }
 
 javafx {

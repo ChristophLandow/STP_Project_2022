@@ -1,56 +1,53 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.services.LoginService;
-import javafx.application.Platform;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import retrofit2.Response;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.io.IOException;
 
-import static de.uniks.pioneers.Constants.LOGIN_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.*;
 
 
 public class LoginScreenController implements Controller {
-    @FXML
-    public AnchorPane root;
-    @FXML
-    public VBox vBoxParent;
-    @FXML
-    public Label pioneersLabel;
-    @FXML
-    public TextField nicknameTextField;
-    @FXML
-    public TextField passwordTextField;
-    public Label IncorrectInputLabel;
-    @FXML
-    public CheckBox rememberMeCheckBox;
-    @FXML
-    public Label signUpLabel;
-    @FXML
-    public Label goToRulesLabel;
-    @FXML
-    public Button loginButton;
 
-    private App app;
+
+    public final SimpleStringProperty userName = new SimpleStringProperty();
+    public final SimpleStringProperty password = new SimpleStringProperty();
+    private final App app;
     private final LoginService loginService;
     private final Provider<SignUpScreenController> signUpScreenControllerProvider;
-
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+
+    @FXML public TextField textFieldUserName;
+    @FXML public PasswordField passwordField;
+    @FXML public Button buttonLogin;
+    @FXML public Text userNameStatusLabel;
+    @FXML public Text passwordStatusLabel;
+    @FXML public CheckBox checkRememberMe;
+
+    @FXML public Text textRegister;
+    @FXML public Text textRules;
 
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider,
-                                 Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
@@ -59,20 +56,42 @@ public class LoginScreenController implements Controller {
 
     @Override
     public Parent render() {
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("views/LoginScreen.fxml"));
+
+        Parent parent;
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LoginScreen.fxml"));
         loader.setControllerFactory(c -> this);
-        final Parent view;
         try {
-            view = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            parent = loader.load();
+            textFieldUserName.textProperty().bindBidirectional(userName);
+            passwordField.textProperty().bindBidirectional(password);
+
+            this.textFieldUserName.setOnMouseClicked(this::resetStatus);
+            this.passwordField.setOnMouseClicked(this::resetStatus);
+
+            final IntegerBinding userNameLength = Bindings.length(textFieldUserName.textProperty());
+            final BooleanBinding invalid = Bindings.equal(userNameStatusLabel.textProperty(), passwordStatusLabel.textProperty()).not();
+
+            userNameStatusLabel.textProperty().bind(Bindings.when(userNameLength.greaterThan(0)).then("").otherwise("Please enter a valid user name"));
+            buttonLogin.disableProperty().bind(invalid);
+
+            return parent;
+
+        } catch (Exception e) {
+            System.err.println("Error loading Login Screen.");
             return null;
         }
-        return view;
+
+    }
+
+    private void resetStatus(MouseEvent mouseEvent) {
+
+        this.passwordStatusLabel.setText("");
     }
 
     @Override
     public void init() {
+
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
     }
 
@@ -81,54 +100,56 @@ public class LoginScreenController implements Controller {
     public void stop() {
     }
 
-    public void signUp(MouseEvent mouseEvent) {
-        SignUpScreenController controller = signUpScreenControllerProvider.get();
-        controller.username.set(nicknameTextField.getText());
-        controller.password.set(passwordTextField.getText());
-        app.show(controller);
-    }
+
+    public void login(ActionEvent event) {
 
 
-    public void login(MouseEvent mouseEvent) {
-        String nickname = nicknameTextField.getText();
-        String password = passwordTextField.getText();
+        this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
+                .observeOn(FX_SCHEDULER)
+                .doOnError(e -> this.passwordStatusLabel.setText("Incorrect user name or password"))
+                .doOnComplete(this::toLobby)
+                .subscribe(new Observer<>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
 
-        if (nickname != null && !nickname.isBlank() && password != null && !password.isBlank()) {
-            loginService.login(nicknameTextField.getText(), passwordTextField.getText(), loginResult -> {
-                Platform.runLater(() -> {
-                    Response<LoginResult> response = loginResult;
-                    int code = response.code();
-                    if (code == 201) {
-                        //build model Data from response body and show Lobby screen
-                        // this code is for test purpose
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setHeaderText("Login successfull !");
-                        alert.setContentText("here comes the lobby Screen");
-                        alert.setOnCloseRequest(event -> app.show(this));
-                        alert.showAndWait();
-                    } else {
-                        try {
-                            displayInvalidLogin(response);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    }
+
+                    @Override
+                    public void onNext(@NonNull LoginResult loginResult) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
-            });
-        } else {
-            // we can edit this alert, function, buttons etc. !!
-            new Alert(Alert.AlertType.ERROR, "need username and password").showAndWait();
-        }
+
     }
 
-    private void displayInvalidLogin(Response<LoginResult> response) throws IOException {
-        new Alert(Alert.AlertType.ERROR, response.errorBody().string()).showAndWait();
-    }
 
 
     public void rememberMe(MouseEvent mouseEvent) {
     }
 
-    public void goToRules(MouseEvent mouseEvent) {
+    public void toSignUp(ActionEvent event) {
+
+        SignUpScreenController signUpScreenController = this.signUpScreenControllerProvider.get();
+        signUpScreenController.userName.set(textFieldUserName.getText());
+        signUpScreenController.password.set(passwordField.getText());
+
+        this.app.show(signUpScreenController);
+    }
+
+    public void toRules(MouseEvent mouseEvent) {
+    }
+
+    public void toLobby() {
+        System.out.println("toLobby");
     }
 }

@@ -59,7 +59,7 @@ public class SignUpScreenController implements Controller{
     private UserService userService;
 
 
-    public final SimpleStringProperty username = new SimpleStringProperty();
+    public final SimpleStringProperty userName = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
 
     private String avatarStr;
@@ -104,7 +104,7 @@ public class SignUpScreenController implements Controller{
             return null;
         }
 
-        newUsernameTextField.textProperty().bindBidirectional(username);
+        newUsernameTextField.textProperty().bindBidirectional(userName);
         passwordTextField.textProperty().bindBidirectional(password);
 
         final BooleanBinding match = Bindings.equal(passwordTextField.textProperty(),repeatPasswordTextField.textProperty());
