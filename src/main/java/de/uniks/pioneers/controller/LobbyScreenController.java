@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
+import de.uniks.pioneers.services.UserService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -45,14 +46,16 @@ public class LobbyScreenController implements Controller {
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
     private final LobbyService lobbyService;
+    private final UserService userService;
 
     public final SimpleStringProperty username = new SimpleStringProperty();
     public final SimpleStringProperty userid = new SimpleStringProperty();
 
     @Inject
-    public LobbyScreenController(App app, LobbyService lobbyService, Provider<ChatController> chatControllerProvider, Provider<LoginScreenController> loginScreenControllerProvider, Provider<EditProfileController> editProfileControllerProvider){
+    public LobbyScreenController(App app, LobbyService lobbyService, UserService userService, Provider<ChatController> chatControllerProvider, Provider<LoginScreenController> loginScreenControllerProvider, Provider<EditProfileController> editProfileControllerProvider){
         this.app = app;
         this.lobbyService = lobbyService;
+        this.userService = userService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
@@ -70,9 +73,10 @@ public class LobbyScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
-
-        this.UsersVBox.getChildren().clear();
         this.EditProfileButton.setOnAction(this::editProfile);
+
+        this.UsernameLabel.setText(this.userService.getCurrentUser().name());
+        this.UsersVBox.getChildren().clear();
 
         List<User> users = lobbyService.userList();
         for(User user : users){

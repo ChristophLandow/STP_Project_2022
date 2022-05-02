@@ -95,6 +95,7 @@ public class EditProfileController implements Controller {
         this.userService.editProfile(newUsername, null, null)
                 .observeOn(Schedulers.from(Platform::runLater))
                 .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
+
     }
 
     private void updateAvatarString(String newAvatar){
