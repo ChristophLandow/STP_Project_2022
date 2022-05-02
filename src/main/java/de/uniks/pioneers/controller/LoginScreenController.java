@@ -176,7 +176,6 @@ public class LoginScreenController implements Controller {
     }
 
     public void toLobby() {
-        System.out.println("toLobby");
         this.app.show(lobbyScreenControllerProvider.get());
     }
 }

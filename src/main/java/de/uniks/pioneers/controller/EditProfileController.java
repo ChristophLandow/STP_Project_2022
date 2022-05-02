@@ -2,9 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
-import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.UserService;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -12,10 +10,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import retrofit2.Response;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -66,8 +63,10 @@ public class EditProfileController implements Controller {
         // set action event for save button
         this.saveLeaveButton.setOnAction(this::edit);
 
-        // TODO: display current username on usernameLabel
+        // display current username on usernameLabel
+        this.usernameLabel.setText(this.userService.getCurrentUser().name());
         // TODO: display current avatar in imageView
+        // this.avatarImage.setImage(new Image("data:" + this.userService.getCurrentUser().avatar()));
 
         // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
@@ -76,7 +75,6 @@ public class EditProfileController implements Controller {
 
         // add action event
         saveLeaveButton.setOnAction(this::edit);
-
     }
 
     @Override
@@ -94,7 +92,7 @@ public class EditProfileController implements Controller {
         }
 
         // send patch request to server
-        this.userService.editProfile("626a72a4b0e52f0014035279", newUsername, null, null)
+        this.userService.editProfile(newUsername, null, null)
                 .observeOn(Schedulers.from(Platform::runLater))
                 .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
     }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.EditProfileController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.EditProfileController">
    <children>
       <TextField fx:id="newUsernameInput" layoutX="36.0" layoutY="70.0" promptText="new username" />
       <Text layoutX="36.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="current username:" />
@@ -19,7 +19,7 @@
       <PasswordField fx:id="oldPasswordInput" layoutX="36.0" layoutY="164.0" promptText="old password" />
       <PasswordField fx:id="newPasswordInput" layoutX="36.0" layoutY="226.0" promptText="new password" />
       <PasswordField fx:id="repeatNewPasswordInput" layoutX="36.0" layoutY="269.0" promptText="repeat new password" />
-      <Spinner fx:id="chooseAvatarSpinner" layoutX="374.0" layoutY="226.0" prefHeight="25.0" prefWidth="53.0" />
+      <Spinner fx:id="chooseAvatarSpinner" layoutX="365.0" layoutY="226.0" prefHeight="25.0" prefWidth="62.0" />
       <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user_394" />
    </children>
 </Pane>
