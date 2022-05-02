@@ -39,8 +39,8 @@ public class LoginScreenController implements Controller {
     @FXML public TextField textFieldUserName;
     @FXML public PasswordField passwordField;
     @FXML public Button buttonLogin;
-    @FXML public Text userNameStatusLabel;
-    @FXML public Text passwordStatusLabel;
+    @FXML public Text userNameStatusText;
+    @FXML public Text passwordStatusText;
     @FXML public CheckBox checkRememberMe;
 
     @FXML public Text textRegister;
@@ -71,9 +71,9 @@ public class LoginScreenController implements Controller {
             this.passwordField.setOnMouseClicked(this::resetStatus);
 
             final IntegerBinding userNameLength = Bindings.length(textFieldUserName.textProperty());
-            final BooleanBinding invalid = Bindings.equal(userNameStatusLabel.textProperty(), passwordStatusLabel.textProperty()).not();
+            final BooleanBinding invalid = Bindings.equal(userNameStatusText.textProperty(), passwordStatusText.textProperty()).not();
 
-            userNameStatusLabel.textProperty().bind(Bindings.when(userNameLength.greaterThan(0)).then("").otherwise("Please enter a valid user name"));
+            userNameStatusText.textProperty().bind(Bindings.when(userNameLength.greaterThan(0)).then("").otherwise("Please enter a valid user name"));
             buttonLogin.disableProperty().bind(invalid);
 
             this.textRegister.setOnMouseEntered(this::markRegister);
@@ -113,7 +113,7 @@ public class LoginScreenController implements Controller {
 
     private void resetStatus(MouseEvent mouseEvent) {
 
-        this.passwordStatusLabel.setText("");
+        this.passwordStatusText.setText("");
     }
 
     @Override
@@ -133,7 +133,7 @@ public class LoginScreenController implements Controller {
 
         this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)
-                .doOnError(e -> this.passwordStatusLabel.setText("Incorrect user name or password"))
+                .doOnError(e -> this.passwordStatusText.setText("Incorrect user name or password"))
                 .doOnComplete(this::toLobby)
                 .subscribe(new Observer<>() {
                     @Override

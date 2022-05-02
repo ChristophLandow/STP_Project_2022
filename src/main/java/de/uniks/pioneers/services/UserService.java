@@ -4,6 +4,7 @@ import de.uniks.pioneers.dto.CreateUserDto;
 import de.uniks.pioneers.dto.UpdateUserDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.UserApiService;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Alert;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,19 +24,9 @@ public class UserService {
         this.userApiService = userApiService;
     }
 
-    public void register(String name, String password, Consumer<Response<User>> responseComsumer) {
-        userApiService.create(new CreateUserDto(name, password)).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                responseComsumer.accept(response);
-            }
+    public Observable<User> register(String userName, String password) {
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
+        return userApiService.create(new CreateUserDto(userName, password));
     }
 
     public void editProfile(String name, String password, String avatar, Consumer<Response<User>> responseConsumer) {
