@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,9 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 import javax.inject.Inject;
@@ -29,6 +25,7 @@ import javax.inject.Provider;
 import java.io.IOException;
 import java.util.List;
 
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
 public class LobbyScreenController implements Controller {
@@ -45,6 +42,7 @@ public class LobbyScreenController implements Controller {
     private App app;
 
     private final Provider<ChatController> chatControllerProvider;
+    private final Provider<LoginScreenController> loginScreenControllerProvider;
 
     private final LobbyService lobbyService;
 
@@ -52,10 +50,11 @@ public class LobbyScreenController implements Controller {
     public final SimpleStringProperty userid = new SimpleStringProperty();
 
     @Inject
-    public LobbyScreenController(App app, LobbyService lobbyService, Provider<ChatController> chatControllerProvider){
+    public LobbyScreenController(App app, LobbyService lobbyService, Provider<ChatController> chatControllerProvider, Provider<LoginScreenController> loginScreenControllerProvider){
         this.app = app;
         this.lobbyService = lobbyService;
         this.chatControllerProvider = chatControllerProvider;
+        this.loginScreenControllerProvider = loginScreenControllerProvider;
     }
 
     @Override
@@ -84,9 +83,7 @@ public class LobbyScreenController implements Controller {
     }
 
     @Override
-    public void init(){
-        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
-    }
+    public void init(){ app.getStage().setTitle(LOBBY_SCREEN_TITLE); }
 
     @Override
     public void stop(){
@@ -132,6 +129,9 @@ public class LobbyScreenController implements Controller {
 
 
     public void logout(ActionEvent actionEvent) {
+        lobbyService.logout()
+                .observeOn(FX_SCHEDULER);
+        app.show(loginScreenControllerProvider.get());
     }
 
     public void newGame(ActionEvent actionEvent) {

@@ -1,5 +1,9 @@
 package de.uniks.pioneers;
 
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
+
 public class Constants {
     // application
     public static final String LOGIN_SCREEN_TITLE = "Pioneers - Login";
@@ -21,5 +25,7 @@ public class Constants {
     public static final String JSON_NAME = "name";
     public static final String JSON_PASSWORD = "password";
     public static final String JSON_AVATAR = "avatar";
+
+    public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
 
 }
