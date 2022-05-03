@@ -65,7 +65,6 @@ public class SignUpScreenController implements Controller{
 
     private String avatar;
 
-
     @Inject
     public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider,App app) {
         this.userService = userService;
@@ -88,7 +87,6 @@ public class SignUpScreenController implements Controller{
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);
         avatarSelector.setValueFactory(spinnerValueFactory);
-
     }
 
     @Override
@@ -104,7 +102,7 @@ public class SignUpScreenController implements Controller{
             passwordField.textProperty().bindBidirectional(password);
 
 
-            //Bindings displaying status information on password validity. Password length takes precedent over math with confirmation field.
+            //Bindings displaying status information on password validity. Password length takes precedent over match with confirmation field.
             final IntegerBinding userNameLength = Bindings.length(textFieldUserName.textProperty());
 
             final IntegerBinding passwordLength = Bindings.length(passwordField.textProperty());
@@ -130,7 +128,6 @@ public class SignUpScreenController implements Controller{
     public void stop() {
     }
 
-
     private void updateAvatarString(String newAvatar){
         avatar = newAvatar;
     }
@@ -142,12 +139,10 @@ public class SignUpScreenController implements Controller{
 
         this.userNameStatusText.setText("");
     }
-
     public void register(ActionEvent actionEvent) throws IOException, URISyntaxException {
 
         getClass().getResource("subcontroller/" + avatar);
         byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatar).toURI()));
-
         String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
 
         this.userService.register(this.textFieldUserName.getText(), avatarB64, this.passwordField.getText())
@@ -157,26 +152,18 @@ public class SignUpScreenController implements Controller{
                 .subscribe(new Observer<>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-
                     }
-
                     @Override
                     public void onNext(@NonNull User user) {
-
                     }
-
                     @Override
                     public void onError(@NonNull Throwable e) {
                         System.out.println(e.getMessage());
-
                     }
-
                     @Override
                     public void onComplete() {
-
                     }
                 });
-
     }
 
     private void registrationComplete(){
@@ -188,15 +175,12 @@ public class SignUpScreenController implements Controller{
 
         alert.showAndWait();
         toLogin(new ActionEvent());
-
     }
 
     public void toLogin(ActionEvent actionEvent) {
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
-
         loginController.userName.set(textFieldUserName.getText());
-
         this.app.show(loginController);
     }
 }

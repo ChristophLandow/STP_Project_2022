@@ -19,15 +19,11 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import static de.uniks.pioneers.Constants.*;
 
-
 public class LoginScreenController implements Controller {
-
 
     public final SimpleStringProperty userName = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
@@ -48,7 +44,6 @@ public class LoginScreenController implements Controller {
     public Text passwordStatusText;
     @FXML
     public CheckBox checkRememberMe;
-
     @FXML
     public Text textRegister;
     @FXML
@@ -98,7 +93,6 @@ public class LoginScreenController implements Controller {
             System.err.println("Error loading Login Screen.");
             return null;
         }
-
     }
 
     private void markRegister(MouseEvent mouseEvent) {
@@ -131,15 +125,10 @@ public class LoginScreenController implements Controller {
 
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
     }
-
-
     @Override
     public void stop() {
     }
-
-
     public void login(ActionEvent event) {
-
 
         this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)
@@ -148,22 +137,15 @@ public class LoginScreenController implements Controller {
                 .subscribe(new Observer<>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-
                     }
-
                     @Override
                     public void onNext(@NonNull LoginResult loginResult) {
-
                     }
-
                     @Override
                     public void onError(@NonNull Throwable e) {
-
                     }
-
                     @Override
                     public void onComplete() {
-
                     }
                 });
 

@@ -24,12 +24,10 @@ public class UserService {
 
         this.userApiService = userApiService;
     }
-
     public Observable<User> register(String userName,String avatar, String password) {
 
         return userApiService.create(new CreateUserDto(userName, avatar, password));
     }
-
     public void editProfile(String name, String password, String avatar, Consumer<Response<User>> responseConsumer) {
         userApiService.update(new UpdateUserDto(name, avatar, password)).enqueue(new Callback<User>() {
             @Override
@@ -43,11 +41,9 @@ public class UserService {
             }
         });
     }
-
     public User getCurrentUser() {
         return currentUser;
     }
-
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
