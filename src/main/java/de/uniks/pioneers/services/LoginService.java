@@ -23,8 +23,6 @@ public class LoginService {
     }
 
     public Observable<LoginResult> login(String userName, String password) {
-
-
         return authApiService.login(new LoginDto(userName, password))
                 .doOnNext(result -> {
                     tokenStorage.setToken(result.accessToken());
