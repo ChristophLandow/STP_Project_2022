@@ -9,15 +9,16 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Body;
+import retrofit2.http.Path;
 import java.util.List;
 
 public interface UserApiService {
     @POST("users")
     Observable<User> create(@Body CreateUserDto dto);
 
-    @PATCH("users")
-    Call<User> update(@Body UpdateUserDto dto);
-    
+    @PATCH("users/{id}")
+    Observable<User> update(@Path("id") String id, @Body UpdateUserDto dto);
+
     @GET("users/?status=online")
     Call<List<User>> getOnlineUsers();
 }
