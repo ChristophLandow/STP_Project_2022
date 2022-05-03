@@ -94,14 +94,32 @@ public class LobbyScreenController implements Controller {
         }
 
         games.addListener((ListChangeListener<? super Game>) c -> {
+            c.next();
+            if (c.wasAdded()){
                 c.getList().forEach(this::renderItem);
+            }
         });
 
         return parent;
     }
 
     private void renderItem(Game game) {
-        GameVbox.getChildren().add(new HBox(new Label(game.name())));
+        // fxml erstellen
+        String createdAt = game.createdAt();
+        int start = createdAt.indexOf("T");
+        int end = createdAt.indexOf(".");
+        String creationTime = game.createdAt().substring(start+1,end)+ " :";
+        Label time = new Label(creationTime);
+        Label name = new Label(game.name());
+        String memberCount = String.format("            %d/4", game.members());
+        Label playerCount = new Label(memberCount);
+
+        HBox gameBox = new HBox();
+        gameBox.setSpacing(10);
+        gameBox.getChildren().add(time);
+        gameBox.getChildren().add(name);
+        gameBox.getChildren().add(playerCount);
+        GameVbox.getChildren().add(gameBox);
     }
 
     @Override
