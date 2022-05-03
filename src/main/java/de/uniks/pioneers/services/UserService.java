@@ -14,11 +14,12 @@ public class UserService {
 
     @Inject
     public UserService(UserApiService userApiService) {
+
         this.userApiService = userApiService;
     }
 
-    public Observable<User> register(String userName, String password) {
-        return userApiService.create(new CreateUserDto(userName, password));
+    public Observable<User> register(String userName,String avatar, String password) {
+        return userApiService.create(new CreateUserDto(userName, avatar, password));
     }
 
     public Observable<User> editProfile(String name, String avatar, String password) {

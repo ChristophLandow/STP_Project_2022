@@ -8,7 +8,6 @@ import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -22,11 +21,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import retrofit2.Response;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
 
 import static de.uniks.pioneers.Constants.*;
 
@@ -85,7 +89,6 @@ public class SignUpScreenController implements Controller{
         spinnerValueFactory.init(imageViewAvatar);
         avatarSelector.setValueFactory(spinnerValueFactory);
 
-
     }
 
     @Override
@@ -140,9 +143,14 @@ public class SignUpScreenController implements Controller{
         this.userNameStatusText.setText("");
     }
 
-    public void register(ActionEvent actionEvent) {
+    public void register(ActionEvent actionEvent) throws IOException, URISyntaxException {
 
-        this.userService.register(this.textFieldUserName.getText(), this.passwordField.getText())
+        getClass().getResource("subcontroller/" + avatar);
+        byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatar).toURI()));
+
+        String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+
+        this.userService.register(this.textFieldUserName.getText(), avatarB64, this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)
                 .doOnError(e -> this.userNameStatusText.setText("Username already taken"))
                 .doOnComplete(this::registrationComplete)
@@ -159,6 +167,7 @@ public class SignUpScreenController implements Controller{
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        System.out.println(e.getMessage());
 
                     }
 
@@ -167,6 +176,7 @@ public class SignUpScreenController implements Controller{
 
                     }
                 });
+
     }
 
     private void registrationComplete(){
