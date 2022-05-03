@@ -6,11 +6,13 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class UserService {
 
     private final UserApiService userApiService;
-    private static User currentUser;
+    private User currentUser;
 
     @Inject
     public UserService(UserApiService userApiService) {
