@@ -2,10 +2,14 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.UserService;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -47,6 +52,9 @@ public class LobbyScreenController implements Controller {
     private final Provider<EditProfileController> editProfileControllerProvider;
     private final LobbyService lobbyService;
     private final UserService userService;
+
+    // List with games from Server
+    private final ObservableList<Game> games = FXCollections.observableArrayList();
 
     public final SimpleStringProperty username = new SimpleStringProperty();
     public final SimpleStringProperty userid = new SimpleStringProperty();
@@ -85,11 +93,23 @@ public class LobbyScreenController implements Controller {
             }
         }
 
+        games.addListener((ListChangeListener<? super Game>) c -> {
+                c.getList().forEach(this::renderItem);
+        });
+
         return parent;
     }
 
+    private void renderItem(Game game) {
+        GameVbox.getChildren().add(new HBox(new Label(game.name())));
+    }
+
     @Override
-    public void init(){ app.getStage().setTitle(LOBBY_SCREEN_TITLE); }
+    public void init(){
+        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+        lobbyService.getGames().observeOn(FX_SCHEDULER)
+                .subscribe(this.games::setAll);
+    }
 
     @Override
     public void stop(){
