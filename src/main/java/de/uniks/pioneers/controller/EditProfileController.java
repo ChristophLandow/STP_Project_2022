@@ -97,6 +97,7 @@ public class EditProfileController implements Controller {
 
     public void edit(ActionEvent event) {
         String newUsername = this.newUsernameInput.getText();
+        String newAvatar = this.avatarImage.getImage().getUrl();
 
         // set new username null if there is no input
         if (newUsername.isEmpty()) {
@@ -104,7 +105,7 @@ public class EditProfileController implements Controller {
         }
 
         // send patch request to server
-        this.userService.editProfile(newUsername, null, null)
+        this.userService.editProfile(newUsername, newAvatar, null)
                 .observeOn(FX_SCHEDULER)
                 .doOnError(e -> this.usernameStatusText.setText("Username already taken. Choose another one!"))
                 .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
