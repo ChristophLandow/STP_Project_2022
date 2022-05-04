@@ -15,6 +15,7 @@ public class Constants {
 
     // network
     public static final String BASE_URL = "https://pioneers.uniks.de";
+    public static final String BASE_URL_WSS = "wss://pioneers.uniks.de";
 
     public static final String API_V1_PREFIX = "/api/v1";
     public static final String WS_V1_PREFIX = "/ws/v1";

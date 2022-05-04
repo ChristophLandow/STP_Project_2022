@@ -39,7 +39,7 @@ public class EventListener {
         }
         try {
             endpoint = new ClientEndpoint(
-                    new URI(BASE_URL + WS_V1_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getToken()));
+                    new URI(BASE_URL_WSS + WS_V1_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getToken()));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
