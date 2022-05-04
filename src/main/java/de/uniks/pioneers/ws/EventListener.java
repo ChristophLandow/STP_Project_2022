@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static de.uniks.pioneers.Constants.*;
-import static jdk.internal.net.http.common.Utils.close;
+
 
 @Singleton
 public class EventListener {
@@ -80,6 +80,17 @@ public class EventListener {
         endpoint.removeMessageHandler(handler);
         if (!endpoint.hasMessageHandlers()){
             close();
+        }
+    }
+
+    private void close() {
+        if (endpoint !=null){
+            try {
+                endpoint.stop();
+                endpoint=null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
