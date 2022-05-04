@@ -78,12 +78,7 @@ public class SignUpScreenController implements Controller{
 
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
-        stage.setOnCloseRequest(event -> {
-            if (stage.getTitle().equals(SIGNUP_SCREEN_TITLE)) {
-                event.consume();
-                app.show(loginScreenControllerProvider.get());
-            }
-        });
+
         // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);
