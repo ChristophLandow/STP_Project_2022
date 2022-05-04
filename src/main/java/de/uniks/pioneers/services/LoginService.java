@@ -23,12 +23,10 @@ public class LoginService {
     }
 
     public Observable<LoginResult> login(String userName, String password) {
-
-
         return authApiService.login(new LoginDto(userName, password))
                 .doOnNext(result -> {
                     tokenStorage.setToken(result.accessToken());
-                    userService.setCurrentUser(new User(result._id(), result.name(), result.status(), result.avatar()));
+                    userService.setCurrentUserId(result._id());
                 });
     }
 }
