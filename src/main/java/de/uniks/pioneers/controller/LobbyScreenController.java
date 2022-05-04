@@ -80,7 +80,11 @@ public class LobbyScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     this.UsernameLabel.setText(user.name());
-                    this.AvatarImageView.setImage(new Image(user.avatar()));
+                    if (user.avatar() != null) {
+                        this.AvatarImageView.setImage(new Image(user.avatar()));
+                    } else {
+                        this.AvatarImageView.setImage(null);
+                    }
                 });
 
         this.UsersVBox.getChildren().clear();
