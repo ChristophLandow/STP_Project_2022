@@ -25,7 +25,11 @@ public class EditAvatarSpinnerController extends AvatarSpinnerController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     setValue(0);
-                    avatarImageView.setImage(new Image(user.avatar()));
+                    if (user.avatar() != null) {
+                        avatarImageView.setImage(new Image(user.avatar()));
+                    } else {
+                        avatarImageView.setImage(null);
+                    }
                 });
     }
 
