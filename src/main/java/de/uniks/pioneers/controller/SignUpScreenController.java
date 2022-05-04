@@ -105,13 +105,17 @@ public class SignUpScreenController implements Controller{
             final IntegerBinding userNameLength = Bindings.length(textFieldUserName.textProperty());
 
             final IntegerBinding passwordLength = Bindings.length(passwordField.textProperty());
+            final BooleanBinding avatarInvalid = Bindings.length(this.avatarStatusText.textProperty()).greaterThan(0);
             final BooleanBinding passwordMatch = Bindings.equal(passwordField.textProperty(), passwordFieldConfirmation.textProperty());
             passwordStatusText.textProperty().bind(Bindings
                     .when(passwordLength.greaterThan(7)).then(Bindings.when(passwordMatch).then("")
                             .otherwise("Passwords do not match")).otherwise("Password must be at least 8 characters long"));
 
-            buttonRegister.disableProperty().bind(passwordMatch.not().or(passwordLength.greaterThan(7).not().or(userNameLength.greaterThan(0).not())));
-
+            buttonRegister.disableProperty().bind(
+                    passwordMatch.not()
+                            .or(passwordLength.greaterThan(7).not()
+                                    .or(userNameLength.greaterThan(0).not()
+                                            .or(avatarInvalid))));
 
             this.textFieldUserName.setOnMouseClicked(this::resetStatus);
 
@@ -122,7 +126,6 @@ public class SignUpScreenController implements Controller{
             return null;
         }
     }
-
     @Override
     public void stop() {
     }
@@ -132,7 +135,6 @@ public class SignUpScreenController implements Controller{
         avatar = newAvatar;
         resetAvatar();
     }
-
     public void uploadAvatar(ActionEvent actionEvent) throws IOException {
 
         resetAvatar();
@@ -148,7 +150,10 @@ public class SignUpScreenController implements Controller{
 
         if(avatarB64.length() > 16384){
             this.avatarStatusText.setText("Image exceeds file size limit");
+        }else{
+            this.customAvatar = avatarB64;
         }
+
         System.out.println(avatarB64.length());
     }
 
@@ -159,7 +164,7 @@ public class SignUpScreenController implements Controller{
     private void resetAvatar() {
 
         this.avatarStatusText.setText("");
-        customAvatar = "";
+        this.customAvatar = "";
     }
     public void register(ActionEvent actionEvent) throws IOException, URISyntaxException {
 
