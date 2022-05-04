@@ -83,7 +83,6 @@ public class LobbyScreenController implements Controller {
                     this.AvatarImageView.setImage(new Image(user.avatar()));
                 });
 
-
         this.UsersVBox.getChildren().clear();
 
         List<User> users = lobbyService.userList();
