@@ -89,4 +89,8 @@ public class WebsocketClient {
             session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,"Fine exit"));
         }
     }
+
+    public boolean hasMessageHandlers() {
+        return messageHandlers.isEmpty();
+    }
 }

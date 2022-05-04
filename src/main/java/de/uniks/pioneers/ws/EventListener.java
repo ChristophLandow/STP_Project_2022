@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static de.uniks.pioneers.Constants.*;
+import static jdk.internal.net.http.common.Utils.close;
 
 @Singleton
 public class EventListener {
@@ -31,39 +32,59 @@ public class EventListener {
         this.mapper = mapper;
     }
 
-    private void ensureOpen(){
-        if (endpoint != null){
+    private void ensureOpen() {
+        if (endpoint != null) {
             return;
         }
         try {
-            endpoint= new WebsocketClient(
+            endpoint = new WebsocketClient(
                     new URI(BASE_URL + WS_V1_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getToken()));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
-    public <T>Observable<Event<T>> listen (String pattern, Class<T> type){
+    public <T> Observable<Event<T>> listen(String pattern, Class<T> type) {
         return Observable.create(emitter -> {
             this.ensureOpen();
-            send(Map.of("event","subsripe", "data", pattern));
+            send(Map.of("event", "subsripe", "data", pattern));
 
-            final Pattern rexex = Pattern.compile(pattern.replace(".","\\."
-                    .replace("*","[^.]*")));
-        });
-                final Consumer<String> handler = eventStr -> {
-                try {
-                    final JsonNode node = mapper.readTree(eventStr);
+            final Pattern regex = Pattern.compile(pattern
+                    .replace(".", "\\.")
+                    .replace("*", "[^.]*"));
 
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+        final Consumer<String> handler = eventStr -> {
+            try {
+                final JsonNode node = mapper.readTree(eventStr);
+                final String event = node.get("event").asText();
+                if (!regex.matcher(event).matches()) {
+                    return;
                 }
-
+                final T data = mapper.treeToValue(node.get("data"),type);
+                emitter.onNext(new Event<>(event,data));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
             }
+        };
+        endpoint.addMessageHandler(handler);
+        emitter.setCancellable(()-> removeEventHandler(pattern,handler));
+
+    });
+    }
+
+    private void removeEventHandler(String pattern, Consumer<String> handler) {
+        if (endpoint==null){
+            return;
+        }
+        send(Map.of("Event","unsubscribe","Data",pattern));
+        endpoint.removeMessageHandler(handler);
+        if (!endpoint.hasMessageHandlers()){
+            close();
+        }
     }
 
     private void send(Object message) {
-            final String msg;
+        final String msg;
         try {
             msg = mapper.writeValueAsString(message);
             endpoint.sendMessage(msg);
