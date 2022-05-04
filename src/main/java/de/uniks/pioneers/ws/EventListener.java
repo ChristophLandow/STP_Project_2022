@@ -48,7 +48,7 @@ public class EventListener {
     public <T> Observable<Event<T>> listen(String pattern, Class<T> type) {
         return Observable.create(emitter -> {
             this.ensureOpen();
-            send(Map.of("event", "subsripe", "data", pattern));
+            send(Map.of("event", "subscribe", "data", pattern));
 
             final Pattern regex = Pattern.compile(pattern
                     .replace(".", "\\.")

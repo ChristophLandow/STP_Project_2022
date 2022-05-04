@@ -30,7 +30,9 @@ import javafx.scene.text.Font;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
@@ -114,7 +116,7 @@ public class LobbyScreenController implements Controller {
     }
 
     private void renderItem(Game game) {
-        // fxml erstellen
+        // this code is not final, when there is time i gona make a fxml and change the game box for a list
         String createdAt = game.createdAt();
         int start = createdAt.indexOf("T");
         int end = createdAt.indexOf(".");
@@ -125,6 +127,7 @@ public class LobbyScreenController implements Controller {
         Label playerCount = new Label(memberCount);
 
         HBox gameBox = new HBox();
+        gameBox.setId(game._id());
         gameBox.setSpacing(10);
         gameBox.getChildren().add(time);
         gameBox.getChildren().add(name);
@@ -141,11 +144,30 @@ public class LobbyScreenController implements Controller {
         eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                    System.out.println(gameEvent.data().toString());
+                    // i gona change this code, when there is nothing else to do
+                    if (gameEvent.event().endsWith(".created")){
+                        renderItem(gameEvent.data());
+                        games.add(gameEvent.data());
+                    }else if (gameEvent.event().endsWith(".updated")){
+                        updateGame(gameEvent.data());
+                    }else {
+                        deleteGame(gameEvent.data());
+                    }
                 });
 
     }
 
+    private void deleteGame(Game data) {
+        Game toRemove =  this.games.stream().filter(game -> data._id().equals(game._id())).findAny().get();
+        Node removal = GameVbox.getChildren().stream().filter(game -> game.getId().equals(data._id())).findAny().get();
+        GameVbox.getChildren().remove(removal);
+    }
+
+    private void updateGame(Game data) {
+        Game toUpdate  = games.stream().filter(game -> game._id().equals(data._id())).findAny().get();
+        toUpdate=data;
+        //rerender
+    }
 
 
     @Override
@@ -199,5 +221,10 @@ public class LobbyScreenController implements Controller {
     }
 
     public void newGame(ActionEvent actionEvent) {
+        lobbyService.createGame()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(game -> {
+                    System.out.println(game.name());
+                });
     }
 }
