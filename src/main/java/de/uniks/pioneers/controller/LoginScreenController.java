@@ -19,7 +19,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -28,7 +27,6 @@ import static de.uniks.pioneers.Constants.*;
 
 public class LoginScreenController implements Controller {
 
-
     public final SimpleStringProperty userName = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
     private final App app;
@@ -36,15 +34,23 @@ public class LoginScreenController implements Controller {
     private final Provider<SignUpScreenController> signUpScreenControllerProvider;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
 
-    @FXML public TextField textFieldUserName;
-    @FXML public PasswordField passwordField;
-    @FXML public Button buttonLogin;
-    @FXML public Text userNameStatusText;
-    @FXML public Text passwordStatusText;
-    @FXML public CheckBox checkRememberMe;
+    @FXML
+    public TextField textFieldUserName;
+    @FXML
+    public PasswordField passwordField;
+    @FXML
+    public Button buttonLogin;
+    @FXML
+    public Text userNameStatusText;
+    @FXML
+    public Text passwordStatusText;
+    @FXML
+    public CheckBox checkRememberMe;
 
-    @FXML public Text textRegister;
-    @FXML public Text textRules;
+    @FXML
+    public Text textRegister;
+    @FXML
+    public Text textRules;
 
     @Inject
     public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
@@ -94,22 +100,22 @@ public class LoginScreenController implements Controller {
 
     private void markRegister(MouseEvent mouseEvent) {
 
-        this.textRegister.setFill(Color.rgb(0,0,255));
+        this.textRegister.setFill(Color.rgb(0, 0, 255));
     }
 
     private void unmarkRegister(MouseEvent mouseEvent) {
 
-        this.textRegister.setFill(Color.rgb(0,0,0));
+        this.textRegister.setFill(Color.rgb(0, 0, 0));
     }
 
     private void markRules(MouseEvent mouseEvent) {
 
-        this.textRules.setFill(Color.rgb(0,0,255));
+        this.textRules.setFill(Color.rgb(0, 0, 255));
     }
 
     private void unmarkRules(MouseEvent mouseEvent) {
 
-        this.textRules.setFill(Color.rgb(0,0,0));
+        this.textRules.setFill(Color.rgb(0, 0, 0));
     }
 
     private void resetStatus(MouseEvent mouseEvent) {
@@ -156,8 +162,6 @@ public class LoginScreenController implements Controller {
                 });
 
     }
-
-
 
     public void rememberMe(MouseEvent mouseEvent) {
     }

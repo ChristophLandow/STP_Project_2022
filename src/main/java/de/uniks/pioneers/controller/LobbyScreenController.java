@@ -93,7 +93,11 @@ public class LobbyScreenController implements Controller {
         }
         this.EditProfileButton.setOnAction(this::editProfile);
 
-        this.UsernameLabel.setText(this.userService.getCurrentUser().name());
+        // get current user from server and display name
+        this.userService.getCurrentUser()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(user -> this.UsernameLabel.setText(user.name()));
+
         this.UsersVBox.getChildren().clear();
 
         List<User> users = lobbyService.userList();

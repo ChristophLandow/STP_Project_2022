@@ -5,33 +5,42 @@ import de.uniks.pioneers.dto.UpdateUserDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
-import javax.inject.Inject;
+import javafx.collections.ObservableList;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.List;
+
+@Singleton
 public class UserService {
 
     private final UserApiService userApiService;
-    private static User currentUser;
+    private String currentUserId;
 
     @Inject
     public UserService(UserApiService userApiService) {
+
         this.userApiService = userApiService;
     }
 
-    public Observable<User> register(String userName, String password) {
-        return userApiService.create(new CreateUserDto(userName, password));
+    public Observable<User> register(String userName,String avatar, String password) {
+        return userApiService.create(new CreateUserDto(userName, avatar, password));
     }
 
     public Observable<User> editProfile(String name, String avatar, String password) {
-        currentUser = new User(currentUser._id(), name, currentUser.status(), avatar);
-        return userApiService.update(currentUser._id(), new UpdateUserDto(name, avatar, password));
+        return userApiService.update(this.currentUserId, new UpdateUserDto(name, avatar, password));
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public Observable<User> getCurrentUser() {
+        return this.userApiService.getUser(this.currentUserId);
     }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+    public void setCurrentUserId(String id) {
+        this.currentUserId = id;
+    }
+
+    public Observable<List<User>> findAll() {
+        return this.userApiService.findAll();
     }
 }
 
