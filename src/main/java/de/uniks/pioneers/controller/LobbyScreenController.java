@@ -93,10 +93,17 @@ public class LobbyScreenController implements Controller {
         }
         this.EditProfileButton.setOnAction(this::editProfile);
 
-        // get current user from server and display name
+        // get current user from server and display name and avatar
         this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(user -> this.UsernameLabel.setText(user.name()));
+                .subscribe(user -> {
+                    this.UsernameLabel.setText(user.name());
+                    if (user.avatar() != null) {
+                        this.AvatarImageView.setImage(new Image(user.avatar()));
+                    } else {
+                        this.AvatarImageView.setImage(null);
+                    }
+                });
 
         this.UsersVBox.getChildren().clear();
 
