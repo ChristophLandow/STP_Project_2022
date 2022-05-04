@@ -20,7 +20,7 @@
    <PasswordField fx:id="passwordFieldConfirmation" layoutX="189.0" layoutY="167.0" prefHeight="33.0" prefWidth="235.0" promptText="Confirm Password" />
    <ImageView fx:id="imageViewAvatar" fitHeight="72.0" fitWidth="73.0" layoutX="351.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true" />
    <Spinner fx:id="avatarSelector" editable="true" layoutX="189.0" layoutY="225.0" prefHeight="25.0" prefWidth="73.0" />
-   <Button fx:id="buttonUploadAvatar" layoutX="189.0" layoutY="262.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="108.0" text="Upload Avatar" />
+   <Button fx:id="buttonUploadAvatar" layoutX="189.0" layoutY="262.0" mnemonicParsing="false" onAction="#uploadAvatar" prefHeight="33.0" prefWidth="108.0" text="Upload Avatar" />
    <Button fx:id="buttonRegister" layoutX="249.0" layoutY="318.0" mnemonicParsing="false" onAction="#register" prefHeight="36.0" prefWidth="116.0" text="Register" textAlignment="CENTER">
       <font>
          <Font size="20.0" />
@@ -28,4 +28,5 @@
    </Button>
    <Text fx:id="userNameStatusText" fill="RED" layoutX="189.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="235.0" />
    <Text fx:id="passwordStatusText" fill="RED" layoutX="190.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="235.0" />
+   <Text fx:id="avatarStatusText" fill="RED" layoutX="270.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="235.0" />
 </Pane>

@@ -1,9 +1,6 @@
 package de.uniks.pioneers;
 
 import de.uniks.pioneers.controller.Controller;
-import de.uniks.pioneers.controller.LoginScreenController;
-import de.uniks.pioneers.services.LoginService;
-import de.uniks.pioneers.services.UserService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

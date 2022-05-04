@@ -17,14 +17,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -59,11 +59,15 @@ public class SignUpScreenController implements Controller{
     @FXML
     public Text passwordStatusText;
 
+    @FXML
+    public Text avatarStatusText;
+
     private final App app;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final UserService userService;
 
     private String avatar;
+    private String customAvatar = "";
 
     @Inject
     public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider,App app) {
@@ -77,12 +81,7 @@ public class SignUpScreenController implements Controller{
 
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
-        stage.setOnCloseRequest(event -> {
-            if (stage.getTitle().equals(SIGNUP_SCREEN_TITLE)) {
-                event.consume();
-                app.show(loginScreenControllerProvider.get());
-            }
-        });
+
         //Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);
@@ -129,21 +128,48 @@ public class SignUpScreenController implements Controller{
     }
 
     private void updateAvatarString(String newAvatar){
+
         avatar = newAvatar;
+        resetAvatar();
     }
 
-    public void uploadAvatar(MouseEvent mouseEvent) {
+    public void uploadAvatar(ActionEvent actionEvent) throws IOException {
+
+        resetAvatar();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Choose Avatar", "*.PNG", "*.jpg"));
+        File avatarURL = fileChooser.showOpenDialog(null);
+        byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
+        String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+
+        Image image = new Image(avatarURL.getAbsolutePath());
+        this.imageViewAvatar.setImage(image);
+
+        if(avatarB64.length() > 16384){
+            this.avatarStatusText.setText("Image exceeds file size limit");
+        }
+        System.out.println(avatarB64.length());
     }
 
     private void resetStatus(MouseEvent mouseEvent) {
 
         this.userNameStatusText.setText("");
     }
+    private void resetAvatar() {
+
+        this.avatarStatusText.setText("");
+        customAvatar = "";
+    }
     public void register(ActionEvent actionEvent) throws IOException, URISyntaxException {
 
-        getClass().getResource("subcontroller/" + avatar);
-        byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatar).toURI()));
-        String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+        String avatarB64 = customAvatar;
+        if(customAvatar.equals("")){
+
+            getClass().getResource("subcontroller/" + avatar);
+            byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatar).toURI()));
+            avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+        }
 
         this.userService.register(this.textFieldUserName.getText(), avatarB64, this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)
@@ -165,7 +191,6 @@ public class SignUpScreenController implements Controller{
                     }
                 });
     }
-
     private void registrationComplete(){
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -176,7 +201,6 @@ public class SignUpScreenController implements Controller{
         alert.showAndWait();
         toLogin(new ActionEvent());
     }
-
     public void toLogin(ActionEvent actionEvent) {
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
