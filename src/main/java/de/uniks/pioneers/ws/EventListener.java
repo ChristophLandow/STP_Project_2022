@@ -1,6 +1,7 @@
 package de.uniks.pioneers.ws;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.services.TokenStorage;
@@ -12,6 +13,7 @@ import javax.websocket.ClientEndpoint;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static de.uniks.pioneers.Constants.*;
@@ -46,8 +48,18 @@ public class EventListener {
             this.ensureOpen();
             send(Map.of("event","subsripe", "data", pattern));
 
-            final Pattern rexex = Pattern.compile(pattern.replace())
+            final Pattern rexex = Pattern.compile(pattern.replace(".","\\."
+                    .replace("*","[^.]*")));
         });
+                final Consumer<String> handler = eventStr -> {
+                try {
+                    final JsonNode node = mapper.readTree(eventStr);
+
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+
+            }
     }
 
     private void send(Object message) {
