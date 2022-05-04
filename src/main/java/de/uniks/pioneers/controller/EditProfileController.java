@@ -2,9 +2,16 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.UserService;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +23,10 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.EDIT_PROFILE_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class EditProfileController implements Controller {
     @FXML public TextField newUsernameInput;
@@ -29,11 +38,14 @@ public class EditProfileController implements Controller {
     @FXML public PasswordField repeatNewPasswordInput;
     @FXML public Text usernameLabel;
     @FXML public Spinner chooseAvatarSpinner;
+    @FXML public Text usernameStatusText;
 
     private App app;
     private UserService userService;
     private Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private String avatarStr;
+
+    private final ObservableList<User> users = FXCollections.observableArrayList();
 
     @Inject
     public EditProfileController(UserService userService, App app, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
@@ -63,10 +75,10 @@ public class EditProfileController implements Controller {
         // set action event for save button
         this.saveLeaveButton.setOnAction(this::edit);
 
-        // display current username on usernameLabel
-        this.usernameLabel.setText(this.userService.getCurrentUser().name());
-        // TODO: display current avatar in imageView
-        // this.avatarImage.setImage(new Image("data:" + this.userService.getCurrentUser().avatar()));
+        // get currentUser from Server and display name
+        this.userService.getCurrentUser()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(user -> this.usernameLabel.setText(user.name()));
 
         // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
@@ -83,8 +95,6 @@ public class EditProfileController implements Controller {
 
     public void edit(ActionEvent event) {
         String newUsername = this.newUsernameInput.getText();
-        String newPassword = this.newPasswordInput.getText();
-        String repeatPassword = this.repeatNewPasswordInput.getText();
 
         // set new username null if there is no input
         if (newUsername.isEmpty()) {
@@ -93,7 +103,8 @@ public class EditProfileController implements Controller {
 
         // send patch request to server
         this.userService.editProfile(newUsername, null, null)
-                .observeOn(Schedulers.from(Platform::runLater))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(e -> this.usernameStatusText.setText("Username already taken. Choose another one!"))
                 .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
 
     }

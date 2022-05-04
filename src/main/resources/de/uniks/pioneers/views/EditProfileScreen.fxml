@@ -21,5 +21,6 @@
       <PasswordField fx:id="repeatNewPasswordInput" layoutX="36.0" layoutY="269.0" promptText="repeat new password" />
       <Spinner fx:id="chooseAvatarSpinner" layoutX="365.0" layoutY="226.0" prefHeight="25.0" prefWidth="62.0" />
       <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user_394" />
+      <Text fx:id="usernameStatusText" fill="RED" layoutX="36.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
    </children>
 </Pane>

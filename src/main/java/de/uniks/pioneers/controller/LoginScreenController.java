@@ -19,7 +19,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -27,7 +26,6 @@ import static de.uniks.pioneers.Constants.*;
 
 
 public class LoginScreenController implements Controller {
-
 
     public final SimpleStringProperty userName = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
@@ -156,8 +154,6 @@ public class LoginScreenController implements Controller {
                 });
 
     }
-
-
 
     public void rememberMe(MouseEvent mouseEvent) {
     }
