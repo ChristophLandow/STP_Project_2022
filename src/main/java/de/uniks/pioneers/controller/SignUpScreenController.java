@@ -24,8 +24,6 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -54,6 +52,8 @@ public class SignUpScreenController implements Controller{
     public ImageView imageViewAvatar;
     @FXML
     public Button buttonRegister;
+    @FXML
+    public Button leaveButton;
     @FXML
     public Text userNameStatusText;
     @FXML
@@ -84,10 +84,13 @@ public class SignUpScreenController implements Controller{
                 app.show(loginScreenControllerProvider.get());
             }
         });
-        //Spinner Code
+        // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);
         avatarSelector.setValueFactory(spinnerValueFactory);
+
+        // set action event for leave button
+        this.leaveButton.setOnAction(this::leave);
 
     }
 
@@ -198,5 +201,9 @@ public class SignUpScreenController implements Controller{
         loginController.userName.set(textFieldUserName.getText());
 
         this.app.show(loginController);
+    }
+
+    private void leave(ActionEvent actionEvent) {
+        this.app.show(loginScreenControllerProvider.get());
     }
 }
