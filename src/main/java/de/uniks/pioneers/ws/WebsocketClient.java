@@ -15,18 +15,16 @@ public class WebsocketClient {
     private Session session;
     private final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new ArrayList<>());
 
-    public WebsocketClient(String endpoint) {
+    public WebsocketClient(URI endpointURI) {
         //Create a new timer and save the callback
         noopTimer = new Timer();
         //Create and connect the websocket client
         try {
             WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
-            webSocketContainer.connectToServer(this, new URI(endpoint));
+            webSocketContainer.connectToServer(this, endpointURI);
         } catch (DeploymentException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }

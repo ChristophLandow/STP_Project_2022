@@ -17,6 +17,8 @@ public class Constants {
     public static final String BASE_URL = "https://pioneers.uniks.de";
 
     public static final String API_V1_PREFIX = "/api/v1";
+    public static final String WS_V1_PREFIX = "/ws/v1";
+    public static final String EVENTS_AUTH_TOKEN = "/events?authToken=";
 
     public static final String LOGIN_URL = BASE_URL + API_V1_PREFIX + "/auth/login";
     public static final String SIGN_UP_URL = BASE_URL + API_V1_PREFIX + "/users";
