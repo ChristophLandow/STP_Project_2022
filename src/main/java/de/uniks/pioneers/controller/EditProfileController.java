@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
+import de.uniks.pioneers.controller.subcontroller.EditAvatarSpinnerController;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.core.Observable;
@@ -81,7 +82,8 @@ public class EditProfileController implements Controller {
                 .subscribe(user -> this.usernameLabel.setText(user.name()));
 
         // Spinner Code
-        AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
+        EditAvatarSpinnerController spinnerValueFactory = new EditAvatarSpinnerController(this::updateAvatarString);
+        spinnerValueFactory.setUserService(this.userService);
         spinnerValueFactory.init(avatarImage);
         chooseAvatarSpinner.setValueFactory(spinnerValueFactory);
 
@@ -95,6 +97,7 @@ public class EditProfileController implements Controller {
 
     public void edit(ActionEvent event) {
         String newUsername = this.newUsernameInput.getText();
+        String newAvatar = this.avatarImage.getImage().getUrl();
 
         // set new username null if there is no input
         if (newUsername.isEmpty()) {
@@ -102,7 +105,7 @@ public class EditProfileController implements Controller {
         }
 
         // send patch request to server
-        this.userService.editProfile(newUsername, null, null)
+        this.userService.editProfile(newUsername, newAvatar, null)
                 .observeOn(FX_SCHEDULER)
                 .doOnError(e -> this.usernameStatusText.setText("Username already taken. Choose another one!"))
                 .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
