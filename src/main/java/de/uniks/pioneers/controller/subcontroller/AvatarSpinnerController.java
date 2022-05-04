@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
 
     private Map<Integer, Pair<Image,String>> images = new LinkedHashMap<>();
-    private ImageView avatarImageView;
+    protected ImageView avatarImageView;
     public Consumer<String> changeAvatar;
 
     public AvatarSpinnerController(Consumer<String> changeAvatar) {
@@ -63,6 +63,10 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
 
         this.avatarImageView = avatarImageView;
 
+        this.initImageView();
+    }
+
+    protected void initImageView() {
         setValue(1);
         Pair <Image,String> pair = images.get(1);
         avatarImageView.setImage(pair.getKey());
