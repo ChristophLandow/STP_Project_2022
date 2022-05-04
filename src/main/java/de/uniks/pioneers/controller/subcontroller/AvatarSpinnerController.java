@@ -75,7 +75,7 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
 
     @Override
     public void decrement(int steps) {
-        if (getValue() == 1) {
+        if (getValue() <= 1) {
             setValue(10);
         } else {
             int oldValue = getValue();

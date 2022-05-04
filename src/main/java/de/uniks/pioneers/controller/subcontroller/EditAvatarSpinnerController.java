@@ -2,9 +2,6 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.services.UserService;
 import javafx.scene.image.Image;
-import javafx.util.Pair;
-
-import java.util.Base64;
 import java.util.function.Consumer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
