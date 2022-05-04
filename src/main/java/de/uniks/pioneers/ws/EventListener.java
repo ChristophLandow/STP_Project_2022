@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.websocket.ClientEndpoint;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -24,7 +24,8 @@ public class EventListener {
 
     private final TokenStorage tokenStorage;
     private final ObjectMapper mapper;
-    private WebsocketClient endpoint;
+    public ClientEndpoint endpoint;
+
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
@@ -37,7 +38,7 @@ public class EventListener {
             return;
         }
         try {
-            endpoint = new WebsocketClient(
+            endpoint = new ClientEndpoint(
                     new URI(BASE_URL + WS_V1_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getToken()));
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -79,14 +80,14 @@ public class EventListener {
         send(Map.of("Event","unsubscribe","Data",pattern));
         endpoint.removeMessageHandler(handler);
         if (!endpoint.hasMessageHandlers()){
-            close();
+            //close();
         }
     }
 
     private void close() {
         if (endpoint !=null){
             try {
-                endpoint.stop();
+                //endpoint.stop();
                 endpoint=null;
             } catch (Exception e) {
                 e.printStackTrace();
