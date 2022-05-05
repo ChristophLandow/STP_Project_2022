@@ -6,8 +6,8 @@
 
 <HBox fx:id="root" maxHeight="30.0" minHeight="30.0" onMouseClicked="#onMouseClicked" onMouseEntered="#showGameInfo" prefHeight="30.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.GameListElementController">
    <children>
-      <TextField fx:id="creationTime" editable="false" maxHeight="30.0" maxWidth="60.0" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0" text="14:32:24" />
-      <TextField fx:id="title" editable="false" maxHeight="30.0" maxWidth="180.0" minHeight="30.0" minWidth="180.0" onMouseEntered="#showGameInfo" onMouseExited="#disableGameInfo" prefHeight="30.0" prefWidth="180.0" text="teamHtestGame" />
-      <TextField fx:id="memberCount" alignment="CENTER" editable="false" maxHeight="30.0" maxWidth="40.0" minHeight="30.0" minWidth="40.0" prefHeight="30.0" prefWidth="40.0" text="1/4" />
+      <TextField fx:id="creationTime" editable="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="63.0" text="14:32:24" />
+      <TextField fx:id="title" editable="false" maxHeight="30.0" minHeight="30.0" onMouseEntered="#showGameInfo" onMouseExited="#disableGameInfo" prefHeight="30.0" text="teamHtestGame" />
+      <TextField fx:id="memberCount" alignment="CENTER" editable="false" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="49.0" text="1/4" />
    </children>
 </HBox>

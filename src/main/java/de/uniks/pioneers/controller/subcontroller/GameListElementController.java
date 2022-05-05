@@ -22,6 +22,9 @@ public class GameListElementController {
 
     private Game game;
 
+    public Game getGame() {
+        return game;
+    }
 
     public void getOrCreateGame(Game game) {
         this.game = game;

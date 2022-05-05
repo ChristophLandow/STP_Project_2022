@@ -116,7 +116,8 @@ public class LobbyScreenController implements Controller {
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getList().forEach(this::renderItem);
+                //c.getList().forEach(this::renderItem);
+                c.getAddedSubList().forEach(this::renderItem);
             }
         });
 
@@ -152,9 +153,8 @@ public class LobbyScreenController implements Controller {
         eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                    // i gona change this code, when there is nothing else to do
+                    // i gona change this code, when there is nothing else to do, add a map with regex
                     if (gameEvent.event().endsWith(".created")){
-                        renderItem(gameEvent.data());
                         games.add(gameEvent.data());
                     }else if (gameEvent.event().endsWith(".updated")){
                         updateGame(gameEvent.data());
@@ -176,6 +176,9 @@ public class LobbyScreenController implements Controller {
         Game toUpdate  = games.stream().filter(game -> game._id().equals(data._id())).findAny().get();
         toUpdate=data;
         //rerender
+        GameListElementController gameListElementController = gameListElementControllers.stream().
+                filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
+        gameListElementController.getOrCreateGame(data);
     }
 
 
@@ -233,7 +236,7 @@ public class LobbyScreenController implements Controller {
         lobbyService.createGame()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
-                    System.out.println(game.name());
+                    //System.out.println(game.name());
                 });
     }
 }
