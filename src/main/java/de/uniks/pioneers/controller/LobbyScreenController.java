@@ -131,9 +131,7 @@ public class LobbyScreenController implements Controller {
 
         eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(gameEvent -> {
-                    System.out.println(gameEvent.data().toString());
-                });
+                .subscribe(gameEvent -> System.out.println(gameEvent.data().toString()));
 
     }
 
@@ -196,7 +194,7 @@ public class LobbyScreenController implements Controller {
         Label chatWithUserid = (Label) newChatUserParent.getChildren().get(2);
 
         this.messageService.getchatUserList().removeIf(u->u.name().equals(chatWithUsername.getText()));
-        this.messageService.getchatUserList().add(new User(chatWithUserid.getText(), chatWithUsername.getText(),"",""));
+        this.messageService.addUserToChatUserList(new User(chatWithUserid.getText(), chatWithUsername.getText(),"",""));
         app.show(chatControllerProvider.get());
     }
 
