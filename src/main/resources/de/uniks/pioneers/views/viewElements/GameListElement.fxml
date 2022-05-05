@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="creationTime" maxHeight="30.0" maxWidth="60.0" minHeight="30.0" minWidth="60.0" prefHeight="30.0" prefWidth="60.0" text="14:32:24" />
+      <TextField fx:id="title" maxHeight="30.0" maxWidth="180.0" minHeight="30.0" minWidth="180.0" prefHeight="30.0" prefWidth="180.0" text="teamHtestGame" />
+      <TextField fx:id="memberCount" alignment="CENTER" maxHeight="30.0" maxWidth="40.0" minHeight="30.0" minWidth="40.0" prefHeight="30.0" prefWidth="40.0" text="1/4" />
+   </children>
+</HBox>
