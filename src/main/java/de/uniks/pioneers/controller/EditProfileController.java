@@ -97,7 +97,11 @@ public class EditProfileController implements Controller {
 
     public void edit(ActionEvent event) {
         String newUsername = this.newUsernameInput.getText();
-        String newAvatar = this.avatarImage.getImage().getUrl();
+        String newAvatar = null;
+
+        if (this.avatarImage.getImage() != null) {
+            newAvatar = this.avatarImage.getImage().getUrl();
+        }
 
         // set new username null if there is no input
         if (newUsername.isEmpty()) {
