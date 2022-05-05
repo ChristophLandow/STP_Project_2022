@@ -57,6 +57,8 @@ public class SignUpScreenController implements Controller{
     @FXML
     public Button buttonReturn;
     @FXML
+    public Button leaveButton;
+    @FXML
     public Text userNameStatusText;
     @FXML
     public Text passwordStatusText;
@@ -84,7 +86,7 @@ public class SignUpScreenController implements Controller{
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
 
-        //Spinner Code
+        // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);
         avatarSelector.setValueFactory(spinnerValueFactory);
@@ -213,5 +215,9 @@ public class SignUpScreenController implements Controller{
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
         loginController.userName.set(textFieldUserName.getText());
         this.app.show(loginController);
+    }
+
+    private void leave(ActionEvent actionEvent) {
+        this.app.show(loginScreenControllerProvider.get());
     }
 }

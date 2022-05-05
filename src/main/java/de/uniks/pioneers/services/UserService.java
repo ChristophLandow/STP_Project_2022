@@ -5,19 +5,16 @@ import de.uniks.pioneers.dto.UpdateUserDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.control.Alert;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.util.function.Consumer;
+import javax.inject.Singleton;
+import java.util.List;
 
+@Singleton
 public class UserService {
 
     private final UserApiService userApiService;
-    private User currentUser;
+    private String currentUserId;
 
     @Inject
     public UserService(UserApiService userApiService) {
@@ -25,27 +22,24 @@ public class UserService {
         this.userApiService = userApiService;
     }
     public Observable<User> register(String userName,String avatar, String password) {
-
         return userApiService.create(new CreateUserDto(userName, avatar, password));
     }
-    public void editProfile(String name, String password, String avatar, Consumer<Response<User>> responseConsumer) {
-        userApiService.update(new UpdateUserDto(name, avatar, password)).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                responseConsumer.accept(response);
-            }
+    public Observable<User> editProfile(String name, String avatar, String password) {
+        return userApiService.update(this.currentUserId, new UpdateUserDto(name, avatar, password));
+    }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+    public Observable<User> getCurrentUser() {
+        return this.userApiService.getUser(this.currentUserId);
     }
-    public User getCurrentUser() {
-        return currentUser;
+
+    public void setCurrentUserId(String id) {
+        this.currentUserId = id;
     }
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+    public String getCurrentUserId() {
+        return this.currentUserId;
+    }
+    public Observable<List<User>> findAll() {
+        return this.userApiService.findAll();
     }
 }
 

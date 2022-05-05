@@ -49,7 +49,6 @@ public class LoginScreenController implements Controller {
     @FXML
     public Text textRules;
 
-
     @Inject
     public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
         this.app = app;
@@ -125,9 +124,11 @@ public class LoginScreenController implements Controller {
 
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
     }
+
     @Override
     public void stop() {
     }
+
     public void login(ActionEvent event) {
 
         this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
@@ -151,8 +152,6 @@ public class LoginScreenController implements Controller {
 
     }
 
-
-
     public void rememberMe(MouseEvent mouseEvent) {
     }
 
@@ -170,6 +169,6 @@ public class LoginScreenController implements Controller {
     }
 
     public void toLobby() {
-        System.out.println("toLobby");
+        this.app.show(lobbyScreenControllerProvider.get());
     }
 }
