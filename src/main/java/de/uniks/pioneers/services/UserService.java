@@ -5,7 +5,6 @@ import de.uniks.pioneers.dto.UpdateUserDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,6 +36,10 @@ public class UserService {
 
     public void setCurrentUserId(String id) {
         this.currentUserId = id;
+    }
+
+    public String getCurrentUserId() {
+        return this.currentUserId;
     }
 
     public Observable<List<User>> findAll() {
