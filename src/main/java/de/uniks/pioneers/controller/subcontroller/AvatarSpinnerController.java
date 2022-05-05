@@ -4,7 +4,6 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Pair;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -72,7 +71,6 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
     }
-
     @Override
     public void decrement(int steps) {
         if (getValue() <= 1) {
@@ -85,7 +83,6 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
     }
-
     @Override
     public void increment(int steps) {
         if (getValue() == 10) {
@@ -98,6 +95,4 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
     }
-
-
 }

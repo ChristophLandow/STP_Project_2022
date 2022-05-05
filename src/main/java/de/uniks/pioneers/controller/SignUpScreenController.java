@@ -17,13 +17,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -53,18 +55,23 @@ public class SignUpScreenController implements Controller{
     @FXML
     public Button buttonRegister;
     @FXML
+    public Button buttonReturn;
+    @FXML
     public Button leaveButton;
     @FXML
     public Text userNameStatusText;
     @FXML
     public Text passwordStatusText;
 
+    @FXML
+    public Text avatarStatusText;
+
     private final App app;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final UserService userService;
 
     private String avatar;
-
+    private String customAvatar = "";
 
     @Inject
     public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider,App app) {
@@ -83,10 +90,6 @@ public class SignUpScreenController implements Controller{
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);
         avatarSelector.setValueFactory(spinnerValueFactory);
-
-        // set action event for leave button
-        this.leaveButton.setOnAction(this::leave);
-
     }
 
     @Override
@@ -102,17 +105,21 @@ public class SignUpScreenController implements Controller{
             passwordField.textProperty().bindBidirectional(password);
 
 
-            //Bindings displaying status information on password validity. Password length takes precedent over math with confirmation field.
+            //Bindings displaying status information on password validity. Password length takes precedent over match with confirmation field.
             final IntegerBinding userNameLength = Bindings.length(textFieldUserName.textProperty());
 
             final IntegerBinding passwordLength = Bindings.length(passwordField.textProperty());
+            final BooleanBinding avatarInvalid = Bindings.length(this.avatarStatusText.textProperty()).greaterThan(0);
             final BooleanBinding passwordMatch = Bindings.equal(passwordField.textProperty(), passwordFieldConfirmation.textProperty());
             passwordStatusText.textProperty().bind(Bindings
                     .when(passwordLength.greaterThan(7)).then(Bindings.when(passwordMatch).then("")
                             .otherwise("Passwords do not match")).otherwise("Password must be at least 8 characters long"));
 
-            buttonRegister.disableProperty().bind(passwordMatch.not().or(passwordLength.greaterThan(7).not().or(userNameLength.greaterThan(0).not())));
-
+            buttonRegister.disableProperty().bind(
+                    passwordMatch.not()
+                            .or(passwordLength.greaterThan(7).not()
+                                    .or(userNameLength.greaterThan(0).not()
+                                            .or(avatarInvalid))));
 
             this.textFieldUserName.setOnMouseClicked(this::resetStatus);
 
@@ -123,30 +130,55 @@ public class SignUpScreenController implements Controller{
             return null;
         }
     }
-
     @Override
     public void stop() {
     }
 
-
     private void updateAvatarString(String newAvatar){
-        avatar = newAvatar;
-    }
 
-    public void uploadAvatar(MouseEvent mouseEvent) {
+        avatar = newAvatar;
+        resetAvatar();
+    }
+    public void uploadAvatar(ActionEvent actionEvent) throws IOException {
+
+        resetAvatar();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Choose Avatar", "*.PNG", "*.jpg"));
+        File avatarURL = fileChooser.showOpenDialog(null);
+        byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
+        String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+
+        Image image = new Image(avatarURL.getAbsolutePath());
+        this.imageViewAvatar.setImage(image);
+
+        if(avatarB64.length() > AVATAR_CHAR_LIMIT){
+            this.avatarStatusText.setText("Image exceeds file size limit");
+        }else{
+            this.customAvatar = avatarB64;
+        }
+
+        System.out.println(avatarB64.length());
     }
 
     private void resetStatus(MouseEvent mouseEvent) {
 
         this.userNameStatusText.setText("");
     }
+    private void resetAvatar() {
 
+        this.avatarStatusText.setText("");
+        this.customAvatar = "";
+    }
     public void register(ActionEvent actionEvent) throws IOException, URISyntaxException {
 
-        getClass().getResource("subcontroller/" + avatar);
-        byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatar).toURI()));
+        String avatarB64 = customAvatar;
+        if(customAvatar.equals("")){
 
-        String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+            getClass().getResource("subcontroller/" + avatar);
+            byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatar).toURI()));
+            avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+        }
 
         this.userService.register(this.textFieldUserName.getText(), avatarB64, this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)
@@ -155,28 +187,19 @@ public class SignUpScreenController implements Controller{
                 .subscribe(new Observer<>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-
                     }
-
                     @Override
                     public void onNext(@NonNull User user) {
-
                     }
-
                     @Override
                     public void onError(@NonNull Throwable e) {
                         System.out.println(e.getMessage());
-
                     }
-
                     @Override
                     public void onComplete() {
-
                     }
                 });
-
     }
-
     private void registrationComplete(){
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -186,15 +209,11 @@ public class SignUpScreenController implements Controller{
 
         alert.showAndWait();
         toLogin(new ActionEvent());
-
     }
-
     public void toLogin(ActionEvent actionEvent) {
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
-
         loginController.userName.set(textFieldUserName.getText());
-
         this.app.show(loginController);
     }
 

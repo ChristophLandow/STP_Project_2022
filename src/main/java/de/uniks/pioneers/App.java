@@ -1,9 +1,6 @@
 package de.uniks.pioneers;
 
 import de.uniks.pioneers.controller.Controller;
-import de.uniks.pioneers.controller.LoginScreenController;
-import de.uniks.pioneers.services.LoginService;
-import de.uniks.pioneers.services.UserService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -15,13 +12,21 @@ public class App extends Application {
     private Stage stage;
     private Controller controller;
 
+    public App(){
 
+        MainComponent mainComponent = DaggerMainComponent.builder().mainApp(this).build();
+        this.controller = mainComponent.loginController();
+    }
+    public App(Controller controller){
+
+        this.controller = controller;
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
-        MainComponent mainComponent = DaggerMainComponent.builder().mainApp(this).build();
+
         this.stage = primaryStage;
         stage.setTitle(LOGIN_SCREEN_TITLE);
-        show(mainComponent.loginController());
+        show(this.controller);
         stage.show();
     }
 
