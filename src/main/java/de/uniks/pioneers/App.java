@@ -23,7 +23,7 @@ public class App extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
-        MainComponent mainComponent = DaggerMainComponent.builder().mainApp(this).build();
+
         this.stage = primaryStage;
         stage.setTitle(LOGIN_SCREEN_TITLE);
         show(this.controller);
