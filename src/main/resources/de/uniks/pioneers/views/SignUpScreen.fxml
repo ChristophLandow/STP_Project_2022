@@ -29,4 +29,9 @@
    <Text fx:id="userNameStatusText" fill="RED" layoutX="189.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="235.0" />
    <Text fx:id="passwordStatusText" fill="RED" layoutX="190.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="235.0" />
    <Text fx:id="avatarStatusText" fill="RED" layoutX="270.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="235.0" />
+   <Button fx:id="buttonReturn" layoutX="54.0" layoutY="328.0" mnemonicParsing="false" onAction="#toLogin" prefHeight="33.0" prefWidth="82.0" text="Return">
+      <font>
+         <Font size="16.0" />
+      </font>
+   </Button>
 </Pane>

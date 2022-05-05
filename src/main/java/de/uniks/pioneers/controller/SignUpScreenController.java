@@ -55,6 +55,8 @@ public class SignUpScreenController implements Controller{
     @FXML
     public Button buttonRegister;
     @FXML
+    public Button buttonReturn;
+    @FXML
     public Text userNameStatusText;
     @FXML
     public Text passwordStatusText;
@@ -148,7 +150,7 @@ public class SignUpScreenController implements Controller{
         Image image = new Image(avatarURL.getAbsolutePath());
         this.imageViewAvatar.setImage(image);
 
-        if(avatarB64.length() > 16384){
+        if(avatarB64.length() > AVATAR_CHAR_LIMIT){
             this.avatarStatusText.setText("Image exceeds file size limit");
         }else{
             this.customAvatar = avatarB64;
