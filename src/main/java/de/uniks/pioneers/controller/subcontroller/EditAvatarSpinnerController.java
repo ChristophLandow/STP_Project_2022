@@ -28,8 +28,6 @@ public class EditAvatarSpinnerController extends AvatarSpinnerController {
                     } else {
                         avatarImageView.setImage(null);
                     }
-                    String decodedAvatar = Base64.getDecoder().decode(user.avatar()).toString();
-                    changeAvatar.accept(decodedAvatar.toString());
                 });
     }
 
