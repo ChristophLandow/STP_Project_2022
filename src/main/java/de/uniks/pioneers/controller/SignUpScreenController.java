@@ -198,7 +198,7 @@ public class SignUpScreenController implements Controller{
         this.app.show(loginController);
     }
 
-    private void leave(ActionEvent actionEvent) {
+    public void leave(ActionEvent actionEvent) {
         this.app.show(loginScreenControllerProvider.get());
     }
 }

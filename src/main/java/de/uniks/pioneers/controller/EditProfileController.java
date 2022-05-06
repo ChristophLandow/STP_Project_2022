@@ -2,16 +2,9 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.EditAvatarSpinnerController;
-import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -27,7 +20,10 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import java.util.concurrent.Executor;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
 
 import static de.uniks.pioneers.Constants.EDIT_PROFILE_SCREEN_TITLE;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -47,7 +43,7 @@ public class EditProfileController implements Controller {
     @FXML public Text oldPasswordStatusText;
 
     private App app;
-    private UserService userService;
+    private final UserService userService;
     private LoginService loginService;
     private Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private String avatarStr;
@@ -78,7 +74,7 @@ public class EditProfileController implements Controller {
                     .when(passwordLength.greaterThan(7)).then(Bindings.when(passwordMatch).then("")
                             .otherwise("Passwords do not match")).otherwise("Password must be at least 8 characters long"));
 
-            this.saveLeaveButton.disableProperty().bind(oldPasswordEmpty.or(passwordMatch.not()).or(passwordLength.greaterThan(7).not()));
+            // this.saveLeaveButton.disableProperty().bind(oldPasswordEmpty.or(passwordMatch.not()).or(passwordLength.greaterThan(7).not()));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,45 +87,47 @@ public class EditProfileController implements Controller {
     public void init() {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
 
-        // set action event for save button
-        this.saveLeaveButton.setOnAction(this::edit);
-
         // get currentUser from Server and display name
         this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(user -> this.usernameLabel.setText(user.name()));
+                .subscribe(user -> {
+                    this.usernameLabel.setText(user.name());
+                });
 
         // Spinner Code
         EditAvatarSpinnerController spinnerValueFactory = new EditAvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.setUserService(this.userService);
         spinnerValueFactory.init(avatarImage);
         chooseAvatarSpinner.setValueFactory(spinnerValueFactory);
-
-        // add action event
-        saveLeaveButton.setOnAction(this::edit);
     }
 
     @Override
     public void stop() {
     }
 
-    public void edit(ActionEvent event) {
-        String newUsername = this.newUsernameInput.getText();
-        String newAvatar = null;
+    public void edit(ActionEvent event) throws URISyntaxException, IOException {
+        // set defaults
+        String newUsername = null;
+        String newAvatar = this.avatarImage.getImage().getUrl();
 
-        if (this.avatarImage.getImage() != null) {
-            newAvatar = this.avatarImage.getImage().getUrl();
+        if ((Integer) chooseAvatarSpinner.getValue() > 0) {
+            getClass().getResource("subcontroller/" + avatarStr);
+            byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatarStr).toURI()));
+            newAvatar = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
         }
 
-        // set new username null if there is no input
-        if (newUsername.isEmpty()) {
-            newUsername = null;
+        // set new username if input not empty
+        if (!newUsernameInput.getText().isEmpty()) {
+            newUsername = newUsernameInput.getText();
         }
 
         // send patch request to server
         this.userService.editProfile(newUsername, newAvatar, null)
                 .observeOn(FX_SCHEDULER)
-                .doOnError(e -> this.usernameStatusText.setText("Username already taken. Choose another one!"))
+                .doOnError(e -> {
+                    this.usernameStatusText.setText("Username already taken. Choose another one!");
+                    e.printStackTrace();
+                })
                 .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
 
     }

@@ -28,7 +28,7 @@
    </Button>
    <Text fx:id="userNameStatusText" fill="RED" layoutX="189.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="235.0" />
    <Text fx:id="passwordStatusText" fill="RED" layoutX="190.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="235.0" />
-   <Button fx:id="leaveButton" layoutX="189.0" layoutY="317.0" mnemonicParsing="false" onAction="#register" prefHeight="0.0" prefWidth="108.0" text="Leave" textAlignment="CENTER">
+   <Button fx:id="leaveButton" layoutX="189.0" layoutY="317.0" mnemonicParsing="false" onAction="#leave" prefHeight="0.0" prefWidth="108.0" text="Leave" textAlignment="CENTER">
       <font>
          <Font size="20.0" />
       </font>
