@@ -25,7 +25,7 @@ public class UserService {
         return userApiService.create(new CreateUserDto(userName, avatar, password));
     }
     public Observable<User> editProfile(String name, String avatar, String password) {
-        return userApiService.update(this.currentUserId, new UpdateUserDto(name, avatar, password));
+        return userApiService.update(this.currentUserId, new UpdateUserDto(name, avatar, password, "online"));
     }
 
     public Observable<User> getCurrentUser() {
