@@ -323,6 +323,9 @@ public class LobbyScreenController implements Controller {
         this.messageService.getchatUserList().clear();
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
+        // set status offline after logout (leaving lobby)
+        userService.editProfile(null, null, null, "offline")
+                .subscribe();
         app.show(loginScreenControllerProvider.get());
     }
 
