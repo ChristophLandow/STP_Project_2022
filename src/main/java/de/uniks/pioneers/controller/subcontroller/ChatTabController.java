@@ -3,18 +3,13 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
-import javafx.application.Platform;
-import javafx.event.Event;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
-
-import javax.inject.Inject;
 
 import java.util.ArrayList;
 
@@ -27,18 +22,20 @@ public class ChatTabController {
     public User chattingWith;
     public User currentUser;
 
-    private final MessageService messageService;
+    public String groupId;
+
     private final UserService userService;
+    private final GroupService groupService;
     private final ChatController chatController;
 
     private ArrayList<ChatMessage> chatMessages = new ArrayList<>();
 
-    public ChatTabController(ChatController chatController, MessageService messageService, UserService userService, TabPane chatTabPane, User chattingWith){
+    public ChatTabController(ChatController chatController, MessageService messageService, UserService userService, TabPane chatTabPane, User chattingWith, GroupService groupService){
         this.chatController = chatController;
-        this.messageService = messageService;
         this.userService = userService;
         this.chatTabPane = chatTabPane;
         this.chattingWith = chattingWith;
+        this.groupService = groupService;
     }
 
     public void init(){
@@ -61,6 +58,7 @@ public class ChatTabController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     currentUser = user;
+                    getOrCreateGroup();
                     //renderMessage(new MessageDto("","", "", "Me", "Test test test test"));
                     //renderMessage(new MessageDto("","", "", chattingWith.name(), "Test test"));
                 });
@@ -77,6 +75,22 @@ public class ChatTabController {
 
         newMessage.init();
         chatMessages.add(newMessage);
+    }
+
+    public void getOrCreateGroup() {
+        groupService.getGroupsWithUser(chattingWith._id())
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe(res -> {
+                    if (res.size() != 0 && res.get(0) != null && res.get(0)._id() != null) {
+                        groupId = res.get(0)._id();
+                    } else {
+                        groupService.createNewGroupWithOtherUser(chattingWith._id())
+                                .observeOn(FX_SCHEDULER)
+                                .doOnError(Throwable::printStackTrace)
+                                .subscribe(result -> groupId= result._id(), Throwable::printStackTrace);
+                    }
+                }, Throwable::printStackTrace);
     }
 
 

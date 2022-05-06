@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -26,10 +25,8 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class ChatController implements Controller {
     private final App app;
     private final MessageService messageService;
-    private final GroupService groupService;
     private final UserService userService;
-    private String currentOpenChat;
-    private String currentGroupid;
+    private final GroupService groupService;
 
     @FXML public Button sendButton;
     @FXML public Button leaveButton;
@@ -40,10 +37,11 @@ public class ChatController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
 
     private final ArrayList<ChatTabController> chatTabControllers = new ArrayList<>();
+    private String currentGroupId;
 
     @Inject
-    public ChatController(App app, MessageService messageService, GroupService groupService, UserService userService,
-                          Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+    public ChatController(App app, MessageService messageService, UserService userService,
+                          GroupService groupService, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
         this.app = app;
         this.messageService = messageService;
         this.userService = userService;
@@ -83,13 +81,10 @@ public class ChatController implements Controller {
     }
 
     public void addTab(User user){
-        ChatTabController newChatController = new ChatTabController(this, this.messageService, this.userService, this.chatTabPane, user);
+        ChatTabController newChatController = new ChatTabController(this, this.messageService, this.userService, this.chatTabPane, user, groupService);
         newChatController.init();
 
         this.chatTabControllers.add(newChatController);
-
-        this.currentOpenChat = this.chatTabPane.getSelectionModel().getSelectedItem().getText();
-        getOrCreateGroup();
     }
 
     public void removeTab(Event event){
@@ -104,29 +99,19 @@ public class ChatController implements Controller {
     }
 
     public void send(ActionEvent event) {
+        Tab open = chatTabPane.getSelectionModel().getSelectedItem();
+        for (ChatTabController chatTabController : chatTabControllers) {
+            if (chatTabController.chattingWith.name().equals(open.getText())) {
+                currentGroupId = chatTabController.groupId;
+            }
+        }
         String message = this.messageTextField.getText();
         if (!message.equals("")) {
-            messageService.sendMessageToGroup(currentGroupid, new CreateMessageDto(message))
+            messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
-                    .subscribe(result -> System.out.println("Message an: " + result._id() + ":" + result.body()));
+                    .subscribe(result -> System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body()));
         }
     }
 
-    public void getOrCreateGroup() {
-        String currentUserId = messageService.getUserIdByName(currentOpenChat);
-        groupService.getGroupsWithUser(currentUserId)
-                .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe(res -> {
-                    if (res.size() != 0 && res.get(0) != null && res.get(0)._id() != null) {
-                        currentGroupid = res.get(0)._id();
-                    } else {
-                        groupService.createNewGroupWithOtherUser(currentUserId)
-                                .observeOn(FX_SCHEDULER)
-                                .doOnError(Throwable::printStackTrace)
-                                .subscribe(result -> currentGroupid= result._id(), Throwable::printStackTrace);
-                    }
-                }, Throwable::printStackTrace);
-    }
 }
