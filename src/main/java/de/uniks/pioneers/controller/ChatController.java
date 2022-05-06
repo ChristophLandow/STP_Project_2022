@@ -7,6 +7,7 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.ws.EventListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -27,6 +28,7 @@ public class ChatController implements Controller {
     private final MessageService messageService;
     private final UserService userService;
     private final GroupService groupService;
+    private final EventListener eventListener;
 
     @FXML public Button sendButton;
     @FXML public Button leaveButton;
@@ -40,12 +42,13 @@ public class ChatController implements Controller {
     private String currentGroupId;
 
     @Inject
-    public ChatController(App app, MessageService messageService, UserService userService,
+    public ChatController(App app, MessageService messageService, UserService userService, EventListener eventListener,
                           GroupService groupService, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
         this.app = app;
         this.messageService = messageService;
         this.userService = userService;
         this.groupService = groupService;
+        this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
@@ -81,8 +84,8 @@ public class ChatController implements Controller {
     }
 
     public void addTab(User user){
-        ChatTabController newChatController = new ChatTabController(this, this.messageService, this.userService, this.chatTabPane, user, groupService);
-        newChatController.init();
+        ChatTabController newChatController = new ChatTabController(this, this.messageService, this.userService, this.groupService, this.chatTabPane, user, this.eventListener);
+        newChatController.render();
 
         this.chatTabControllers.add(newChatController);
     }

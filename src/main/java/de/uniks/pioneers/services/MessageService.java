@@ -6,6 +6,7 @@ import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,6 +35,10 @@ public class MessageService {
 
     public Observable<MessageDto> sendMessageToGroup(String id, CreateMessageDto dto) {
         return messageApiService.sendMessage("groups", id, dto);
+    }
+
+    public Observable<List<MessageDto>> getChatMessages(String id){
+        return messageApiService.getChatMessages("groups", id);
     }
 
     public String getUserIdByName(String username) {
