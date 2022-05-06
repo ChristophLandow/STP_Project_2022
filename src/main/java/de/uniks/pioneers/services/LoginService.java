@@ -5,6 +5,7 @@ import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.rest.AuthApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
+import java.io.IOException;
 
 public class LoginService {
     private final AuthApiService authApiService;
@@ -24,5 +25,15 @@ public class LoginService {
                     tokenStorage.setToken(result.accessToken());
                     userService.setCurrentUserId(result._id());
                 });
+    }
+
+    public LoginResult checkPassword(String username, String password) {
+        LoginResult body;
+        try {
+            body = authApiService.checkPassword(new LoginDto(username, password)).execute().body();
+        } catch (IOException e) {
+            return null;
+        }
+        return body;
     }
 }
