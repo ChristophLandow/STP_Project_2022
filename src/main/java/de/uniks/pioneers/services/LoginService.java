@@ -2,13 +2,9 @@ package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.LoginDto;
 import de.uniks.pioneers.model.LoginResult;
-import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.AuthApiService;
 import io.reactivex.rxjava3.core.Observable;
-
-
 import javax.inject.Inject;
-
 
 public class LoginService {
     private final AuthApiService authApiService;
@@ -26,7 +22,7 @@ public class LoginService {
         return authApiService.login(new LoginDto(userName, password))
                 .doOnNext(result -> {
                     tokenStorage.setToken(result.accessToken());
-                    userService.setCurrentUser(new User(result._id(), result.name(), result.status(), result.avatar()));
+                    userService.setCurrentUserId(result._id());
                 });
     }
 }

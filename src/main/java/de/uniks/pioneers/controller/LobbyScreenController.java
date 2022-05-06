@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
@@ -14,7 +13,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,6 +65,7 @@ public class LobbyScreenController implements Controller {
     private final EventListener eventListener;
     private final LobbyService lobbyService;
     private final UserService userService;
+    private final MessageService messageService;
 
     // List with games from Server
     private final ObservableList<Game> games = FXCollections.observableArrayList();
@@ -85,6 +84,7 @@ public class LobbyScreenController implements Controller {
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
         this.userService = userService;
+        this.messageService = messageService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
@@ -103,13 +103,24 @@ public class LobbyScreenController implements Controller {
         }
         this.EditProfileButton.setOnAction(this::editProfile);
 
-        this.UsernameLabel.setText(this.userService.getCurrentUser().name());
+        // get current user from server and display name and avatar
+        this.userService.getCurrentUser()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(user -> {
+                    this.UsernameLabel.setText(user.name());
+                    if (user.avatar() != null) {
+                        this.AvatarImageView.setImage(new Image(user.avatar()));
+                    } else {
+                        this.AvatarImageView.setImage(null);
+                    }
+                });
+
         this.UsersVBox.getChildren().clear();
 
         List<User> users = lobbyService.userList();
         for (User user : users) {
-            if (!user.name().equals(this.username.get())) {
-                renderUserlist(user);
+            if (!user.name().equals(this.UsernameLabel.getText())) {
+                renderUser(user);
             }
         }
 
@@ -122,6 +133,10 @@ public class LobbyScreenController implements Controller {
         });
 
         return parent;
+    }
+
+    @Override
+    public void stop(){
     }
 
     private void renderItem(Game game) {
@@ -141,7 +156,7 @@ public class LobbyScreenController implements Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
     }
 
     @Override
@@ -186,25 +201,35 @@ public class LobbyScreenController implements Controller {
     public void stop(){
     }
 
-    public void renderUserlist(User user){
-        GridPane gridPane = new GridPane();
 
-        Label username = new Label(user.name());
-        username.setOnMouseClicked(this::openChat);
+    public void renderUser(User user){
+        if(!user.name().equals(UsernameLabel.getText())) {
+            GridPane gridPane = new GridPane();
 
-        ImageView imgView = new ImageView(new Image(Main.class.getResource("question_mark_icon.jpg").toString()));
-        imgView.setFitHeight(40);
-        imgView.setFitWidth(40);
+            Label username = new Label(user.name());
+            username.setOnMouseClicked(this::openChat);
 
-        Label userid = new Label(user._id());
-        userid.setVisible(false);
-        userid.setFont(new Font(0));
+            ImageView imgView;
+            try {
+                imgView = new ImageView(new Image(user.avatar()));
+            } catch (NullPointerException e) {
+                imgView = new ImageView();
+            }
 
-        gridPane.addRow(0, username, imgView, userid);
+            imgView.setOnMouseClicked(this::openChat);
+            imgView.setFitHeight(40);
+            imgView.setFitWidth(40);
 
-        gridPane.getColumnConstraints().addAll(new ColumnConstraints(140),new ColumnConstraints(45));
+            Label userid = new Label(user._id());
+            userid.setVisible(false);
+            userid.setFont(new Font(0));
 
-        this.UsersVBox.getChildren().add(gridPane);
+            gridPane.addRow(0, username, imgView, userid);
+
+            gridPane.getColumnConstraints().addAll(new ColumnConstraints(140), new ColumnConstraints(45));
+
+            this.UsersVBox.getChildren().add(gridPane);
+        }
     }
 
     public void openChat(MouseEvent event){
@@ -212,13 +237,9 @@ public class LobbyScreenController implements Controller {
         Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
         Label chatWithUserid = (Label) newChatUserParent.getChildren().get(2);
 
-        ChatController chatController = chatControllerProvider.get();
-        chatController.username.set(this.username.get());
-        chatController.userid.set(this.userid.get());
-        chatController.newUsername.set(chatWithUsername.getText());
-        chatController.newUserid.set(chatWithUserid.getText());
-
-        app.show(chatController);
+        this.messageService.getchatUserList().removeIf(u->u.name().equals(chatWithUsername.getText()));
+        this.messageService.addUserToChatUserList(new User(chatWithUserid.getText(), chatWithUsername.getText(),"",""));
+        app.show(chatControllerProvider.get());
     }
 
     public void editProfile(ActionEvent actionEvent) {
@@ -227,6 +248,7 @@ public class LobbyScreenController implements Controller {
 
 
     public void logout(ActionEvent actionEvent) {
+        this.messageService.getchatUserList().clear();
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
         app.show(loginScreenControllerProvider.get());

@@ -4,17 +4,14 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Pair;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-;
-
 public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
 
     private Map<Integer, Pair<Image,String>> images = new LinkedHashMap<>();
-    private ImageView avatarImageView;
+    protected ImageView avatarImageView;
     public Consumer<String> changeAvatar;
 
     public AvatarSpinnerController(Consumer<String> changeAvatar) {
@@ -23,58 +20,60 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
 
     public void init(ImageView avatarImageView) {
 
-        Image image = new Image(getClass().getResource("images/flegmon.png").toString());
-        String flegmonURL = "images/flegmon.png";
-        images.put(1,new Pair<>(image,flegmonURL));
+        String elephantURL = "images/elephant.png";
+        Image image = new Image(getClass().getResource(elephantURL).toString());
+        images.put(1,new Pair<>(image,elephantURL));
 
-        image = new Image(getClass().getResource("images/mew.png").toString());
-        String mewURL = "images/mew.png";
-        images.put(2,new Pair<>(image,mewURL));
+        String giraffeURL = "images/giraffe.png";
+        image = new Image(getClass().getResource(giraffeURL).toString());
+        images.put(2,new Pair<>(image,giraffeURL));
 
-        image = new Image(getClass().getResource("images/enton.png").toString());
-        String entonURL = "images/enton.png";
-        images.put(3,new Pair<>(image,entonURL));
+        String hippoURL = "images/hippo.png";
+        image = new Image(getClass().getResource(hippoURL).toString());
+        images.put(3,new Pair<>(image,hippoURL));
 
-        image = new Image(getClass().getResource("images/gyrados.png").toString());
-        String gyradosURL = "images/gyrados.png";
-        images.put(4,new Pair<>(image,gyradosURL));
+        String monkeyURL = "images/monkey.png";
+        image = new Image(getClass().getResource(monkeyURL).toString());
+        images.put(4,new Pair<>(image,monkeyURL));
 
-        image = new Image(getClass().getResource("images/arkani.png").toString());
-        String arkaniURL = "images/arkani.png";
-        images.put(5,new Pair<>(image,arkaniURL));
+        String pandaURL = "images/panda.png";
+        image = new Image(getClass().getResource(pandaURL).toString());
+        images.put(5,new Pair<>(image,pandaURL));
 
-        image = new Image(getClass().getResource("images/shiggy.png").toString());
-        String shiggyURL = "images/shiggy.png";
-        images.put(6,new Pair<>(image,shiggyURL));
+        String parrotURL = "images/parrot.png";
+        image = new Image(getClass().getResource(parrotURL).toString());
+        images.put(6,new Pair<>(image,parrotURL));
 
-        image = new Image(getClass().getResource("images/pinzor.png").toString());
-        String pinzorURL = "images/pinzor.png";
-        images.put(7,new Pair<>(image,pinzorURL));
+        String penguinURL = "images/penguin.png";
+        image = new Image(getClass().getResource(penguinURL).toString());
+        images.put(7,new Pair<>(image,penguinURL));
 
-        image = new Image(getClass().getResource("images/glurak.png").toString());
-        String glurakURL = "images/glurak.png";
-        images.put(8,new Pair<>(image,glurakURL));
+        String pigURL = "images/pig.png";
+        image = new Image(getClass().getResource(pigURL).toString());
+        images.put(8,new Pair<>(image,pigURL));
 
-        image = new Image(getClass().getResource("images/bisaflor.png").toString());
-        String bisarflorURL = "images/bisaflor.png";
-        images.put(9,new Pair<>(image,bisarflorURL));
+        String rabbitURL = "images/rabbit.png";
+        image = new Image(getClass().getResource(rabbitURL).toString());
+        images.put(9,new Pair<>(image,rabbitURL));
 
-        image = new Image(getClass().getResource("images/bisasam.png").toString());
-        String bisasamURL = "images/bisasam.png";
-        images.put(10,new Pair<>(image,bisasamURL));
+        String snakeURL = "images/snake.png";
+        image = new Image(getClass().getResource(snakeURL).toString());
+        images.put(10,new Pair<>(image,snakeURL));
 
         this.avatarImageView = avatarImageView;
 
+        this.initImageView();
+    }
+
+    protected void initImageView() {
         setValue(1);
         Pair <Image,String> pair = images.get(1);
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
-        ;
     }
-
     @Override
     public void decrement(int steps) {
-        if (getValue() == 1) {
+        if (getValue() <= 1) {
             setValue(10);
         } else {
             int oldValue = getValue();
@@ -84,7 +83,6 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
     }
-
     @Override
     public void increment(int steps) {
         if (getValue() == 10) {
@@ -97,6 +95,4 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
     }
-
-
 }
