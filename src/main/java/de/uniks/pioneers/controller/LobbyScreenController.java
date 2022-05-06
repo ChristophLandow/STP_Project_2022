@@ -168,6 +168,11 @@ public class LobbyScreenController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+
+        // set user online after login (entering lobby)
+        userService.editProfile(null, null, null, "online")
+                .subscribe();
+
         lobbyService.getGames().observeOn(FX_SCHEDULER)
                 .subscribe(this.games::setAll);
 
