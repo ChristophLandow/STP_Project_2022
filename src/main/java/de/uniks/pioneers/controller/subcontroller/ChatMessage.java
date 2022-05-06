@@ -34,7 +34,7 @@ public class ChatMessage {
         try{
             avatarImgView = new ImageView(new Image(this.sender.avatar()));
         }
-        catch(IllegalArgumentException e){
+        catch(IllegalArgumentException | NullPointerException e){
             avatarImgView = new ImageView(new Image(App.class.getResource("user-avatar.svg").toString()));
         }
 

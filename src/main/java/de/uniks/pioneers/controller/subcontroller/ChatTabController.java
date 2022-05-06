@@ -7,6 +7,12 @@ import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -28,7 +34,7 @@ public class ChatTabController {
     public User chattingWith;
     public User currentUser;
 
-    public String groupId;
+    public SimpleStringProperty groupId = new SimpleStringProperty("");
 
     private final UserService userService;
     private final GroupService groupService;
@@ -68,7 +74,7 @@ public class ChatTabController {
         this.messages.addListener((ListChangeListener<? super MessageDto>) c->{
             c.next();
             if(c.wasAdded()){
-                c.getList().forEach(this::renderMessage);
+                c.getAddedSubList().forEach(this::renderMessage);
             }
             else if(c.wasRemoved()){
                 c.getList().forEach(this::deleteMessage);
@@ -84,11 +90,22 @@ public class ChatTabController {
                 });
     }
 
-    public void setupMessageSubscription(){
-        messageService.getChatMessages(groupId).observeOn(FX_SCHEDULER)
+    public void init(){
+        groupId.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!newValue.isEmpty()){
+                    initMessageSubscriber();
+                }
+            }
+        });
+    }
+
+    public void initMessageSubscriber(){
+        messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
                 .subscribe(this.messages::setAll);
 
-        eventListener.listen("groups." + groupId + ".messages.*.*", MessageDto.class)
+        eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(messageEvent -> {
                     final MessageDto message = messageEvent.data();
@@ -125,17 +142,16 @@ public class ChatTabController {
                 .doOnError(Throwable::printStackTrace)
                 .subscribe(res -> {
                     if (res.size() != 0 && res.get(0) != null && res.get(0)._id() != null) {
-                        groupId = res.get(0)._id();
+                        groupId.set(res.get(0)._id());
                     } else {
                         groupService.createNewGroupWithOtherUser(chattingWith._id())
                                 .observeOn(FX_SCHEDULER)
                                 .doOnError(Throwable::printStackTrace)
                                 .subscribe(result -> {
-                                    groupId= result._id();
+                                    groupId.set(result._id());
                                     }, Throwable::printStackTrace
                                 );
                     }
-                    setupMessageSubscription();
                 }, Throwable::printStackTrace);
     }
 

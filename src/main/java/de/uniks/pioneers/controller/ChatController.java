@@ -86,6 +86,7 @@ public class ChatController implements Controller {
     public void addTab(User user){
         ChatTabController newChatController = new ChatTabController(this, this.messageService, this.userService, this.groupService, this.chatTabPane, user, this.eventListener);
         newChatController.render();
+        newChatController.init();
 
         this.chatTabControllers.add(newChatController);
     }
@@ -105,16 +106,23 @@ public class ChatController implements Controller {
         Tab open = chatTabPane.getSelectionModel().getSelectedItem();
         for (ChatTabController chatTabController : chatTabControllers) {
             if (chatTabController.chattingWith.name().equals(open.getText())) {
-                currentGroupId = chatTabController.groupId;
+                currentGroupId = chatTabController.groupId.get();
             }
         }
-        String message = this.messageTextField.getText();
-        if (!message.equals("")) {
-            messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(Throwable::printStackTrace)
-                    .subscribe(result -> System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body()));
+
+        if(!currentGroupId.isEmpty()){
+            String message = this.messageTextField.getText();
+            if (!message.equals("")) {
+                messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
+                        .observeOn(FX_SCHEDULER)
+                        .doOnError(Throwable::printStackTrace)
+                        .subscribe(result -> {
+                            System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body());
+                            this.messageTextField.clear();
+                        });
+            }
         }
+
     }
 
 }
