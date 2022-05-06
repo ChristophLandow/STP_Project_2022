@@ -1,5 +1,4 @@
 package de.uniks.pioneers.controller;
-
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.GameListElementController;
@@ -71,6 +70,7 @@ public class LobbyScreenController implements Controller {
     private final MessageService messageService;
 
     // List with games from Server
+    private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
 
     public final SimpleStringProperty username = new SimpleStringProperty();
@@ -121,12 +121,38 @@ public class LobbyScreenController implements Controller {
 
         this.UsersVBox.getChildren().clear();
 
-        List<User> users = lobbyService.userList();
+        /*List<User> users = lobbyService.userList();
         for (User user : users) {
-            if (!user.name().equals(this.UsernameLabel.getText())) {
-                renderUser(user);
+            if (!user.name().equals(this.username.get())) {
+                renderUserlist(user);
             }
-        }
+        }*/
+
+       users.addListener((ListChangeListener<? super User>) c->{
+            c.next();
+            if(c.wasRemoved()){
+                c.getList().forEach(this::removeUser);
+            }
+            else if(c.wasUpdated()){
+                c.getList().forEach(u->{
+                    //if(!u.name().equals(this.UsernameLabel.getText()) && u.status().equals("online")){
+                    if(!u.name().equals(this.UsernameLabel.getText())){
+                        updateUser(u);
+                    }
+                    else{
+                        removeUser(u);
+                    }
+                });
+            }
+            else{
+                c.getList().forEach(u->{
+                    //if(!u.name().equals(this.UsernameLabel.getText()) && u.status().equals("online")){
+                    if(!u.name().equals(this.UsernameLabel.getText())){
+                        renderUser(u);
+                    }
+                });
+            }
+        });
 
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
@@ -137,6 +163,46 @@ public class LobbyScreenController implements Controller {
         });
 
         return parent;
+    }
+
+    @Override
+    public void init() {
+        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+        lobbyService.getGames().observeOn(FX_SCHEDULER)
+                .subscribe(this.games::setAll);
+
+        userService.findAll().observeOn(FX_SCHEDULER)
+                .subscribe(this.users::setAll);
+
+        eventListener.listen("users.*.*", User.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(userEvent -> {
+                    System.out.println(userEvent.event());
+                    final User user = userEvent.data();
+                    if (userEvent.event().endsWith(".created")){
+                        users.add(user);
+                    }
+                    else if (userEvent.event().endsWith(".deleted")){
+                        users.removeIf(u->u._id().equals(user._id()));
+                    }
+                    else if(userEvent.event().endsWith(".updated")){
+                        users.replaceAll(u->u._id().equals(user._id()) ? user : u);
+                    }
+                });
+
+        eventListener.listen("games.*.*", Game.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(gameEvent -> {
+                    // i gona change this code, when there is nothing else to do, add a map with regex
+                    if (gameEvent.event().endsWith(".created")){
+                        games.add(gameEvent.data());
+                    }else if (gameEvent.event().endsWith(".updated")){
+                        updateGame(gameEvent.data());
+                    }else {
+                        deleteGame(gameEvent.data());
+                    }
+                });
+
     }
 
     @Override
@@ -163,27 +229,6 @@ public class LobbyScreenController implements Controller {
 
     }
 
-    @Override
-    public void init() {
-        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
-        lobbyService.getGames().observeOn(FX_SCHEDULER)
-                .subscribe(this.games::setAll);
-
-        eventListener.listen("games.*.*", Game.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(gameEvent -> {
-                    // i gona change this code, when there is nothing else to do, add a map with regex
-                    if (gameEvent.event().endsWith(".created")){
-                        games.add(gameEvent.data());
-                    }else if (gameEvent.event().endsWith(".updated")){
-                        updateGame(gameEvent.data());
-                    }else {
-                        deleteGame(gameEvent.data());
-                    }
-                });
-
-    }
-
     private void deleteGame(Game data) {
         Game toRemove =  this.games.stream().filter(game -> data._id().equals(game._id())).findAny().get();
         List<Node> removales = (List<Node>) ListViewGames.getItems().stream().toList();
@@ -200,45 +245,67 @@ public class LobbyScreenController implements Controller {
         gameListElementController.getOrCreateGame(data);
     }
 
-
-
     public void renderUser(User user){
-        if(!user.name().equals(UsernameLabel.getText())) {
-            GridPane gridPane = new GridPane();
+        GridPane gridPane = new GridPane();
 
-            Label username = new Label(user.name());
-            username.setOnMouseClicked(this::openChat);
+        Label username = new Label(user.name());
+        username.setOnMouseClicked(this::openChat);
 
-            ImageView imgView;
-            try {
-                imgView = new ImageView(new Image(user.avatar()));
-            } catch (NullPointerException e) {
-                imgView = new ImageView();
+        ImageView imgView;
+        try {
+            imgView = new ImageView(new Image(user.avatar()));
+        } catch (NullPointerException e) {
+            imgView = new ImageView(new Image(App.class.getResource("user-avatar.svg").toString()));
+        }
+
+        imgView.setOnMouseClicked(this::openChat);
+        imgView.setFitHeight(40);
+        imgView.setFitWidth(40);
+
+        Label userid = new Label(user._id());
+        userid.setVisible(false);
+        userid.setFont(new Font(0));
+
+        gridPane.addRow(0, username, imgView, userid);
+
+        gridPane.getColumnConstraints().addAll(new ColumnConstraints(200), new ColumnConstraints(45));
+
+        this.UsersVBox.getChildren().add(gridPane);
+    }
+
+    public void removeUser(User user){
+        UsersVBox.getChildren().removeIf(n -> {
+            GridPane gpane = (GridPane) n;
+            return ((Label) gpane.getChildren().get(2)).getText().equals(user._id());
+        });
+    }
+
+    public void updateUser(User user){
+        for(Node n: UsersVBox.getChildren()){
+            GridPane gpane = (GridPane) n;
+            Label chatWithUserid = ((Label) gpane.getChildren().get(2));
+
+            if(chatWithUserid.getText().equals(user._id())){
+                ((Label) gpane.getChildren().get(0)).setText(user.name());
+
+                try {
+                    ((ImageView) gpane.getChildren().get(1)).setImage(new Image(user.avatar()));
+                }catch(NullPointerException e){
+                    ((ImageView) gpane.getChildren().get(1)).setImage(new Image(App.class.getResource("user-avatar.svg").toString()));
+                }
             }
-
-            imgView.setOnMouseClicked(this::openChat);
-            imgView.setFitHeight(40);
-            imgView.setFitWidth(40);
-
-            Label userid = new Label(user._id());
-            userid.setVisible(false);
-            userid.setFont(new Font(0));
-
-            gridPane.addRow(0, username, imgView, userid);
-
-            gridPane.getColumnConstraints().addAll(new ColumnConstraints(140), new ColumnConstraints(45));
-
-            this.UsersVBox.getChildren().add(gridPane);
         }
     }
 
     public void openChat(MouseEvent event){
         GridPane newChatUserParent = (GridPane) ((Node) event.getSource()).getParent();
         Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
+        ImageView chatWithAvatar = (ImageView) newChatUserParent.getChildren().get(1);
         Label chatWithUserid = (Label) newChatUserParent.getChildren().get(2);
 
         this.messageService.getchatUserList().removeIf(u->u.name().equals(chatWithUsername.getText()));
-        this.messageService.addUserToChatUserList(new User(chatWithUserid.getText(), chatWithUsername.getText(),"",""));
+        this.messageService.addUserToChatUserList(
+                new User(chatWithUserid.getText(), chatWithUsername.getText(),"", chatWithAvatar.getImage().getUrl()));
         app.show(chatControllerProvider.get());
     }
 
