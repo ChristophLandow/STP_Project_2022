@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.dto.CreateGameDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.LogoutResult;
 import de.uniks.pioneers.model.User;
@@ -37,4 +38,6 @@ public class LobbyService {
     }
 
     public Observable<List<Game>> getGames(){ return gameApiService.getGames(); }
+
+    public Observable<Game> createGame() {return gameApiService.create(new CreateGameDto("teamH","insel123A!"));}
 }

@@ -2,17 +2,20 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +33,10 @@ import javafx.scene.text.Font;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
@@ -46,7 +52,7 @@ public class LobbyScreenController implements Controller {
     @FXML
     public VBox UsersVBox;
     @FXML
-    public VBox GameVbox;
+    public ListView ListViewGames;
     @FXML
     public Button EditProfileButton;
     @FXML
@@ -67,9 +73,17 @@ public class LobbyScreenController implements Controller {
     // List with games from Server
     private final ObservableList<Game> games = FXCollections.observableArrayList();
 
+    public final SimpleStringProperty username = new SimpleStringProperty();
+    public final SimpleStringProperty userid = new SimpleStringProperty();
+    private List<GameListElementController> gameListElementControllers;
+
     @Inject
-    public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService, MessageService messageService,
-                                 Provider<ChatController> chatControllerProvider, Provider<LoginScreenController> loginScreenControllerProvider, Provider<EditProfileController> editProfileControllerProvider) {
+    public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService,
+                                 Provider<ChatController> chatControllerProvider,
+                                 Provider<LoginScreenController> loginScreenControllerProvider,
+                                 Provider<EditProfileController> editProfileControllerProvider,
+                                 MessageService messageService
+                                ) {
         this.app = app;
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
@@ -91,6 +105,7 @@ public class LobbyScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+        this.EditProfileButton.setOnAction(this::editProfile);
 
         // get current user from server and display name and avatar
         this.userService.getCurrentUser()
@@ -116,11 +131,36 @@ public class LobbyScreenController implements Controller {
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getList().forEach(this::renderItem);
+                //c.getList().forEach(this::renderItem);
+                c.getAddedSubList().forEach(this::renderItem);
             }
         });
 
         return parent;
+    }
+
+    @Override
+    public void stop(){
+    }
+
+    private void renderItem(Game game) {
+        // this code is not final, when there is time i gona use dagger, when i know how to hand over objects,
+        // when creating an controller, for now i could just inject the whole game list and would not know which game
+        // belongs to this controller
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
+        gameListElementControllers = new ArrayList<>();
+        final Node node;
+        try {
+            node = loader.load();
+            GameListElementController gameListElementController = loader.getController();
+            gameListElementController.getOrCreateGame(game);
+            node.setId(game._id());
+            gameListElementControllers.add(gameListElementController);
+            ListViewGames.getItems().add(0,node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -131,32 +171,36 @@ public class LobbyScreenController implements Controller {
 
         eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(gameEvent -> System.out.println(gameEvent.data().toString()));
+                .subscribe(gameEvent -> {
+                    // i gona change this code, when there is nothing else to do, add a map with regex
+                    if (gameEvent.event().endsWith(".created")){
+                        games.add(gameEvent.data());
+                    }else if (gameEvent.event().endsWith(".updated")){
+                        updateGame(gameEvent.data());
+                    }else {
+                        deleteGame(gameEvent.data());
+                    }
+                });
 
     }
 
-    @Override
-    public void stop(){
+    private void deleteGame(Game data) {
+        Game toRemove =  this.games.stream().filter(game -> data._id().equals(game._id())).findAny().get();
+        List<Node> removales = (List<Node>) ListViewGames.getItems().stream().toList();
+        removales= removales.stream().filter(game -> game.getId().equals(data._id())).toList();
+        ListViewGames.getItems().removeAll(removales);
     }
 
-    private void renderItem(Game game) {
-        // fxml erstellen
-        String createdAt = game.createdAt();
-        int start = createdAt.indexOf("T");
-        int end = createdAt.indexOf(".");
-        String creationTime = game.createdAt().substring(start + 1, end) + " :";
-        Label time = new Label(creationTime);
-        Label name = new Label(game.name());
-        String memberCount = String.format("            %d/4", game.members());
-        Label playerCount = new Label(memberCount);
-
-        HBox gameBox = new HBox();
-        gameBox.setSpacing(10);
-        gameBox.getChildren().add(time);
-        gameBox.getChildren().add(name);
-        gameBox.getChildren().add(playerCount);
-        GameVbox.getChildren().add(gameBox);
+    private void updateGame(Game data) {
+        Game toUpdate  = games.stream().filter(game -> game._id().equals(data._id())).findAny().get();
+        toUpdate=data;
+        //rerender
+        GameListElementController gameListElementController = gameListElementControllers.stream().
+                filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
+        gameListElementController.getOrCreateGame(data);
     }
+
+
 
     public void renderUser(User user){
         if(!user.name().equals(UsernameLabel.getText())) {
@@ -211,5 +255,10 @@ public class LobbyScreenController implements Controller {
     }
 
     public void newGame(ActionEvent actionEvent) {
+        lobbyService.createGame()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(game -> {
+                    //System.out.println(game.name());
+                });
     }
 }
