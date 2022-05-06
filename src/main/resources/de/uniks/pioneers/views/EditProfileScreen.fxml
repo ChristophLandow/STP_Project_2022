@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.EditProfileController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.EditProfileController">
    <children>
       <TextField fx:id="newUsernameInput" layoutX="36.0" layoutY="70.0" promptText="new username" />
       <Text layoutX="36.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="current username:" />
@@ -22,5 +22,7 @@
       <Spinner fx:id="chooseAvatarSpinner" layoutX="365.0" layoutY="226.0" prefHeight="25.0" prefWidth="62.0" />
       <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user_394" />
       <Text fx:id="usernameStatusText" fill="RED" layoutX="36.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
+      <Text fx:id="newPasswordStatusText" fill="RED" layoutX="36.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
+      <Text fx:id="oldPasswordStatusText" fill="RED" layoutX="36.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
    </children>
 </Pane>
