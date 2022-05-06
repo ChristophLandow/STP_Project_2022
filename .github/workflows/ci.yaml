@@ -25,13 +25,16 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Build with Gradle
         run: ./gradlew build test jacocoTestReport
-      - name: Upload CodeCov
-        uses: codecov/codecov-action@v2
+      - name: Publish Coverage to Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/reports/jacoco/test/html/
+          destination_dir: omkjy5l2wrrci5sg/coverage/${{ github.ref }}
       - name: Add coverage to PR
         uses: madrapps/jacoco-report@v1.2
         with:
+          title: '[JaCoCo Report](https://sekassel.github.io/stp-22-team-h/omkjy5l2wrrci5sg/coverage/${{ github.ref }})'
           paths: build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: ${{ secrets.STP_MIN_COVERAGE }}
