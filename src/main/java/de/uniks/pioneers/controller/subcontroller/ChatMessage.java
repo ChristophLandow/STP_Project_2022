@@ -45,7 +45,7 @@ public class ChatMessage {
         chatText.setFont(new Font(16));
 
         TextFlow textFlow = new TextFlow(chatText);
-        textFlow.setPrefWidth(325);
+        textFlow.setPrefWidth(310);
 
         ImageView deleteImgView = new ImageView(new Image(App.class.getResource("trash.png").toString()));
         deleteImgView.setFitHeight(20);
@@ -69,5 +69,9 @@ public class ChatMessage {
 
     public void removeChat(MouseEvent event){
 
+    }
+
+    public String getMessageID(){
+        return this.message._id();
     }
 }

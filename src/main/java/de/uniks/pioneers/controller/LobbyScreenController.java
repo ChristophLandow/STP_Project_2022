@@ -121,14 +121,7 @@ public class LobbyScreenController implements Controller {
 
         this.UsersVBox.getChildren().clear();
 
-        /*List<User> users = lobbyService.userList();
-        for (User user : users) {
-            if (!user.name().equals(this.username.get())) {
-                renderUserlist(user);
-            }
-        }*/
-
-       users.addListener((ListChangeListener<? super User>) c->{
+        users.addListener((ListChangeListener<? super User>) c->{
             c.next();
             if(c.wasRemoved()){
                 c.getList().forEach(this::removeUser);
@@ -177,7 +170,6 @@ public class LobbyScreenController implements Controller {
         eventListener.listen("users.*.*", User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
-                    System.out.println(userEvent.event());
                     final User user = userEvent.data();
                     if (userEvent.event().endsWith(".created")){
                         users.add(user);
