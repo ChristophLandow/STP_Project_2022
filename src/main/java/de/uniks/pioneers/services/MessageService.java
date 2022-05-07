@@ -1,12 +1,11 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.controller.subcontroller.ChatTabController;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
+import de.uniks.pioneers.dto.UpdateMessageDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,13 +40,8 @@ public class MessageService {
         return messageApiService.getChatMessages("groups", id);
     }
 
-    public String getUserIdByName(String username) {
-        List<User> users = getchatUserList();
-        for (User user : users) {
-            if (user.name() != null && user.name().equals(username)) {
-                return user._id();
-            }
-        }
-        return null;
+    public Observable<MessageDto> updateMessage(String namespace, String parent, String id, UpdateMessageDto message) {
+        return messageApiService.updateMessage(namespace, parent, id, message);
     }
+
 }

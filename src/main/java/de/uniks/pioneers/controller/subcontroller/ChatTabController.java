@@ -7,12 +7,7 @@ import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableStringValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -91,12 +86,9 @@ public class ChatTabController {
     }
 
     public void init(){
-        groupId.addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!newValue.isEmpty()){
-                    initMessageSubscriber();
-                }
+        groupId.addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty()) {
+                initMessageSubscriber();
             }
         });
     }
@@ -115,6 +107,8 @@ public class ChatTabController {
                     }
                     else if (messageEvent.event().endsWith(".deleted")){
                         messages.removeIf(m->m._id().equals(message._id()));
+                    } else if (messageEvent.event().endsWith(".updated")) {
+                        System.out.println("UpdateEvent erfasst!");
                     }
                 });
     }
@@ -122,10 +116,10 @@ public class ChatTabController {
     public void renderMessage(MessageDto message){
         ChatMessage newMessage;
         if(message.sender().equals(this.chattingWith._id())){
-            newMessage = new ChatMessage(chattingWith, message, this.chatBox);
+            newMessage = new ChatMessage(chattingWith, message, this.chatBox, this.groupId, messageService);
         }
         else{
-            newMessage = new ChatMessage(new User(currentUser._id(),"Me", currentUser.status(),currentUser.avatar()), message, this.chatBox);
+            newMessage = new ChatMessage(new User(currentUser._id(),"Me", currentUser.status(),currentUser.avatar()), message, this.chatBox, this.groupId, messageService);
         }
 
         newMessage.init();
@@ -147,9 +141,7 @@ public class ChatTabController {
                         groupService.createNewGroupWithOtherUser(chattingWith._id())
                                 .observeOn(FX_SCHEDULER)
                                 .doOnError(Throwable::printStackTrace)
-                                .subscribe(result -> {
-                                    groupId.set(result._id());
-                                    }, Throwable::printStackTrace
+                                .subscribe(result -> groupId.set(result._id()), Throwable::printStackTrace
                                 );
                     }
                 }, Throwable::printStackTrace);
