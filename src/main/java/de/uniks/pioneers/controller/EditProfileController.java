@@ -48,7 +48,6 @@ public class EditProfileController implements Controller {
     private LoginService loginService;
     private Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private String avatarStr;
-    private User currentUser;
 
     private final ObservableList<User> users = FXCollections.observableArrayList();
 
