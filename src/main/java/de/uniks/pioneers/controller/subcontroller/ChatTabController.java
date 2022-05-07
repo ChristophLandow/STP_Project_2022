@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
+import static de.uniks.pioneers.Constants.DELETE_MESSAGE_TEXT;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class ChatTabController {
@@ -57,7 +58,7 @@ public class ChatTabController {
         scrollPane = new ScrollPane(this.chatBox);
         scrollPane.setPrefHeight(579);
 
-        chatBox.heightProperty().addListener(observable -> scrollPane.setVvalue(1D));
+        chatBox.heightProperty().addListener(u->scrollPane.setVvalue(1D));
 
         chatTab = new Tab(this.chattingWith.name(), scrollPane);
         chatTab.setOnClosed(this.chatController::removeTab);
@@ -108,26 +109,57 @@ public class ChatTabController {
                     else if (messageEvent.event().endsWith(".deleted")){
                         messages.removeIf(m->m._id().equals(message._id()));
                     } else if (messageEvent.event().endsWith(".updated")) {
-                        System.out.println("UpdateEvent erfasst!");
+                        messages.replaceAll(m->m.sender().equals(message.sender()) ? message : m);
+                        updateMessage(message);
                     }
                 });
     }
 
     public void renderMessage(MessageDto message){
-        ChatMessage newMessage;
-        if(message.sender().equals(this.chattingWith._id())){
-            newMessage = new ChatMessage(chattingWith, message, this.chatBox, this.groupId, messageService);
-        }
-        else{
-            newMessage = new ChatMessage(new User(currentUser._id(),"Me", currentUser.status(),currentUser.avatar()), message, this.chatBox, this.groupId, messageService);
-        }
+        if(!messageAlreadyRendered(message)) {
+            ChatMessage newMessage;
+            if (message.sender().equals(this.chattingWith._id())) {
+                newMessage = new ChatMessage(chattingWith, message, this.chatBox, this.groupId, messageService);
+            } else {
+                newMessage = new ChatMessage(new User(currentUser._id(), "Me", currentUser.status(), currentUser.avatar()), message, this.chatBox, this.groupId, messageService);
+            }
 
-        newMessage.init();
-        chatMessages.add(newMessage);
+            newMessage.render();
+
+            if (message.body().equals(DELETE_MESSAGE_TEXT)) {
+                newMessage.setMessageText(DELETE_MESSAGE_TEXT);
+            }
+
+            chatMessages.add(newMessage);
+        }
     }
 
+
     public void deleteMessage(MessageDto message){
-        chatMessages.removeIf(m->m.getMessageID().equals(message._id()));
+        chatMessages.removeIf(m->{
+            if(m.getMessageID().equals(message._id())){
+                m.stop();
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public void updateMessage(MessageDto message){
+        for(ChatMessage cm : chatMessages){
+            if(cm.getMessageID().equals(message._id()) && message.body().equals(DELETE_MESSAGE_TEXT)){
+                cm.setMessageText(DELETE_MESSAGE_TEXT);
+            }
+        }
+    }
+
+    public boolean messageAlreadyRendered(MessageDto message){
+        for(ChatMessage cm : chatMessages){
+            if(cm.getMessageID().equals(message._id())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void getOrCreateGroup() {
@@ -141,11 +173,9 @@ public class ChatTabController {
                         groupService.createNewGroupWithOtherUser(chattingWith._id())
                                 .observeOn(FX_SCHEDULER)
                                 .doOnError(Throwable::printStackTrace)
-                                .subscribe(result -> groupId.set(result._id()), Throwable::printStackTrace
-                                );
+                                .subscribe(result -> groupId.set(result._id()), Throwable::printStackTrace);
                     }
                 }, Throwable::printStackTrace);
     }
-
 
 }
