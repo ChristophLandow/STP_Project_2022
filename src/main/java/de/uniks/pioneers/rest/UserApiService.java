@@ -26,6 +26,6 @@ public interface UserApiService {
     @GET("users/?status=online")
     Call<List<User>> getOnlineUsers();
 
-    @GET("users")
+    @GET("users/?status=online")
     Observable<List<User>> findAll();
 }

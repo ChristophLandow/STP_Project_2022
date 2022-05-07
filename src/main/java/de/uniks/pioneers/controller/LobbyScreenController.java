@@ -72,9 +72,6 @@ public class LobbyScreenController implements Controller {
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
-
-    public final SimpleStringProperty username = new SimpleStringProperty();
-    public final SimpleStringProperty userid = new SimpleStringProperty();
     private List<GameListElementController> gameListElementControllers;
 
     @Inject
@@ -111,6 +108,7 @@ public class LobbyScreenController implements Controller {
         this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
+                    removeUser(user);
                     this.UsernameLabel.setText(user.name());
                     if (user.avatar() != null) {
                         this.AvatarImageView.setImage(new Image(user.avatar()));
@@ -123,27 +121,25 @@ public class LobbyScreenController implements Controller {
 
         users.addListener((ListChangeListener<? super User>) c->{
             c.next();
-            if(c.wasRemoved()){
-                c.getList().forEach(this::removeUser);
-            }
-            else if(c.wasUpdated()){
-                c.getList().forEach(u->{
-                    //if(!u.name().equals(this.UsernameLabel.getText()) && u.status().equals("online")){
-                    if(!u.name().equals(this.UsernameLabel.getText())){
-                        updateUser(u);
-                    }
-                    else{
-                        removeUser(u);
-                    }
-                });
-            }
-            else{
-                c.getList().forEach(u->{
-                    //if(!u.name().equals(this.UsernameLabel.getText()) && u.status().equals("online")){
+            if(c.wasAdded()){
+                c.getAddedSubList().forEach(u->{
                     if(!u.name().equals(this.UsernameLabel.getText())){
                         renderUser(u);
                     }
                 });
+            }
+            else if(c.wasRemoved()){
+                c.getRemoved().forEach(this::removeUser);
+            }
+            else if(c.wasUpdated()){
+                for(int i=c.getFrom(); i < c.getTo(); i++){
+                    if(!users.get(i).name().equals(this.UsernameLabel.getText())){
+                        updateUser(users.get(i));
+                    }
+                    else{
+                        removeUser(users.get(i));
+                    }
+                }
             }
         });
 
@@ -176,14 +172,20 @@ public class LobbyScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
                     final User user = userEvent.data();
-                    if (userEvent.event().endsWith(".created")){
+                    if (userEvent.event().endsWith(".created") && user.status().equals("online")){
                         users.add(user);
                     }
                     else if (userEvent.event().endsWith(".deleted")){
                         users.removeIf(u->u._id().equals(user._id()));
                     }
                     else if(userEvent.event().endsWith(".updated")){
-                        users.replaceAll(u->u._id().equals(user._id()) ? user : u);
+                        if(user.status().equals("online")){
+                            users.removeIf(u->u._id().equals(user._id()));
+                            users.add(user);
+                        }
+                        else{
+                            users.removeIf(u->u._id().equals(user._id()));
+                        }
                     }
                 });
 
