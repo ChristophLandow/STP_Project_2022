@@ -8,12 +8,17 @@ import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -40,6 +45,10 @@ public class ChatController implements Controller {
 
     private final ArrayList<ChatTabController> chatTabControllers = new ArrayList<>();
     private String currentGroupId;
+
+    private final ObservableList<User> users = FXCollections.observableArrayList();
+
+    private User currentUser = new User("","","","");
 
     @Inject
     public ChatController(App app, MessageService messageService, UserService userService, EventListener eventListener,
@@ -70,12 +79,66 @@ public class ChatController implements Controller {
             addTab(u);
         }
 
+        this.userService.getCurrentUser()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(user -> {
+                    currentUser = user;
+                });
+
+        users.addListener((ListChangeListener<? super User>) c->{
+            c.next();
+            if(c.wasAdded()){
+                c.getAddedSubList().forEach(u->{
+                    if(!u._id().equals(this.currentUser._id())){
+                        renderUser(u);
+                    }
+                });
+            }
+            else if(c.wasRemoved()){
+                c.getRemoved().forEach(this::removeUser);
+            }
+            else if(c.wasUpdated()){
+                for(int i=c.getFrom(); i < c.getTo(); i++){
+                    if(!users.get(i)._id().equals(this.currentUser._id())){
+                        updateUser(users.get(i));
+                    }
+                    else{
+                        removeUser(users.get(i));
+                    }
+                }
+            }
+        });
+
         return view;
     }
 
     @Override
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
+
+        userService.findAll().observeOn(FX_SCHEDULER)
+                .subscribe(this.users::setAll);
+
+        eventListener.listen("users.*.*", User.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(userEvent -> {
+                    final User user = userEvent.data();
+                    if (userEvent.event().endsWith(".created") && user.status().equals("online")){
+                        users.add(user);
+                    }
+                    else if (userEvent.event().endsWith(".deleted")){
+                        users.removeIf(u->u._id().equals(user._id()));
+                    }
+                    else if(userEvent.event().endsWith(".updated")){
+                        if(user.status().equals("online")){
+                            users.removeIf(u->u._id().equals(user._id()));
+                            users.add(user);
+                        }
+                        else{
+                            users.removeIf(u->u._id().equals(user._id()));
+                        }
+                    }
+                });
     }
 
 
@@ -123,6 +186,40 @@ public class ChatController implements Controller {
             }
         }
 
+    }
+
+    public void renderUser(User user){
+        Label newUser = new Label(user.name());
+        newUser.setOnMouseClicked(this::openChat);
+        this.userListView.getItems().add(newUser);
+    }
+
+    public void removeUser(User user){
+        this.userListView.getItems().removeIf(userlable->((Label) userlable).getText().equals(user.name()));
+    }
+
+    public void updateUser(User user){
+        Label updatedUser = new Label(user.name());
+        updatedUser.setOnMouseClicked(this::openChat);
+        this.userListView.getItems().replaceAll(userlabel->((Label) userlabel).getText().equals(user.name()) ? updatedUser : userlabel );
+    }
+
+    public void openChat(MouseEvent event){
+        Label userLabel = (Label) event.getSource();
+        User findUser = new User("","","","");
+        for(User user : this.users){
+            if(user.name().equals(userLabel.getText())){
+                findUser = user;
+                break;
+            }
+        }
+
+        final User openUser = findUser;
+        this.messageService.getchatUserList().removeIf(user -> user._id().equals(openUser._id()));
+        this.chatTabControllers.removeIf(cm->cm.chattingWith._id().equals(openUser._id()));
+        this.chatTabPane.getTabs().removeIf(tab->tab.getText().equals(openUser.name()));
+        this.messageService.getchatUserList().add(openUser);
+        addTab(openUser);
     }
 
 }
