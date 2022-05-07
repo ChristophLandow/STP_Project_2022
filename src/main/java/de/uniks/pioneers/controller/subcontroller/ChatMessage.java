@@ -13,7 +13,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -60,7 +62,7 @@ public class ChatMessage {
         TextFlow textFlow = new TextFlow(messageText);
         textFlow.setPrefWidth(310);
 
-        deleteImgView = new ImageView(new Image(App.class.getResource("trash.png").toString()));
+        deleteImgView = new ImageView(new Image(App.class.getResource("trash.jpg").toString()));
         deleteImgView.setFitHeight(20);
         deleteImgView.setFitWidth(20);
         deleteImgView.setStyle("-fx-cursor: hand;");
@@ -103,6 +105,8 @@ public class ChatMessage {
         if(newText.equals(DELETE_MESSAGE_TEXT)){
             deleteImgView.setOnMouseClicked(null);
             deleteImgView.setVisible(false);
+            messageText.setFont(Font.font("Verdana", FontPosture.ITALIC, 16));
+            messageText.setFill(Color.GRAY);
         }
     }
 }
