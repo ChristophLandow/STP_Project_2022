@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.EditAvatarSpinnerController;
+import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
@@ -47,6 +48,7 @@ public class EditProfileController implements Controller {
     private LoginService loginService;
     private Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private String avatarStr;
+    private User currentUser;
 
     private final ObservableList<User> users = FXCollections.observableArrayList();
 
@@ -110,6 +112,11 @@ public class EditProfileController implements Controller {
         String newUsername = null;
         String newAvatar = this.avatarImage.getImage().getUrl();
 
+        boolean changePassword = false;
+        final boolean[] oldPasswordCorrect = {true}; // array to access in onComplete-lambda
+        String newPassword = this.newPasswordInput.getText();
+
+        // set new avatar if spinner value changed
         if ((Integer) chooseAvatarSpinner.getValue() > 0) {
             getClass().getResource("subcontroller/" + avatarStr);
             byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatarStr).toURI()));
@@ -121,14 +128,40 @@ public class EditProfileController implements Controller {
             newUsername = newUsernameInput.getText();
         }
 
-        // send patch request to server
-        this.userService.editProfile(newUsername, newAvatar, null)
-                .observeOn(FX_SCHEDULER)
-                .doOnError(e -> {
-                    this.usernameStatusText.setText("Username already taken. Choose another one!");
-                    e.printStackTrace();
-                })
-                .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
+        // check if there is input for new password
+        if (!newPassword.isEmpty()) {
+            changePassword = true;
+
+            // check old password via API call
+            LoginResult result = loginService.checkPassword(usernameLabel.getText(), oldPasswordInput.getText());
+            if (result == null) {
+                oldPasswordCorrect[0] = false;
+            }
+        }
+
+        if (changePassword && oldPasswordCorrect[0]) {
+            // send patch request with changing password
+            this.userService.editProfile(newUsername, newAvatar, newPasswordInput.getText())
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(e -> {
+                        this.usernameStatusText.setText("Username already taken. Choose another one!");
+                        e.printStackTrace();
+                    })
+                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
+
+        } else if (changePassword) {
+            // dont send patch request
+            oldPasswordStatusText.setText("Incorrect password");
+        } else {
+            // send patch request without new password
+            this.userService.editProfile(newUsername, newAvatar, null)
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(e -> {
+                        this.usernameStatusText.setText("Username already taken. Choose another one!");
+                        e.printStackTrace();
+                    })
+                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
+        }
 
     }
 
