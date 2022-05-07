@@ -31,6 +31,8 @@ public class Constants {
     public static final String JSON_PASSWORD = "password";
     public static final String JSON_AVATAR = "avatar";
 
+    public static final String DELETE_MESSAGE_TEXT = "Diese Nachricht wurde gelöscht.";
+
     public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
 
 }
