@@ -154,7 +154,7 @@ public class EditProfileController implements Controller {
             oldPasswordStatusText.setText("Incorrect password");
         } else {
             // send patch request without new password
-            this.userService.editProfile(newUsername, newAvatar, null)
+            this.userService.editProfile(newUsername, newAvatar, null, null)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
