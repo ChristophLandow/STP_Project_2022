@@ -24,8 +24,8 @@ public class UserService {
     public Observable<User> register(String userName,String avatar, String password) {
         return userApiService.create(new CreateUserDto(userName, avatar, password));
     }
-    public Observable<User> editProfile(String name, String avatar, String password) {
-        return userApiService.update(this.currentUserId, new UpdateUserDto(name, avatar, password, "online"));
+    public Observable<User> editProfile(String name, String avatar, String password, String status) {
+        return userApiService.update(this.currentUserId, new UpdateUserDto(name, avatar, password, status));
     }
 
     public Observable<User> getCurrentUser() {

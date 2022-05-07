@@ -161,6 +161,11 @@ public class LobbyScreenController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+
+        // set user online after login (entering lobby)
+        userService.editProfile(null, null, null, "online")
+                .subscribe();
+
         lobbyService.getGames().observeOn(FX_SCHEDULER)
                 .subscribe(this.games::setAll);
 
@@ -310,6 +315,9 @@ public class LobbyScreenController implements Controller {
         this.messageService.getchatUserList().clear();
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
+        // set status offline after logout (leaving lobby)
+        userService.editProfile(null, null, null, "offline")
+                .subscribe();
         app.show(loginScreenControllerProvider.get());
     }
 

@@ -48,7 +48,6 @@ public class EditProfileController implements Controller {
     private LoginService loginService;
     private Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private String avatarStr;
-    private User currentUser;
 
     private final ObservableList<User> users = FXCollections.observableArrayList();
 
@@ -110,7 +109,11 @@ public class EditProfileController implements Controller {
     public void edit(ActionEvent event) throws URISyntaxException, IOException {
         // set defaults
         String newUsername = null;
-        String newAvatar = this.avatarImage.getImage().getUrl();
+        String newAvatar = null;
+
+        if (avatarImage.getImage() != null) {
+            newAvatar = avatarImage.getImage().getUrl();
+        }
 
         boolean changePassword = false;
         final boolean[] oldPasswordCorrect = {true}; // array to access in onComplete-lambda
@@ -141,7 +144,7 @@ public class EditProfileController implements Controller {
 
         if (changePassword && oldPasswordCorrect[0]) {
             // send patch request with changing password
-            this.userService.editProfile(newUsername, newAvatar, newPasswordInput.getText())
+            this.userService.editProfile(newUsername, newAvatar, newPasswordInput.getText(), null)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
@@ -154,7 +157,7 @@ public class EditProfileController implements Controller {
             oldPasswordStatusText.setText("Incorrect password");
         } else {
             // send patch request without new password
-            this.userService.editProfile(newUsername, newAvatar, null)
+            this.userService.editProfile(newUsername, newAvatar, null, null)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
