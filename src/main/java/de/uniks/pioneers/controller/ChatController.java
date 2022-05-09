@@ -158,7 +158,6 @@ public class ChatController implements Controller {
 
     public void removeTab(Event event){
         Tab closedTab = (Tab) event.getSource();
-
         this.messageService.getchatUserList().removeIf(u->u.name().equals(closedTab.getText()));
         this.chatTabControllers.removeIf(c->c.chattingWith.name().equals(closedTab.getText()));
     }
