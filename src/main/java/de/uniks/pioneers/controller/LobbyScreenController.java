@@ -8,7 +8,6 @@ import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -25,7 +24,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -33,9 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
@@ -218,7 +214,7 @@ public class LobbyScreenController implements Controller {
         try {
             node = loader.load();
             GameListElementController gameListElementController = loader.getController();
-            gameListElementController.getOrCreateGame(game);
+            gameListElementController.getOrCreateGame(game, users);
             node.setId(game._id());
             gameListElementControllers.add(gameListElementController);
             ListViewGames.getItems().add(0,node);
@@ -241,7 +237,7 @@ public class LobbyScreenController implements Controller {
         //rerender
         GameListElementController gameListElementController = gameListElementControllers.stream().
                 filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
-        gameListElementController.getOrCreateGame(data);
+        gameListElementController.getOrCreateGame(data, users);
     }
 
     public void renderUser(User user){
