@@ -47,8 +47,12 @@ public class GameListElementController {
     private void initGameAndUser(Game game, ObservableList<User> users) {
         if (this.game==null){
             this.game=game;
-            User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
-            this.creator=creator;
+            try {
+                User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
+                this.creator=creator;
+            } catch (Exception e) {
+                this.creator=null;
+            }
         }else {
             return;
         }
@@ -60,15 +64,20 @@ public class GameListElementController {
 
     public void showGameInfo(MouseEvent mouseEvent) {
         Tooltip tt = new Tooltip();
-        String toolTipTxt = String.format("Created by: %s  id: %s", creator.name(),game._id());
-        tt.setText(toolTipTxt);
+        if (this.creator!=null && this.creator.name()!=null){
+            String toolTipTxt = String.format("Created by: %s  id: %s", creator.name(),game._id());
+            tt.setText(toolTipTxt);
+        } else {
+            String toolTipTxt = String.format("Created by: %s  id: %s", "unknown",game._id());
+            tt.setText(toolTipTxt);
+        }
+
         tt.setStyle("-fx-font: normal bold 4 Langdon; "
                 + "-fx-base: #AE3522; "
                 + "-fx-text-fill: orange;"
                 + "-fx-font-size: 14");
         tt.setShowDelay(Duration.seconds(0.3));
         title.setTooltip(tt);
-
     }
 
     public void disableGameInfo(MouseEvent mouseEvent) {

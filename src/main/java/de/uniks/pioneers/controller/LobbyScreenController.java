@@ -100,6 +100,9 @@ public class LobbyScreenController implements Controller {
         }
         this.EditProfileButton.setOnAction(this::editProfile);
 
+        //init GameListViewElements
+        gameListElementControllers = new ArrayList<>();
+
         // get current user from server and display name and avatar
         this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
@@ -142,8 +145,8 @@ public class LobbyScreenController implements Controller {
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
-                //c.getList().forEach(this::renderItem);
-                c.getAddedSubList().forEach(this::renderItem);
+                c.getAddedSubList().stream().filter(game -> isGameValid(game))
+                                            .forEach(game -> renderGame(game));
             }
         });
 
@@ -204,12 +207,11 @@ public class LobbyScreenController implements Controller {
     public void stop(){
     }
 
-    private void renderItem(Game game) {
+    private void renderGame(Game game) {
         // this code is not final, when there is time i gona use dagger, when i know how to hand over objects,
         // when creating an controller, for now i could just inject the whole game list and would not know which game
         // belongs to this controller
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
-        gameListElementControllers = new ArrayList<>();
         final Node node;
         try {
             node = loader.load();
@@ -222,6 +224,12 @@ public class LobbyScreenController implements Controller {
             e.printStackTrace();
         }
 
+    }
+
+    private boolean isGameValid(Game game) {
+        // a game is valid as long his creator is online, we can update this if needed
+        //return users.stream().anyMatch(user -> user._id().equals(game.owner()));
+        return true;
     }
 
     private void deleteGame(Game data) {
