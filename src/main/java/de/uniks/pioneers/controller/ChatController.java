@@ -89,8 +89,10 @@ public class ChatController implements Controller {
             c.next();
             if(c.wasAdded()){
                 c.getAddedSubList().forEach(u->{
-                    if(!u._id().equals(this.currentUser._id())){
-                        renderUser(u);
+                    if(u.name() != null){
+                        if(!u._id().equals(this.currentUser._id())){
+                            renderUser(u);
+                        }
                     }
                 });
             }
@@ -157,7 +159,6 @@ public class ChatController implements Controller {
 
     public void removeTab(Event event){
         Tab closedTab = (Tab) event.getSource();
-
         this.messageService.getchatUserList().removeIf(u->u.name().equals(closedTab.getText()));
         this.chatTabControllers.removeIf(c->c.chattingWith.name().equals(closedTab.getText()));
     }
@@ -209,9 +210,11 @@ public class ChatController implements Controller {
         Label userLabel = (Label) event.getSource();
         User findUser = new User("","","","");
         for(User user : this.users){
-            if(user.name().equals(userLabel.getText())){
-                findUser = user;
-                break;
+            if(user.name() != null){
+                if(user.name().equals(userLabel.getText())){
+                    findUser = user;
+                    break;
+                }
             }
         }
 
