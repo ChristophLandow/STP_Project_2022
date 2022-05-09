@@ -8,6 +8,7 @@ import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 import javax.inject.Inject;
@@ -34,6 +34,8 @@ public class ChatController implements Controller {
     private final UserService userService;
     private final GroupService groupService;
     private final EventListener eventListener;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @FXML public Button sendButton;
     @FXML public Button leaveButton;
@@ -79,11 +81,9 @@ public class ChatController implements Controller {
             addTab(u);
         }
 
-        this.userService.getCurrentUser()
+        disposable.add(this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(user -> {
-                    currentUser = user;
-                });
+                .subscribe(user -> currentUser = user));
 
         users.addListener((ListChangeListener<? super User>) c->{
             c.next();
@@ -116,10 +116,10 @@ public class ChatController implements Controller {
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
 
-        userService.findAll().observeOn(FX_SCHEDULER)
-                .subscribe(this.users::setAll);
+        disposable.add(userService.findAll().observeOn(FX_SCHEDULER)
+                .subscribe(this.users::setAll));
 
-        eventListener.listen("users.*.*", User.class)
+        disposable.add(eventListener.listen("users.*.*", User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
                     final User user = userEvent.data();
@@ -138,12 +138,13 @@ public class ChatController implements Controller {
                             users.removeIf(u->u._id().equals(user._id()));
                         }
                     }
-                });
+                }));
     }
 
 
     @Override
     public void stop() {
+        disposable.dispose();
     }
 
     public void addTab(User user){
@@ -176,13 +177,13 @@ public class ChatController implements Controller {
         if(!currentGroupId.isEmpty()){
             String message = this.messageTextField.getText();
             if (!message.equals("")) {
-                messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
+                disposable.add(messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
                         .observeOn(FX_SCHEDULER)
                         .doOnError(Throwable::printStackTrace)
                         .subscribe(result -> {
                             System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body());
                             this.messageTextField.clear();
-                        });
+                        }));
             }
         }
 

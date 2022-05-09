@@ -7,6 +7,7 @@ import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -40,6 +41,8 @@ public class ChatTabController {
 
     private final ArrayList<ChatMessage> chatMessages = new ArrayList<>();
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     public ChatTabController(ChatController chatController, MessageService messageService, UserService userService, GroupService groupService,
                              TabPane chatTabPane, User chattingWith, EventListener eventListener){
@@ -77,13 +80,13 @@ public class ChatTabController {
             }
         });
 
-        this.userService.getCurrentUser()
+        disposable.add(this.userService.getCurrentUser()
                 .take(1)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     currentUser = user;
                     getOrCreateGroup();
-                });
+                }));
     }
 
     public void init(){
@@ -95,10 +98,10 @@ public class ChatTabController {
     }
 
     public void initMessageSubscriber(){
-        messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
-                .subscribe(this.messages::setAll);
+        disposable.add(messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
+                .subscribe(this.messages::setAll));
 
-        eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
+        disposable.add(eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(messageEvent -> {
                     final MessageDto message = messageEvent.data();
@@ -112,7 +115,7 @@ public class ChatTabController {
                         messages.replaceAll(m->m.sender().equals(message.sender()) ? message : m);
                         updateMessage(message);
                     }
-                });
+                }));
     }
 
     public void renderMessage(MessageDto message){
@@ -163,19 +166,19 @@ public class ChatTabController {
     }
 
     public void getOrCreateGroup() {
-        groupService.getGroupsWithUser(chattingWith._id())
+        disposable.add(groupService.getGroupsWithUser(chattingWith._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
                 .subscribe(res -> {
                     if (res.size() != 0 && res.get(0) != null && res.get(0)._id() != null) {
                         groupId.set(res.get(0)._id());
                     } else {
-                        groupService.createNewGroupWithOtherUser(chattingWith._id())
+                        disposable.add(groupService.createNewGroupWithOtherUser(chattingWith._id())
                                 .observeOn(FX_SCHEDULER)
                                 .doOnError(Throwable::printStackTrace)
-                                .subscribe(result -> groupId.set(result._id()), Throwable::printStackTrace);
+                                .subscribe(result -> groupId.set(result._id()), Throwable::printStackTrace));
                     }
-                }, Throwable::printStackTrace);
+                }, Throwable::printStackTrace));
     }
 
 }
