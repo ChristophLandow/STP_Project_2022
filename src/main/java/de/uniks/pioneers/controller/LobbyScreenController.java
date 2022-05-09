@@ -123,8 +123,10 @@ public class LobbyScreenController implements Controller {
             c.next();
             if(c.wasAdded()){
                 c.getAddedSubList().forEach(u->{
-                    if(!u.name().equals(this.UsernameLabel.getText())){
-                        renderUser(u);
+                    if (u.name() != null) {
+                        if(!u.name().equals(this.UsernameLabel.getText())){
+                            renderUser(u);
+                        }
                     }
                 });
             }
