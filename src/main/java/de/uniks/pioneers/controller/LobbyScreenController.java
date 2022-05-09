@@ -4,7 +4,6 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistControler;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
@@ -62,9 +61,6 @@ public class LobbyScreenController implements Controller {
     private final LobbyService lobbyService;
     private final UserService userService;
     private final MessageService messageService;
-
-    // List with games from Server
-    private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
     private List<GameListElementController> gameListElementControllers;
 
@@ -75,7 +71,7 @@ public class LobbyScreenController implements Controller {
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
                                  MessageService messageService
-                                ) {
+    ) {
         this.app = app;
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
@@ -108,16 +104,14 @@ public class LobbyScreenController implements Controller {
                     if (user.avatar() != null) {
                         this.AvatarImageView.setImage(new Image(user.avatar()));
                     } else {
-                        this.AvatarImageView.setImage(new Image(App.class.getResource("user-avatar.svg").toString()));
+                        this.AvatarImageView.setImage(null);
                     }
                 });
 
-        this.UsersVBox.getChildren().clear();
-
-        LobbyUserlistControler userlistControler = userlistControlerProvider.get();
-        userlistControler.usersVBox = this.UsersVBox;
-        userlistControler.render();
-        userlistControler.init();
+        LobbyUserlistControler userlistController = userlistControlerProvider.get();
+        userlistController.usersVBox = this.UsersVBox;
+        userlistController.render();
+        userlistController.init();
 
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
