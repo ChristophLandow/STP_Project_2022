@@ -35,7 +35,7 @@ public class MainModule {
     @Singleton
     static OkHttpClient client(TokenStorage tokenStorage) {
         return new OkHttpClient.Builder().addInterceptor(chain -> {
-            final String token = tokenStorage.getToken();
+            final String token = tokenStorage.getAccessToken();
             if (token == null) {
                 return chain.proceed(chain.request());
             }
@@ -51,7 +51,7 @@ public class MainModule {
     @Provides
     Preferences prefs(){
 
-        return Preferences.systemNodeForPackage(Main.class);
+        return Preferences.userNodeForPackage(Main.class);
     }
 
 

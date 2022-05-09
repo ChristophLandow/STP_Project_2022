@@ -7,15 +7,18 @@ public class PrefService{
 
     private final Preferences preferences;
 
+    private final TokenStorage tokenStorage;
+
     @Inject
-    public PrefService(Preferences preferences){
+    public PrefService(Preferences preferences, TokenStorage tokenStorage){
 
         this.preferences = preferences;
+        this.tokenStorage = tokenStorage;
     }
 
-    public void remember(String refreshToken){
+    public void remember(){
 
-        preferences.put("RememberMe", refreshToken);
+        preferences.put("RememberMe", tokenStorage.getRefreshToken());
     }
     public void forget(){
 

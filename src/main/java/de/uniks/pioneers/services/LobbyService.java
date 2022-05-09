@@ -8,7 +8,6 @@ import de.uniks.pioneers.rest.AuthApiService;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
@@ -18,11 +17,14 @@ public class LobbyService {
     private final AuthApiService authApiService;
     private final GameApiService gameApiService;
 
+    private final PrefService prefService;
+
     @Inject
-    public LobbyService(UserApiService userApiService, AuthApiService authApiService, GameApiService gameApiService) {
+    public LobbyService(UserApiService userApiService, AuthApiService authApiService, GameApiService gameApiService, PrefService prefService) {
         this.userApiService = userApiService;
         this.authApiService = authApiService;
         this.gameApiService = gameApiService;
+        this.prefService = prefService;
     }
 
     public List<User> userList() {
@@ -34,6 +36,8 @@ public class LobbyService {
     }
 
     public Observable<LogoutResult> logout() {
+
+        prefService.forget();
         return authApiService.logout();
     }
 

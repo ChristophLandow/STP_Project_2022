@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.services.LoginService;
+import de.uniks.pioneers.services.PrefService;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -32,6 +33,8 @@ public class LoginScreenController implements Controller {
     private final Provider<SignUpScreenController> signUpScreenControllerProvider;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
 
+    private final PrefService prefService;
+
     @FXML
     public TextField textFieldUserName;
     @FXML
@@ -50,11 +53,12 @@ public class LoginScreenController implements Controller {
     public Text textRules;
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+    public LoginScreenController(App app, LoginService loginService, PrefService prefService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.prefService = prefService;
     }
 
     @Override
@@ -123,6 +127,7 @@ public class LoginScreenController implements Controller {
     public void init() {
 
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
+        System.out.println(prefService.recall());
     }
 
     @Override
@@ -134,7 +139,7 @@ public class LoginScreenController implements Controller {
         this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)
                 .doOnError(e -> this.passwordStatusText.setText("Incorrect user name or password"))
-                .doOnComplete(this::toLobby)
+                .doOnComplete(this::loginComplete)
                 .subscribe(new Observer<>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
@@ -149,10 +154,15 @@ public class LoginScreenController implements Controller {
                     public void onComplete() {
                     }
                 });
-
     }
 
-    public void rememberMe(MouseEvent mouseEvent) {
+    private void loginComplete() {
+
+        if(this.checkRememberMe.isSelected()){
+
+            this.prefService.remember();
+        }
+        toLobby();
     }
 
     public void toSignUp(MouseEvent mouseEvent) {
