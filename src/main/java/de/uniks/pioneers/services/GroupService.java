@@ -25,7 +25,8 @@ public class GroupService {
         memberList.add(userService.getCurrentUserId());
         memberList.add(otherUserId);
         System.out.println(memberList);
-        return this.groupApiService.newGroup(new CreateGroupDto(memberList));
+        String groupName = userService.getCurrentUserId() + "," + otherUserId;
+        return this.groupApiService.newGroup(new CreateGroupDto(memberList, groupName));
     }
 
     public Observable<List<GroupDto>> getGroupsWithUser(String otherUserId) {
