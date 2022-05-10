@@ -22,7 +22,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -139,6 +141,9 @@ public class LobbyScreenController implements Controller {
         userService.editProfile(null, null, null, "online")
                 .subscribe();
 
+        // add mouse event to rules button
+        this.RulesButton.setOnMouseClicked(this::openRules);
+
         lobbyService.getGames().observeOn(FX_SCHEDULER)
                 .subscribe(this.games::setAll);
 
@@ -154,6 +159,11 @@ public class LobbyScreenController implements Controller {
                         deleteGame(gameEvent.data());
                     }
                 });
+    }
+
+    private void openRules(MouseEvent mouseEvent) {
+        RulesScreenController controller = new RulesScreenController(new Stage());
+        controller.init();
     }
 
     @Override
