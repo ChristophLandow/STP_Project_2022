@@ -8,6 +8,7 @@ import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -108,6 +109,12 @@ public class LobbyScreenController implements Controller {
                     }
                 });
 
+        this.app.getStage().setOnCloseRequest(event -> {
+            logout();
+            Platform.exit();
+            System.exit(0);
+        });
+
         LobbyUserlistControler userlistController = userlistControlerProvider.get();
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
@@ -196,12 +203,16 @@ public class LobbyScreenController implements Controller {
 
     public void logout(ActionEvent actionEvent) {
         this.messageService.getchatUserList().clear();
+        logout();
+        app.show(loginScreenControllerProvider.get());
+    }
+
+    public void logout(){
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
-        app.show(loginScreenControllerProvider.get());
     }
 
     public void newGame(ActionEvent actionEvent) {
