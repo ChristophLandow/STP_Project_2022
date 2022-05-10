@@ -15,10 +15,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import static de.uniks.pioneers.Constants.*;
@@ -166,6 +169,9 @@ public class LoginScreenController implements Controller {
 
     public void toRules(MouseEvent mouseEvent) {
         System.out.println("toRules");
+
+        RulesScreenController controller = new RulesScreenController(new Stage());
+        controller.init();
     }
 
     public void toLobby() {

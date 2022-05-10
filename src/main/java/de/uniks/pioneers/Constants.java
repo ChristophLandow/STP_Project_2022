@@ -11,6 +11,7 @@ public class Constants {
     public static final String LOBBY_SCREEN_TITLE = "Pioneers - Lobby";
     public static final String EDIT_PROFILE_SCREEN_TITLE = "Pioneers - Edit Profile";
     public static final String CHAT_SCREEN_TITLE = "Pioneers - Chat";
+    public static final String RULES_SCREEN_TITLE = "Pioneers - Rules";
     public static final String NOOP = "noop";
 
     // network
