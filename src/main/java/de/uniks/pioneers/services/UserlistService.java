@@ -29,8 +29,6 @@ public class UserlistService {
     }
 
     public void init() {
-        System.out.println("Created");
-
         this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
