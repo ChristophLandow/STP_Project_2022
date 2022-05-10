@@ -4,11 +4,11 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistControler;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -62,9 +62,6 @@ public class LobbyScreenController implements Controller {
     private final LobbyService lobbyService;
     private final UserService userService;
     private final MessageService messageService;
-
-    // List with games from Server
-    private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
     private List<GameListElementController> gameListElementControllers;
 
@@ -75,7 +72,7 @@ public class LobbyScreenController implements Controller {
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
                                  MessageService messageService
-                                ) {
+    ) {
         this.app = app;
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
@@ -108,16 +105,20 @@ public class LobbyScreenController implements Controller {
                     if (user.avatar() != null) {
                         this.AvatarImageView.setImage(new Image(user.avatar()));
                     } else {
-                        this.AvatarImageView.setImage(new Image(App.class.getResource("user-avatar.svg").toString()));
+                        this.AvatarImageView.setImage(null);
                     }
                 });
 
-        this.UsersVBox.getChildren().clear();
+        this.app.getStage().setOnCloseRequest(event -> {
+            logout();
+            Platform.exit();
+            System.exit(0);
+        });
 
-        LobbyUserlistControler userlistControler = userlistControlerProvider.get();
-        userlistControler.usersVBox = this.UsersVBox;
-        userlistControler.render();
-        userlistControler.init();
+        LobbyUserlistControler userlistController = userlistControlerProvider.get();
+        userlistController.usersVBox = this.UsersVBox;
+        userlistController.render();
+        userlistController.init();
 
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
@@ -202,12 +203,16 @@ public class LobbyScreenController implements Controller {
 
     public void logout(ActionEvent actionEvent) {
         this.messageService.getchatUserList().clear();
+        logout();
+        app.show(loginScreenControllerProvider.get());
+    }
+
+    public void logout(){
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
-        app.show(loginScreenControllerProvider.get());
     }
 
     public void newGame(ActionEvent actionEvent) {

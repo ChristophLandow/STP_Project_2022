@@ -33,6 +33,12 @@ public class LobbyUserlistControler extends OnlineUserlistController {
     }
 
     @Override
+    public void render(){
+        this.usersVBox.getChildren().clear();
+        super.render();
+    }
+
+    @Override
     public void renderUser(User user){
         GridPane gridPane = new GridPane();
 
@@ -43,7 +49,7 @@ public class LobbyUserlistControler extends OnlineUserlistController {
         try {
             imgView = new ImageView(new Image(user.avatar()));
         } catch (NullPointerException e) {
-            imgView = new ImageView(new Image(App.class.getResource("user-avatar.svg").toString()));
+            imgView = new ImageView();
         }
 
         imgView.setOnMouseClicked(this::openChat);
@@ -55,7 +61,6 @@ public class LobbyUserlistControler extends OnlineUserlistController {
         userid.setFont(new Font(0));
 
         gridPane.addRow(0, username, imgView, userid);
-
         gridPane.getColumnConstraints().addAll(new ColumnConstraints(200), new ColumnConstraints(45));
 
         this.usersVBox.getChildren().add(gridPane);
@@ -81,7 +86,7 @@ public class LobbyUserlistControler extends OnlineUserlistController {
                 try {
                     ((ImageView) gpane.getChildren().get(1)).setImage(new Image(user.avatar()));
                 }catch(NullPointerException e){
-                    ((ImageView) gpane.getChildren().get(1)).setImage(new Image(App.class.getResource("user-avatar.svg").toString()));
+                    ((ImageView) gpane.getChildren().get(1)).setImage(null);
                 }
             }
         }
