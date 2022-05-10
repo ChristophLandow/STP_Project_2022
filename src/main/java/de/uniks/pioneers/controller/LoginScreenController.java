@@ -85,7 +85,6 @@ public class LoginScreenController implements Controller {
             this.textRegister.setOnMouseEntered(this::markRegister);
             this.textRegister.setOnMouseExited(this::unmarkRegister);
             this.textRegister.setOnMouseClicked(this::toSignUp);
-
             this.textRules.setOnMouseEntered(this::markRules);
             this.textRules.setOnMouseExited(this::unmarkRules);
             this.textRules.setOnMouseClicked(this::toRules);
@@ -126,13 +125,19 @@ public class LoginScreenController implements Controller {
     @Override
     public void init() {
 
+        if(!this.prefService.recall().equals("")){
+
+            this.loginService.refresh()
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(e -> System.out.println("An error has occurred during refresh login."))
+                    .doOnComplete(this::loginComplete)
+                    .subscribe();
+        }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
-        System.out.println(prefService.recall());
     }
 
     @Override
-    public void stop() {
-    }
+    public void stop(){}
 
     public void login(ActionEvent event) {
 
@@ -164,7 +169,6 @@ public class LoginScreenController implements Controller {
         }
         toLobby();
     }
-
     public void toSignUp(MouseEvent mouseEvent) {
 
         SignUpScreenController signUpScreenController = this.signUpScreenControllerProvider.get();
