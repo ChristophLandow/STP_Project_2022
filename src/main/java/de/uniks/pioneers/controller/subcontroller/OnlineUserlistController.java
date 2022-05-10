@@ -15,10 +15,10 @@ import javax.inject.Inject;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class OnlineUserlistController {
-    private final UserService userService;
+    protected final UserService userService;
     protected final MessageService messageService;
-    private final EventListener eventListener;
-    private final ObservableList<User> users = FXCollections.observableArrayList();
+    protected final EventListener eventListener;
+    protected ObservableList<User> users = FXCollections.observableArrayList();
     private User currentUser = new User("","","","");
 
     @Inject
@@ -26,7 +26,6 @@ public class OnlineUserlistController {
         this.userService = userService;
         this.messageService = messageService;
         this.eventListener = eventListener;
-        this.currentUser = currentUser;
     }
 
     public void render(){
