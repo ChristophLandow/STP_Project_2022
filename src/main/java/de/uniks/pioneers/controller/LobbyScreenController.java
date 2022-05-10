@@ -7,6 +7,7 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -64,6 +65,7 @@ public class LobbyScreenController implements Controller {
     private final LobbyService lobbyService;
     private final UserService userService;
     private final MessageService messageService;
+    private final UserlistService userlistService;
     private final ObservableList<Game> games = FXCollections.observableArrayList();
     private List<GameListElementController> gameListElementControllers;
 
@@ -73,13 +75,15 @@ public class LobbyScreenController implements Controller {
                                  Provider<LoginScreenController> loginScreenControllerProvider,
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
-                                 MessageService messageService
+                                 MessageService messageService,
+                                 UserlistService userlistService
     ) {
         this.app = app;
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
         this.userService = userService;
         this.messageService = messageService;
+        this.userlistService = userlistService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;

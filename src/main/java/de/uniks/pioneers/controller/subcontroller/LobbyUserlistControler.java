@@ -6,6 +6,7 @@ import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -26,9 +27,9 @@ public class LobbyUserlistControler extends OnlineUserlistController {
     private final Provider<ChatController> chatControllerProvider;
 
     @Inject
-    public LobbyUserlistControler(App app, UserService userService, MessageService messageService, EventListener eventListener,
-                                  Provider<ChatController> chatControllerProvider){
-        super(userService, messageService, eventListener);
+    public LobbyUserlistControler(App app, UserService userService, MessageService messageService, UserlistService userlistService,
+                                  EventListener eventListener, Provider<ChatController> chatControllerProvider){
+        super(userService, messageService, userlistService, eventListener);
         this.app = app;
         this.chatControllerProvider = chatControllerProvider;
     }
@@ -99,7 +100,7 @@ public class LobbyUserlistControler extends OnlineUserlistController {
         Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
 
         User findUser = new User("","","","");
-        for(User user : this.users){
+        for(User user : this.userlistService.getUsers()){
             if(user.name() != null){
                 if(user.name().equals(chatWithUsername.getText())){
                     findUser = user;

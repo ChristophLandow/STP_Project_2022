@@ -8,6 +8,7 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.event.ActionEvent;
@@ -29,6 +30,7 @@ public class ChatController implements Controller {
     private final App app;
     private final MessageService messageService;
     private final UserService userService;
+    private final UserlistService userlistService;
     private final GroupService groupService;
     private final EventListener eventListener;
 
@@ -47,12 +49,14 @@ public class ChatController implements Controller {
     private String currentGroupId;
 
     @Inject
-    public ChatController(App app, MessageService messageService, UserService userService, EventListener eventListener,
-                          GroupService groupService, Provider<LobbyScreenController> lobbyScreenControllerProvider,
+    public ChatController(App app, MessageService messageService, UserService userService, UserlistService userlistService,
+                          EventListener eventListener, GroupService groupService,
+                          Provider<LobbyScreenController> lobbyScreenControllerProvider,
                           Provider<ChatUserlistController> userlistControllerProvider) {
         this.app = app;
         this.messageService = messageService;
         this.userService = userService;
+        this.userlistService = userlistService;
         this.groupService = groupService;
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;

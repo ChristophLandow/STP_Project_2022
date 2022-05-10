@@ -5,6 +5,7 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -21,8 +22,8 @@ public class ChatUserlistController extends OnlineUserlistController {
     public ChatController chatController;
 
     @Inject
-    public ChatUserlistController(UserService userService, MessageService messageService, EventListener eventListener){
-        super(userService, messageService, eventListener);
+    public ChatUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener){
+        super(userService, messageService, userlistService, eventListener);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class ChatUserlistController extends OnlineUserlistController {
     public void openChat(MouseEvent event){
         Label userLabel = (Label) event.getSource();
         User findUser = new User("","","","");
-        for(User user : this.users){
+        for(User user : this.userlistService.getUsers()){
             if(user.name() != null){
                 if(user.name().equals(userLabel.getText())){
                     findUser = user;
