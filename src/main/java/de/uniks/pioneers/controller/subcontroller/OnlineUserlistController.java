@@ -33,37 +33,36 @@ public class OnlineUserlistController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     this.currentUser = user;
-                    removeUser(user);
-                });
 
-        users.addListener((ListChangeListener<? super User>) c->{
-            c.next();
-            if(c.wasAdded()){
-                c.getAddedSubList().forEach(u->{
-                    if (validUser(u)) {
-                        if(!u._id().equals(this.currentUser._id())){
-                            renderUser(u);
+                    users.addListener((ListChangeListener<? super User>) c->{
+                        c.next();
+                        if(c.wasAdded()){
+                            c.getAddedSubList().forEach(u->{
+                                if (validUser(u)) {
+                                    if(!u._id().equals(this.currentUser._id())){
+                                        renderUser(u);
+                                    }
+                                }
+                                else{
+                                    users.remove(u);
+                                }
+                            });
                         }
-                    }
-                    else{
-                        users.remove(u);
-                    }
+                        else if(c.wasRemoved()){
+                            c.getRemoved().forEach(this::removeUser);
+                        }
+                        else if(c.wasUpdated()){
+                            for(int i=c.getFrom(); i < c.getTo(); i++){
+                                if(!users.get(i)._id().equals(this.currentUser._id())){
+                                    updateUser(users.get(i));
+                                }
+                                else{
+                                    removeUser(users.get(i));
+                                }
+                            }
+                        }
+                    });
                 });
-            }
-            else if(c.wasRemoved()){
-                c.getRemoved().forEach(this::removeUser);
-            }
-            else if(c.wasUpdated()){
-                for(int i=c.getFrom(); i < c.getTo(); i++){
-                    if(!users.get(i)._id().equals(this.currentUser._id())){
-                        updateUser(users.get(i));
-                    }
-                    else{
-                        removeUser(users.get(i));
-                    }
-                }
-            }
-        });
     }
 
     public void init(){

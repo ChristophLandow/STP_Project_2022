@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
@@ -48,8 +49,8 @@ public class LobbyUserlistControler extends OnlineUserlistController {
         ImageView imgView;
         try {
             imgView = new ImageView(new Image(user.avatar()));
-        } catch (NullPointerException e) {
-            imgView = new ImageView();
+        } catch (IllegalArgumentException | NullPointerException e) {
+            imgView = new ImageView(new Image(Constants.DEFAULT_AVATAR));
         }
 
         imgView.setOnMouseClicked(this::openChat);
@@ -85,8 +86,8 @@ public class LobbyUserlistControler extends OnlineUserlistController {
 
                 try {
                     ((ImageView) gpane.getChildren().get(1)).setImage(new Image(user.avatar()));
-                }catch(NullPointerException e){
-                    ((ImageView) gpane.getChildren().get(1)).setImage(null);
+                }catch(IllegalArgumentException | NullPointerException e){
+                    ((ImageView) gpane.getChildren().get(1)).setImage(new Image(Constants.DEFAULT_AVATAR));
                 }
             }
         }
