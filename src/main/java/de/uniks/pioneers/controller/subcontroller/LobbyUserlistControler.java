@@ -61,7 +61,6 @@ public class LobbyUserlistControler extends OnlineUserlistController {
         userid.setFont(new Font(0));
 
         gridPane.addRow(0, username, imgView, userid);
-
         gridPane.getColumnConstraints().addAll(new ColumnConstraints(200), new ColumnConstraints(45));
 
         this.usersVBox.getChildren().add(gridPane);
