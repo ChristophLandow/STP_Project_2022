@@ -97,12 +97,21 @@ public class LobbyUserlistControler extends OnlineUserlistController {
     public void openChat(MouseEvent event){
         GridPane newChatUserParent = (GridPane) ((Node) event.getSource()).getParent();
         Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
-        ImageView chatWithAvatar = (ImageView) newChatUserParent.getChildren().get(1);
-        Label chatWithUserid = (Label) newChatUserParent.getChildren().get(2);
 
-        this.messageService.getchatUserList().removeIf(u->u.name().equals(chatWithUsername.getText()));
-        this.messageService.addUserToChatUserList(
-                new User(chatWithUserid.getText(), chatWithUsername.getText(),"", chatWithAvatar.getImage().getUrl()));
+        User findUser = new User("","","","");
+        for(User user : this.users){
+            if(user.name() != null){
+                if(user.name().equals(chatWithUsername.getText())){
+                    findUser = user;
+                    break;
+                }
+            }
+        }
+
+        final User openUser = findUser;
+
+        this.messageService.getchatUserList().removeIf(u->u._id().equals(openUser._id()));
+        this.messageService.addUserToChatUserList(openUser);
         app.show(chatControllerProvider.get());
     }
 }
