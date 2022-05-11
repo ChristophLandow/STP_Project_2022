@@ -207,9 +207,7 @@ public class LobbyScreenController implements Controller {
     }
 
     private void renderGame(Game game) {
-        // this code is not final, when there is time i gona use dagger, when i know how to hand over objects,
-        // when creating an controller, for now i could just inject the whole game list and would not know which game
-        // belongs to this controller
+        //not final
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
         final Node node;
         try {

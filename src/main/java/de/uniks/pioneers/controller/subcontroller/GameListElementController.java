@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_BLUEPeer;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import javafx.collections.ObservableList;
@@ -11,9 +12,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class GameListElementController {
@@ -32,8 +34,7 @@ public class GameListElementController {
 
 
     public void createOrUpdateGame(Game game, ObservableList<Game> games, ObservableList<User> users) {
-
-
+        title.setMouseTransparent(true);
         initGameAndUser(game,games,users);
         // might be better with rex ex, i gona update this
         String createdAt = game.createdAt();
@@ -74,6 +75,9 @@ public class GameListElementController {
             // show options in a small list (join game, discard from list, show more game details
             VBox gameOption = new VBox();
             gameOption.setMinSize(200,200);
+            gameOption.setVisible(true);
+            gameOption.setBackground(new Background(new BackgroundFill(Color.SILVER,null,null)));
+
 
             HBox joinGameBox = new HBox();
             Label joinGame = new Label("join game");
@@ -100,9 +104,6 @@ public class GameListElementController {
             gameOption.setOnMouseExited(event -> {
                 pane.getChildren().remove(gameOption);
             });
-
-
-
 
         }
     }
