@@ -68,7 +68,7 @@ Pioneers is a contract work for Deadly Birds Society to develop a modern clone o
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To play Pioneers you only need Java 17 or higher.
+To play Pioneers you only need Java 17 or higher and an active connection to the Internet.
 
 ### Prerequisites
 
