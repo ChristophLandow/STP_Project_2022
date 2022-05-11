@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.User;
@@ -8,10 +9,12 @@ import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -25,7 +28,6 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class ChatTabController {
 
     private final TabPane chatTabPane;
-    private Tab chatTab;
     private ScrollPane scrollPane;
     private VBox chatBox;
     public User chattingWith;
@@ -63,12 +65,51 @@ public class ChatTabController {
 
         chatBox.heightProperty().addListener(u->scrollPane.setVvalue(1D));
 
-        chatTab = new Tab(this.chattingWith.name(), scrollPane);
+        Tab chatTab = new Tab(this.chattingWith.name(), scrollPane);
         chatTab.setOnClosed(this.chatController::removeTab);
         chatTab.setClosable(true);
 
         this.chatTabPane.getTabs().add(chatTab);
         this.chatTabPane.getSelectionModel().select(chatTab);
+
+        this.chatBox.getChildren().add(new Label("Loading..."));
+
+        this.messageService.getOpenChatQueue().add(this.chattingWith);
+        this.messageService.increaseOpenChatCounter();
+
+        if(this.messageService.getOpenChatQueue().size() == 0){
+            checkCounter();
+        }
+        else if(this.messageService.getOpenChatQueue().get(0)._id().equals(this.chattingWith._id())){
+            checkCounter();
+        }
+        else{
+            this.messageService.getOpenChatQueue().addListener((ListChangeListener<? super User>) c->{
+                if(this.messageService.getOpenChatQueue().size() == 0){
+                    checkCounter();
+                }
+                else if(this.messageService.getOpenChatQueue().get(0)._id().equals(this.chattingWith._id())){
+                    checkCounter();
+                }
+            });
+        }
+    }
+
+    public void checkCounter(){
+        if(this.messageService.getOpenChatCounter().get() <= Constants.MAX_LOADING_CHATS){
+            renderMessages();
+        }
+        else{
+            this.messageService.getOpenChatCounter().addListener((observable, oldValue, newValue) -> {
+                if(this.messageService.getOpenChatCounter().get() <= Constants.MAX_LOADING_CHATS){
+                    renderMessages();
+                }
+            });
+        }
+    }
+
+    public void renderMessages(){
+        this.chatBox.getChildren().clear();
 
         this.messages.addListener((ListChangeListener<? super MessageDto>) c->{
             c.next();
@@ -92,30 +133,29 @@ public class ChatTabController {
     public void init(){
         groupId.addListener((observable, oldValue, newValue) -> {
             if (!newValue.isEmpty()) {
-                initMessageSubscriber();
+                disposable.add(messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
+                        .subscribe(this.messages::setAll));
+
+                disposable.add(eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(messageEvent -> {
+                            final MessageDto message = messageEvent.data();
+                            System.out.println(message);
+                            if (messageEvent.event().endsWith(".created")){
+                                messages.add(message);
+                            }
+                            else if (messageEvent.event().endsWith(".deleted")){
+                                messages.removeIf(m->m._id().equals(message._id()));
+                            } else if (messageEvent.event().endsWith(".updated")) {
+                                messages.replaceAll(m->m.sender().equals(message.sender()) ? message : m);
+                                updateMessage(message);
+                            }
+                        }));
+
+                this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
+                this.messageService.increaseOpenChatCounter();
             }
         });
-    }
-
-    public void initMessageSubscriber(){
-        disposable.add(messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
-                .subscribe(this.messages::setAll));
-
-        disposable.add(eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(messageEvent -> {
-                    final MessageDto message = messageEvent.data();
-                    System.out.println(message);
-                    if (messageEvent.event().endsWith(".created")){
-                        messages.add(message);
-                    }
-                    else if (messageEvent.event().endsWith(".deleted")){
-                        messages.removeIf(m->m._id().equals(message._id()));
-                    } else if (messageEvent.event().endsWith(".updated")) {
-                        messages.replaceAll(m->m.sender().equals(message.sender()) ? message : m);
-                        updateMessage(message);
-                    }
-                }));
     }
 
     public void renderMessage(MessageDto message){
@@ -179,6 +219,13 @@ public class ChatTabController {
                                 .subscribe(result -> groupId.set(result._id()), Throwable::printStackTrace));
                     }
                 }, Throwable::printStackTrace));
+    }
+
+    public void stop(){
+        disposable.dispose();
+        this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
+        this.messageService.decreaseChatCounter(1);
+        this.chatMessages.clear();
     }
 
 }
