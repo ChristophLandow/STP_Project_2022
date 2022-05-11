@@ -17,14 +17,11 @@ public class LobbyService {
     private final AuthApiService authApiService;
     private final GameApiService gameApiService;
 
-    private final PrefService prefService;
-
     @Inject
-    public LobbyService(UserApiService userApiService, AuthApiService authApiService, GameApiService gameApiService, PrefService prefService) {
+    public LobbyService(UserApiService userApiService, AuthApiService authApiService, GameApiService gameApiService) {
         this.userApiService = userApiService;
         this.authApiService = authApiService;
         this.gameApiService = gameApiService;
-        this.prefService = prefService;
     }
 
     public List<User> userList() {
@@ -37,7 +34,6 @@ public class LobbyService {
 
     public Observable<LogoutResult> logout() {
 
-        prefService.forget();
         return authApiService.logout();
     }
 

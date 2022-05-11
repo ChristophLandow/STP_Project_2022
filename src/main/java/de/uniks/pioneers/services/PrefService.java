@@ -22,6 +22,7 @@ public class PrefService{
     public void remember(){
 
         String encryptedToken = this.cryptService.encrypt(tokenStorage.getRefreshToken());
+        System.out.println("Encrypted Token:" + encryptedToken);
         preferences.put("RememberMe", encryptedToken);
     }
     public void forget(){
