@@ -7,17 +7,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 import static de.uniks.pioneers.Constants.RULES_SCREEN_TITLE;
 
+@Singleton
 public class RulesScreenController implements Controller {
 
     Stage stage;
 
     @Inject
-    public RulesScreenController(Stage stage) {
-        this.stage = stage;
+    public RulesScreenController() {
     }
 
     @Override
@@ -36,9 +37,17 @@ public class RulesScreenController implements Controller {
 
     @Override
     public void init() {
-        this.stage.setTitle(RULES_SCREEN_TITLE);
-        this.stage.setScene(new Scene(render()));
-        stage.show();
+        // check if rules screen is not open yet
+        if (this.stage == null) {
+            this.stage = new Stage();
+            this.stage.setScene(new Scene(render()));
+            this.stage.setTitle(RULES_SCREEN_TITLE);
+            this.stage.show();
+        } else {
+            // bring to front if already open
+            this.stage.show();
+            this.stage.toFront();
+        }
     }
 
     @Override
