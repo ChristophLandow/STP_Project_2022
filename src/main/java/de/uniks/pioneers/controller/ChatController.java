@@ -95,6 +95,7 @@ public class ChatController implements Controller {
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
 
+        this.messageService.increaseOpenChatCounter();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.UpdateMessageDto;
@@ -54,6 +55,10 @@ public class MessageService {
 
     public void increaseOpenChatCounter(){
         this.openChatCounter.set(this.openChatCounter.get()+1);
+
+        if(this.openChatCounter.get() > Constants.OPEN_CHATS_COUNTER_MAX_VALUE){
+            this.openChatCounter.set(Constants.OPEN_CHATS_COUNTER_MAX_VALUE);
+        }
     }
 
     public boolean userlistContains(User user){
