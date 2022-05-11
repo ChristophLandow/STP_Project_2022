@@ -30,10 +30,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#changelog">Changelog</a></li>
   </ol>
 </details>
 
@@ -49,7 +46,7 @@
 </div>
 
 <br><br>
-Pioneers is a contract work for Deadly Birds Society to develop a modern clone of Settlers of Catan. Among other things, it features a comprehensive chat function and the possibility to play online with other settlers.
+Project Pioneers is a contract work for Deadly Birds Society to develop a modern clone of Settlers of Catan. Among other things, it features a comprehensive chat function and the possibility to play online with other settlers.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -89,9 +86,7 @@ To play Pioneers you only need Java 17 or higher and an active connection to the
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+To play Pioneers you need an account. If you don't have an account yet, you can go from the Login Screen to the Sign Up Screen and create an account with username, password and avatar. Then you can log in with your account using the login screen. After a successful login process you will find yourself in the lobby. From there, you can chat with other users, join an existing game or create a new game yourself. We at Team HERKULES wish you a lot of fun with Pioneers.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -113,59 +108,24 @@ _For more examples, please refer to the [Documentation](https://example.com)_
     - [X] Send to other users
     - [X] Delete own messages
     - [X] Automatic display of new message
- .....
- .....
-
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- [X] Game-Management
+    - [X] Create game
+- [ ] Game view
+    - [ ] Show list of participants
+    - [ ] Join with password
+    - [ ] Ready / not ready
+    - [ ] Leave
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
-<!-- LICENSE -->
-## License
+<!-- CHANGELOG -->
+## Changelog
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
-
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
+- Version 1.0
+    - ....
+    - ...
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
