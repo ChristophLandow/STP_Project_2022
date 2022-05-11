@@ -9,16 +9,20 @@ public class PrefService{
 
     private final TokenStorage tokenStorage;
 
+    private final CryptService cryptService;
+
     @Inject
-    public PrefService(Preferences preferences, TokenStorage tokenStorage){
+    public PrefService(Preferences preferences, TokenStorage tokenStorage, CryptService cryptService){
 
         this.preferences = preferences;
         this.tokenStorage = tokenStorage;
+        this.cryptService = cryptService;
     }
 
     public void remember(){
 
-        preferences.put("RememberMe", tokenStorage.getRefreshToken());
+        String encryptedToken = this.cryptService.encrypt(tokenStorage.getRefreshToken());
+        preferences.put("RememberMe", encryptedToken);
     }
     public void forget(){
 
@@ -27,6 +31,10 @@ public class PrefService{
 
     public String recall(){
 
-        return preferences.get("RememberMe", "");
+        String encryptedToken = preferences.get("RememberMe", "");
+        if(encryptedToken.equals("")){
+            return "";
+        }
+        return this.cryptService.decrypt(encryptedToken);
     }
 }

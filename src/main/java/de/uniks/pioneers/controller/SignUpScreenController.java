@@ -56,8 +56,6 @@ public class SignUpScreenController implements Controller{
     @FXML
     public Button buttonRegister;
     @FXML
-    public Button buttonReturn;
-    @FXML
     public Button leaveButton;
     @FXML
     public Text userNameStatusText;
