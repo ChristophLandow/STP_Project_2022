@@ -139,7 +139,7 @@ public class LoginScreenController implements Controller {
     @Override
     public void stop(){}
 
-    public void login(ActionEvent event) {
+    public void login() {
 
         this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)

@@ -12,7 +12,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -48,7 +47,7 @@ public class SignUpScreenController implements Controller{
     @FXML
     public TextField passwordFieldConfirmation;
     @FXML
-    public Spinner avatarSelector;
+    public Spinner<Integer> avatarSelector;
     @FXML
     public Button buttonUploadAvatar;
     @FXML
@@ -138,7 +137,7 @@ public class SignUpScreenController implements Controller{
         avatar = newAvatar;
         resetAvatar();
     }
-    public void uploadAvatar(ActionEvent actionEvent) throws IOException {
+    public void uploadAvatar() throws IOException {
 
         resetAvatar();
 
@@ -169,7 +168,7 @@ public class SignUpScreenController implements Controller{
         this.avatarStatusText.setText("");
         this.customAvatar = "";
     }
-    public void register(ActionEvent actionEvent) throws IOException, URISyntaxException {
+    public void register() throws IOException, URISyntaxException {
 
         String avatarB64 = customAvatar;
         if(customAvatar.equals("")){
@@ -207,16 +206,16 @@ public class SignUpScreenController implements Controller{
         alert.setContentText("You can now log into your new account.");
 
         alert.showAndWait();
-        toLogin(new ActionEvent());
+        toLogin();
     }
-    public void toLogin(ActionEvent actionEvent) {
+    public void toLogin() {
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
         loginController.userName.set(textFieldUserName.getText());
         this.app.show(loginController);
     }
 
-    public void leave(ActionEvent actionEvent) {
+    public void leave() {
         this.app.show(loginScreenControllerProvider.get());
     }
 }
