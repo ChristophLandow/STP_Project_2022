@@ -42,6 +42,7 @@ public class RulesScreenController implements Controller {
             this.stage = new Stage();
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(RULES_SCREEN_TITLE);
+            this.stage.setX(100);
             this.stage.show();
         } else {
             // bring to front if already open
