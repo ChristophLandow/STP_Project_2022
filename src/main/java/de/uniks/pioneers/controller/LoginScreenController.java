@@ -34,6 +34,7 @@ public class LoginScreenController implements Controller {
     private final LoginService loginService;
     private final Provider<SignUpScreenController> signUpScreenControllerProvider;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
 
     @FXML
     public TextField textFieldUserName;
@@ -53,11 +54,12 @@ public class LoginScreenController implements Controller {
     public Text textRules;
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
     }
 
     @Override
@@ -170,7 +172,7 @@ public class LoginScreenController implements Controller {
     public void toRules(MouseEvent mouseEvent) {
         System.out.println("toRules");
 
-        RulesScreenController controller = new RulesScreenController(new Stage());
+        RulesScreenController controller = rulesScreenControllerProvider.get();
         controller.init();
     }
 

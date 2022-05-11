@@ -61,6 +61,7 @@ public class LobbyScreenController implements Controller {
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
     private  final Provider<LobbyUserlistControler> userlistControlerProvider;
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final EventListener eventListener;
     private final LobbyService lobbyService;
     private final UserService userService;
@@ -75,6 +76,7 @@ public class LobbyScreenController implements Controller {
                                  Provider<LoginScreenController> loginScreenControllerProvider,
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
+                                 Provider<RulesScreenController> rulesScreenControllerProvider,
                                  MessageService messageService,
                                  UserlistService userlistService
     ) {
@@ -88,6 +90,7 @@ public class LobbyScreenController implements Controller {
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
     }
 
     @Override
@@ -166,7 +169,7 @@ public class LobbyScreenController implements Controller {
     }
 
     private void openRules(MouseEvent mouseEvent) {
-        RulesScreenController controller = new RulesScreenController(new Stage());
+        RulesScreenController controller = rulesScreenControllerProvider.get();
         controller.init();
     }
 
