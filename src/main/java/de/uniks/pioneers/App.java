@@ -64,9 +64,11 @@ public class App extends Application {
         stage.getIcons().add(icon);
         if (!GraphicsEnvironment.isHeadless()) {
             try {
-                final Taskbar taskbar = Taskbar.getTaskbar();
-                final java.awt.Image image = ImageIO.read(Objects.requireNonNull(Main.class.getResource(iconName)));
-                taskbar.setIconImage(image);
+                if (Taskbar.isTaskbarSupported()) {
+                    final Taskbar taskbar = Taskbar.getTaskbar();
+                    final java.awt.Image image = ImageIO.read(Objects.requireNonNull(Main.class.getResource(iconName)));
+                    taskbar.setIconImage(image);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
