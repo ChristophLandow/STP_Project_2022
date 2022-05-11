@@ -100,10 +100,21 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [X] User-Management
+    - [X] Create Account
+    - [X] Login
+- [X] Lobby
+    - [X] Show list of (online)-users
+    - [X] Show list of games
+    - [X] Logout
+    - [X] Logout
+- [X] Direct messages
+    - [X] Display of old messages
+    - [X] Send to other users
+    - [X] Delete own messages
+    - [X] Automatic display of new message
+ .....
+ .....
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
