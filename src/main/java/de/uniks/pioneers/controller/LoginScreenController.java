@@ -12,7 +12,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,7 +31,7 @@ public class LoginScreenController implements Controller {
     private final LoginService loginService;
     private final Provider<SignUpScreenController> signUpScreenControllerProvider;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final PrefService prefService;
 
     @FXML
@@ -53,11 +52,12 @@ public class LoginScreenController implements Controller {
     public Text textRules;
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, PrefService prefService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.prefService = prefService;
     }
 
@@ -179,7 +179,9 @@ public class LoginScreenController implements Controller {
     }
 
     public void toRules(MouseEvent mouseEvent) {
-        System.out.println("toRules");
+
+        RulesScreenController controller = rulesScreenControllerProvider.get();
+        controller.init();
     }
 
     public void toLobby() {

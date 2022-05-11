@@ -1,11 +1,12 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
-
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.UpdateMessageDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -33,6 +34,7 @@ public class ChatMessage {
     private final SimpleStringProperty groupId;
     private final MessageDto message;
     private final MessageService messageService;
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
 
     public ChatMessage(User sender, MessageDto message, VBox tabChatBox, SimpleStringProperty groupId, MessageService messageService){
@@ -50,7 +52,7 @@ public class ChatMessage {
             avatarImgView = new ImageView(new Image(this.sender.avatar()));
         }
         catch(IllegalArgumentException | NullPointerException e){
-            avatarImgView = new ImageView(new Image(App.class.getResource("user-avatar.svg").toString()));
+            avatarImgView = new ImageView(new Image(Constants.DEFAULT_AVATAR));
         }
 
         avatarImgView.setFitHeight(20);
@@ -84,10 +86,10 @@ public class ChatMessage {
     }
 
     public void removeChat(MouseEvent event){
-        messageService.updateMessage("groups", groupId.getValue(), message._id(),new UpdateMessageDto(DELETE_MESSAGE_TEXT))
+        disposable.add(messageService.updateMessage("groups", groupId.getValue(), message._id(),new UpdateMessageDto(DELETE_MESSAGE_TEXT))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(res -> System.out.println("Nachricht gelöscht!"));
+                .subscribe(res -> System.out.println("Nachricht gelöscht!")));
     }
 
     public void stop(){
