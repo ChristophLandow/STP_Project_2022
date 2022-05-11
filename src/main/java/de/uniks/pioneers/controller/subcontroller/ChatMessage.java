@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.UpdateMessageDto;
 import de.uniks.pioneers.model.User;
@@ -51,7 +52,7 @@ public class ChatMessage {
             avatarImgView = new ImageView(new Image(this.sender.avatar()));
         }
         catch(IllegalArgumentException | NullPointerException e){
-            avatarImgView = new ImageView(new Image(App.class.getResource("user-avatar.svg").toString()));
+            avatarImgView = new ImageView(new Image(Constants.DEFAULT_AVATAR));
         }
 
         avatarImgView.setFitHeight(20);

@@ -1,10 +1,12 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -25,9 +27,9 @@ public class LobbyUserlistControler extends OnlineUserlistController {
     private final Provider<ChatController> chatControllerProvider;
 
     @Inject
-    public LobbyUserlistControler(App app, UserService userService, MessageService messageService, EventListener eventListener,
-                                  Provider<ChatController> chatControllerProvider){
-        super(userService, messageService, eventListener);
+    public LobbyUserlistControler(App app, UserService userService, MessageService messageService, UserlistService userlistService,
+                                  EventListener eventListener, Provider<ChatController> chatControllerProvider){
+        super(userService, messageService, userlistService, eventListener);
         this.app = app;
         this.chatControllerProvider = chatControllerProvider;
     }
@@ -48,8 +50,8 @@ public class LobbyUserlistControler extends OnlineUserlistController {
         ImageView imgView;
         try {
             imgView = new ImageView(new Image(user.avatar()));
-        } catch (NullPointerException e) {
-            imgView = new ImageView();
+        } catch (IllegalArgumentException | NullPointerException e) {
+            imgView = new ImageView(new Image(Constants.DEFAULT_AVATAR));
         }
 
         imgView.setOnMouseClicked(this::openChat);
@@ -85,8 +87,8 @@ public class LobbyUserlistControler extends OnlineUserlistController {
 
                 try {
                     ((ImageView) gpane.getChildren().get(1)).setImage(new Image(user.avatar()));
-                }catch(NullPointerException e){
-                    ((ImageView) gpane.getChildren().get(1)).setImage(null);
+                }catch(IllegalArgumentException | NullPointerException e){
+                    ((ImageView) gpane.getChildren().get(1)).setImage(new Image(Constants.DEFAULT_AVATAR));
                 }
             }
         }
@@ -96,12 +98,21 @@ public class LobbyUserlistControler extends OnlineUserlistController {
     public void openChat(MouseEvent event){
         GridPane newChatUserParent = (GridPane) ((Node) event.getSource()).getParent();
         Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
-        ImageView chatWithAvatar = (ImageView) newChatUserParent.getChildren().get(1);
-        Label chatWithUserid = (Label) newChatUserParent.getChildren().get(2);
 
-        this.messageService.getchatUserList().removeIf(u->u.name().equals(chatWithUsername.getText()));
-        this.messageService.addUserToChatUserList(
-                new User(chatWithUserid.getText(), chatWithUsername.getText(),"", chatWithAvatar.getImage().getUrl()));
+        User findUser = new User("","","","");
+        for(User user : this.userlistService.getUsers()){
+            if(user.name() != null){
+                if(user.name().equals(chatWithUsername.getText())){
+                    findUser = user;
+                    break;
+                }
+            }
+        }
+
+        final User openUser = findUser;
+
+        this.messageService.getchatUserList().removeIf(u->u._id().equals(openUser._id()));
+        this.messageService.addUserToChatUserList(openUser);
         app.show(chatControllerProvider.get());
     }
 }
