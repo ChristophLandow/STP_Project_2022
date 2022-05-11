@@ -113,6 +113,11 @@ public class LobbyUserlistControler extends OnlineUserlistController {
 
         this.messageService.getchatUserList().removeIf(u->u._id().equals(openUser._id()));
         this.messageService.addUserToChatUserList(openUser);
+
+        if(this.messageService.getchatUserList().size() > Constants.MAX_OPEN_CHATS){
+            this.messageService.getchatUserList().remove(0);
+        }
+
         app.show(chatControllerProvider.get());
     }
 }
