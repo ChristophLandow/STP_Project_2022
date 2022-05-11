@@ -3,7 +3,12 @@ package de.uniks.pioneers;
 import de.uniks.pioneers.controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.LOGIN_SCREEN_TITLE;
 
@@ -18,14 +23,14 @@ public class App extends Application {
         this.controller = mainComponent.loginController();
     }
     public App(Controller controller){
-
         this.controller = controller;
     }
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
 
         this.stage = primaryStage;
         stage.setTitle(LOGIN_SCREEN_TITLE);
+        setIcons();
         show(this.controller);
         stage.show();
     }
@@ -52,6 +57,22 @@ public class App extends Application {
     public Stage getStage() {
         return stage;
     }
+
+    private void setIcons() {
+        String iconName = "AppIcon.png";
+        Image icon = new Image(Objects.requireNonNull(App.class.getResource(iconName)).toString());
+        stage.getIcons().add(icon);
+        if (!GraphicsEnvironment.isHeadless()) {
+            try {
+                final Taskbar taskbar = Taskbar.getTaskbar();
+                final java.awt.Image image = ImageIO.read(Objects.requireNonNull(Main.class.getResource(iconName)));
+                taskbar.setIconImage(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
 
 
