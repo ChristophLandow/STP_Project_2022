@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -17,36 +18,33 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class OnlineUserlistController {
     protected final UserService userService;
     protected final MessageService messageService;
+    protected final UserlistService userlistService;
     protected final EventListener eventListener;
-    protected ObservableList<User> users = FXCollections.observableArrayList();
-    private User currentUser = new User("","","","");
+    //protected ObservableList<User> users = FXCollections.observableArrayList();
+    //private User currentUser = new User("","","","");
 
     @Inject
-    public OnlineUserlistController(UserService userService, MessageService messageService, EventListener eventListener){
+    public OnlineUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener){
         this.userService = userService;
         this.messageService = messageService;
+        this.userlistService = userlistService;
         this.eventListener = eventListener;
     }
 
     public void render(){
-        this.userService.getCurrentUser()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(user -> {
-                    this.currentUser = user;
-                    removeUser(user);
-                });
+        this.userlistService.getUsers().forEach(this::renderUser);
 
-        users.addListener((ListChangeListener<? super User>) c->{
+        this.userlistService.getUsers().addListener((ListChangeListener<? super User>) c->{
             c.next();
             if(c.wasAdded()){
                 c.getAddedSubList().forEach(u->{
                     if (validUser(u)) {
-                        if(!u._id().equals(this.currentUser._id())){
+                        if(!u._id().equals(this.userlistService.getCurrentUser()._id())){
                             renderUser(u);
                         }
                     }
                     else{
-                        users.remove(u);
+                        this.userlistService.getUsers().remove(u);
                     }
                 });
             }
@@ -55,11 +53,11 @@ public class OnlineUserlistController {
             }
             else if(c.wasUpdated()){
                 for(int i=c.getFrom(); i < c.getTo(); i++){
-                    if(!users.get(i)._id().equals(this.currentUser._id())){
-                        updateUser(users.get(i));
+                    if(!this.userlistService.getUsers().get(i)._id().equals(this.userlistService.getCurrentUser()._id())){
+                        updateUser(this.userlistService.getUsers().get(i));
                     }
                     else{
-                        removeUser(users.get(i));
+                        removeUser(this.userlistService.getUsers().get(i));
                     }
                 }
             }
@@ -67,28 +65,6 @@ public class OnlineUserlistController {
     }
 
     public void init(){
-        userService.findAll().observeOn(FX_SCHEDULER)
-                .subscribe(this.users::setAll);
-
-        eventListener.listen("users.*.*", User.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(userEvent -> {
-                    final User user = userEvent.data();
-                    if(validUser(user)) {
-                        if (userEvent.event().endsWith(".created") && user.status().equals("online")) {
-                            users.add(user);
-                        } else if (userEvent.event().endsWith(".deleted")) {
-                            users.removeIf(u -> u._id().equals(user._id()));
-                        } else if (userEvent.event().endsWith(".updated")) {
-                            if (user.status().equals("online")) {
-                                users.removeIf(u -> u._id().equals(user._id()));
-                                users.add(user);
-                            } else {
-                                users.removeIf(u -> u._id().equals(user._id()));
-                            }
-                        }
-                    }
-                });
     }
 
     public void renderUser(User user){
