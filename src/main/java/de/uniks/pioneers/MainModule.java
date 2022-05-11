@@ -12,9 +12,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import javax.inject.Singleton;
-
+import java.util.prefs.Preferences;
 import static de.uniks.pioneers.Constants.API_V1_PREFIX;
 import static de.uniks.pioneers.Constants.BASE_URL;
 
@@ -34,7 +33,7 @@ public class MainModule {
     @Singleton
     static OkHttpClient client(TokenStorage tokenStorage) {
         return new OkHttpClient.Builder().addInterceptor(chain -> {
-            final String token = tokenStorage.getToken();
+            final String token = tokenStorage.getAccessToken();
             if (token == null) {
                 return chain.proceed(chain.request());
             }
@@ -46,7 +45,11 @@ public class MainModule {
             return chain.proceed(newRequest);
         }).build();
     }
+    @Provides
+    Preferences prefs(){
 
+        return Preferences.userNodeForPackage(Main.class);
+    }
     @Provides
     @Singleton
     static Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
@@ -56,9 +59,7 @@ public class MainModule {
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createAsync())
                 .build();
-
     }
-
     @Provides
     static UserApiService userApiService(Retrofit retrofit){
         return retrofit.create(UserApiService.class);

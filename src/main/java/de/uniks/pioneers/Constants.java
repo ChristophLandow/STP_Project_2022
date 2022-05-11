@@ -38,4 +38,6 @@ public class Constants {
 
     public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
 
+    public static final byte[] encryptKeySeed = "UGk8LmWKk2WXPEQGJAsOzOYUMfSjasH3".getBytes();
+
 }

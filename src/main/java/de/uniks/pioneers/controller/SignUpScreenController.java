@@ -12,7 +12,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,6 +30,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.*;
 
@@ -47,15 +47,13 @@ public class SignUpScreenController implements Controller{
     @FXML
     public TextField passwordFieldConfirmation;
     @FXML
-    public Spinner avatarSelector;
+    public Spinner<Integer> avatarSelector;
     @FXML
     public Button buttonUploadAvatar;
     @FXML
     public ImageView imageViewAvatar;
     @FXML
     public Button buttonRegister;
-    @FXML
-    public Button buttonReturn;
     @FXML
     public Button leaveButton;
     @FXML
@@ -139,26 +137,26 @@ public class SignUpScreenController implements Controller{
         avatar = newAvatar;
         resetAvatar();
     }
-    public void uploadAvatar(ActionEvent actionEvent) throws IOException {
+    public void uploadAvatar() throws IOException {
 
         resetAvatar();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Choose Avatar", "*.PNG", "*.jpg"));
         File avatarURL = fileChooser.showOpenDialog(null);
-        byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
-        String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+        if(avatarURL != null) {
+            byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
+            String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
 
-        Image image = new Image(avatarURL.getAbsolutePath());
-        this.imageViewAvatar.setImage(image);
+            Image image = new Image(avatarURL.getAbsolutePath());
+            this.imageViewAvatar.setImage(image);
 
-        if(avatarB64.length() > AVATAR_CHAR_LIMIT){
-            this.avatarStatusText.setText("Image exceeds file size limit");
-        }else{
-            this.customAvatar = avatarB64;
+            if (avatarB64.length() > AVATAR_CHAR_LIMIT) {
+                this.avatarStatusText.setText("Image exceeds file size limit");
+            } else {
+                this.customAvatar = avatarB64;
+            }
         }
-
-        System.out.println(avatarB64.length());
     }
 
     private void resetStatus(MouseEvent mouseEvent) {
@@ -170,13 +168,13 @@ public class SignUpScreenController implements Controller{
         this.avatarStatusText.setText("");
         this.customAvatar = "";
     }
-    public void register(ActionEvent actionEvent) throws IOException, URISyntaxException {
+    public void register() throws IOException, URISyntaxException {
 
         String avatarB64 = customAvatar;
         if(customAvatar.equals("")){
 
             getClass().getResource("subcontroller/" + avatar);
-            byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatar).toURI()));
+            byte[] data = Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getResource("subcontroller/" + avatar)).toURI()));
             avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
         }
 
@@ -208,16 +206,16 @@ public class SignUpScreenController implements Controller{
         alert.setContentText("You can now log into your new account.");
 
         alert.showAndWait();
-        toLogin(new ActionEvent());
+        toLogin();
     }
-    public void toLogin(ActionEvent actionEvent) {
+    public void toLogin() {
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
         loginController.userName.set(textFieldUserName.getText());
         this.app.show(loginController);
     }
 
-    public void leave(ActionEvent actionEvent) {
+    public void leave() {
         this.app.show(loginScreenControllerProvider.get());
     }
 }
