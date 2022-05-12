@@ -11,6 +11,8 @@ import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -332,28 +334,13 @@ public class LobbyScreenController implements Controller {
     }
 
 
-    public final SimpleStringProperty gameName = new SimpleStringProperty();
-    public final SimpleStringProperty password = new SimpleStringProperty();
+
+
 
     public void newGame(ActionEvent actionEvent) {
-        Popup createGame = new Popup();
-        //createGame.getContent().add(new Label("kappa"));
-
-        /*Label label = new Label();
-        label.setMinSize(300,300);
-        label.setText("kappa");
-        label.setFont(Font.font ("Verdana", 30));
-
-        VBox popUp = new VBox();
-        popUp.setMinSize(300  ,300);
-        popUp.getChildren().add(label);
-
-        createGame.getContent().add(popUp);
-
-        ;*/
-
+        //create pop up to create a new game
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/CreateNewGamePopUp.fxml"));
-        Node node = null;
+        Parent node = null;
         try {
             node = loader.load();
             CreateNewGamePopUpController createNewGamePopUpController = loader.getController();
@@ -362,14 +349,11 @@ public class LobbyScreenController implements Controller {
             e.printStackTrace();
         }
 
-        createGame.getContent().add(node);
         Stage stage = new Stage();
-        VBox root = new VBox();
-        root.setMinSize(800,600);
-        Scene scene = new Scene(root);
+        stage.setTitle("create new game pop up");
+        Scene scene = new Scene(node);
         stage.setScene(scene);
         stage.show();
-        createGame.show(stage);
 
         /*
         lobbyService.createGame()
