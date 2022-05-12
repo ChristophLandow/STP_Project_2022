@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Objects;
+import java.awt.FileDialog;
 
 import static de.uniks.pioneers.Constants.*;
 
@@ -148,7 +149,7 @@ public class SignUpScreenController implements Controller{
             byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
             String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
 
-            Image image = new Image(avatarURL.getAbsolutePath());
+            Image image = new Image("file:" + avatarURL.getAbsolutePath());
             this.imageViewAvatar.setImage(image);
 
             if (avatarB64.length() > AVATAR_CHAR_LIMIT) {
