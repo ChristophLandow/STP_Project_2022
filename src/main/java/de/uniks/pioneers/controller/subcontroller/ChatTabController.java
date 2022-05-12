@@ -9,11 +9,11 @@ import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
@@ -72,7 +72,11 @@ public class ChatTabController {
         this.chatTabPane.getTabs().add(chatTab);
         this.chatTabPane.getSelectionModel().select(chatTab);
 
-        this.chatBox.getChildren().add(new Label("Loading..."));
+        Label loadingLabel = new Label(Constants.LOADING_CHAT_TEXT);
+        loadingLabel.setPrefSize(340,263);
+        loadingLabel.setAlignment(Pos.CENTER);
+
+        this.chatBox.getChildren().add(loadingLabel);
 
         this.messageService.getOpenChatQueue().add(this.chattingWith);
         this.messageService.increaseOpenChatCounter();

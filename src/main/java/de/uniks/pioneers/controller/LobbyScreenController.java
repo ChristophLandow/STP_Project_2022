@@ -50,9 +50,8 @@ public class LobbyScreenController implements Controller {
     @FXML
     public Button NewGameButton;
 
-    private App app;
+    private final App app;
 
-    private final Provider<ChatController> chatControllerProvider;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
     private  final Provider<LobbyUserlistControler> userlistControlerProvider;
@@ -63,19 +62,16 @@ public class LobbyScreenController implements Controller {
     private final LobbyService lobbyService;
     private final UserService userService;
     private final MessageService messageService;
-    private final UserlistService userlistService;
     private final ObservableList<Game> games = FXCollections.observableArrayList();
     private List<GameListElementController> gameListElementControllers;
 
     @Inject
     public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService,
-                                 Provider<ChatController> chatControllerProvider,
                                  Provider<LoginScreenController> loginScreenControllerProvider,
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
                                  MessageService messageService,
-                                 UserlistService userlistService,
                                  PrefService prefService
     ) {
         this.app = app;
@@ -83,8 +79,6 @@ public class LobbyScreenController implements Controller {
         this.lobbyService = lobbyService;
         this.userService = userService;
         this.messageService = messageService;
-        this.userlistService = userlistService;
-        this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
@@ -217,7 +211,7 @@ public class LobbyScreenController implements Controller {
     }
 
 
-    public void logout(ActionEvent actionEvent) {
+    public void logout(ActionEvent ignoredActionEvent) {
         this.messageService.getchatUserList().clear();
         prefService.forget();
         logout();
@@ -232,7 +226,7 @@ public class LobbyScreenController implements Controller {
                 .subscribe();
     }
 
-    public void newGame(ActionEvent actionEvent) {
+    public void newGame(ActionEvent ignoredActionEvent) {
         lobbyService.createGame()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {

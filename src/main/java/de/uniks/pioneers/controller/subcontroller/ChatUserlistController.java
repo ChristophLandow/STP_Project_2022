@@ -3,7 +3,6 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.services.UserlistService;
@@ -27,11 +26,7 @@ public class ChatUserlistController extends OnlineUserlistController {
 
     @Override
     public void render(){
-        this.chatTabPane.getTabs().remove(0);
-
-        for(User u: this.messageService.getchatUserList()){
-            chatController.addTab(u);
-        }
+        this.userListView.setOnMouseClicked(this::openChat);
 
         super.render();
     }
@@ -57,7 +52,7 @@ public class ChatUserlistController extends OnlineUserlistController {
 
     @Override
     public void openChat(MouseEvent event){
-        Label userLabel = (Label) event.getSource();
+        Label userLabel = userListView.getSelectionModel().getSelectedItem();
         User findUser = new User("","","","");
         for(User user : this.userlistService.getUsers()){
             if(user.name() != null){

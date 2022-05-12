@@ -40,6 +40,8 @@ public class Constants {
 
     public static final int OPEN_CHATS_COUNTER_MAX_VALUE = 6;
 
+    public static final String LOADING_CHAT_TEXT = "Loading...";
+
     public static final String DELETE_MESSAGE_TEXT = "This message was deleted";
 
     public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
