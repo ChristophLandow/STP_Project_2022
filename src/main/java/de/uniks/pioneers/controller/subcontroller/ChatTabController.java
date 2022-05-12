@@ -9,6 +9,7 @@ import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -45,8 +46,7 @@ public class ChatTabController {
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
 
     private final CompositeDisposable disposable = new CompositeDisposable();
-
-    private boolean finishedInitialization = false;
+    private final SimpleBooleanProperty finishedInitialization = new SimpleBooleanProperty(false);
 
     public ChatTabController(ChatController chatController, MessageService messageService, UserService userService, GroupService groupService,
                              TabPane chatTabPane, User chattingWith, EventListener eventListener){
@@ -160,7 +160,7 @@ public class ChatTabController {
 
                 this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
                 this.messageService.increaseOpenChatCounter();
-                this.finishedInitialization = true;
+                this.finishedInitialization.set(true);
             }
         });
     }
@@ -235,7 +235,7 @@ public class ChatTabController {
         this.chatMessages.clear();
     }
 
-    public boolean getFinishedInitialization(){
+    public SimpleBooleanProperty getFinishedInitialization(){
         return this.finishedInitialization;
     }
 
