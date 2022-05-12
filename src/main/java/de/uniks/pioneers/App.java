@@ -69,9 +69,7 @@ public class App extends Application {
                     final java.awt.Image image = ImageIO.read(Objects.requireNonNull(Main.class.getResource(iconName)));
                     taskbar.setIconImage(image);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } catch (Exception ignored) {}
         }
     }
 
