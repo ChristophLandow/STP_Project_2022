@@ -13,6 +13,8 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.control.LabeledMatchers;
+import org.testfx.matcher.control.TextMatchers;
+
 import javax.inject.Provider;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,27 +26,31 @@ class SignUpScreenControllerTest extends ApplicationTest {
     @Spy
     Provider<LoginScreenController> loginScreenControllerProvider;
 
+    @Spy
+    App app;
+
     @InjectMocks
     SignUpScreenController signUpScreenController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
 
-        //new App(signUpScreenController).start(stage);
+        app.start(stage);
+        app.show(signUpScreenController);
     }
 
 
     @Test
     void register(){
 
-        //write("Test\t");
-        //write("1234567");
-        //FxAssert.verifyThat("#passwordStatusText", LabeledMatchers.hasText("Password must be at least 8 characters long"));
-        //write("8\t");
-        //FxAssert.verifyThat("#passwordStatusText", LabeledMatchers.hasText("Passwords do not match"));
-        //FxAssert.verifyThat("#buttonRegister", NodeMatchers.isDisabled());
-        //write("12345678\t");
-        //FxAssert.verifyThat("#passwordStatusText", LabeledMatchers.hasText(""));
+        write("Test\t");
+        write("1234567");
+        FxAssert.verifyThat("#passwordStatusText", TextMatchers.hasText("Password must be at least 8 characters long"));
+        write("8\t");
+        FxAssert.verifyThat("#passwordStatusText", TextMatchers.hasText("Passwords do not match"));
+        FxAssert.verifyThat("#buttonRegister", NodeMatchers.isDisabled());
+        write("12345678\t");
+        FxAssert.verifyThat("#passwordStatusText", TextMatchers.hasText(""));
 
 
     }

@@ -22,12 +22,15 @@ public class App extends Application {
         this.controller = controller;
     }
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
 
         this.stage = primaryStage;
-        stage.setTitle(LOGIN_SCREEN_TITLE);
-        show(this.controller);
-        stage.show();
+        if(this.controller != null){
+
+            stage.setTitle(LOGIN_SCREEN_TITLE);
+            show(this.controller);
+            stage.show();
+        }
     }
 
     @Override
