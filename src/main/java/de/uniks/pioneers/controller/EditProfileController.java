@@ -43,10 +43,10 @@ public class EditProfileController implements Controller {
     @FXML public Text newPasswordStatusText;
     @FXML public Text oldPasswordStatusText;
 
-    private App app;
+    private final App app;
     private final UserService userService;
-    private LoginService loginService;
-    private Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final LoginService loginService;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private String avatarStr;
 
     private final ObservableList<User> users = FXCollections.observableArrayList();
