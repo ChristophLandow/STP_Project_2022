@@ -48,15 +48,14 @@ public class CreateNewGamePopUpController {
     private LobbyService lobbyService;
     public Consumer<Game> createGameLobby;
 
-    final IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
-    final IntegerBinding passwordLength = Bindings.length(passWordTextField.textProperty());
-
-
     public void init(LobbyScreenController lobbyScreenController, LobbyService lobbyService) {
         this.lobbyScreenController = lobbyScreenController;
         this.lobbyService = lobbyService;
         createGameButton.setOnMouseClicked(this::createGame);
         cancelButton.setOnMouseClicked(this::closePoPUp);
+
+        IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
+        IntegerBinding passwordLength = Bindings.length(passWordTextField.textProperty());
 
         passwordLen.textProperty().bind(Bindings
                 .when(passwordLength.greaterThan(7)).then("")
@@ -65,8 +64,6 @@ public class CreateNewGamePopUpController {
         nameLen.textProperty().bind(Bindings
                 .when(gameNameLength.greaterThan(3)).then("")
                 .otherwise("to make sense use more than three characters"));
-
-
     }
 
     private void createGame(MouseEvent mouseEvent) {
@@ -76,6 +73,8 @@ public class CreateNewGamePopUpController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
                     lobbyScreenController.showNewGameLobby(game);
+                    Stage stage = (Stage) popUpBox.getScene().getWindow();
+                    stage.close();
                 });
     }
 
@@ -87,5 +86,7 @@ public class CreateNewGamePopUpController {
     public void setCreateGameLobby(Consumer<Game> createGameLobby) {
         this.createGameLobby = createGameLobby;
     }
+
+
 
 }
