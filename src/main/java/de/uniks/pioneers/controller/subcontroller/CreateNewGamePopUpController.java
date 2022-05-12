@@ -4,10 +4,12 @@ import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -32,7 +34,7 @@ public class CreateNewGamePopUpController {
     @FXML
     public Label passWordLabel;
     @FXML
-    public TextField passWordTextField;
+    public PasswordField passwordTextfield;
     @FXML
     public HBox buttonBox;
     @FXML
@@ -55,7 +57,10 @@ public class CreateNewGamePopUpController {
         cancelButton.setOnMouseClicked(this::closePoPUp);
 
         IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
-        IntegerBinding passwordLength = Bindings.length(passWordTextField.textProperty());
+        IntegerBinding passwordLength = Bindings.length(passwordTextfield.textProperty());
+        BooleanBinding invalid = Bindings.equal(passwordLen.textProperty(), nameLen.textProperty()).not();
+
+        createGameButton.disableProperty().bind(invalid);
 
         passwordLen.textProperty().bind(Bindings
                 .when(passwordLength.greaterThan(7)).then("")
@@ -68,7 +73,7 @@ public class CreateNewGamePopUpController {
 
     private void createGame(MouseEvent mouseEvent) {
         String name = gameNameTextField.getText();
-        String password = passWordTextField.getText();
+        String password = passwordTextfield.getText();
         lobbyService.createGame(name,password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
