@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,10 +16,12 @@ import static de.uniks.pioneers.Constants.RULES_SCREEN_TITLE;
 @Singleton
 public class RulesScreenController implements Controller {
 
+    private final App app;
     Stage stage;
 
     @Inject
-    public RulesScreenController() {
+    public RulesScreenController(App app) {
+        this.app = app;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class RulesScreenController implements Controller {
             this.stage.show();
             this.stage.toFront();
         }
+        app.setIcons(stage);
     }
 
     @Override
