@@ -46,6 +46,8 @@ public class ChatTabController {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    private boolean finishedInitialization = false;
+
     public ChatTabController(ChatController chatController, MessageService messageService, UserService userService, GroupService groupService,
                              TabPane chatTabPane, User chattingWith, EventListener eventListener){
         this.chatController = chatController;
@@ -158,6 +160,7 @@ public class ChatTabController {
 
                 this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
                 this.messageService.increaseOpenChatCounter();
+                this.finishedInitialization = true;
             }
         });
     }
@@ -230,6 +233,10 @@ public class ChatTabController {
         this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
         //this.messageService.decreaseChatCounter(1);
         this.chatMessages.clear();
+    }
+
+    public boolean getFinishedInitialization(){
+        return this.finishedInitialization;
     }
 
 }

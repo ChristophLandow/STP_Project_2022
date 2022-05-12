@@ -18,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -153,23 +152,17 @@ public class ChatController implements Controller {
     public void send(ActionEvent ignoredEvent) {
         Tab openTab = chatTabPane.getSelectionModel().getSelectedItem();
 
+        ChatTabController openChatTabController = null;
+        for(ChatTabController tabController : this.chatTabControllers){
+            if(tabController.chattingWith.name().equals(openTab.getText())){
+                openChatTabController = tabController;
+            }
+        }
+
         boolean sendReady = false;
 
-        if(openTab.getContent() != null){
-            VBox openVBox = (VBox) ((ScrollPane) openTab.getContent()).getContent();
-
-            if(openVBox != null){
-                Label firstText = (Label) openVBox.getChildren().get(0);
-
-                if(firstText != null){
-                    if(!firstText.getText().equals(Constants.LOADING_CHAT_TEXT)) {
-                        sendReady = true;
-                    }
-                }
-                else{
-                    sendReady = true;
-                }
-            }
+        if(openChatTabController != null){
+            sendReady = openChatTabController.getFinishedInitialization();
         }
 
         if(sendReady) {
