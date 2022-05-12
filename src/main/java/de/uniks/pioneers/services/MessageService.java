@@ -13,10 +13,8 @@ import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Queue;
 
 @Singleton
 public class MessageService {

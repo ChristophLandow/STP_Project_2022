@@ -5,23 +5,16 @@ import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 import javax.inject.Inject;
-
-import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class OnlineUserlistController {
     protected final UserService userService;
     protected final MessageService messageService;
     protected final UserlistService userlistService;
     protected final EventListener eventListener;
-    //protected ObservableList<User> users = FXCollections.observableArrayList();
-    //private User currentUser = new User("","","","");
 
     @Inject
     public OnlineUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener){
@@ -84,10 +77,6 @@ public class OnlineUserlistController {
     }
 
     public boolean validUser(User user){
-        if(user.name() == null || user._id() == null || user.status() == null){
-            return false;
-        }
-
-        return true;
+        return user.name() != null && user._id() != null && user.status() != null;
     }
 }
