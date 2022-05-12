@@ -4,10 +4,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistControler;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.services.LobbyService;
-import de.uniks.pioneers.services.MessageService;
-import de.uniks.pioneers.services.UserService;
-import de.uniks.pioneers.services.UserlistService;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -25,8 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -61,6 +56,9 @@ public class LobbyScreenController implements Controller {
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
     private  final Provider<LobbyUserlistControler> userlistControlerProvider;
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
+    private final PrefService prefService;
     private final EventListener eventListener;
     private final LobbyService lobbyService;
     private final UserService userService;
@@ -75,8 +73,10 @@ public class LobbyScreenController implements Controller {
                                  Provider<LoginScreenController> loginScreenControllerProvider,
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
+                                 Provider<RulesScreenController> rulesScreenControllerProvider,
                                  MessageService messageService,
-                                 UserlistService userlistService
+                                 UserlistService userlistService,
+                                 PrefService prefService
     ) {
         this.app = app;
         this.eventListener = eventListener;
@@ -88,6 +88,8 @@ public class LobbyScreenController implements Controller {
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
+        this.prefService = prefService;
     }
 
     @Override
@@ -166,7 +168,7 @@ public class LobbyScreenController implements Controller {
     }
 
     private void openRules(MouseEvent mouseEvent) {
-        RulesScreenController controller = new RulesScreenController(new Stage());
+        RulesScreenController controller = rulesScreenControllerProvider.get();
         controller.init();
     }
 
@@ -217,6 +219,7 @@ public class LobbyScreenController implements Controller {
 
     public void logout(ActionEvent actionEvent) {
         this.messageService.getchatUserList().clear();
+        prefService.forget();
         logout();
         app.show(loginScreenControllerProvider.get());
     }
