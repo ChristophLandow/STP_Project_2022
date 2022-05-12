@@ -88,6 +88,8 @@ public class ChatController implements Controller {
             this.addTab(u);
         }
 
+        sendButtonBinding();
+
         ChatUserlistController chatUserlistController = userlistControllerProvider.get();
         chatUserlistController.chatController = this;
         chatUserlistController.chatTabControllers = this.chatTabControllers;
@@ -131,6 +133,7 @@ public class ChatController implements Controller {
         ChatTabController newChatController = new ChatTabController(this, this.messageService, this.userService, this.groupService, this.chatTabPane, user, this.eventListener);
         newChatController.render();
         newChatController.init();
+        sendButtonBinding();
 
         this.chatTabControllers.add(newChatController);
     }
@@ -149,12 +152,13 @@ public class ChatController implements Controller {
     }
 
     public void sendButtonBinding(){
-        sendButton.disableProperty().unbind();
         Tab openTab = this.chatTabPane.getSelectionModel().getSelectedItem();
 
         for(ChatTabController tabController : this.chatTabControllers){
             if(tabController.chattingWith.name().equals(openTab.getText())){
+                sendButton.disableProperty().unbind();
                 sendButton.disableProperty().bind(tabController.getFinishedInitialization().not());
+                break;
             }
         }
     }
