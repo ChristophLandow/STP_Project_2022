@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:id="popUpBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController">
+   <children>
+      <HBox fx:id="gameNameBox" alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Label fx:id="gameNameLabel" text="name">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="gameNameTextField" promptText="&lt;your game name&gt;">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <HBox fx:id="passwordBox" alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Label fx:id="passWordLabel" text="password" />
+            <TextField fx:id="passWordTextField" promptText="&lt;select a password&gt;" />
+         </children>
+         <padding>
+            <Insets right="20.0" />
+         </padding>
+      </HBox>
+      <ButtonBar fx:id="buttonBar" prefHeight="40.0" prefWidth="200.0">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </ButtonBar>
+   </children>
+   <padding>
+      <Insets top="30.0" />
+   </padding>
+</VBox>

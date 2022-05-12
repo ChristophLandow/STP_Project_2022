@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
@@ -9,36 +10,42 @@ import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
 public class LobbyScreenController implements Controller {
-
+    @FXML
+    public Pane root;
     @FXML
     public ImageView AvatarImageView;
     @FXML
@@ -56,6 +63,7 @@ public class LobbyScreenController implements Controller {
     @FXML
     public Button NewGameButton;
 
+
     private App app;
 
     private final Provider<ChatController> chatControllerProvider;
@@ -66,9 +74,11 @@ public class LobbyScreenController implements Controller {
     private final UserService userService;
     private final MessageService messageService;
 
-    // List with games from Server
+    // List with games ans Users from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
+
+    // List with gameListControllers
     private List<GameListElementController> gameListElementControllers;
 
     @Inject
@@ -321,12 +331,56 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
+
+    public final SimpleStringProperty gameName = new SimpleStringProperty();
+    public final SimpleStringProperty password = new SimpleStringProperty();
+
     public void newGame(ActionEvent actionEvent) {
+        Popup createGame = new Popup();
+        //createGame.getContent().add(new Label("kappa"));
+
+        /*Label label = new Label();
+        label.setMinSize(300,300);
+        label.setText("kappa");
+        label.setFont(Font.font ("Verdana", 30));
+
+        VBox popUp = new VBox();
+        popUp.setMinSize(300  ,300);
+        popUp.getChildren().add(label);
+
+        createGame.getContent().add(popUp);
+
+        ;*/
+
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/CreateNewGamePopUp.fxml"));
+        Node node = null;
+        try {
+            node = loader.load();
+            CreateNewGamePopUpController createNewGamePopUpController = loader.getController();
+            createNewGamePopUpController.init(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        createGame.getContent().add(node);
+        Stage stage = new Stage();
+        VBox root = new VBox();
+        root.setMinSize(800,600);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        createGame.show(stage);
+
+        /*
         lobbyService.createGame()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
 
                     //System.out.println(game.name());
                 });
+
+
+         */
+
     }
 }
