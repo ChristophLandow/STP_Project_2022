@@ -228,7 +228,7 @@ public class ChatTabController {
     public void stop(){
         disposable.dispose();
         this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
-        this.messageService.decreaseChatCounter(1);
+        //this.messageService.decreaseChatCounter(1);
         this.chatMessages.clear();
     }
 

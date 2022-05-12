@@ -101,6 +101,7 @@ public class ChatController implements Controller {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
 
         this.messageService.increaseOpenChatCounter();
+        this.messageService.increaseOpenChatCounter();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -151,10 +152,27 @@ public class ChatController implements Controller {
 
     public void send(ActionEvent ignoredEvent) {
         Tab openTab = chatTabPane.getSelectionModel().getSelectedItem();
-        VBox openVBox = (VBox) ((ScrollPane) openTab.getContent()).getContent();
-        Label firstText = (Label) openVBox.getChildren().get(0);
 
-        if(!firstText.getText().equals(Constants.LOADING_CHAT_TEXT)) {
+        boolean sendReady = false;
+
+        if(openTab.getContent() != null){
+            VBox openVBox = (VBox) ((ScrollPane) openTab.getContent()).getContent();
+
+            if(openVBox != null){
+                Label firstText = (Label) openVBox.getChildren().get(0);
+
+                if(firstText != null){
+                    if(!firstText.getText().equals(Constants.LOADING_CHAT_TEXT)) {
+                        sendReady = true;
+                    }
+                }
+                else{
+                    sendReady = true;
+                }
+            }
+        }
+
+        if(sendReady) {
             for (ChatTabController chatTabController : chatTabControllers) {
                 if (chatTabController.chattingWith.name().equals(openTab.getText())) {
                     currentGroupId = chatTabController.groupId.get();

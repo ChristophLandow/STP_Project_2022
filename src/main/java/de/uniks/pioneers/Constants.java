@@ -38,7 +38,7 @@ public class Constants {
 
     public static final int MAX_LOADING_CHATS = 2;
 
-    public static final int OPEN_CHATS_COUNTER_MAX_VALUE = 6;
+    public static final int OPEN_CHATS_COUNTER_MAX_VALUE = 4;
 
     public static final String LOADING_CHAT_TEXT = "Loading...";
 
