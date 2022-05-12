@@ -30,7 +30,7 @@ public class App extends Application {
 
         this.stage = primaryStage;
         stage.setTitle(LOGIN_SCREEN_TITLE);
-        setIcons();
+        setIcons(stage);
         show(this.controller);
         stage.show();
     }
@@ -58,7 +58,7 @@ public class App extends Application {
         return stage;
     }
 
-    private void setIcons() {
+    public void setIcons(Stage stage) {
         String iconName = "AppIcon.png";
         Image icon = new Image(Objects.requireNonNull(App.class.getResource(iconName)).toString());
         stage.getIcons().add(icon);
