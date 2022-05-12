@@ -68,7 +68,7 @@ public class CreateNewGamePopUpController {
 
         nameLen.textProperty().bind(Bindings
                 .when(gameNameLength.greaterThan(3)).then("")
-                .otherwise("to make sense use more than three characters"));
+                .otherwise("game name must be at least 3 charakters long"));
     }
 
     private void createGame(MouseEvent mouseEvent) {
