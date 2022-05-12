@@ -335,7 +335,9 @@ public class LobbyScreenController implements Controller {
 
 
 
+    public void showNewGameLobby (Game game){
 
+    }
 
     public void newGame(ActionEvent actionEvent) {
         //create pop up to create a new game
@@ -344,27 +346,15 @@ public class LobbyScreenController implements Controller {
         try {
             node = loader.load();
             CreateNewGamePopUpController createNewGamePopUpController = loader.getController();
-            createNewGamePopUpController.init(this);
+            createNewGamePopUpController.setCreateGameLobby(this::showNewGameLobby);
+            createNewGamePopUpController.init(this,lobbyService);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         Stage stage = new Stage();
         stage.setTitle("create new game pop up");
         Scene scene = new Scene(node);
         stage.setScene(scene);
         stage.show();
-
-        /*
-        lobbyService.createGame()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(game -> {
-
-                    //System.out.println(game.name());
-                });
-
-
-         */
-
     }
 }

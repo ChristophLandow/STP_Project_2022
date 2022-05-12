@@ -37,7 +37,11 @@ public class LobbyService {
         return authApiService.logout();
     }
 
-    public Observable<List<Game>> getGames(){ return gameApiService.getGames(); }
+    public Observable<List<Game>> getGames() {
+        return gameApiService.getGames();
+    }
 
-    public Observable<Game> createGame() {return gameApiService.create(new CreateGameDto("teamH","insel123A!"));}
+    public Observable<Game> createGame(String name, String password) {
+        return gameApiService.create(new CreateGameDto(name, password));
+    }
 }
