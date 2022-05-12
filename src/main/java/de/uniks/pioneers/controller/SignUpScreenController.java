@@ -31,7 +31,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Objects;
-import java.awt.FileDialog;
 
 import static de.uniks.pioneers.Constants.*;
 
@@ -169,6 +168,7 @@ public class SignUpScreenController implements Controller{
         this.avatarStatusText.setText("");
         this.customAvatar = "";
     }
+
     public void register() throws IOException, URISyntaxException {
 
         String avatarB64 = customAvatar;
