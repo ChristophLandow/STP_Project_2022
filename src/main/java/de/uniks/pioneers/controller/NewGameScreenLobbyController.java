@@ -1,10 +1,11 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.ws.EventListener;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -63,14 +64,16 @@ public class NewGameScreenLobbyController implements Controller {
     public Button leaveButton;
 
     private Game game;
-    private List <User> members;
+    private List <Member> members;
+    private List <MessageDto> messaages;
 
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener,Provider<LobbyScreenController> lobbyScreenControllerProvider) {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        this.members= new ArrayList<User>();
+        this.members= new ArrayList<>();
+        this.messaages= new ArrayList<>();
 
     }
 
@@ -79,13 +82,33 @@ public class NewGameScreenLobbyController implements Controller {
         LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
         game = lobbyScreenController.gameForNewLobby.get();
 
+        //set game name label and password text label
         gameNameLabel.setText(game.name());
+        passwordLabel.setText("kappa");
 
+        initMemberListener();
+        initMessageListener();
+        
 
+        
+    }
+
+    private void initMessageListener() {
+        String patternToObserveChatMessages = String.format("games.%s.messages.*.*",game._id());
+        eventListener.listen(patternToObserveChatMessages, MessageDto.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(messageEvent -> {
+                    if (messageEvent.event().endsWith(".created")) {
+                        messaages.add(messageEvent.data());
+                    } else if (messageEvent.event().endsWith(".deleted")) {
+                        messaages.remove(messageEvent.data());
+                    }
+                });
+    }
+
+    private void initMemberListener() {
         String patternToObserveGameMembers = String.format("games.%s.members.*",game._id());
-
-
-        eventListener.listen(patternToObserveGameMembers, User.class)
+        eventListener.listen(patternToObserveGameMembers, Member.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(memberEvent -> {
                     if (memberEvent.event().endsWith(".created")) {
@@ -93,11 +116,13 @@ public class NewGameScreenLobbyController implements Controller {
                     } else if (memberEvent.event().endsWith(".deleted")) {
                         members.remove(memberEvent.data());
                     } else {
-                        updateGame(memberEvent.data());
+                        updateMember(memberEvent.data());
                     }
                 });
+    }
 
 
+    private void updateMember(Member data) {
     }
 
     @Override
