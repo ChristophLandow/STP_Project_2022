@@ -64,11 +64,11 @@ public class CreateNewGamePopUpController {
 
         passwordLen.textProperty().bind(Bindings
                 .when(passwordLength.greaterThan(7)).then("")
-                .otherwise("password must be at least 8 characters long"));
+                .otherwise("password must be at least eight characters long"));
 
         nameLen.textProperty().bind(Bindings
                 .when(gameNameLength.greaterThan(3)).then("")
-                .otherwise("game name must be at least 3 charakters long"));
+                .otherwise("game name must be at least three charakters long"));
     }
 
     private void createGame(MouseEvent mouseEvent) {

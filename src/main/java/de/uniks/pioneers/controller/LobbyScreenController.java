@@ -13,6 +13,8 @@ import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -69,6 +71,7 @@ public class LobbyScreenController implements Controller {
     private final Provider<EditProfileController> editProfileControllerProvider;
     private  final Provider<LobbyUserlistControler> userlistControlerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+    private final Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
 
     private final PrefService prefService;
     private final EventListener eventListener;
@@ -79,7 +82,13 @@ public class LobbyScreenController implements Controller {
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
+    // also not injected
     private List<GameListElementController> gameListElementControllers;
+
+    /*instead of injecting more stuff, which would lead to more code in the constructor, i created some
+    object properties, so we can transfer data */
+    public SimpleObjectProperty<Game> gameForNewLobby = new SimpleObjectProperty<>();
+
 
     @Inject
     public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService,
@@ -88,6 +97,7 @@ public class LobbyScreenController implements Controller {
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
+                                 Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                  MessageService messageService,
                                  PrefService prefService
     ) {
@@ -98,6 +108,7 @@ public class LobbyScreenController implements Controller {
         this.messageService = messageService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
+        this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
@@ -223,7 +234,7 @@ public class LobbyScreenController implements Controller {
         try {
             node = loader.load();
             GameListElementController gameListElementController = loader.getController();
-            gameListElementController.createOrUpdateGame(game, games, users);
+            gameListElementController.createOrUpdateGame(game, games, users, this);
             node.setId(game._id());
             gameListElementControllers.add(gameListElementController);
             ListViewGames.getItems().add(0, node);
@@ -249,7 +260,7 @@ public class LobbyScreenController implements Controller {
         //rerender
         GameListElementController gameListElementController = gameListElementControllers.stream().
                 filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
-        gameListElementController.createOrUpdateGame(data, games, users);
+        gameListElementController.createOrUpdateGame(data, games, users,this);
     }
 
     public void renderUser(User user){
@@ -340,7 +351,8 @@ public class LobbyScreenController implements Controller {
 
 
     public void showNewGameLobby (Game game){
-
+        this.gameForNewLobby.set(game);
+        app.show(newGameScreenLobbyControllerProvider.get());
     }
 
     public void newGame(ActionEvent actionEvent) {
