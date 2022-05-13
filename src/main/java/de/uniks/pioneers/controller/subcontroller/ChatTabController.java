@@ -11,6 +11,7 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -33,18 +34,15 @@ public class ChatTabController {
     private VBox chatBox;
     public User chattingWith;
     public User currentUser;
-
     public SimpleStringProperty groupId = new SimpleStringProperty("");
-
+    private final ChangeListener<String> changeListener = (observable, oldValue, newValue) -> initSubscription();
     private final UserService userService;
     private final GroupService groupService;
     private final MessageService messageService;
     private final EventListener eventListener;
     private final ChatController chatController;
-
     private final ArrayList<ChatMessage> chatMessages = new ArrayList<>();
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
-
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final SimpleBooleanProperty finishedInitialization = new SimpleBooleanProperty(false);
 
@@ -137,32 +135,39 @@ public class ChatTabController {
     }
 
     public void init(){
-        groupId.addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                disposable.add(messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
-                        .subscribe(this.messages::setAll));
+        groupId.addListener(changeListener);
+    }
 
-                disposable.add(eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
-                        .observeOn(FX_SCHEDULER)
-                        .subscribe(messageEvent -> {
-                            final MessageDto message = messageEvent.data();
-                            System.out.println(message);
-                            if (messageEvent.event().endsWith(".created")){
-                                messages.add(message);
-                            }
-                            else if (messageEvent.event().endsWith(".deleted")){
-                                messages.removeIf(m->m._id().equals(message._id()));
-                            } else if (messageEvent.event().endsWith(".updated")) {
-                                messages.replaceAll(m->m.sender().equals(message.sender()) ? message : m);
-                                updateMessage(message);
-                            }
-                        }));
+    public void initSubscription(){
+        if (!groupId.get().isEmpty()) {
+            disposable.add(messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
+                    .subscribe(this.messages::setAll));
 
-                this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
-                this.messageService.increaseOpenChatCounter();
-                this.finishedInitialization.set(true);
-            }
-        });
+            disposable.add(eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(messageEvent -> {
+                        final MessageDto message = messageEvent.data();
+                        System.out.println(message);
+                        if (messageEvent.event().endsWith(".created")){
+                            messages.add(message);
+                        }
+                        else if (messageEvent.event().endsWith(".deleted")){
+                            messages.removeIf(m->m._id().equals(message._id()));
+                        } else if (messageEvent.event().endsWith(".updated")) {
+                            messages.replaceAll(m->m.sender().equals(message.sender()) ? message : m);
+                            updateMessage(message);
+                        }
+                    }));
+
+            finishedInitialization();
+        }
+    }
+
+    public void finishedInitialization(){
+        this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
+        this.messageService.increaseOpenChatCounter();
+        this.finishedInitialization.set(true);
+        groupId.removeListener(changeListener);
     }
 
     public void renderMessage(MessageDto message){
