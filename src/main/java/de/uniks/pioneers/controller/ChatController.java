@@ -12,6 +12,9 @@ import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -46,10 +49,9 @@ public class ChatController implements Controller {
 
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<ChatUserlistController> userlistControllerProvider;
-
-    private final ArrayList<ChatTabController> chatTabControllers = new ArrayList<>();
+    private final ObservableList<ChatTabController> chatTabControllers = FXCollections.observableArrayList(new ArrayList<>());
+    private final ListChangeListener<ChatTabController> listChangeListener = c -> sendButtonBinding();
     private String currentGroupId;
-
     private final Timer timer = new Timer();
 
     @Inject
@@ -79,6 +81,11 @@ public class ChatController implements Controller {
         }
 
         this.chatTabPane.getTabs().remove(0);
+
+        this.chatTabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            sendButtonBinding();
+            chatTabControllers.addListener(listChangeListener);
+        });
 
         for(User u: this.messageService.getchatUserList()){
             this.addTab(u);
@@ -144,6 +151,24 @@ public class ChatController implements Controller {
         this.chatTabControllers.removeIf(c->c.chattingWith.name().equals(closedTab.getText()));
     }
 
+    public void sendButtonBinding(){
+        Tab openTab = this.chatTabPane.getSelectionModel().getSelectedItem();
+
+        if(openTab != null) {
+            for (ChatTabController tabController : this.chatTabControllers) {
+                if (tabController.chattingWith.name().equals(openTab.getText())) {
+                    sendButton.disableProperty().bind(tabController.getFinishedInitialization().not());
+                    chatTabControllers.removeListener(listChangeListener);
+                    break;
+                }
+            }
+        }
+        else{
+            this.sendButton.disableProperty().unbind();
+            this.sendButton.setDisable(true);
+        }
+    }
+
     public void leave(ActionEvent ignoredEvent) {
         this.messageService.getchatUserList().clear();
         app.show(lobbyScreenControllerProvider.get());
@@ -152,37 +177,22 @@ public class ChatController implements Controller {
     public void send(ActionEvent ignoredEvent) {
         Tab openTab = chatTabPane.getSelectionModel().getSelectedItem();
 
-        ChatTabController openChatTabController = null;
-        for(ChatTabController tabController : this.chatTabControllers){
-            if(tabController.chattingWith.name().equals(openTab.getText())){
-                openChatTabController = tabController;
+        for (ChatTabController chatTabController : chatTabControllers) {
+            if (chatTabController.chattingWith.name().equals(openTab.getText())) {
+                currentGroupId = chatTabController.groupId.get();
             }
         }
 
-        boolean sendReady = false;
-
-        if(openChatTabController != null){
-            sendReady = openChatTabController.getFinishedInitialization();
-        }
-
-        if(sendReady) {
-            for (ChatTabController chatTabController : chatTabControllers) {
-                if (chatTabController.chattingWith.name().equals(openTab.getText())) {
-                    currentGroupId = chatTabController.groupId.get();
-                }
-            }
-
-            if (!currentGroupId.isEmpty()) {
-                String message = this.messageTextField.getText();
-                if (!message.equals("")) {
-                    disposable.add(messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
-                            .observeOn(FX_SCHEDULER)
-                            .doOnError(Throwable::printStackTrace)
-                            .subscribe(result -> {
-                                System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body());
-                                this.messageTextField.clear();
-                            }));
-                }
+        if (!currentGroupId.isEmpty()) {
+            String message = this.messageTextField.getText();
+            if (!message.equals("")) {
+                disposable.add(messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
+                        .observeOn(FX_SCHEDULER)
+                        .doOnError(Throwable::printStackTrace)
+                        .subscribe(result -> {
+                            System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body());
+                            this.messageTextField.clear();
+                        }));
             }
         }
     }

@@ -20,6 +20,8 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.util.Objects;
+
 import static de.uniks.pioneers.Constants.DELETE_MESSAGE_TEXT;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -64,7 +66,7 @@ public class ChatMessage {
         TextFlow textFlow = new TextFlow(messageText);
         textFlow.setPrefWidth(310);
 
-        deleteImgView = new ImageView(new Image(App.class.getResource("trash.jpg").toString()));
+        deleteImgView = new ImageView(new Image(Objects.requireNonNull(App.class.getResource("trash.jpg")).toString()));
         deleteImgView.setFitHeight(20);
         deleteImgView.setFitWidth(20);
         deleteImgView.setStyle("-fx-cursor: hand;");
@@ -79,7 +81,7 @@ public class ChatMessage {
 
         chatBox = new HBox(avatarImgView, textFlow, deleteImgView);
         chatBox.setPadding(new Insets(5,0,0,0));
-        chatBox.setMargin(textFlow, new Insets(0,0,0,5));
+        HBox.setMargin(textFlow, new Insets(0,0,0,5));
         chatBox.setSpacing(5);
 
         this.tabChatBox.getChildren().add(chatBox);

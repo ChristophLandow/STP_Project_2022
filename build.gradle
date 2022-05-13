@@ -54,9 +54,6 @@ dependencies {
     implementation group: 'org.glassfish.tyrus', name: 'tyrus-client', version: '1.15'
     implementation group: 'org.glassfish.tyrus', name: 'tyrus-container-grizzly-client', version: '1.15'
 
-
-
-
     // -------------------- Dagger (Dependency Injetion) --------------------------------------------------
     implementation 'com.google.dagger:dagger:2.41'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.41'

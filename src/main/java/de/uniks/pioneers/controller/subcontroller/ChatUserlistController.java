@@ -7,6 +7,8 @@ import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 
 public class ChatUserlistController extends OnlineUserlistController {
     public ListView<Label> userListView;
-    public ArrayList<ChatTabController> chatTabControllers = new ArrayList<>();
+    public ObservableList<ChatTabController> chatTabControllers = FXCollections.observableArrayList(new ArrayList<>());
     public TabPane chatTabPane;
     public ChatController chatController;
 
