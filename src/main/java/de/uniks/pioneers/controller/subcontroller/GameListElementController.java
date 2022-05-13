@@ -76,9 +76,11 @@ public class GameListElementController {
         if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
             if(mouseEvent.getClickCount() == 2){
                 //join game
+                lobbyScreenController.showNewGameLobby(game);
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
             // show options in a small list (join game, discard from list, show more game details
+            // need a fxml !
             VBox gameOption = new VBox();
             gameOption.setMinSize(200,200);
             gameOption.setVisible(true);
