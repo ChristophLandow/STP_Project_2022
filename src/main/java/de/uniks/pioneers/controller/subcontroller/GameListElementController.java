@@ -20,11 +20,11 @@ public class GameListElementController {
     @FXML
     public HBox gameBoxRoot;
     @FXML
-    public TextField creationTime;
+    public Label creationTime;
     @FXML
-    public TextField title;
+    public Label title;
     @FXML
-    public TextField memberCount;
+    public Label memberCount;
 
     private LobbyScreenController lobbyScreenController;
     private ObservableList<Game> games;
@@ -32,14 +32,10 @@ public class GameListElementController {
     private User creator;
 
 
-
     public void createOrUpdateGame(Game game, ObservableList<Game> games,
                                    ObservableList<User> users, LobbyScreenController lobbyScreenController) {
-        // needs to be fixed
-        // now mouse hovering is blocked !
-        title.setMouseTransparent(true);
 
-        initGameAndUser(game,games,users,lobbyScreenController);
+        initGameAndUser(game, games, users, lobbyScreenController);
         // might be better with rex ex, i gona update this
         String createdAt = game.createdAt();
         int start = createdAt.indexOf("T");
@@ -56,35 +52,47 @@ public class GameListElementController {
 
     private void initGameAndUser(Game game, ObservableList<Game> games,
                                  ObservableList<User> users, LobbyScreenController lobbyScreenController) {
-        if (this.lobbyScreenController==null){
-            this.game=game;
-            this.games=games;
-            this.lobbyScreenController=lobbyScreenController;
+        if (this.lobbyScreenController == null) {
+            this.game = game;
+            this.games = games;
+            this.lobbyScreenController = lobbyScreenController;
             try {
                 User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
-                this.creator=creator;
+                this.creator = creator;
             } catch (Exception e) {
-                this.creator=null;
+                this.creator = null;
             }
-        }else {
+        } else {
             return;
         }
     }
 
 
-    public void onMouseClicked(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-            if(mouseEvent.getClickCount() == 2){
+    private void joinGame(MouseEvent mouseEvent) {
+        lobbyScreenController.showNewGameLobby(game);
+    }
+
+    private void discardGame(MouseEvent mouseEvent) {
+        games.remove(game);
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void showDropDown(MouseEvent mouseEvent) {
+        if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+            if (mouseEvent.getClickCount() == 2) {
                 //join game
                 lobbyScreenController.showNewGameLobby(game);
             }
-        } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+        } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
             // show options in a small list (join game, discard from list, show more game details
             // need a fxml !
             VBox gameOption = new VBox();
-            gameOption.setMinSize(200,200);
+            gameOption.setMinSize(200, 200);
             gameOption.setVisible(true);
-            gameOption.setBackground(new Background(new BackgroundFill(Color.SILVER,null,null)));
+            gameOption.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
 
 
             HBox joinGameBox = new HBox();
@@ -97,17 +105,17 @@ public class GameListElementController {
             discardGameBox.getChildren().add(discardGame);
             discardGameBox.setOnMouseClicked(this::discardGame);
 
-            gameOption.getChildren().add(0,joinGameBox);
-            gameOption.getChildren().add(1,discardGameBox);
+            gameOption.getChildren().add(0, joinGameBox);
+            gameOption.getChildren().add(1, discardGameBox);
 
             Scene scene = gameBoxRoot.getScene();
 
-            Pane pane  = (Pane) scene.lookup("#root");
+            Pane pane = (Pane) scene.lookup("#root");
             pane.getChildren().add(gameOption);
             double xPos = mouseEvent.getSceneX();
             double yPos = mouseEvent.getSceneY();
-            gameOption.setLayoutX(xPos-10);
-            gameOption.setLayoutY(yPos-10);
+            gameOption.setLayoutX(xPos - 10);
+            gameOption.setLayoutY(yPos - 10);
 
             gameOption.setOnMouseExited(event -> {
                 pane.getChildren().remove(gameOption);
@@ -116,24 +124,16 @@ public class GameListElementController {
         }
     }
 
-    private void joinGame(MouseEvent mouseEvent) {
-        lobbyScreenController.showNewGameLobby(game);
-    }
-
-    private void discardGame(MouseEvent mouseEvent) {
-        games.remove(game);
-    }
-
     public void showGameInfo(MouseEvent mouseEvent) {
         Tooltip tt = new Tooltip();
-        if (this.creator!=null && this.creator.name()!=null){
-            String toolTipTxt = String.format("Created by: %s  id: %s", creator.name(),game._id());
+        if (this.creator != null && this.creator.name() != null) {
+            String toolTipTxt = String.format("Created by: %s  id: %s", creator.name(), game._id());
             tt.setText(toolTipTxt);
         } else {
-            String toolTipTxt = String.format("Created by: %s  id: %s", "unknown",game._id());
+            String toolTipTxt = String.format("Created by: %s  id: %s", "unknown", game._id());
             tt.setText(toolTipTxt);
         }
-
+        // style not final
         tt.setStyle("-fx-font: normal bold 4 Langdon; "
                 + "-fx-base: #AE3522; "
                 + "-fx-text-fill: orange;"
@@ -143,13 +143,7 @@ public class GameListElementController {
         title.setTooltip(tt);
     }
 
-    public void disableGameInfo(MouseEvent mouseEvent) {
+    public void dontShowGameInfo(MouseEvent mouseEvent) {
         title.setTooltip(null);
     }
-
-
-    public Game getGame() {
-        return game;
-    }
-
 }
