@@ -29,8 +29,8 @@ public class App extends Application {
 
             stage.setTitle(LOGIN_SCREEN_TITLE);
             show(this.controller);
-            stage.show();
         }
+        stage.show();
     }
 
     @Override
