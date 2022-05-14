@@ -1,6 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_BLUEPeer;
+import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import javafx.collections.ObservableList;
@@ -14,8 +14,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class GameListElementController {
@@ -28,14 +26,20 @@ public class GameListElementController {
     @FXML
     public TextField memberCount;
 
+    private LobbyScreenController lobbyScreenController;
     private ObservableList<Game> games;
     private Game game;
     private User creator;
 
 
-    public void createOrUpdateGame(Game game, ObservableList<Game> games, ObservableList<User> users) {
+
+    public void createOrUpdateGame(Game game, ObservableList<Game> games,
+                                   ObservableList<User> users, LobbyScreenController lobbyScreenController) {
+        // needs to be fixed
+        // now mouse hovering is blocked !
         title.setMouseTransparent(true);
-        initGameAndUser(game,games,users);
+
+        initGameAndUser(game,games,users,lobbyScreenController);
         // might be better with rex ex, i gona update this
         String createdAt = game.createdAt();
         int start = createdAt.indexOf("T");
@@ -50,10 +54,12 @@ public class GameListElementController {
     }
 
 
-    private void initGameAndUser(Game game, ObservableList<Game> games, ObservableList<User> users) {
-        if (this.game==null){
+    private void initGameAndUser(Game game, ObservableList<Game> games,
+                                 ObservableList<User> users, LobbyScreenController lobbyScreenController) {
+        if (this.lobbyScreenController==null){
             this.game=game;
             this.games=games;
+            this.lobbyScreenController=lobbyScreenController;
             try {
                 User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
                 this.creator=creator;
@@ -70,9 +76,11 @@ public class GameListElementController {
         if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
             if(mouseEvent.getClickCount() == 2){
                 //join game
+                lobbyScreenController.showNewGameLobby(game);
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
             // show options in a small list (join game, discard from list, show more game details
+            // need a fxml !
             VBox gameOption = new VBox();
             gameOption.setMinSize(200,200);
             gameOption.setVisible(true);
@@ -109,9 +117,7 @@ public class GameListElementController {
     }
 
     private void joinGame(MouseEvent mouseEvent) {
-        //find game from ListElement
-        //find lobbycontroller
-        //show lobbycontroller
+        lobbyScreenController.showNewGameLobby(game);
     }
 
     private void discardGame(MouseEvent mouseEvent) {
@@ -132,6 +138,7 @@ public class GameListElementController {
                 + "-fx-base: #AE3522; "
                 + "-fx-text-fill: orange;"
                 + "-fx-font-size: 14");
+
         tt.setShowDelay(Duration.seconds(0.3));
         title.setTooltip(tt);
     }
@@ -144,4 +151,5 @@ public class GameListElementController {
     public Game getGame() {
         return game;
     }
+
 }

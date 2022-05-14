@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.pioneers.rest.*;
+import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.TokenStorage;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import okhttp3.OkHttpClient;
@@ -76,5 +77,8 @@ public class MainModule {
     @Provides
     @Singleton
     GroupApiService groupApiService(Retrofit retrofit) { return retrofit.create(GroupApiService.class); }
+
+    @Provides
+    static GameMemberApiService gameMemberApiService(Retrofit retrofit) { return  retrofit.create(GameMemberApiService.class);}
 
 }

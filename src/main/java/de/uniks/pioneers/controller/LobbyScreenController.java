@@ -13,6 +13,8 @@ import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -69,6 +71,7 @@ public class LobbyScreenController implements Controller {
     private final Provider<EditProfileController> editProfileControllerProvider;
     private  final Provider<LobbyUserlistControler> userlistControlerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+    private final Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
 
     private final PrefService prefService;
     private final EventListener eventListener;
@@ -79,7 +82,10 @@ public class LobbyScreenController implements Controller {
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
+
     private List<GameListElementController> gameListElementControllers;
+
+
 
     @Inject
     public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService,
@@ -88,6 +94,7 @@ public class LobbyScreenController implements Controller {
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
+                                 Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                  MessageService messageService,
                                  PrefService prefService
     ) {
@@ -98,6 +105,7 @@ public class LobbyScreenController implements Controller {
         this.messageService = messageService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
+        this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
@@ -171,6 +179,7 @@ public class LobbyScreenController implements Controller {
         userService.findAll().observeOn(FX_SCHEDULER)
                 .subscribe(this.users::setAll);
 
+
         eventListener.listen("users.*.*", User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
@@ -223,7 +232,7 @@ public class LobbyScreenController implements Controller {
         try {
             node = loader.load();
             GameListElementController gameListElementController = loader.getController();
-            gameListElementController.createOrUpdateGame(game, games, users);
+            gameListElementController.createOrUpdateGame(game, games, users, this);
             node.setId(game._id());
             gameListElementControllers.add(gameListElementController);
             ListViewGames.getItems().add(0, node);
@@ -247,9 +256,17 @@ public class LobbyScreenController implements Controller {
 
     private void updateGame(Game data) {
         //rerender
-        GameListElementController gameListElementController = gameListElementControllers.stream().
-                filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
-        gameListElementController.createOrUpdateGame(data, games, users);
+        try {
+            GameListElementController gameListElementController = gameListElementControllers.stream()
+                    .filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
+            gameListElementController.createOrUpdateGame(data, games, users,this);
+        } catch (Exception e) {
+            return;
+        }
+    }
+
+    public User returnUserById(String id){
+        return users.stream().filter(user -> user._id().equals(id)).findAny().get();
     }
 
     public void renderUser(User user){
@@ -337,20 +354,19 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
-
-
     public void showNewGameLobby (Game game){
-
+        NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
+        newGameScreenLobbyController.game.set(game);
+        app.show(newGameScreenLobbyController);
     }
 
     public void newGame(ActionEvent actionEvent) {
-        //create pop up to create a new game
+        //create pop in order to create a new game lobby
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/CreateNewGamePopUp.fxml"));
         Parent node = null;
         try {
             node = loader.load();
             CreateNewGamePopUpController createNewGamePopUpController = loader.getController();
-            createNewGamePopUpController.setCreateGameLobby(this::showNewGameLobby);
             createNewGamePopUpController.init(this,lobbyService);
         } catch (IOException e) {
             e.printStackTrace();
