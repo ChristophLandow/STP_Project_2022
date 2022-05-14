@@ -16,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.function.Consumer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -48,7 +47,6 @@ public class CreateNewGamePopUpController {
 
     private LobbyScreenController lobbyScreenController;
     private LobbyService lobbyService;
-    public Consumer<Game> createGameLobby;
 
     public void init(LobbyScreenController lobbyScreenController, LobbyService lobbyService) {
         this.lobbyScreenController = lobbyScreenController;
@@ -68,7 +66,7 @@ public class CreateNewGamePopUpController {
 
         nameLen.textProperty().bind(Bindings
                 .when(gameNameLength.greaterThan(3)).then("")
-                .otherwise("game name must be at least three charakters long"));
+                .otherwise("game name must be at least three characters long"));
     }
 
     private void createGame(MouseEvent mouseEvent) {
@@ -87,11 +85,4 @@ public class CreateNewGamePopUpController {
         Stage stage = (Stage) popUpBox.getScene().getWindow();
         stage.close();
     }
-
-    public void setCreateGameLobby(Consumer<Game> createGameLobby) {
-        this.createGameLobby = createGameLobby;
-    }
-
-
-
 }

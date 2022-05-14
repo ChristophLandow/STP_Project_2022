@@ -59,9 +59,9 @@
             </HBox>
             <HBox fx:id="buttonBox" alignment="CENTER" prefHeight="100.0" prefWidth="800.0" spacing="100.0">
                <children>
-                  <Button fx:id="readyButton" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" text="Ready" />
-                  <Button fx:id="startGameButton" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" text="Start Game" />
-                  <Button fx:id="leaveButton" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" text="Leave" />
+                  <Button fx:id="readyButton" mnemonicParsing="false" onMouseClicked="#setReadyTrue" scaleX="1.5" scaleY="1.5" text="Ready" />
+                  <Button fx:id="startGameButton" mnemonicParsing="false" onMouseClicked="#startGame" scaleX="1.5" scaleY="1.5" text="Start Game" />
+                  <Button fx:id="leaveButton" mnemonicParsing="false" onMouseClicked="#leaveLobby" scaleX="1.5" scaleY="1.5" text="Leave" />
                </children>
             </HBox>
          </children>

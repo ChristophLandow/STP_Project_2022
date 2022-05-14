@@ -82,12 +82,9 @@ public class LobbyScreenController implements Controller {
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
-    // also not injected
+
     private List<GameListElementController> gameListElementControllers;
 
-    /*instead of injecting more stuff, which would lead to more code in the constructor, i created some
-    object properties, so we can transfer data */
-    public SimpleObjectProperty<Game> gameForNewLobby = new SimpleObjectProperty<>();
 
 
     @Inject
@@ -182,6 +179,7 @@ public class LobbyScreenController implements Controller {
         userService.findAll().observeOn(FX_SCHEDULER)
                 .subscribe(this.users::setAll);
 
+
         eventListener.listen("users.*.*", User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
@@ -258,9 +256,17 @@ public class LobbyScreenController implements Controller {
 
     private void updateGame(Game data) {
         //rerender
-        GameListElementController gameListElementController = gameListElementControllers.stream().
-                filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
-        gameListElementController.createOrUpdateGame(data, games, users,this);
+        try {
+            GameListElementController gameListElementController = gameListElementControllers.stream()
+                    .filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
+            gameListElementController.createOrUpdateGame(data, games, users,this);
+        } catch (Exception e) {
+            return;
+        }
+    }
+
+    public User returnUserById(String id){
+        return users.stream().filter(user -> user._id().equals(id)).findAny().get();
     }
 
     public void renderUser(User user){
@@ -348,21 +354,19 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
-
-
     public void showNewGameLobby (Game game){
-        this.gameForNewLobby.set(game);
-        app.show(newGameScreenLobbyControllerProvider.get());
+        NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
+        newGameScreenLobbyController.game.set(game);
+        app.show(newGameScreenLobbyController);
     }
 
     public void newGame(ActionEvent actionEvent) {
-        //create pop up to create a new game
+        //create pop in order to create a new game lobby
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/CreateNewGamePopUp.fxml"));
         Parent node = null;
         try {
             node = loader.load();
             CreateNewGamePopUpController createNewGamePopUpController = loader.getController();
-            createNewGamePopUpController.setCreateGameLobby(this::showNewGameLobby);
             createNewGamePopUpController.init(this,lobbyService);
         } catch (IOException e) {
             e.printStackTrace();
