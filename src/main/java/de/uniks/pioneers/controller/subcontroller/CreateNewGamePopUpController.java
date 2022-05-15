@@ -75,7 +75,7 @@ public class CreateNewGamePopUpController {
         lobbyService.createGame(name,password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
-                    lobbyScreenController.showNewGameLobby(game);
+                    lobbyScreenController.showNewGameLobby(game, "test");
                     Stage stage = (Stage) popUpBox.getScene().getWindow();
                     stage.close();
                 });

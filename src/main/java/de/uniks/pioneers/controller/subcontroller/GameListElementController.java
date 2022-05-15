@@ -1,11 +1,14 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.NewGameLobbyService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,7 +17,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class GameListElementController {
     @FXML
@@ -27,19 +33,20 @@ public class GameListElementController {
     public TextField memberCount;
 
     private LobbyScreenController lobbyScreenController;
+
+    private NewGameLobbyService newGameLobbyService;
     private ObservableList<Game> games;
     private Game game;
     private User creator;
 
 
-
     public void createOrUpdateGame(Game game, ObservableList<Game> games,
-                                   ObservableList<User> users, LobbyScreenController lobbyScreenController) {
+                                   ObservableList<User> users, LobbyScreenController lobbyScreenController, NewGameLobbyService newGameLobbyService) {
         // needs to be fixed
         // now mouse hovering is blocked !
         title.setMouseTransparent(true);
 
-        initGameAndUser(game,games,users,lobbyScreenController);
+        initGameAndUser(game,games,users,lobbyScreenController, newGameLobbyService);
         // might be better with rex ex, i gona update this
         String createdAt = game.createdAt();
         int start = createdAt.indexOf("T");
@@ -55,11 +62,12 @@ public class GameListElementController {
 
 
     private void initGameAndUser(Game game, ObservableList<Game> games,
-                                 ObservableList<User> users, LobbyScreenController lobbyScreenController) {
+                                 ObservableList<User> users, LobbyScreenController lobbyScreenController, NewGameLobbyService newGameLobbyService) {
         if (this.lobbyScreenController==null){
             this.game=game;
             this.games=games;
             this.lobbyScreenController=lobbyScreenController;
+            this.newGameLobbyService = newGameLobbyService;
             try {
                 User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
                 this.creator=creator;
@@ -76,7 +84,7 @@ public class GameListElementController {
         if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
             if(mouseEvent.getClickCount() == 2){
                 //join game
-                lobbyScreenController.showNewGameLobby(game);
+                joinGame(mouseEvent);
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
             // show options in a small list (join game, discard from list, show more game details
@@ -109,15 +117,26 @@ public class GameListElementController {
             gameOption.setLayoutX(xPos-10);
             gameOption.setLayoutY(yPos-10);
 
-            gameOption.setOnMouseExited(event -> {
-                pane.getChildren().remove(gameOption);
-            });
+            gameOption.setOnMouseExited(event -> pane.getChildren().remove(gameOption));
 
         }
     }
 
     private void joinGame(MouseEvent mouseEvent) {
-        lobbyScreenController.showNewGameLobby(game);
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/JoinGamePopUp.fxml"));
+        Parent node = null;
+        try {
+            node = loader.load();
+            JoinGamePopUpController joinGamePopUpController = loader.getController();
+            joinGamePopUpController.init(newGameLobbyService, lobbyScreenController, game);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage = new Stage();
+        stage.setTitle("Join Game");
+        Scene scene = new Scene(node);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void discardGame(MouseEvent mouseEvent) {
