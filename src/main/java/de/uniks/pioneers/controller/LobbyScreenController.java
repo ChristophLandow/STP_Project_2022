@@ -7,14 +7,10 @@ import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistControler;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.LobbyService;
-import de.uniks.pioneers.services.MessageService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -78,14 +74,12 @@ public class LobbyScreenController implements Controller {
     private final LobbyService lobbyService;
     private final UserService userService;
     private final MessageService messageService;
-
+    private final NewGameLobbyService newGameLobbyService;
+    private final CompositeDisposable disposable = new CompositeDisposable();
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private final ObservableList<Game> games = FXCollections.observableArrayList();
-
     private List<GameListElementController> gameListElementControllers;
-
-
 
     @Inject
     public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService,
@@ -96,8 +90,8 @@ public class LobbyScreenController implements Controller {
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
                                  Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                  MessageService messageService,
-                                 PrefService prefService
-    ) {
+                                 PrefService prefService,
+                                 NewGameLobbyService newGameLobbyService) {
         this.app = app;
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
@@ -110,6 +104,7 @@ public class LobbyScreenController implements Controller {
         this.userlistControlerProvider = userlistControlerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.prefService = prefService;
+        this.newGameLobbyService = newGameLobbyService;
     }
 
     @Override
@@ -126,7 +121,7 @@ public class LobbyScreenController implements Controller {
         this.EditProfileButton.setOnAction(this::editProfile);
 
         // get current user from server and display name and avatar
-        this.userService.getCurrentUser()
+        disposable.add(this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     removeUser(user);
@@ -136,7 +131,7 @@ public class LobbyScreenController implements Controller {
                     } else {
                         this.AvatarImageView.setImage(null);
                     }
-                });
+                }));
 
         this.app.getStage().setOnCloseRequest(event -> {
             logout();
@@ -152,8 +147,8 @@ public class LobbyScreenController implements Controller {
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getAddedSubList().stream().filter(game -> isGameValid(game))
-                                            .forEach(game -> renderGame(game));
+                c.getAddedSubList().stream().filter(this::isGameValid)
+                                            .forEach(this::renderGame);
             }else if (c.wasRemoved()){
                 c.getRemoved().forEach(this::deleteGame);
             }
@@ -173,14 +168,14 @@ public class LobbyScreenController implements Controller {
         // add mouse event to rules button
         this.RulesButton.setOnMouseClicked(this::openRules);
 
-        lobbyService.getGames().observeOn(FX_SCHEDULER)
-                .subscribe(this.games::setAll);
+        disposable.add(lobbyService.getGames().observeOn(FX_SCHEDULER)
+                .subscribe(this.games::setAll));
 
-        userService.findAll().observeOn(FX_SCHEDULER)
-                .subscribe(this.users::setAll);
+        disposable.add(userService.findAll().observeOn(FX_SCHEDULER)
+                .subscribe(this.users::setAll));
 
 
-        eventListener.listen("users.*.*", User.class)
+        disposable.add(eventListener.listen("users.*.*", User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
                     final User user = userEvent.data();
@@ -199,9 +194,9 @@ public class LobbyScreenController implements Controller {
                             users.removeIf(u->u._id().equals(user._id()));
                         }
                     }
-                });
+                }));
 
-        eventListener.listen("games.*.*", Game.class)
+        disposable.add(eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     // i gona change this code, when there is nothing else to do, add a map with regex
@@ -212,7 +207,7 @@ public class LobbyScreenController implements Controller {
                     } else {
                         updateGame(gameEvent.data());
                     }
-                });
+                }));
     }
 
     private void openRules(MouseEvent mouseEvent) {
@@ -222,6 +217,7 @@ public class LobbyScreenController implements Controller {
 
     @Override
     public void stop(){
+        disposable.dispose();
     }
 
     private void renderGame(Game game) {
@@ -232,7 +228,7 @@ public class LobbyScreenController implements Controller {
         try {
             node = loader.load();
             GameListElementController gameListElementController = loader.getController();
-            gameListElementController.createOrUpdateGame(game, games, users, this);
+            gameListElementController.createOrUpdateGame(game, games, users, this, newGameLobbyService );
             node.setId(game._id());
             gameListElementControllers.add(gameListElementController);
             ListViewGames.getItems().add(0, node);
@@ -259,7 +255,7 @@ public class LobbyScreenController implements Controller {
         try {
             GameListElementController gameListElementController = gameListElementControllers.stream()
                     .filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
-            gameListElementController.createOrUpdateGame(data, games, users,this);
+            gameListElementController.createOrUpdateGame(data, games, users,this, newGameLobbyService);
         } catch (Exception e) {
             return;
         }
@@ -354,9 +350,10 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
-    public void showNewGameLobby (Game game){
+    public void showNewGameLobby (Game game, String password){
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
+        newGameScreenLobbyController.setPassword(password);
         app.show(newGameScreenLobbyController);
     }
 
@@ -377,4 +374,5 @@ public class LobbyScreenController implements Controller {
         stage.setScene(scene);
         stage.show();
     }
+
 }

@@ -1,6 +1,5 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.dto.CreateMemberDto;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.rest.GameMemberApiService;
@@ -27,6 +26,6 @@ public class NewGameLobbyService {
     }
 
     public Observable<Member> deleteMember(String id, String userId){
-        return gameMemberApiService.deleteMemmber(id,userId);
+        return gameMemberApiService.deleteMember(id,userId);
     }
 }
