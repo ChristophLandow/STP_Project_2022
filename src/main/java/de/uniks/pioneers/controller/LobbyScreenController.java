@@ -77,6 +77,7 @@ public class LobbyScreenController implements Controller {
     private final EventListener eventListener;
     private final LobbyService lobbyService;
     private final UserService userService;
+    private final Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
     private final MessageService messageService;
 
     // List with games from Server
@@ -94,7 +95,8 @@ public class LobbyScreenController implements Controller {
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
-                                 Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
+                                 Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider,
+                                 //Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                  MessageService messageService,
                                  PrefService prefService
     ) {
@@ -102,10 +104,14 @@ public class LobbyScreenController implements Controller {
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
         this.userService = userService;
+        this.createNewGamePopUpControllerProvider = createNewGamePopUpControllerProvider;
         this.messageService = messageService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
-        this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
+
+
+        //this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
+
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
@@ -366,7 +372,7 @@ public class LobbyScreenController implements Controller {
         Parent node = null;
         try {
             node = loader.load();
-            CreateNewGamePopUpController createNewGamePopUpController = loader.getController();
+            CreateNewGamePopUpController createNewGamePopUpController = createnew
             createNewGamePopUpController.init(this,lobbyService);
         } catch (IOException e) {
             e.printStackTrace();

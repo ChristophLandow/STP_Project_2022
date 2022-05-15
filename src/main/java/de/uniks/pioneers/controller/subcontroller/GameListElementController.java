@@ -1,11 +1,15 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,6 +19,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class GameListElementController {
     @FXML
@@ -87,40 +93,26 @@ public class GameListElementController {
                 lobbyScreenController.showNewGameLobby(game);
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-            // show options in a small list (join game, discard from list, show more game details
-            // need a fxml !
-            VBox gameOption = new VBox();
-            gameOption.setMinSize(200, 200);
-            gameOption.setVisible(true);
-            gameOption.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
-
-
-            HBox joinGameBox = new HBox();
-            Label joinGame = new Label("join game");
-            joinGameBox.getChildren().add(joinGame);
-            joinGameBox.setOnMouseClicked(this::joinGame);
-
-            HBox discardGameBox = new HBox();
-            Label discardGame = new Label("discard game");
-            discardGameBox.getChildren().add(discardGame);
-            discardGameBox.setOnMouseClicked(this::discardGame);
-
-            gameOption.getChildren().add(0, joinGameBox);
-            gameOption.getChildren().add(1, discardGameBox);
-
-            Scene scene = gameBoxRoot.getScene();
-
-            Pane pane = (Pane) scene.lookup("#root");
-            pane.getChildren().add(gameOption);
-            double xPos = mouseEvent.getSceneX();
-            double yPos = mouseEvent.getSceneY();
-            gameOption.setLayoutX(xPos - 10);
-            gameOption.setLayoutY(yPos - 10);
-
-            gameOption.setOnMouseExited(event -> {
-                pane.getChildren().remove(gameOption);
-            });
-
+            final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListDropDown.fxml"));
+            final VBox gameOptions;
+            try {
+                gameOptions = loader.load();
+                GameListDropDownController gameListDropDownController = loader.getController();
+                gameListDropDownController.init(this, lobbyService);
+                gameOptions.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
+                Scene scene = gameBoxRoot.getScene();
+                Pane pane = (Pane) scene.lookup("#root");
+                pane.getChildren().add(gameOptions);
+                double xPos = mouseEvent.getSceneX();
+                double yPos = mouseEvent.getSceneY();
+                gameOptions.setLayoutX(xPos - 10);
+                gameOptions.setLayoutY(yPos - 10);
+                gameOptions.setOnMouseExited(event -> {
+                    pane.getChildren().remove(gameOptions);
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
