@@ -7,5 +7,4 @@ public record Game(
         String name,
         String owner,
         Integer members
-) {
-}
+) {}
