@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -51,7 +53,10 @@
                         <HBox fx:id="messageHbox" maxWidth="370.0" prefHeight="40.0" prefWidth="370.0">
                            <children>
                               <TextField fx:id="messageText" maxHeight="30.0" maxWidth="280.0" prefHeight="30.0" prefWidth="280.0" />
-                              <Button fx:id="sendButton" maxHeight="30.0" maxWidth="90.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="send" />
+                              <Button fx:id="sendButton" maxHeight="30.0" maxWidth="90.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="send">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font></Button>
                            </children>
                         </HBox>
                      </children>
@@ -63,9 +68,28 @@
             </HBox>
             <HBox fx:id="buttonBox" alignment="CENTER" prefHeight="100.0" prefWidth="800.0" spacing="100.0">
                <children>
-                  <Button fx:id="readyButton" mnemonicParsing="false" onMouseClicked="#setReadyTrue" scaleX="1.5" scaleY="1.5" text="Ready" />
-                  <Button fx:id="startGameButton" mnemonicParsing="false" onMouseClicked="#startGame" scaleX="1.5" scaleY="1.5" text="Start Game" />
-                  <Button fx:id="leaveButton" mnemonicParsing="false" onMouseClicked="#leaveLobby" scaleX="1.5" scaleY="1.5" text="Leave" />
+                  <Pane prefHeight="100.0" prefWidth="822.0">
+                     <children>
+                        <Button fx:id="startGameButton" layoutX="332.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#startGame" prefHeight="40.0" prefWidth="137.0" text="Start Game">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="readyButton" layoutX="175.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#setReadyTrue" prefHeight="40.0" prefWidth="123.0" text="Ready">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="leaveButton" layoutX="495.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#leaveLobby" prefHeight="40.0" prefWidth="84.0" text="Leave">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                        <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="24.0" fitWidth="22.0" layoutX="628.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
+                           <Image url="@../question_mark_icon.jpg" />
+                        </ImageView>
+                     </children>
+                  </Pane>
                </children>
             </HBox>
          </children>
