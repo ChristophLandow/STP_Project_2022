@@ -25,6 +25,13 @@ public class UserServiceTest {
 
     @Test
     void getCurrentUser() {
+        when(userApiService.getUser("1")).thenReturn(Observable.just(new User("1", "Alice", "offline", null)));
+        userService.setCurrentUserId("1");
+
+        final User result = userService.getCurrentUser().blockingFirst();
+        assertEquals("Alice", result.name());
+
+        verify(userApiService).getUser("1");
     }
 
     @Test
