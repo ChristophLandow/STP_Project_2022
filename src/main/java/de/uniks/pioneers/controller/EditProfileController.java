@@ -188,7 +188,7 @@ public class EditProfileController implements Controller {
     }
 
     public void uploadAvatar() throws IOException {
-        resetAvatar();
+        // resetAvatar();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Choose Avatar", "*.PNG", "*.jpg"));
