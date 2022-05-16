@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
@@ -19,10 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -54,7 +52,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML
     public VBox messageBox;
     @FXML
-    public ScrollBar scrollbar;
+    public ScrollPane chatScrollPane;
     @FXML
     public HBox messageHbox;
     @FXML
@@ -72,6 +70,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final Provider<GameChatController> gameChatControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final ObservableList<Member> members = FXCollections.observableArrayList();
@@ -85,9 +84,11 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                        Provider<GameChatController> gameChatControllerProvider,
                                         NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService) {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.gameChatControllerProvider = gameChatControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
         this.app = app;
         this.userService = userService;
@@ -136,6 +137,14 @@ public class NewGameScreenLobbyController implements Controller {
         //User owner = lobbyScreenController.returnUserById(game.get().owner());
         //newGameLobbyService.postMember(game.get()._id(),owner.name(),true);
 
+        GameChatController gameChatController = gameChatControllerProvider.get();
+        gameChatController.chatScrollPane = this.chatScrollPane;
+        gameChatController.messageBox = this.messageBox;
+        gameChatController.messageText = this.messageText;
+        gameChatController.sendButton = this.sendButton;
+        gameChatController.game = this.game.get();
+        gameChatController.render();
+        gameChatController.init();
     }
 
     private void deleteUser(Member member) {

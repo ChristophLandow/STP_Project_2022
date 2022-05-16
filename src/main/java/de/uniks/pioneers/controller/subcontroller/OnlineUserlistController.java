@@ -58,6 +58,7 @@ public class OnlineUserlistController {
     }
 
     public void init(){
+
     }
 
     public void renderUser(User user){
