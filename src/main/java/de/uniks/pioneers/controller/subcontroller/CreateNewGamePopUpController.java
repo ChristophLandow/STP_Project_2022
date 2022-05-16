@@ -89,7 +89,7 @@ public class CreateNewGamePopUpController {
 
                         response -> show message in controller, because we dont have a model we could listen to
                         with lists, our lists are saved in services and controllers, which is rly bad !
-                    */
+                   */
                     lobbyScreenControllerProvider.get().showNewGameLobby(game);
                     Stage stage = (Stage) popUpBox.getScene().getWindow();
                     stage.close();

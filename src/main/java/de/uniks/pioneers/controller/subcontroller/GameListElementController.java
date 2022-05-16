@@ -51,7 +51,7 @@ public class GameListElementController implements Controller {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.lobbyServiceProvider = lobbyServiceProvider;
         this.gameListDropDownControllerProvider = GameListDropDownControllerProvider;
-        this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
+        //this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
     }
 
     public void setDataToGameListElement() {
@@ -112,7 +112,7 @@ public class GameListElementController implements Controller {
 
     public void showGameInfo(MouseEvent mouseEvent) {
         Tooltip tt = new Tooltip();
-        if (this.creator != null && this.creator.get().name() != null) {
+        if (this.creator != null ) {
             String toolTipTxt = String.format("Created by: %s  id: %s", creator.get().name(), game.get()._id());
             tt.setText(toolTipTxt);
         } else {

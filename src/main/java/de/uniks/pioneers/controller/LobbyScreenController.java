@@ -240,6 +240,7 @@ public class LobbyScreenController implements Controller {
 
             GameListElementController gameListElementController = gameListElementControllerProvider.get();
             Parent node = gameListElementController.render();
+            ListViewGames.getItems().add(0, node);
             System.out.println(node);
             node.setId(game._id());
             try {
@@ -251,7 +252,6 @@ public class LobbyScreenController implements Controller {
             gameListElementController.game.set(game);
             gameListElementController.setDataToGameListElement();
             gameListElementControllers.add(gameListElementController);
-            ListViewGames.getItems().add(0, node);
 
     }
 
