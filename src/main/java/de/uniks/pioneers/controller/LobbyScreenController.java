@@ -236,9 +236,11 @@ public class LobbyScreenController implements Controller {
 
     private void renderGame(Game game) {
             //code not final
-        System.out.println("kappa");
+            System.out.println(game._id());
+
             GameListElementController gameListElementController = gameListElementControllerProvider.get();
             Parent node = gameListElementController.render();
+            System.out.println(node);
             node.setId(game._id());
             try {
                 User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
@@ -246,8 +248,8 @@ public class LobbyScreenController implements Controller {
             } catch (Exception e) {
                 return;
             }
-
             gameListElementController.game.set(game);
+            gameListElementController.setDataToGameListElement();
             gameListElementControllers.add(gameListElementController);
             ListViewGames.getItems().add(0, node);
 
