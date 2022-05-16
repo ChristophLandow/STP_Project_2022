@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.subcontroller.EditAvatarSpinnerController;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -26,6 +27,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.*;
 
@@ -38,7 +40,7 @@ public class EditProfileController implements Controller {
     @FXML public PasswordField newPasswordInput;
     @FXML public PasswordField repeatNewPasswordInput;
     @FXML public Text usernameLabel;
-    @FXML public Spinner chooseAvatarSpinner;
+    @FXML public Spinner<Integer> chooseAvatarSpinner;
     @FXML public Text usernameStatusText;
     @FXML public Text newPasswordStatusText;
     @FXML public Text oldPasswordStatusText;
@@ -48,6 +50,7 @@ public class EditProfileController implements Controller {
     private final UserService userService;
     private final LoginService loginService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final CompositeDisposable disposable = new CompositeDisposable();
     private String avatarStr;
     private String customAvatar = "";
 
@@ -98,11 +101,9 @@ public class EditProfileController implements Controller {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
 
         // get currentUser from Server and display name
-        this.userService.getCurrentUser()
+        disposable.add(this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(user -> {
-                    this.usernameLabel.setText(user.name());
-                });
+                .subscribe(user -> this.usernameLabel.setText(user.name())));
 
         // Spinner Code
         EditAvatarSpinnerController spinnerValueFactory = new EditAvatarSpinnerController(this::updateAvatarString);
@@ -129,9 +130,9 @@ public class EditProfileController implements Controller {
         String newPassword = this.newPasswordInput.getText();
 
         // set new avatar if spinner value changed
-        if ((Integer) chooseAvatarSpinner.getValue() > 0) {
+        if (chooseAvatarSpinner.getValue() > 0) {
             getClass().getResource("subcontroller/" + avatarStr);
-            byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatarStr).toURI()));
+            byte[] data = Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getResource("subcontroller/" + avatarStr)).toURI()));
             newAvatar = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
         }
         // or if user uploaded custom avatar
@@ -157,26 +158,26 @@ public class EditProfileController implements Controller {
 
         if (changePassword && oldPasswordCorrect[0]) {
             // send patch request with changing password
-            this.userService.editProfile(newUsername, newAvatar, newPasswordInput.getText(), null)
+            disposable.add(this.userService.editProfile(newUsername, newAvatar, newPasswordInput.getText(), null)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
                         e.printStackTrace();
                     })
-                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
+                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get())));
 
         } else if (changePassword) {
             // dont send patch request
             oldPasswordStatusText.setText("Incorrect password");
         } else {
             // send patch request without new password
-            this.userService.editProfile(newUsername, newAvatar, null, null)
+            disposable.add(this.userService.editProfile(newUsername, newAvatar, null, null)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
                         e.printStackTrace();
                     })
-                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get()));
+                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get())));
         }
 
     }
