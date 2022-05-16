@@ -2,9 +2,13 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.controller.LobbyScreenController;
+import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.LobbyService;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -17,9 +21,6 @@ import java.io.IOException;
 
 
 public class GameListDropDownController implements Controller {
-
-    private final Provider<GameListElementController> gameListElementControllerProvider;
-    private final Provider<LobbyService> lobbyServiceProvider;
     @FXML
     public VBox dropDownRoot;
     @FXML
@@ -31,11 +32,17 @@ public class GameListDropDownController implements Controller {
     @FXML
     public Label discardGameLabel;
 
+    private final Provider<LobbyService> lobbyServiceProvider;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
+
     @Inject
-    public GameListDropDownController(Provider<GameListElementController> gameListElementControllerProvider,
-                                      Provider<LobbyService> lobbyServiceProvider) {
-        this.gameListElementControllerProvider = gameListElementControllerProvider;
+    public GameListDropDownController(
+            Provider<LobbyService> lobbyServiceProvider,
+            Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+
         this.lobbyServiceProvider = lobbyServiceProvider;
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
 
@@ -66,7 +73,8 @@ public class GameListDropDownController implements Controller {
     }
 
     public void discardGame(MouseEvent mouseEvent) {
-        LobbyService lobbyService = lobbyServiceProvider.get();
-        lobbyService.gamesProperty.get().remove(gameListElementControllerProvider.get().game);
+        //LobbyService lobbyService = lobbyServiceProvider.get();
+        LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
+        lobbyScreenController.gamesProperty.get().remove(game.get());
     }
 }

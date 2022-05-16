@@ -24,7 +24,6 @@ public class LobbyService {
     private final AuthApiService authApiService;
     private final GameApiService gameApiService;
 
-
     public SimpleObjectProperty <ObservableList<Game>> gamesProperty;
     private final ObservableList<Game> games = FXCollections.observableArrayList();
 

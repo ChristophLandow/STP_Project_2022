@@ -87,6 +87,8 @@ public class LobbyScreenController implements Controller {
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private ObservableList<Game> games = FXCollections.observableArrayList();
 
+    public SimpleObjectProperty <ObservableList<Game>> gamesProperty = new SimpleObjectProperty();
+
     private List<GameListElementController> gameListElementControllers = new ArrayList<>();
 
 
@@ -156,7 +158,6 @@ public class LobbyScreenController implements Controller {
         userlistController.render();
         userlistController.init();
 
-
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
@@ -164,6 +165,8 @@ public class LobbyScreenController implements Controller {
                         .forEach(game -> renderGame(game));
             } else if (c.wasRemoved()) {
                 c.getRemoved().forEach(this::deleteGame);
+            } else if (c.wasUpdated()){
+                c.getList().forEach(this::updateGame);
             }
         });
 
@@ -184,6 +187,8 @@ public class LobbyScreenController implements Controller {
 
         lobbyService.getGames().observeOn(FX_SCHEDULER)
                 .subscribe(this.games::setAll);
+
+        gamesProperty.set(games);
 
         userService.findAll().observeOn(FX_SCHEDULER)
                 .subscribe(this.users::setAll);
@@ -251,9 +256,13 @@ public class LobbyScreenController implements Controller {
 
     public void deleteGame(Game data) {
         //find node belonging to game and then remove it from ListView
-        List<Node> removales = (List<Node>) ListViewGames.getItems().stream().toList();
+        try {
+        List<Node> removales = (List<Node>) ListViewGames.getItems().stream();
         removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
         ListViewGames.getItems().removeAll(removales);
+        } catch (Exception e) {
+            return;
+        }
     }
 
     private void updateGame(Game game) {

@@ -7,6 +7,7 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,8 +51,7 @@ public class GameListElementController implements Controller {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.lobbyServiceProvider = lobbyServiceProvider;
         this.gameListDropDownControllerProvider = gameListDropDownControllerProvider;
-
-        //this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
+        this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
     }
 
     @Override
@@ -110,11 +110,10 @@ public class GameListElementController implements Controller {
                 lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-
-
                 GameListDropDownController gameListDropDownController = gameListDropDownControllerProvider.get();
-                gameListDropDownController.render();
-
+                gameListDropDownController.game.set(game.get());
+                VBox gameOptions = (VBox) gameListDropDownController.render();
+                //not final
                 gameOptions.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
                 Scene scene = gameBoxRoot.getScene();
                 Pane pane = (Pane) scene.lookup("#root");
