@@ -30,7 +30,7 @@ class SignUpScreenControllerTest extends ApplicationTest {
     Provider<LoginScreenController> loginScreenControllerProvider;
 
     @Spy
-    App app;
+    App app = new App(null);
 
     @InjectMocks
     SignUpScreenController signUpScreenController;

@@ -85,20 +85,22 @@ test {
         showStackTraces = true
     }
 
-    //systemProperties = [
-    //        'java.awt.headless': 'true',
-    //        'testfx.robot'     : 'glass',
-    //        'testfx.headless'  : 'true',
-    //        'glass.platform'   : 'Monocle',
-    //        'monocle.platform' : 'Headless',
-    //        'prism.order'      : 'sw',
-    //        'prism.text'       : 't2k',
-    //]
+    systemProperties = [
+            'java.awt.headless': 'true',
+            'testfx.robot'     : 'glass',
+            'testfx.headless'  : 'true',
+            'glass.platform'   : 'Monocle',
+            'monocle.platform' : 'Headless',
+            'prism.order'      : 'sw',
+            'prism.text'       : 't2k',
+    ]
 
-    //jvmArgs += [
-    //        '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
-    //        '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
-    //]
+    jvmArgs += [
+            '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
+            '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
+    ]
+
+
 }
 
 jar {

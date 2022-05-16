@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextMatchers;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,19 +25,17 @@ import static org.mockito.Mockito.when;
 class LoginScreenControllerTest extends ApplicationTest {
 
     @Spy
-    App app;
+    App app = new App(null);
     @Mock
     LoginService loginService;
     @Mock
     PrefService prefService;
-
     @InjectMocks
     LoginScreenController loginScreenController;
     @Override
     public void start(Stage stage){
 
         when(prefService.recall()).thenReturn("");
-
         app.start(stage);
         app.show(loginScreenController);
     }
