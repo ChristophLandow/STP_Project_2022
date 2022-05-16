@@ -1,19 +1,13 @@
 package de.uniks.pioneers;
 
-import de.uniks.pioneers.controller.LoginScreenController;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest extends ApplicationTest {
 
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stage){
 
         final App app = new App(null);
         MainComponent testComponent = DaggerTestComponent.builder().mainApp(app).build();
@@ -25,8 +19,8 @@ class AppTest extends ApplicationTest {
     @Test
     public void test() {
 
-        write("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    //clickOn("#textFieldUserName");
+
+        //Test module still provisionally uses Server functionality! Implementation of tests may require adjustment to respective classes in TestModule class!
 
 
     }

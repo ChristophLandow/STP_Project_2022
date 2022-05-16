@@ -30,6 +30,8 @@ import static de.uniks.pioneers.Constants.BASE_URL;
 @Module
 public class TestModule {
 
+    //Provisionally uses Server functionality! Adjustments for respective Tests required!
+
     @Provides
     static EventListener eventListener(){
 
