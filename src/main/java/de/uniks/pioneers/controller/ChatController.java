@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.subcontroller.ChatTabController;
 import de.uniks.pioneers.controller.subcontroller.ChatUserlistController;
 import de.uniks.pioneers.dto.CreateMessageDto;
@@ -8,9 +9,12 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
 import de.uniks.pioneers.services.UserService;
-import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -22,6 +26,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static de.uniks.pioneers.Constants.CHAT_SCREEN_TITLE;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -30,7 +36,6 @@ public class ChatController implements Controller {
     private final App app;
     private final MessageService messageService;
     private final UserService userService;
-    private final UserlistService userlistService;
     private final GroupService groupService;
     private final EventListener eventListener;
 
@@ -38,25 +43,25 @@ public class ChatController implements Controller {
 
     @FXML public Button sendButton;
     @FXML public Button leaveButton;
-    @FXML public ListView userListView;
+    @FXML public ListView<Label> userListView;
     @FXML public TextField messageTextField;
     @FXML public TabPane chatTabPane;
 
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<ChatUserlistController> userlistControllerProvider;
-
-    private final ArrayList<ChatTabController> chatTabControllers = new ArrayList<>();
+    private final ObservableList<ChatTabController> chatTabControllers = FXCollections.observableArrayList(new ArrayList<>());
+    private final ListChangeListener<ChatTabController> listChangeListener = c -> sendButtonBinding();
     private String currentGroupId;
+    private final Timer timer = new Timer();
 
     @Inject
-    public ChatController(App app, MessageService messageService, UserService userService, UserlistService userlistService,
+    public ChatController(App app, MessageService messageService, UserService userService,
                           EventListener eventListener, GroupService groupService,
                           Provider<LobbyScreenController> lobbyScreenControllerProvider,
                           Provider<ChatUserlistController> userlistControllerProvider) {
         this.app = app;
         this.messageService = messageService;
         this.userService = userService;
-        this.userlistService = userlistService;
         this.groupService = groupService;
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
@@ -75,6 +80,17 @@ public class ChatController implements Controller {
             return null;
         }
 
+        this.chatTabPane.getTabs().remove(0);
+
+        this.chatTabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            sendButtonBinding();
+            chatTabControllers.addListener(listChangeListener);
+        });
+
+        for(User u: this.messageService.getchatUserList()){
+            this.addTab(u);
+        }
+
         ChatUserlistController chatUserlistController = userlistControllerProvider.get();
         chatUserlistController.chatController = this;
         chatUserlistController.chatTabControllers = this.chatTabControllers;
@@ -89,11 +105,28 @@ public class ChatController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
+
+        this.messageService.increaseOpenChatCounter();
+        this.messageService.increaseOpenChatCounter();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> resetOpenChatCounter());
+            }
+        }, 1000*5, 1000*10);
     }
 
 
     @Override
     public void stop() {
+        for(ChatTabController chatTabController : this.chatTabControllers){
+            chatTabController.stop();
+        }
+
+        timer.cancel();
+
+        this.chatTabControllers.clear();
+
         disposable.dispose();
     }
 
@@ -108,22 +141,49 @@ public class ChatController implements Controller {
     public void removeTab(Event event){
         Tab closedTab = (Tab) event.getSource();
         this.messageService.getchatUserList().removeIf(u->u.name().equals(closedTab.getText()));
+
+        for(ChatTabController chatTabController : this.chatTabControllers){
+            if(chatTabController.chattingWith.name().equals(closedTab.getText())){
+                chatTabController.stop();
+            }
+        }
+
         this.chatTabControllers.removeIf(c->c.chattingWith.name().equals(closedTab.getText()));
     }
 
-    public void leave(ActionEvent event) {
+    public void sendButtonBinding(){
+        Tab openTab = this.chatTabPane.getSelectionModel().getSelectedItem();
+
+        if(openTab != null) {
+            for (ChatTabController tabController : this.chatTabControllers) {
+                if (tabController.chattingWith.name().equals(openTab.getText())) {
+                    sendButton.disableProperty().bind(tabController.getFinishedInitialization().not());
+                    chatTabControllers.removeListener(listChangeListener);
+                    break;
+                }
+            }
+        }
+        else{
+            this.sendButton.disableProperty().unbind();
+            this.sendButton.setDisable(true);
+        }
+    }
+
+    public void leave(ActionEvent ignoredEvent) {
+        this.messageService.getchatUserList().clear();
         app.show(lobbyScreenControllerProvider.get());
     }
 
-    public void send(ActionEvent event) {
-        Tab open = chatTabPane.getSelectionModel().getSelectedItem();
+    public void send(ActionEvent ignoredEvent) {
+        Tab openTab = chatTabPane.getSelectionModel().getSelectedItem();
+
         for (ChatTabController chatTabController : chatTabControllers) {
-            if (chatTabController.chattingWith.name().equals(open.getText())) {
+            if (chatTabController.chattingWith.name().equals(openTab.getText())) {
                 currentGroupId = chatTabController.groupId.get();
             }
         }
 
-        if(!currentGroupId.isEmpty()){
+        if (!currentGroupId.isEmpty()) {
             String message = this.messageTextField.getText();
             if (!message.equals("")) {
                 disposable.add(messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
@@ -135,6 +195,9 @@ public class ChatController implements Controller {
                         }));
             }
         }
+    }
 
+    public void resetOpenChatCounter(){
+        this.messageService.decreaseChatCounter(Constants.MAX_LOADING_CHATS);
     }
 }

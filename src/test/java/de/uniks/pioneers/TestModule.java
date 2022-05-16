@@ -128,6 +128,9 @@ public class TestModule {
     static GroupApiService groupApiService(Retrofit retrofit) { return retrofit.create(GroupApiService.class); }
 
     @Provides
+    static GameMemberApiService gameMemberApiService(Retrofit retrofit) { return retrofit.create(GameMemberApiService.class); }
+
+    @Provides
     static PrefService prefService() {
 
         return new PrefService(null, null,null){

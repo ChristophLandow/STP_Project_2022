@@ -148,7 +148,7 @@ public class SignUpScreenController implements Controller{
             byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
             String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
 
-            Image image = new Image(avatarURL.getAbsolutePath());
+            Image image = new Image("file:" + avatarURL.getAbsolutePath());
             this.imageViewAvatar.setImage(image);
 
             if (avatarB64.length() > AVATAR_CHAR_LIMIT) {
@@ -168,6 +168,7 @@ public class SignUpScreenController implements Controller{
         this.avatarStatusText.setText("");
         this.customAvatar = "";
     }
+
     public void register() throws IOException, URISyntaxException {
 
         String avatarB64 = customAvatar;

@@ -12,8 +12,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
+
 import static de.uniks.pioneers.Constants.API_V1_PREFIX;
 import static de.uniks.pioneers.Constants.BASE_URL;
 
@@ -22,7 +24,7 @@ public class MainModule {
 
     @Provides
     @Singleton
-    static ObjectMapper mapper(){
+    ObjectMapper mapper(){
         return new ObjectMapper()
                 .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -31,7 +33,7 @@ public class MainModule {
 
     @Provides
     @Singleton
-    static OkHttpClient client(TokenStorage tokenStorage) {
+    OkHttpClient client(TokenStorage tokenStorage) {
         return new OkHttpClient.Builder().addInterceptor(chain -> {
             final String token = tokenStorage.getAccessToken();
             if (token == null) {
@@ -46,13 +48,10 @@ public class MainModule {
         }).build();
     }
     @Provides
-    Preferences prefs(){
-
-        return Preferences.userNodeForPackage(Main.class);
-    }
+    Preferences prefs(){ return Preferences.userNodeForPackage(Main.class); }
     @Provides
     @Singleton
-    static Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
+    Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL+API_V1_PREFIX+"/")
                 .client(client)
@@ -61,22 +60,26 @@ public class MainModule {
                 .build();
     }
     @Provides
-    static UserApiService userApiService(Retrofit retrofit){
-        return retrofit.create(UserApiService.class);
-    }
+    @Singleton
+    UserApiService userApiService(Retrofit retrofit){ return retrofit.create(UserApiService.class); }
 
     @Provides
-    static AuthApiService authApiService(Retrofit retrofit){
-        return retrofit.create(AuthApiService.class);
-    }
+    @Singleton
+    AuthApiService authApiService(Retrofit retrofit){ return retrofit.create(AuthApiService.class); }
 
     @Provides
-    static GameApiService gameApiService(Retrofit retrofit) { return retrofit.create(GameApiService.class); }
+    @Singleton
+    GameApiService gameApiService(Retrofit retrofit) { return retrofit.create(GameApiService.class); }
 
     @Provides
-    static MessageApiService messageApiService(Retrofit retrofit) { return retrofit.create(MessageApiService.class); }
+    @Singleton
+    MessageApiService messageApiService(Retrofit retrofit) { return retrofit.create(MessageApiService.class); }
 
     @Provides
-    static GroupApiService groupApiService(Retrofit retrofit) { return retrofit.create(GroupApiService.class); }
+    @Singleton
+    GroupApiService groupApiService(Retrofit retrofit) { return retrofit.create(GroupApiService.class); }
 
+    @Provides
+    @Singleton
+    GameMemberApiService gameMemberApiService(Retrofit retrofit) { return  retrofit.create(GameMemberApiService.class);}
 }

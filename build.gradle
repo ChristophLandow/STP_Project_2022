@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'jacoco'
-
     // https://plugins.gradle.org/plugin/org.openjfx.javafxplugin
     id 'org.openjfx.javafxplugin' version '0.0.12'
 }
@@ -55,18 +54,13 @@ dependencies {
     implementation group: 'org.glassfish.tyrus', name: 'tyrus-client', version: '1.15'
     implementation group: 'org.glassfish.tyrus', name: 'tyrus-container-grizzly-client', version: '1.15'
 
-
-
-
-    // -------------------- Degger (Dependency Injetion) --------------------------------------------------
+    // -------------------- Dagger (Dependency Injetion) --------------------------------------------------
     implementation 'com.google.dagger:dagger:2.41'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.41'
     testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.41'
 
     //RXJava
-
     implementation group: 'io.reactivex.rxjava3', name: 'rxjava', version: '3.1.4'
-
     implementation group: 'com.github.akarnokd', name: 'rxjava3-retrofit-adapter', version: '3.0.0'
 }
 
@@ -105,4 +99,15 @@ test {
     //        '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
     //        '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
     //]
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes "Main-Class": "de.uniks.pioneers.Main"
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
