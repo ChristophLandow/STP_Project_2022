@@ -188,12 +188,11 @@ public class EditProfileController implements Controller {
     }
 
     public void uploadAvatar() throws IOException {
-        // resetAvatar();
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Choose Avatar", "*.PNG", "*.jpg"));
         File avatarURL = fileChooser.showOpenDialog(null);
         if(avatarURL != null) {
+            resetAvatar();
             byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
             String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
 
