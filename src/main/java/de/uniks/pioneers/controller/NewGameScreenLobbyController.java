@@ -108,8 +108,6 @@ public class NewGameScreenLobbyController implements Controller {
         System.out.println(game.get()._id());
         newGameLobbyService.deleteMember(game.get()._id(),null);
 
-
-
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();

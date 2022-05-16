@@ -93,16 +93,6 @@ public class GameListElementController implements Controller {
         memberCount.setText(actualMemberCount);
     }
 
-
-    private void joinGame(MouseEvent mouseEvent) {
-        lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
-    }
-
-    private void discardGame(MouseEvent mouseEvent) {
-        ObservableList<Game> games = lobbyServiceProvider.get().gamesProperty.get();
-        games.remove(game.get());
-    }
-
     public void showDropDown(MouseEvent mouseEvent) {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             if (mouseEvent.getClickCount() == 2) {

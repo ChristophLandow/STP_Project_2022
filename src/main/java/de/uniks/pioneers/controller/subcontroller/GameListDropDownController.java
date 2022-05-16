@@ -32,16 +32,12 @@ public class GameListDropDownController implements Controller {
     @FXML
     public Label discardGameLabel;
 
-    private final Provider<LobbyService> lobbyServiceProvider;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
 
     @Inject
     public GameListDropDownController(
-            Provider<LobbyService> lobbyServiceProvider,
             Provider<LobbyScreenController> lobbyScreenControllerProvider) {
-
-        this.lobbyServiceProvider = lobbyServiceProvider;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
@@ -73,7 +69,6 @@ public class GameListDropDownController implements Controller {
     }
 
     public void discardGame(MouseEvent mouseEvent) {
-        //LobbyService lobbyService = lobbyServiceProvider.get();
         LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
         lobbyScreenController.gamesProperty.get().remove(game.get());
     }

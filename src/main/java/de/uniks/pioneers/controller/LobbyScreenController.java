@@ -86,8 +86,7 @@ public class LobbyScreenController implements Controller {
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private ObservableList<Game> games = FXCollections.observableArrayList();
-
-    public SimpleObjectProperty <ObservableList<Game>> gamesProperty = new SimpleObjectProperty();
+    public SimpleObjectProperty<ObservableList> gamesProperty;
 
     private List<GameListElementController> gameListElementControllers = new ArrayList<>();
 
@@ -132,7 +131,6 @@ public class LobbyScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
-        this.EditProfileButton.setOnAction(this::editProfile);
 
         // get current user from server and display name and avatar
         this.userService.getCurrentUser()
@@ -147,53 +145,39 @@ public class LobbyScreenController implements Controller {
                     }
                 });
 
-        this.app.getStage().setOnCloseRequest(event -> {
-            logout();
-            Platform.exit();
-            System.exit(0);
-        });
-
         LobbyUserlistControler userlistController = userlistControlerProvider.get();
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
         userlistController.init();
-
-        games.addListener((ListChangeListener<? super Game>) c -> {
-            c.next();
-            if (c.wasAdded()) {
-                c.getAddedSubList().stream().filter(game -> isGameValid(game))
-                        .forEach(game -> renderGame(game));
-            } else if (c.wasRemoved()) {
-                c.getRemoved().forEach(this::deleteGame);
-            } else if (c.wasUpdated()){
-                c.getList().forEach(this::updateGame);
-            }
-        });
-
 
         return parent;
     }
 
     @Override
     public void init() {
-        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+        this.app.getStage().setOnCloseRequest(event -> {
+            logout();
+            Platform.exit();
+            System.exit(0);
+        });
 
+        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
                 .subscribe();
-
-        // add mouse event to rules button
+        // add mouse event to buttons
         this.RulesButton.setOnMouseClicked(this::openRules);
+        this.EditProfileButton.setOnAction(this::editProfile);
+        //init listeners
+        initUserListTools();
+        initGamesListTools();
+    }
 
-        lobbyService.getGames().observeOn(FX_SCHEDULER)
-                .subscribe(this.games::setAll);
+    @Override
+    public void stop() {
+    }
 
-        gamesProperty.set(games);
-
-        userService.findAll().observeOn(FX_SCHEDULER)
-                .subscribe(this.users::setAll);
-
-
+    private void initUserListTools() {
         eventListener.listen("users.*.*", User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
@@ -212,10 +196,30 @@ public class LobbyScreenController implements Controller {
                     }
                 });
 
+        userService.findAll().observeOn(FX_SCHEDULER)
+                .subscribe(this.users::setAll);
+    }
+
+    private void initGamesListTools() {
+        games.addListener((ListChangeListener<? super Game>) c -> {
+            c.next();
+            if (c.wasAdded()) {
+                c.getAddedSubList().stream().filter(this::isGameValid)
+                                            .forEach(this::renderGame);
+            } else if (c.wasRemoved()) {
+                c.getRemoved().forEach(this::deleteGame);
+            } else if (c.wasUpdated()) {
+                c.getList().forEach(this::updateGame);
+            }
+        });
+
+        lobbyService.getGames().observeOn(FX_SCHEDULER)
+                .subscribe(this.games::setAll);
+        gamesProperty.set(games);
+
         eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                    // i gona change this code, when there is nothing else to do, add a map with regex
                     if (gameEvent.event().endsWith(".created")) {
                         games.add(gameEvent.data());
                     } else if (gameEvent.event().endsWith(".deleted")) {
@@ -224,15 +228,6 @@ public class LobbyScreenController implements Controller {
                         updateGame(gameEvent.data());
                     }
                 });
-    }
-
-    private void openRules(MouseEvent mouseEvent) {
-        RulesScreenController controller = rulesScreenControllerProvider.get();
-        controller.init();
-    }
-
-    @Override
-    public void stop() {
     }
 
     private void renderGame(Game game) {
@@ -257,9 +252,9 @@ public class LobbyScreenController implements Controller {
     public void deleteGame(Game data) {
         //find node belonging to game and then remove it from ListView
         try {
-        List<Node> removales = (List<Node>) ListViewGames.getItems().stream();
-        removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
-        ListViewGames.getItems().removeAll(removales);
+            List<Node> removales = (List<Node>) ListViewGames.getItems().stream();
+            removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
+            ListViewGames.getItems().removeAll(removales);
         } catch (Exception e) {
             return;
         }
@@ -352,6 +347,10 @@ public class LobbyScreenController implements Controller {
         this.app.show(editProfileControllerProvider.get());
     }
 
+    private void openRules(MouseEvent mouseEvent) {
+        RulesScreenController controller = rulesScreenControllerProvider.get();
+        controller.init();
+    }
 
     public void logout(ActionEvent ignoredActionEvent) {
         this.messageService.getchatUserList().clear();
