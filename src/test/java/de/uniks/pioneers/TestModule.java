@@ -11,6 +11,7 @@ import de.uniks.pioneers.dto.RefreshDto;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.model.LogoutResult;
 import de.uniks.pioneers.rest.*;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.TokenStorage;
 import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
@@ -125,6 +126,19 @@ public class TestModule {
 
     @Provides
     static GroupApiService groupApiService(Retrofit retrofit) { return retrofit.create(GroupApiService.class); }
+
+    @Provides
+    static PrefService prefService() {
+
+        return new PrefService(null, null,null){
+
+            @Override
+            public String recall(){
+
+                return "";
+            }
+        };}
+
 
 }
 
