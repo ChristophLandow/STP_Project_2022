@@ -161,7 +161,7 @@ public class LobbyScreenController implements Controller {
             c.next();
             if (c.wasAdded()) {
                 c.getAddedSubList().stream().filter(game -> isGameValid(game))
-                                            .forEach(game -> System.out.println(game._id()));
+                                            .forEach(game -> renderGame(game));
             }else if (c.wasRemoved()){
                 c.getRemoved().forEach(this::deleteGame);
             }
@@ -236,8 +236,6 @@ public class LobbyScreenController implements Controller {
 
     private void renderGame(Game game) {
             //code not final
-
-
             GameListElementController gameListElementController = gameListElementControllerProvider.get();
             Parent node = gameListElementController.render();
             node.setId(game._id());
@@ -245,18 +243,19 @@ public class LobbyScreenController implements Controller {
                 User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
                 gameListElementController.creator.set(creator);
             } catch (Exception e) {
-                return;
+                User creator = null;
             }
             gameListElementController.game.set(game);
-            ListViewGames.getItems().add(0, node);
             gameListElementController.setDataToGameListElement();
             gameListElementControllers.add(gameListElementController);
+            ListViewGames.getItems().add(0, node);
 
     }
 
     private boolean isGameValid(Game game) {
         // a game is valid as long his creator is online, we can update this if needed
-        return users.stream().anyMatch(user -> user._id().equals(game.owner()));
+        //return users.stream().anyMatch(user -> user._id().equals(game.owner()));
+        return true;
     }
 
     public void deleteGame(Game data) {
