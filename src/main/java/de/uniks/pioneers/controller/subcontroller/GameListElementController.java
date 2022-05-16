@@ -1,18 +1,19 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.LobbyService;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -20,9 +21,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 
-public class GameListElementController {
+
+public class GameListElementController implements Controller {
     @FXML
     public HBox gameBoxRoot;
     @FXML
@@ -32,73 +36,63 @@ public class GameListElementController {
     @FXML
     public Label memberCount;
 
-    private LobbyScreenController lobbyScreenController;
-    private ObservableList<Game> games;
-    private Game game;
-    private User creator;
 
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final Provider<LobbyService> lobbyServiceProvider;
+    private final Provider<GameListDropDownController> gameListDropDownControllerProvider;
 
-    public void createOrUpdateGame(Game game, ObservableList<Game> games,
-                                   ObservableList<User> users, LobbyScreenController lobbyScreenController) {
+    public SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
 
-        initGameAndUser(game, games, users, lobbyScreenController);
-        // might be better with rex ex, i gona update this
-        String createdAt = game.createdAt();
+    @Inject
+    public GameListElementController(Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                     Provider<LobbyService> lobbyServiceProvider,
+                                     Provider<GameListDropDownController> GameListDropDownControllerProvider) {
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.lobbyServiceProvider = lobbyServiceProvider;
+        this.gameListDropDownControllerProvider = GameListDropDownControllerProvider;
+        this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
+    }
+
+    public void setDataToGameListElement() {
+        // might be better with reg ex, i gona update this
+
+        // set game createdAt to creationTime label
+        String createdAt = game.get().createdAt();
         int start = createdAt.indexOf("T");
         int end = createdAt.indexOf(".");
-        String time = game.createdAt().substring(start + 1, end) + " :";
+        String time = game.get().createdAt().substring(start + 1, end) + " :";
         creationTime.setText(time);
-        // set title to textfield
-        title.setText(game.name());
-        // set member count to textfield
-        String actualMemberCount = String.format("%d/4", game.members());
+        // set game title to title label
+        title.setText(game.get().name());
+        // set game member count to memberCount label
+        String actualMemberCount = String.format("%d/4", game.get().members());
         memberCount.setText(actualMemberCount);
     }
 
 
-    private void initGameAndUser(Game game, ObservableList<Game> games,
-                                 ObservableList<User> users, LobbyScreenController lobbyScreenController) {
-        if (this.lobbyScreenController == null) {
-            this.game = game;
-            this.games = games;
-            this.lobbyScreenController = lobbyScreenController;
-            try {
-                User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
-                this.creator = creator;
-            } catch (Exception e) {
-                this.creator = null;
-            }
-        } else {
-            return;
-        }
-    }
-
-
     private void joinGame(MouseEvent mouseEvent) {
-        lobbyScreenController.showNewGameLobby(game);
+        lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
     }
 
     private void discardGame(MouseEvent mouseEvent) {
-        games.remove(game);
+        ObservableList<Game> games = lobbyServiceProvider.get().gamesProperty.get();
+        games.remove(game.get());
     }
 
-    public Game getGame() {
-        return game;
-    }
 
     public void showDropDown(MouseEvent mouseEvent) {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             if (mouseEvent.getClickCount() == 2) {
                 //join game
-                lobbyScreenController.showNewGameLobby(game);
+                lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
             final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListDropDown.fxml"));
             final VBox gameOptions;
             try {
                 gameOptions = loader.load();
-                GameListDropDownController gameListDropDownController = loader.getController();
-                gameListDropDownController.init(this, lobbyService);
+                GameListDropDownController gameListDropDownController = gameListDropDownControllerProvider.get();
                 gameOptions.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
                 Scene scene = gameBoxRoot.getScene();
                 Pane pane = (Pane) scene.lookup("#root");
@@ -118,11 +112,11 @@ public class GameListElementController {
 
     public void showGameInfo(MouseEvent mouseEvent) {
         Tooltip tt = new Tooltip();
-        if (this.creator != null && this.creator.name() != null) {
-            String toolTipTxt = String.format("Created by: %s  id: %s", creator.name(), game._id());
+        if (this.creator != null && this.creator.get().name() != null) {
+            String toolTipTxt = String.format("Created by: %s  id: %s", creator.get().name(), game.get()._id());
             tt.setText(toolTipTxt);
         } else {
-            String toolTipTxt = String.format("Created by: %s  id: %s", "unknown", game._id());
+            String toolTipTxt = String.format("Created by: %s  id: %s", "unknown", game.get()._id());
             tt.setText(toolTipTxt);
         }
         // style not final
@@ -137,5 +131,29 @@ public class GameListElementController {
 
     public void dontShowGameInfo(MouseEvent mouseEvent) {
         title.setTooltip(null);
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public Parent render() {
+        Parent parent=null;
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
+        loader.setControllerFactory(c -> this);
+        try {
+            parent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return parent;
     }
 }

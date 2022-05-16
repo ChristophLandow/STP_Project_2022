@@ -38,6 +38,7 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ import java.util.List;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
+@Singleton
 public class LobbyScreenController implements Controller {
 
     @FXML
@@ -78,14 +80,14 @@ public class LobbyScreenController implements Controller {
     private final LobbyService lobbyService;
     private final UserService userService;
     private final Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
+    private final Provider<GameListElementController> gameListElementControllerProvider;
     private final MessageService messageService;
 
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
-    private final ObservableList<Game> games = FXCollections.observableArrayList();
+    private ObservableList<Game> games = FXCollections.observableArrayList();
 
-    private List<GameListElementController> gameListElementControllers;
-
+    private List<GameListElementController> gameListElementControllers = new ArrayList<>();
 
 
     @Inject
@@ -96,7 +98,8 @@ public class LobbyScreenController implements Controller {
                                  Provider<LobbyUserlistControler> userlistControlerProvider,
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
                                  Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider,
-                                 //Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
+                                 Provider<GameListElementController> gameListElementControllerProvider,
+                                 Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                  MessageService messageService,
                                  PrefService prefService
     ) {
@@ -105,13 +108,11 @@ public class LobbyScreenController implements Controller {
         this.lobbyService = lobbyService;
         this.userService = userService;
         this.createNewGamePopUpControllerProvider = createNewGamePopUpControllerProvider;
+        this.gameListElementControllerProvider = gameListElementControllerProvider;
         this.messageService = messageService;
         this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
-
-
-        //this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
-
+        this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
@@ -155,6 +156,7 @@ public class LobbyScreenController implements Controller {
         userlistController.render();
         userlistController.init();
 
+
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
@@ -164,6 +166,8 @@ public class LobbyScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteGame);
             }
         });
+
+
 
         return parent;
     }
@@ -231,20 +235,21 @@ public class LobbyScreenController implements Controller {
     }
 
     private void renderGame(Game game) {
-        //not final
-        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
-        gameListElementControllers = new ArrayList<>();
-        final Node node;
-        try {
-            node = loader.load();
-            GameListElementController gameListElementController = loader.getController();
-            gameListElementController.createOrUpdateGame(game, games, users, this);
+            //code not final
+        System.out.println("kappa");
+            GameListElementController gameListElementController = gameListElementControllerProvider.get();
+            Parent node = gameListElementController.render();
             node.setId(game._id());
+            try {
+                User creator = users.stream().filter(user -> user._id().equals(game.owner())).findAny().get();
+                gameListElementController.creator.set(creator);
+            } catch (Exception e) {
+                return;
+            }
+
+            gameListElementController.game.set(game);
             gameListElementControllers.add(gameListElementController);
             ListViewGames.getItems().add(0, node);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -254,18 +259,18 @@ public class LobbyScreenController implements Controller {
         return true;
     }
 
-    private void deleteGame(Game data) {
+    public void deleteGame(Game data) {
         List<Node> removales = (List<Node>) ListViewGames.getItems().stream().toList();
         removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
         ListViewGames.getItems().removeAll(removales);
     }
 
-    private void updateGame(Game data) {
+    private void updateGame(Game game) {
         //rerender
         try {
             GameListElementController gameListElementController = gameListElementControllers.stream()
-                    .filter(conroller -> conroller.getGame()._id().equals(data._id())).findAny().get();
-            gameListElementController.createOrUpdateGame(data, games, users,this);
+                    .filter(conroller -> conroller.game.get()._id().equals(game._id())).findAny().get();
+            gameListElementController.game.set(game);
         } catch (Exception e) {
             return;
         }
@@ -367,13 +372,13 @@ public class LobbyScreenController implements Controller {
     }
 
     public void newGame(ActionEvent actionEvent) {
+        /*
         //create pop in order to create a new game lobby
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/CreateNewGamePopUp.fxml"));
         Parent node = null;
         try {
             node = loader.load();
-            CreateNewGamePopUpController createNewGamePopUpController = createnew
-            createNewGamePopUpController.init(this,lobbyService);
+            CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -382,5 +387,9 @@ public class LobbyScreenController implements Controller {
         Scene scene = new Scene(node);
         stage.setScene(scene);
         stage.show();
+
+         */
     }
+
+
 }

@@ -134,7 +134,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void renderUser(Member member) {
-        //here i gona create an hbox with an image view
+        //here i gona create a hbox with an image view
         //User userToRender = lobbyScreenControllerProvider.get().returnUserById(member.UserId());
         //Label userName = new Label(userToRender.name());
         Label memberId = new Label(member.UserId()+"weird null user cannot be kicked");

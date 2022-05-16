@@ -17,6 +17,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class CreateNewGamePopUpController {
@@ -33,7 +36,7 @@ public class CreateNewGamePopUpController {
     @FXML
     public Label passWordLabel;
     @FXML
-    public PasswordField passwordTextfield;
+    public PasswordField passwordTextField;
     @FXML
     public HBox buttonBox;
     @FXML
@@ -45,17 +48,23 @@ public class CreateNewGamePopUpController {
     @FXML
     public Label passwordLen;
 
-    private LobbyScreenController lobbyScreenController;
-    private LobbyService lobbyService;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final Provider<LobbyService> lobbyServiceProvider;
 
-    public void init(LobbyScreenController lobbyScreenController, LobbyService lobbyService) {
-        this.lobbyScreenController = lobbyScreenController;
-        this.lobbyService = lobbyService;
+    @Inject
+    public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                        Provider<LobbyService> lobbyServiceProvider) {
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.lobbyServiceProvider = lobbyServiceProvider;
+        init();
+    }
+
+    public void init() {
         createGameButton.setOnMouseClicked(this::createGame);
         cancelButton.setOnMouseClicked(this::closePoPUp);
 
         IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
-        IntegerBinding passwordLength = Bindings.length(passwordTextfield.textProperty());
+        IntegerBinding passwordLength = Bindings.length(passwordTextField.textProperty());
         BooleanBinding invalid = Bindings.equal(passwordLen.textProperty(), nameLen.textProperty()).not();
 
         createGameButton.disableProperty().bind(invalid);
@@ -71,11 +80,17 @@ public class CreateNewGamePopUpController {
 
     private void createGame(MouseEvent mouseEvent) {
         String name = gameNameTextField.getText();
-        String password = passwordTextfield.getText();
-        lobbyService.createGame(name,password)
+        String password = passwordTextField.getText();
+        lobbyServiceProvider.get().createGame(name,password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
-                    lobbyScreenController.showNewGameLobby(game);
+                    /* kein lobby model, add game to model lobby -> 1) show game in list
+                                                                    2) show game lobby for host
+
+                        response -> show message in controller, because we dont have a model we could listen to
+                        with lists, our lists are saved in services and controllers, which is rly bad !
+                    */
+                    lobbyScreenControllerProvider.get().showNewGameLobby(game);
                     Stage stage = (Stage) popUpBox.getScene().getWindow();
                     stage.close();
                 });
