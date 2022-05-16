@@ -38,7 +38,7 @@ public class EditProfileController implements Controller {
     @FXML public PasswordField newPasswordInput;
     @FXML public PasswordField repeatNewPasswordInput;
     @FXML public Text usernameLabel;
-    @FXML public Spinner chooseAvatarSpinner;
+    @FXML public Spinner<Integer> chooseAvatarSpinner;
     @FXML public Text usernameStatusText;
     @FXML public Text newPasswordStatusText;
     @FXML public Text oldPasswordStatusText;
@@ -129,7 +129,7 @@ public class EditProfileController implements Controller {
         String newPassword = this.newPasswordInput.getText();
 
         // set new avatar if spinner value changed
-        if ((Integer) chooseAvatarSpinner.getValue() > 0) {
+        if (chooseAvatarSpinner.getValue() > 0) {
             getClass().getResource("subcontroller/" + avatarStr);
             byte[] data = Files.readAllBytes(Paths.get(getClass().getResource("subcontroller/" + avatarStr).toURI()));
             newAvatar = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
