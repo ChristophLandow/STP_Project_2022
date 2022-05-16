@@ -7,7 +7,6 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,13 +46,37 @@ public class GameListElementController implements Controller {
     @Inject
     public GameListElementController(Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                      Provider<LobbyService> lobbyServiceProvider,
-                                     Provider<GameListDropDownController> GameListDropDownControllerProvider) {
+                                     Provider<GameListDropDownController> gameListDropDownControllerProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.lobbyServiceProvider = lobbyServiceProvider;
-        this.gameListDropDownControllerProvider = GameListDropDownControllerProvider;
+        this.gameListDropDownControllerProvider = gameListDropDownControllerProvider;
+
         //this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
     }
 
+    @Override
+    public Parent render() {
+        Parent parent=null;
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
+        loader.setControllerFactory(c -> this);
+        try {
+            parent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return parent;
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
     public void setDataToGameListElement() {
         // might be better with reg ex, i gona update this
 
@@ -80,7 +103,6 @@ public class GameListElementController implements Controller {
         games.remove(game.get());
     }
 
-
     public void showDropDown(MouseEvent mouseEvent) {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             if (mouseEvent.getClickCount() == 2) {
@@ -88,11 +110,11 @@ public class GameListElementController implements Controller {
                 lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-            final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListDropDown.fxml"));
-            final VBox gameOptions;
-            try {
-                gameOptions = loader.load();
+
+
                 GameListDropDownController gameListDropDownController = gameListDropDownControllerProvider.get();
+                gameListDropDownController.render();
+
                 gameOptions.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
                 Scene scene = gameBoxRoot.getScene();
                 Pane pane = (Pane) scene.lookup("#root");
@@ -104,15 +126,12 @@ public class GameListElementController implements Controller {
                 gameOptions.setOnMouseExited(event -> {
                     pane.getChildren().remove(gameOptions);
                 });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
     public void showGameInfo(MouseEvent mouseEvent) {
         Tooltip tt = new Tooltip();
-        if (this.creator != null ) {
+        if (this.creator.get() != null ) {
             String toolTipTxt = String.format("Created by: %s  id: %s", creator.get().name(), game.get()._id());
             tt.setText(toolTipTxt);
         } else {
@@ -133,27 +152,5 @@ public class GameListElementController implements Controller {
         title.setTooltip(null);
     }
 
-    @Override
-    public void init() {
 
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public Parent render() {
-        Parent parent=null;
-        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
-        loader.setControllerFactory(c -> this);
-        try {
-            parent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-        return parent;
-    }
 }
