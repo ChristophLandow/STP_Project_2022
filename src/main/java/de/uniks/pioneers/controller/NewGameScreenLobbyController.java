@@ -21,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -67,14 +68,17 @@ public class NewGameScreenLobbyController implements Controller {
     public Button startGameButton;
     @FXML
     public Button leaveButton;
+    @FXML public ImageView RulesButton;
 
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<GameChatController> gameChatControllerProvider;
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
+
     private String password;
     private final App app;
     private final UserService userService;
@@ -85,10 +89,12 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                         Provider<GameChatController> gameChatControllerProvider,
+                                        Provider<RulesScreenController> rulesScreenControllerProvider,
                                         NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService) {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.gameChatControllerProvider = gameChatControllerProvider;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
         this.app = app;
         this.userService = userService;
@@ -120,6 +126,8 @@ public class NewGameScreenLobbyController implements Controller {
         newGameLobbyService.deleteMember(game.get()._id(),null);
 
 
+        // add mouse event for rules screen
+        this.RulesButton.setOnMouseClicked(this::openRules);
 
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
@@ -145,6 +153,11 @@ public class NewGameScreenLobbyController implements Controller {
         gameChatController.game = this.game.get();
         gameChatController.render();
         gameChatController.init();
+    }
+
+    private void openRules(MouseEvent mouseEvent) {
+        RulesScreenController controller = rulesScreenControllerProvider.get();
+        controller.init();
     }
 
     private void deleteUser(Member member) {
