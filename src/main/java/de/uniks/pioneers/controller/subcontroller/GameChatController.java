@@ -3,7 +3,9 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
@@ -29,13 +31,15 @@ public class GameChatController {
     private final EventListener eventListener;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
-    private final GameService gameService;
+    private final UserService userService;
+    private final NewGameLobbyService newGameLobbyService;
     public Game game;
 
     @Inject
-    GameChatController(GameService gameService, EventListener eventListener){
-        this.gameService = gameService;
+    GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService){
+        this.newGameLobbyService = newGameLobbyService;
         this.eventListener = eventListener;
+        this.userService = userService;
     }
 
     public void render(){
@@ -52,7 +56,7 @@ public class GameChatController {
     }
 
     public void init(){
-        disposable.add(gameService.getMessages(game._id()).observeOn(FX_SCHEDULER)
+        disposable.add(newGameLobbyService.getMessages(game._id()).observeOn(FX_SCHEDULER)
                 .subscribe(this.messages::setAll));
 
         disposable.add(eventListener.listen("games." + game._id() + ".messages.*.*", MessageDto.class)
@@ -71,7 +75,8 @@ public class GameChatController {
     }
 
     public void renderMessage(MessageDto message){
-        Label textLabel = new Label(message.sender() + ": " + message.body());
+        User user = userService.getUserById(message.sender()).blockingFirst();
+        Label textLabel = new Label(user.name() + ": " + message.body());
         textLabel.setFont(new Font(15));
         this.messageBox.getChildren().add(textLabel);
     }
@@ -88,7 +93,7 @@ public class GameChatController {
     private void sendMessage(ActionEvent actionEvent) {
         String message = this.messageText.getText();
         if(!message.isEmpty()) {
-            disposable.add(gameService.sendMessage(game._id(), new CreateMessageDto(message))
+            disposable.add(newGameLobbyService.sendMessage(game._id(), new CreateMessageDto(message))
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
                     .subscribe(result -> {
