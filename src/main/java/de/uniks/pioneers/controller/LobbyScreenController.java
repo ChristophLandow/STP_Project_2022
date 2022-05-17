@@ -373,11 +373,11 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
-    public void showNewGameLobby(Game game) {
+    public void showNewGameLobby(Game game, String password) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         userService.getCurrentUser().observeOn(FX_SCHEDULER)
                                     .subscribe(user -> {
-                                        newGameScreenLobbyController.postNewMember(game, user);
+                                        newGameScreenLobbyController.postNewMember(game, user, password);
                                     });
     }
 

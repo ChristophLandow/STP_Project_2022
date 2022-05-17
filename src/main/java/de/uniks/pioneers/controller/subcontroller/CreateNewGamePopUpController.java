@@ -3,7 +3,6 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
-import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -62,7 +61,6 @@ public class CreateNewGamePopUpController implements Controller {
                                         Provider<LobbyService> lobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.lobbyServiceProvider = lobbyServiceProvider;
-
     }
 
     @Override
@@ -112,7 +110,7 @@ public class CreateNewGamePopUpController implements Controller {
                 .subscribe(game -> {
                     LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
                     lobbyScreenController.getGames().add(game);
-                    lobbyScreenController.showNewGameLobby(game);
+                    lobbyScreenController.showNewGameLobby(game, password);
                     Stage stage = (Stage) popUpBox.getScene().getWindow();
                     stage.close();
                 });

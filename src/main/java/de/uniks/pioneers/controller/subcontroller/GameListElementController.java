@@ -3,9 +3,11 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
+import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
+import de.uniks.pioneers.services.NewGameLobbyService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -37,6 +40,8 @@ public class GameListElementController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<LobbyService> lobbyServiceProvider;
     private final Provider<GameListDropDownController> gameListDropDownControllerProvider;
+    private final Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
+    private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
 
     public SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
@@ -44,16 +49,20 @@ public class GameListElementController implements Controller {
     @Inject
     public GameListElementController(Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                      Provider<LobbyService> lobbyServiceProvider,
-                                     Provider<GameListDropDownController> gameListDropDownControllerProvider) {
+                                     Provider<GameListDropDownController> gameListDropDownControllerProvider,
+                                     Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
+                                     Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.lobbyServiceProvider = lobbyServiceProvider;
         this.gameListDropDownControllerProvider = gameListDropDownControllerProvider;
+        this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
+        this.newGameLobbyServiceProvider = newGameLobbyServiceProvider;
         this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
     }
 
     @Override
     public Parent render() {
-        Parent parent=null;
+        Parent parent = null;
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/GameListElement.fxml"));
         loader.setControllerFactory(c -> this);
         try {
@@ -74,6 +83,7 @@ public class GameListElementController implements Controller {
     public void stop() {
 
     }
+
     public void setDataToGameListElement() {
         // might be better with reg ex, i gona update this
 
@@ -94,34 +104,44 @@ public class GameListElementController implements Controller {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             if (mouseEvent.getClickCount() == 2) {
                 //join game
-                lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
+                final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/JoinGamePopUp.fxml"));
+                Parent node = null;
+                try {
+                    node = loader.load();
+                    JoinGamePopUpController joinGamePopUpController = loader.getController();
+                    joinGamePopUpController.init(newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Stage stage = new Stage();
+                stage.setTitle("Join Game");
+                Scene scene = new Scene(node);
+                stage.setScene(scene);
+                stage.show();
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                GameListDropDownController gameListDropDownController = gameListDropDownControllerProvider.get();
-                gameListDropDownController.game.set(game.get());
-                VBox gameOptions = (VBox) gameListDropDownController.render();
-                //not final
-                gameOptions.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
-                Scene scene = gameBoxRoot.getScene();
-                Pane pane = (Pane) scene.lookup("#root");
-                pane.getChildren().add(gameOptions);
-                double xPos = mouseEvent.getSceneX();
-                double yPos = mouseEvent.getSceneY();
-                gameOptions.setLayoutX(xPos - 10);
-                gameOptions.setLayoutY(yPos - 10);
-                gameOptions.setOnMouseExited(event -> {
-                    pane.getChildren().remove(gameOptions);
-                });
+            GameListDropDownController gameListDropDownController = gameListDropDownControllerProvider.get();
+            gameListDropDownController.game.set(game.get());
+            VBox gameOptions = (VBox) gameListDropDownController.render();
+            //not final
+            gameOptions.setBackground(new Background(new BackgroundFill(Color.SILVER, null, null)));
+            Scene scene = gameBoxRoot.getScene();
+            Pane pane = (Pane) scene.lookup("#root");
+            pane.getChildren().add(gameOptions);
+            double xPos = mouseEvent.getSceneX();
+            double yPos = mouseEvent.getSceneY();
+            gameOptions.setLayoutX(xPos - 10);
+            gameOptions.setLayoutY(yPos - 10);
+            gameOptions.setOnMouseExited(event -> {
+                pane.getChildren().remove(gameOptions);
+            });
         }
     }
 
 
-
-
-
     public void showGameInfo(MouseEvent mouseEvent) {
         Tooltip tt = new Tooltip();
-        if (this.creator.get() != null ) {
+        if (this.creator.get() != null) {
             String toolTipTxt = String.format("Created by: %s  id: %s", creator.get().name(), game.get()._id());
             tt.setText(toolTipTxt);
         } else {
@@ -141,8 +161,6 @@ public class GameListElementController implements Controller {
     public void dontShowGameInfo(MouseEvent mouseEvent) {
         title.setTooltip(null);
     }
-
-
 
 
 }

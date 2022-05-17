@@ -11,7 +11,7 @@ import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,8 +30,6 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -87,6 +85,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
+    private String password;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -103,22 +102,22 @@ public class NewGameScreenLobbyController implements Controller {
         this.gameService = gameService;
     }
 
-    public void postNewMember(Game game, User user) {
-            System.out.println(game._id());
+    public void postNewMember(Game game, User user, String password) {
+
+            this.password = password;
             this.game.set(game);
             if (user._id().equals(game.owner())){
                 this.owner.set(user);
             }
             app.show(this);
-            // post new Member to game
-            newGameLobbyService.postMember(game._id(), user.name(), true)
+            // post new member to game
+            newGameLobbyService.postMember(game._id(), true, this.password)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> System.out.println(" why this doenst work ? "))
                     .subscribe(member -> members.add(member));
             // rest
             newGameLobbyService.getAll(game._id()).observeOn(FX_SCHEDULER)
                .subscribe(this.members::setAll);
-
         }
 
 
@@ -170,7 +169,7 @@ public class NewGameScreenLobbyController implements Controller {
         //here i gona create a hbox with an image view
         //User userToRender = lobbyScreenControllerProvider.get().returnUserById(member.UserId());
         //Label userName = new Label(userToRender.name());
-        Label memberId = new Label(member.UserId() + " weird null user cannot be kicked");
+        Label memberId = new Label(member.UserId() + " weird null user, cannot be kicked");
         //userName.setId(member.UserId());
         memberId.setId(member.UserId());
         //userBox.getChildren().add(userName);
@@ -255,7 +254,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void startGame(MouseEvent mouseEvent) {
     }
-
+    private final CompositeDisposable disposable = new CompositeDisposable();
     public void leaveLobby(MouseEvent mouseEvent) {
         if (game.get().owner().equals(userService.getCurrentUserId())) {
             disposable.add(gameService.deleteGame(game.get()._id())

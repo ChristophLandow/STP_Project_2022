@@ -4,6 +4,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.services.NewGameLobbyService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,12 +34,14 @@ public class GameListDropDownController implements Controller {
     public Label discardGameLabel;
 
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
+    private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
 
     @Inject
     public GameListDropDownController(
-            Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+            Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.newGameLobbyServiceProvider = newGameLobbyServiceProvider;
     }
 
     @Override
@@ -70,7 +73,8 @@ public class GameListDropDownController implements Controller {
         try {
             node = loader.load();
             JoinGamePopUpController joinGamePopUpController = loader.getController();
-            joinGamePopUpController.init(newGameLobbyService, lobbyScreenController, game);
+            joinGamePopUpController.init(newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
