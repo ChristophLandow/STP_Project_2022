@@ -31,6 +31,9 @@ public class UserService {
     public Observable<User> getCurrentUser() {
         return this.userApiService.getUser(this.currentUserId);
     }
+    public Observable<User> getUserById(String id) {
+        return this.userApiService.getUser(id);
+    }
 
     public void setCurrentUserId(String id) {
         this.currentUserId = id;

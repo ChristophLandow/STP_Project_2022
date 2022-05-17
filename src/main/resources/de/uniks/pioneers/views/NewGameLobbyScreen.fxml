@@ -18,7 +18,7 @@
          <children>
             <HBox fx:id="topLevel" prefHeight="500.0" prefWidth="800.0">
                <children>
-                  <VBox fx:id="leftBox" prefHeight="500.0" prefWidth="350.0" spacing="40.0">
+                  <VBox fx:id="leftBox" prefHeight="480.0" prefWidth="350.0" spacing="40.0">
                      <children>
                         <Label fx:id="gameNameLabel" text="&lt;game name&gt;" textFill="#28d72b">
                            <font>
@@ -30,13 +30,19 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <VBox fx:id="userBox" maxHeight="350.0" maxWidth="270.0" prefHeight="350.0" prefWidth="270.0" />
+                        <VBox fx:id="userBox" maxHeight="350.0" maxWidth="252.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="219.0" style="-fx-border-color: grey;">
+                           <VBox.margin>
+                              <Insets top="17.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="13.0" top="10.0" />
+                           </padding></VBox>
                      </children>
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                      <padding>
-                        <Insets left="30.0" top="40.0" />
+                        <Insets left="36.0" top="40.0" />
                      </padding>
                   </VBox>
                   <VBox fx:id="rightBox" alignment="TOP_RIGHT" prefHeight="500.0" prefWidth="450.0" spacing="10.0">
