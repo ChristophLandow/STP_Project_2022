@@ -7,7 +7,6 @@ import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.ws.EventListener;
-import io.reactivex.rxjava3.core.Observable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -28,8 +27,6 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -72,9 +69,11 @@ public class NewGameScreenLobbyController implements Controller {
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
-    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
+
+    public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
+    public SimpleObjectProperty <User> owner = new SimpleObjectProperty<>();
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -83,6 +82,7 @@ public class NewGameScreenLobbyController implements Controller {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
     }
+
 
     @Override
     public void init() {
@@ -95,6 +95,10 @@ public class NewGameScreenLobbyController implements Controller {
         // init event listeners
         initMemberListener();
         initMessageListener();
+
+        newGameLobbyService.postMember(game.get()._id(),owner.get().name(),true)
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(FX_SCHEDULER)
 
         // rest
         newGameLobbyService.getAll(game.get()._id()).observeOn(FX_SCHEDULER)
@@ -223,4 +227,5 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void leaveLobby(MouseEvent mouseEvent) {
     }
+
 }

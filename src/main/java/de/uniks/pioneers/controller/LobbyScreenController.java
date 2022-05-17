@@ -13,7 +13,6 @@ import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -58,7 +57,7 @@ public class LobbyScreenController implements Controller {
     @FXML
     public VBox UsersVBox;
     @FXML
-    public ListView ListViewGames;
+    public ListView listViewGames;
     @FXML
     public Button EditProfileButton;
     @FXML
@@ -86,7 +85,8 @@ public class LobbyScreenController implements Controller {
     // List with games from Server
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private ObservableList<Game> games = FXCollections.observableArrayList();
-    public SimpleObjectProperty<ObservableList> gamesProperty;
+
+    public SimpleObjectProperty<ObservableList<Game>> gamesProperty = new SimpleObjectProperty<>();
 
     private List<GameListElementController> gameListElementControllers = new ArrayList<>();
 
@@ -169,6 +169,7 @@ public class LobbyScreenController implements Controller {
         this.RulesButton.setOnMouseClicked(this::openRules);
         this.EditProfileButton.setOnAction(this::editProfile);
         //init listeners
+
         initUserListTools();
         initGamesListTools();
     }
@@ -201,6 +202,7 @@ public class LobbyScreenController implements Controller {
     }
 
     private void initGamesListTools() {
+
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
@@ -230,31 +232,43 @@ public class LobbyScreenController implements Controller {
                 });
     }
 
+    public ObservableList<Game> getGames() {
+        return games;
+    }
+
     private void renderGame(Game game) {
-        //code not final
-        GameListElementController gameListElementController = gameListElementControllerProvider.get();
-        Parent node = gameListElementController.render();
-        node.setId(game._id());
-        User creator = returnUserById(game.owner());
-        gameListElementController.creator.set(creator);
-        gameListElementController.game.set(game);
-        gameListElementController.setDataToGameListElement();
-        gameListElementControllers.add(gameListElementController);
-        ListViewGames.getItems().add(0, node);
+        userService.getCurrentUser()
+                   .observeOn(FX_SCHEDULER)
+                   .subscribe(user -> {
+                       if (user._id().equals(game.owner())){
+                           showNewGameLobby(game, user);
+                       }else {
+                           //code not final
+                           GameListElementController gameListElementController = gameListElementControllerProvider.get();
+                           Parent node = gameListElementController.render();
+                           node.setId(game._id());
+                           User creator = returnUserById(game.owner());
+                           gameListElementController.creator.set(creator);
+                           gameListElementController.game.set(game);
+                           gameListElementController.setDataToGameListElement();
+                           gameListElementControllers.add(gameListElementController);
+                           listViewGames.getItems().add(0, node);
+                       }
+                   });
     }
 
     private boolean isGameValid(Game game) {
         // a game is valid as long his creator is online, we can update this if needed
-        //return users.stream().anyMatch(user -> user._id().equals(game.owner()));
-        return true;
+        return users.stream().anyMatch(user -> user._id().equals(game.owner()));
+        //return true;
     }
 
     public void deleteGame(Game data) {
         //find node belonging to game and then remove it from ListView
         try {
-            List<Node> removales = (List<Node>) ListViewGames.getItems().stream();
+            List<Node> removales = (List<Node>) listViewGames.getItems().stream();
             removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
-            ListViewGames.getItems().removeAll(removales);
+            listViewGames.getItems().removeAll(removales);
         } catch (Exception e) {
             return;
         }
@@ -368,14 +382,17 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
-    public void showNewGameLobby(Game game) {
+    public void showNewGameLobby(Game game, User user) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
+        newGameScreenLobbyController.owner.set(user);
+        newGameScreenLobbyController.init();
         app.show(newGameScreenLobbyController);
     }
 
     public void newGame(ActionEvent actionEvent) {
         //create pop in order to create a new game lobby
+
         CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
         Parent node = createNewGamePopUpController.render();
         Stage stage = new Stage();

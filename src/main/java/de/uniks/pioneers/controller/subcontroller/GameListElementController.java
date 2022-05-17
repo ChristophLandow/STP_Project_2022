@@ -8,7 +8,6 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -97,7 +96,7 @@ public class GameListElementController implements Controller {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             if (mouseEvent.getClickCount() == 2) {
                 //join game
-                lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
+                lobbyScreenControllerProvider.get().showNewGameLobby(game.get(), user);
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 GameListDropDownController gameListDropDownController = gameListDropDownControllerProvider.get();

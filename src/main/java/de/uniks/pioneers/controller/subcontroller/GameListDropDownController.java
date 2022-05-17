@@ -70,6 +70,6 @@ public class GameListDropDownController implements Controller {
 
     public void discardGame(MouseEvent mouseEvent) {
         LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
-        lobbyScreenController.gamesProperty.get().remove(game.get());
+        lobbyScreenController.deleteGame(game.get());
     }
 }
