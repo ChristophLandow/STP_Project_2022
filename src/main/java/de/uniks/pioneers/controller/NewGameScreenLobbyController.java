@@ -146,9 +146,6 @@ public class NewGameScreenLobbyController implements Controller {
                 c.getRemoved().forEach(this::deleteUser);
             }
         });
-
-
-
         GameChatController gameChatController = gameChatControllerProvider.get();
         gameChatController.chatScrollPane = this.chatScrollPane;
         gameChatController.messageBox = this.messageBox;
