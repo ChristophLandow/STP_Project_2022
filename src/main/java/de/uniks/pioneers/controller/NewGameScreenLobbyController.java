@@ -111,10 +111,12 @@ public class NewGameScreenLobbyController implements Controller {
             }
             app.show(this);
             // post new member to game
+            /*
             newGameLobbyService.postMember(game._id(), true, this.password)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> System.out.println(" why this doenst work ? "))
                     .subscribe(member -> members.add(member));
+             */
             // rest
             newGameLobbyService.getAll(game._id()).observeOn(FX_SCHEDULER)
                .subscribe(this.members::setAll);
@@ -145,6 +147,7 @@ public class NewGameScreenLobbyController implements Controller {
                 c.getRemoved().forEach(this::deleteUser);
             }
         });
+
         GameChatController gameChatController = gameChatControllerProvider.get();
         gameChatController.chatScrollPane = this.chatScrollPane;
         gameChatController.messageBox = this.messageBox;
@@ -161,7 +164,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void deleteUser(Member member) {
-        Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.UserId())).findAny().get();
+        Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().get();
         userBox.getChildren().remove(removal);
     }
 
@@ -169,9 +172,9 @@ public class NewGameScreenLobbyController implements Controller {
         //here i gona create a hbox with an image view
         //User userToRender = lobbyScreenControllerProvider.get().returnUserById(member.UserId());
         //Label userName = new Label(userToRender.name());
-        Label memberId = new Label(member.UserId() + " weird null user, cannot be kicked");
+        Label memberId = new Label(member.userId() + " weird null user, cannot be kicked");
         //userName.setId(member.UserId());
-        memberId.setId(member.UserId());
+        memberId.setId(member.userId());
         //userBox.getChildren().add(userName);
         userBox.getChildren().add(memberId);
     }
@@ -195,9 +198,10 @@ public class NewGameScreenLobbyController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(memberEvent -> {
                     final Member member = memberEvent.data();
+                    System.out.println(member);
                     if (memberEvent.event().endsWith(".created")) {
                         members.add(memberEvent.data());
-                        initUserListener(memberEvent.data().UserId(), member);
+                        initUserListener(member.userId(), member);
                     } else if (memberEvent.event().endsWith(".deleted")) {
                         members.remove(memberEvent.data());
                     } else {
