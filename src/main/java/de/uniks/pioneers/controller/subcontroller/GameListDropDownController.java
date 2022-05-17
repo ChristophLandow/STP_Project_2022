@@ -66,10 +66,13 @@ public class GameListDropDownController implements Controller {
     }
 
     public void joinGame(MouseEvent mouseEvent) {
+        LobbyScreenController lobbyScreenController= lobbyScreenControllerProvider.get();
+        lobbyScreenController.showNewGameLobby(game.get());
     }
 
     public void discardGame(MouseEvent mouseEvent) {
         LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
+        //lobbyScreenController.getGames().remove(game);
         lobbyScreenController.deleteGame(game.get());
     }
 }

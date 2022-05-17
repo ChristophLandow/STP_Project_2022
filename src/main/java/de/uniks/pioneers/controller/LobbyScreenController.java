@@ -202,13 +202,13 @@ public class LobbyScreenController implements Controller {
     }
 
     private void initGamesListTools() {
-
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
                 c.getAddedSubList().stream().filter(this::isGameValid)
                                             .forEach(this::renderGame);
             } else if (c.wasRemoved()) {
+                // fomr some reason this does not work anymore
                 c.getRemoved().forEach(this::deleteGame);
             } else if (c.wasUpdated()) {
                 c.getList().forEach(this::updateGame);
@@ -237,24 +237,16 @@ public class LobbyScreenController implements Controller {
     }
 
     private void renderGame(Game game) {
-        userService.getCurrentUser()
-                   .observeOn(FX_SCHEDULER)
-                   .subscribe(user -> {
-                       if (user._id().equals(game.owner())){
-                           showNewGameLobby(game, user);
-                       }else {
-                           //code not final
-                           GameListElementController gameListElementController = gameListElementControllerProvider.get();
-                           Parent node = gameListElementController.render();
-                           node.setId(game._id());
-                           User creator = returnUserById(game.owner());
-                           gameListElementController.creator.set(creator);
-                           gameListElementController.game.set(game);
-                           gameListElementController.setDataToGameListElement();
-                           gameListElementControllers.add(gameListElementController);
-                           listViewGames.getItems().add(0, node);
-                       }
-                   });
+        //code not final
+        GameListElementController gameListElementController = gameListElementControllerProvider.get();
+        Parent node = gameListElementController.render();
+        node.setId(game._id());
+        User creator = returnUserById(game.owner());
+        gameListElementController.creator.set(creator);
+        gameListElementController.game.set(game);
+        gameListElementController.setDataToGameListElement();
+        gameListElementControllers.add(gameListElementController);
+        listViewGames.getItems().add(0, node);
     }
 
     private boolean isGameValid(Game game) {
@@ -266,7 +258,7 @@ public class LobbyScreenController implements Controller {
     public void deleteGame(Game data) {
         //find node belonging to game and then remove it from ListView
         try {
-            List<Node> removales = (List<Node>) listViewGames.getItems().stream();
+            List<Node> removales = (List<Node>) listViewGames.getItems().stream().toList();
             removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
             listViewGames.getItems().removeAll(removales);
         } catch (Exception e) {
@@ -335,7 +327,6 @@ public class LobbyScreenController implements Controller {
 
             if (chatWithUserid.getText().equals(user._id())) {
                 ((Label) gpane.getChildren().get(0)).setText(user.name());
-
                 try {
                     ((ImageView) gpane.getChildren().get(1)).setImage(new Image(user.avatar()));
                 } catch (NullPointerException e) {
@@ -382,17 +373,16 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
-    public void showNewGameLobby(Game game, User user) {
+    public void showNewGameLobby(Game game) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
-        newGameScreenLobbyController.game.set(game);
-        newGameScreenLobbyController.owner.set(user);
-        newGameScreenLobbyController.init();
-        app.show(newGameScreenLobbyController);
+        userService.getCurrentUser().observeOn(FX_SCHEDULER)
+                                    .subscribe(user -> {
+                                        newGameScreenLobbyController.postNewMember(game, user);
+                                    });
     }
 
     public void newGame(ActionEvent actionEvent) {
         //create pop in order to create a new game lobby
-
         CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
         Parent node = createNewGamePopUpController.render();
         Stage stage = new Stage();

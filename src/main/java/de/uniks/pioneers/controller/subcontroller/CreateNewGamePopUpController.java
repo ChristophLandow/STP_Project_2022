@@ -77,7 +77,6 @@ public class CreateNewGamePopUpController implements Controller {
         }
         init();
         return node;
-
     }
 
     @Override
@@ -105,14 +104,15 @@ public class CreateNewGamePopUpController implements Controller {
 
     }
 
-
     private void createGame(MouseEvent mouseEvent) {
         String name = gameNameTextField.getText();
         String password = passwordTextField.getText();
         lobbyServiceProvider.get().createGame(name,password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
-                    //lobbyScreenControllerProvider.get().getGames().add(game);
+                    LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
+                    lobbyScreenController.getGames().add(game);
+                    lobbyScreenController.showNewGameLobby(game);
                     Stage stage = (Stage) popUpBox.getScene().getWindow();
                     stage.close();
                 });

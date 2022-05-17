@@ -35,7 +35,6 @@ public class GameListElementController implements Controller {
     @FXML
     public Label memberCount;
 
-
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<LobbyService> lobbyServiceProvider;
     private final Provider<GameListDropDownController> gameListDropDownControllerProvider;
@@ -96,7 +95,7 @@ public class GameListElementController implements Controller {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             if (mouseEvent.getClickCount() == 2) {
                 //join game
-                lobbyScreenControllerProvider.get().showNewGameLobby(game.get(), user);
+                lobbyScreenControllerProvider.get().showNewGameLobby(game.get());
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 GameListDropDownController gameListDropDownController = gameListDropDownControllerProvider.get();

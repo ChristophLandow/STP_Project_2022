@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
@@ -69,19 +70,40 @@ public class NewGameScreenLobbyController implements Controller {
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
+    private final App app;
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
 
-    public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
-    public SimpleObjectProperty <User> owner = new SimpleObjectProperty<>();
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public SimpleObjectProperty<User> owner = new SimpleObjectProperty<>();
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
-                                        NewGameLobbyService newGameLobbyService) {
+                                        NewGameLobbyService newGameLobbyService,
+                                        App app) {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
+        this.app = app;
     }
+
+    public void postNewMember(Game game, User user) {
+            System.out.println(game._id());
+            this.game.set(game);
+            if (user._id().equals(game.owner())){
+                this.owner.set(user);
+            }
+            app.show(this);
+            // post new Member to game
+            newGameLobbyService.postMember(game._id(), user.name(), true)
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(e -> System.out.println(" why this doenst work ? "))
+                    .subscribe(member -> members.add(member));
+            // rest
+            newGameLobbyService.getAll(game._id()).observeOn(FX_SCHEDULER)
+               .subscribe(this.members::setAll);
+
+        }
 
 
     @Override
@@ -96,22 +118,6 @@ public class NewGameScreenLobbyController implements Controller {
         initMemberListener();
         initMessageListener();
 
-        newGameLobbyService.postMember(game.get()._id(),owner.get().name(),true)
-                        .observeOn(FX_SCHEDULER)
-                        .subscribe(FX_SCHEDULER)
-
-        // rest
-        newGameLobbyService.getAll(game.get()._id()).observeOn(FX_SCHEDULER)
-                .subscribe(this.members::setAll);
-
-        /*for some reason when i create a game
-        [createdAt=2022-05-14T08:09:27.395Z, updatedAt=2022-05-14T08:09:27.395Z, gameId=627f63b76ed8740014a8c5a7, UserId=null, ready=false]
-        there is this user ^^
-         */
-
-        System.out.println(game.get()._id());
-        newGameLobbyService.deleteMember(game.get()._id(),null);
-
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();
@@ -125,9 +131,6 @@ public class NewGameScreenLobbyController implements Controller {
             }
         });
 
-        //User owner = lobbyScreenController.returnUserById(game.get().owner());
-        //newGameLobbyService.postMember(game.get()._id(),owner.name(),true);
-
     }
 
     private void deleteUser(Member member) {
@@ -139,7 +142,7 @@ public class NewGameScreenLobbyController implements Controller {
         //here i gona create a hbox with an image view
         //User userToRender = lobbyScreenControllerProvider.get().returnUserById(member.UserId());
         //Label userName = new Label(userToRender.name());
-        Label memberId = new Label(member.UserId()+"weird null user cannot be kicked");
+        Label memberId = new Label(member.UserId() + " weird null user cannot be kicked");
         //userName.setId(member.UserId());
         memberId.setId(member.UserId());
         //userBox.getChildren().add(userName);
@@ -166,6 +169,7 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(memberEvent -> {
                     final Member member = memberEvent.data();
                     if (memberEvent.event().endsWith(".created")) {
+                        System.out.println("Kappa");
                         members.add(memberEvent.data());
                         initUserListener(memberEvent.data().UserId(), member);
                     } else if (memberEvent.event().endsWith(".deleted")) {
