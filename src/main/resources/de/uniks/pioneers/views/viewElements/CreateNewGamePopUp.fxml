@@ -39,7 +39,7 @@
                <font>
                   <Font size="18.0" />
                </font></Label>
-            <PasswordField fx:id="passwordTextfield" promptText="&lt;select your password&gt;" scaleX="1.2" scaleY="1.2" />
+            <PasswordField fx:id="passwordTextField" promptText="&lt;select your password&gt;" scaleX="1.2" scaleY="1.2" />
          </children>
          <padding>
             <Insets right="20.0" />

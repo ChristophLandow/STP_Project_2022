@@ -37,7 +37,7 @@
    </ScrollPane>
    <ScrollPane hbarPolicy="NEVER" layoutX="420.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0" style="-fx-border-color: black;">
       <content>
-         <ListView fx:id="ListViewGames" maxWidth="280.0" minWidth="280.0" prefHeight="400.0" prefWidth="280.0" />
+         <ListView fx:id="listViewGames" maxWidth="280.0" minWidth="280.0" prefHeight="400.0" prefWidth="280.0" />
       </content>
    </ScrollPane>
 </Pane>

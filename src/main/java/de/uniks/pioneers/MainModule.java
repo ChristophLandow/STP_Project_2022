@@ -6,16 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.pioneers.rest.*;
+import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.TokenStorage;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
-
 import static de.uniks.pioneers.Constants.API_V1_PREFIX;
 import static de.uniks.pioneers.Constants.BASE_URL;
 
@@ -82,4 +81,5 @@ public class MainModule {
     @Provides
     @Singleton
     GameMemberApiService gameMemberApiService(Retrofit retrofit) { return  retrofit.create(GameMemberApiService.class);}
+
 }

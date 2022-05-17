@@ -33,8 +33,6 @@ public class JoinGamePopUpController{
     private final CompositeDisposable disposable = new CompositeDisposable();
     private LobbyScreenController lobbyScreenController;
 
-
-
     public void init(NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game) {
         this.newGameLobbyService = newGameLobbyService;
         this.game = game;
@@ -46,7 +44,7 @@ public class JoinGamePopUpController{
 
     public void joinGame() {
         String password = passwordInputField.getText();
-        disposable.add(newGameLobbyService.postMember(game._id(), password, true)
+        disposable.add(newGameLobbyService.postMember(game._id(), true, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(res -> {
                     lobbyScreenController.showNewGameLobby(game, password);

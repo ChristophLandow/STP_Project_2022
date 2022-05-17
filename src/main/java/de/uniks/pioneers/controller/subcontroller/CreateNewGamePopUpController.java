@@ -1,12 +1,15 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
-import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -17,9 +20,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import java.io.IOException;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
-public class CreateNewGamePopUpController {
+public class CreateNewGamePopUpController implements Controller {
     @FXML
     public VBox popUpBox;
     @FXML
@@ -33,7 +41,7 @@ public class CreateNewGamePopUpController {
     @FXML
     public Label passWordLabel;
     @FXML
-    public PasswordField passwordTextfield;
+    public PasswordField passwordTextField;
     @FXML
     public HBox buttonBox;
     @FXML
@@ -45,17 +53,37 @@ public class CreateNewGamePopUpController {
     @FXML
     public Label passwordLen;
 
-    private LobbyScreenController lobbyScreenController;
-    private LobbyService lobbyService;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final Provider<LobbyService> lobbyServiceProvider;
 
-    public void init(LobbyScreenController lobbyScreenController, LobbyService lobbyService) {
-        this.lobbyScreenController = lobbyScreenController;
-        this.lobbyService = lobbyService;
+    @Inject
+    public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                        Provider<LobbyService> lobbyServiceProvider) {
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.lobbyServiceProvider = lobbyServiceProvider;
+    }
+
+    @Override
+    public Parent render() {
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/CreateNewGamePopUp.fxml"));
+        loader.setControllerFactory(c -> this);
+        Parent node;
+        try {
+            node = loader.load();
+        } catch (IOException e) {
+            node = null;
+        }
+        init();
+        return node;
+    }
+
+    @Override
+    public void init() {
         createGameButton.setOnMouseClicked(this::createGame);
         cancelButton.setOnMouseClicked(this::closePoPUp);
 
         IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
-        IntegerBinding passwordLength = Bindings.length(passwordTextfield.textProperty());
+        IntegerBinding passwordLength = Bindings.length(passwordTextField.textProperty());
         BooleanBinding invalid = Bindings.equal(passwordLen.textProperty(), nameLen.textProperty()).not();
 
         createGameButton.disableProperty().bind(invalid);
@@ -69,13 +97,20 @@ public class CreateNewGamePopUpController {
                 .otherwise("game name must be at least three characters long"));
     }
 
+    @Override
+    public void stop() {
+
+    }
+
     private void createGame(MouseEvent mouseEvent) {
         String name = gameNameTextField.getText();
-        String password = passwordTextfield.getText();
-        lobbyService.createGame(name,password)
+        String password = passwordTextField.getText();
+        lobbyServiceProvider.get().createGame(name,password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
-                    lobbyScreenController.showNewGameLobby(game, "test");
+                    LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
+                    lobbyScreenController.getGames().add(game);
+                    lobbyScreenController.showNewGameLobby(game, password);
                     Stage stage = (Stage) popUpBox.getScene().getWindow();
                     stage.close();
                 });

@@ -21,8 +21,8 @@ public class NewGameLobbyService {
         return gameMemberApiService.getAll(id);
     }
 
-    public Observable<Member> postMember(String id, String name, boolean ready){
-        return gameMemberApiService.createMember(id, new CreateMemberDto(ready, name));
+    public Observable<Member> postMember(String id, boolean ready, String password){
+        return gameMemberApiService.createMember(id, new CreateMemberDto(ready, password));
     }
 
     public Observable<Member> deleteMember(String id, String userId){
