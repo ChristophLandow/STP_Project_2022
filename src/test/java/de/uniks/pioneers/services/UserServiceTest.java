@@ -24,20 +24,9 @@ public class UserServiceTest {
     UserService userService;
 
     @Test
-    void getCurrentUser() {
-        when(userApiService.getUser("1")).thenReturn(Observable.just(new User("1", "Alice", "offline", null)));
-        userService.setCurrentUserId("1");
-
-        final User result = userService.getCurrentUser().blockingFirst();
-        assertEquals("Alice", result.name());
-
-        verify(userApiService).getUser("1");
-    }
-
-    @Test
     void editProfile() {
         when(userApiService.update(any(), any())).thenReturn(Observable.just(new User("1", "newName", "online", null)));
-        userService.setCurrentUserId("1");
+        userService.setCurrentUser(new User("1", "name", "online", null));
 
         final User result = userService.editProfile("newName", null, null, null).blockingFirst();
         assertEquals("newName", result.name());
