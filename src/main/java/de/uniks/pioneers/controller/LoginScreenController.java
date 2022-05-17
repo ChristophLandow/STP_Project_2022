@@ -101,26 +101,10 @@ public class LoginScreenController implements Controller {
 
         this.textRegister.setFill(Color.rgb(0, 0, 255));
     }
-
-    private void unmarkRegister(MouseEvent mouseEvent) {
-
-        this.textRegister.setFill(Color.rgb(0, 0, 0));
-    }
-
-    private void markRules(MouseEvent mouseEvent) {
-
-        this.textRules.setFill(Color.rgb(0, 0, 255));
-    }
-
-    private void unmarkRules(MouseEvent mouseEvent) {
-
-        this.textRules.setFill(Color.rgb(0, 0, 0));
-    }
-
-    private void resetStatus(MouseEvent mouseEvent) {
-
-        this.passwordStatusText.setText("");
-    }
+    private void unmarkRegister(MouseEvent mouseEvent) {this.textRegister.setFill(Color.rgb(0, 0, 0));}
+    private void markRules(MouseEvent mouseEvent) {this.textRules.setFill(Color.rgb(0, 0, 255));}
+    private void unmarkRules(MouseEvent mouseEvent) {this.textRules.setFill(Color.rgb(0, 0, 0));}
+    private void resetStatus(MouseEvent mouseEvent) {this.passwordStatusText.setText("");}
 
     @Override
     public void init() {

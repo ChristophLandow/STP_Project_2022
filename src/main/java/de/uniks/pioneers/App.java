@@ -23,15 +23,19 @@ public class App extends Application {
         this.controller = mainComponent.loginController();
     }
     public App(Controller controller){
+
         this.controller = controller;
     }
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage){
 
         this.stage = primaryStage;
-        stage.setTitle(LOGIN_SCREEN_TITLE);
-        setIcons(stage);
-        show(this.controller);
+        if(this.controller != null){
+
+            stage.setTitle(LOGIN_SCREEN_TITLE);
+            setIcons(stage);
+            show(this.controller);
+        }
         stage.show();
     }
 
