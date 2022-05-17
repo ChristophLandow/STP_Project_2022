@@ -259,13 +259,18 @@ public class NewGameScreenLobbyController implements Controller {
         if (game.get().owner().equals(userService.getCurrentUserId())) {
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(res -> System.out.println(res.toString()), Throwable::printStackTrace));
+                    .subscribe(res -> {
+                        System.out.println(res.toString());
+                        app.show(lobbyScreenControllerProvider.get());
+                    }, Throwable::printStackTrace));
         } else {
             disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userService.getCurrentUserId())
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(res -> System.out.println(res.toString()), Throwable::printStackTrace));
+                    .subscribe(res -> {
+                        System.out.println(res.toString());
+                        app.show(lobbyScreenControllerProvider.get());
+                    }, Throwable::printStackTrace));
         }
-        app.show(lobbyScreenControllerProvider.get());
     }
 
     public String getPassword() {
