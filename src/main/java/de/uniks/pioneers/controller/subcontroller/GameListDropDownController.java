@@ -4,16 +4,16 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.services.LobbyService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -41,7 +41,6 @@ public class GameListDropDownController implements Controller {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
-
     @Override
     public Parent render() {
         Parent parent;
@@ -66,8 +65,20 @@ public class GameListDropDownController implements Controller {
     }
 
     public void joinGame(MouseEvent mouseEvent) {
-        LobbyScreenController lobbyScreenController= lobbyScreenControllerProvider.get();
-        lobbyScreenController.showNewGameLobby(game.get());
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/JoinGamePopUp.fxml"));
+        Parent node = null;
+        try {
+            node = loader.load();
+            JoinGamePopUpController joinGamePopUpController = loader.getController();
+            joinGamePopUpController.init(newGameLobbyService, lobbyScreenController, game);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage = new Stage();
+        stage.setTitle("Join Game");
+        Scene scene = new Scene(node);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void discardGame(MouseEvent mouseEvent) {

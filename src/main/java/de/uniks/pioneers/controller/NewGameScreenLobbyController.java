@@ -2,12 +2,16 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -16,10 +20,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -28,6 +30,8 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -51,7 +55,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML
     public VBox messageBox;
     @FXML
-    public ScrollBar scrollbar;
+    public ScrollPane chatScrollPane;
     @FXML
     public HBox messageHbox;
     @FXML
@@ -66,25 +70,37 @@ public class NewGameScreenLobbyController implements Controller {
     public Button startGameButton;
     @FXML
     public Button leaveButton;
+    @FXML
+    public ImageView RulesButton;
 
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final Provider<GameChatController> gameChatControllerProvider;
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     private final App app;
-    private final ObservableList<Member> members = FXCollections.observableArrayList();
-    private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
+    private final UserService userService;
+    private final GameService gameService;
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     public SimpleObjectProperty<User> owner = new SimpleObjectProperty<>();
 
+    private final ObservableList<Member> members = FXCollections.observableArrayList();
+    private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
+
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
-                                        NewGameLobbyService newGameLobbyService,
-                                        App app) {
+                                        Provider<GameChatController> gameChatControllerProvider,
+                                        Provider<RulesScreenController> rulesScreenControllerProvider,
+                                        NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService) {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.gameChatControllerProvider = gameChatControllerProvider;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
         this.app = app;
+        this.userService = userService;
+        this.gameService = gameService;
     }
 
     public void postNewMember(Game game, User user) {
@@ -112,7 +128,7 @@ public class NewGameScreenLobbyController implements Controller {
 
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
-        passwordLabel.setText("kappa");
+        passwordLabel.setText(this.getPassword());
 
         // init event listeners
         initMemberListener();
@@ -131,6 +147,21 @@ public class NewGameScreenLobbyController implements Controller {
             }
         });
 
+
+
+        GameChatController gameChatController = gameChatControllerProvider.get();
+        gameChatController.chatScrollPane = this.chatScrollPane;
+        gameChatController.messageBox = this.messageBox;
+        gameChatController.messageText = this.messageText;
+        gameChatController.sendButton = this.sendButton;
+        gameChatController.game = this.game.get();
+        gameChatController.render();
+        gameChatController.init();
+    }
+
+    private void openRules(MouseEvent mouseEvent) {
+        RulesScreenController controller = rulesScreenControllerProvider.get();
+        controller.init();
     }
 
     private void deleteUser(Member member) {
@@ -169,7 +200,6 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(memberEvent -> {
                     final Member member = memberEvent.data();
                     if (memberEvent.event().endsWith(".created")) {
-                        System.out.println("Kappa");
                         members.add(memberEvent.data());
                         initUserListener(memberEvent.data().UserId(), member);
                     } else if (memberEvent.event().endsWith(".deleted")) {
@@ -230,6 +260,28 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     public void leaveLobby(MouseEvent mouseEvent) {
+        if (game.get().owner().equals(userService.getCurrentUserId())) {
+            disposable.add(gameService.deleteGame(game.get()._id())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        System.out.println(res.toString());
+                        app.show(lobbyScreenControllerProvider.get());
+                    }, Throwable::printStackTrace));
+        } else {
+            disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userService.getCurrentUserId())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        System.out.println(res.toString());
+                        app.show(lobbyScreenControllerProvider.get());
+                    }, Throwable::printStackTrace));
+        }
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

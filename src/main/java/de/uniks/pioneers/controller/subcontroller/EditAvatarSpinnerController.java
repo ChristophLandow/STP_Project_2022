@@ -1,9 +1,8 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.services.UserService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.image.Image;
-
-import java.util.Base64;
 import java.util.function.Consumer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -11,6 +10,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class EditAvatarSpinnerController extends AvatarSpinnerController {
 
     private UserService userService;
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     public EditAvatarSpinnerController(Consumer<String> changeAvatar) {
         super(changeAvatar);
@@ -19,7 +19,7 @@ public class EditAvatarSpinnerController extends AvatarSpinnerController {
     @Override
     protected void initImageView() {
         // get current user's avatar and display it
-        this.userService.getCurrentUser()
+        disposable.add(this.userService.getCurrentUser()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     setValue(0);
@@ -28,7 +28,7 @@ public class EditAvatarSpinnerController extends AvatarSpinnerController {
                     } else {
                         avatarImageView.setImage(null);
                     }
-                });
+                }));
     }
 
     public void setUserService(UserService userService) {

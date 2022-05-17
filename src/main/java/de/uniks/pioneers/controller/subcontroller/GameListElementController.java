@@ -18,12 +18,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-
 
 public class GameListElementController implements Controller {
     @FXML
@@ -116,6 +115,10 @@ public class GameListElementController implements Controller {
         }
     }
 
+
+
+
+
     public void showGameInfo(MouseEvent mouseEvent) {
         Tooltip tt = new Tooltip();
         if (this.creator.get() != null ) {
@@ -138,6 +141,8 @@ public class GameListElementController implements Controller {
     public void dontShowGameInfo(MouseEvent mouseEvent) {
         title.setTooltip(null);
     }
+
+
 
 
 }
