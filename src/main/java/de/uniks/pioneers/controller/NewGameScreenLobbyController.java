@@ -30,6 +30,8 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -84,7 +86,8 @@ public class NewGameScreenLobbyController implements Controller {
     public SimpleObjectProperty<User> owner = new SimpleObjectProperty<>();
 
     private final ObservableList<Member> members = FXCollections.observableArrayList();
-    private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
+    private final List<User> users = new ArrayList<>();
+    //private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
     private String password;
 
     @Inject
@@ -133,16 +136,17 @@ public class NewGameScreenLobbyController implements Controller {
 
         // init event listeners
         initMemberListener();
-        initMessageListener();
+        //initMessageListener();
 
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getAddedSubList().stream().forEach(member -> {
+                /*c.getAddedSubList().stream().forEach(member -> {
                     System.out.println(member);
                     renderUser(member);
-                });
+                });*/
+                c.getAddedSubList().forEach(this::renderUser);
             } else if (c.wasRemoved()) {
                 c.getRemoved().forEach(this::deleteUser);
             }
@@ -166,20 +170,25 @@ public class NewGameScreenLobbyController implements Controller {
     private void deleteUser(Member member) {
         Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().get();
         userBox.getChildren().remove(removal);
+        users.removeIf(user -> user._id().equals(member.userId()));
     }
 
     private void renderUser(Member member) {
         //here i gona create a hbox with an image view
         //User userToRender = lobbyScreenControllerProvider.get().returnUserById(member.UserId());
         //Label userName = new Label(userToRender.name());
-        Label memberId = new Label(member.userId() + " weird null user, cannot be kicked");
+        User user = userService.getUserById(member.userId()).blockingFirst();
+        users.add(user);
+
+        Label memberId = new Label(user.name());
+
         //userName.setId(member.UserId());
         memberId.setId(member.userId());
         //userBox.getChildren().add(userName);
         userBox.getChildren().add(memberId);
     }
 
-    private void initMessageListener() {
+    /*private void initMessageListener() {
         String patternToObserveChatMessages = String.format("games.%s.messages.*.*", game.get()._id());
         eventListener.listen(patternToObserveChatMessages, MessageDto.class)
                 .observeOn(FX_SCHEDULER)
@@ -190,9 +199,10 @@ public class NewGameScreenLobbyController implements Controller {
                         messages.remove(messageEvent.data());
                     }
                 });
-    }
+    }*/
 
     private void initMemberListener() {
+        System.out.println(game.get()._id());
         String patternToObserveGameMembers = String.format("games.%s.members.*", game.get()._id());
         eventListener.listen(patternToObserveGameMembers, Member.class)
                 .observeOn(FX_SCHEDULER)
@@ -200,12 +210,12 @@ public class NewGameScreenLobbyController implements Controller {
                     final Member member = memberEvent.data();
                     System.out.println(member);
                     if (memberEvent.event().endsWith(".created")) {
-                        members.add(memberEvent.data());
+                        members.add(member);
                         initUserListener(member.userId(), member);
                     } else if (memberEvent.event().endsWith(".deleted")) {
-                        members.remove(memberEvent.data());
+                        members.remove(member);
                     } else {
-                        updateMember(memberEvent.data());
+                        updateMember(member);
                     }
                 });
     }
