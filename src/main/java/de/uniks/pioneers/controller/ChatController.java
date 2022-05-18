@@ -19,8 +19,11 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -98,13 +101,17 @@ public class ChatController implements Controller {
         chatUserlistController.chatTabPane = this.chatTabPane;
         chatUserlistController.render();
         chatUserlistController.init();
-
         return view;
     }
 
     @Override
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
+        this.sendButton.setDefaultButton(true);
+        Node textFieldNode = this.messageTextField;
+        Node sendButtonNode = this.sendButton;
+        setEventHandler(textFieldNode);
+        setEventHandler(sendButtonNode);
 
         this.messageService.increaseOpenChatCounter();
         this.messageService.increaseOpenChatCounter();
@@ -195,6 +202,15 @@ public class ChatController implements Controller {
                         }));
             }
         }
+    }
+
+    private void setEventHandler(Node root) {
+        root.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                sendButton.fire();
+                event.consume();
+            }
+        });
     }
 
     public void resetOpenChatCounter(){
