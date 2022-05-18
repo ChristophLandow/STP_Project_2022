@@ -101,9 +101,7 @@ public class EditProfileController implements Controller {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
 
         // get currentUser from Server and display name
-        disposable.add(this.userService.getCurrentUser()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(user -> this.usernameLabel.setText(user.name())));
+        this.usernameLabel.setText(userService.getCurrentUser().name());
 
         // Spinner Code
         EditAvatarSpinnerController spinnerValueFactory = new EditAvatarSpinnerController(this::updateAvatarString);
@@ -177,7 +175,9 @@ public class EditProfileController implements Controller {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
                         e.printStackTrace();
                     })
-                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get())));
+                    .subscribe(result -> {
+                        app.show(lobbyScreenControllerProvider.get());
+                    }));
         }
 
     }
@@ -188,12 +188,11 @@ public class EditProfileController implements Controller {
     }
 
     public void uploadAvatar() throws IOException {
-        resetAvatar();
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Choose Avatar", "*.PNG", "*.jpg"));
         File avatarURL = fileChooser.showOpenDialog(null);
         if(avatarURL != null) {
+            resetAvatar();
             byte[] data = Files.readAllBytes(Paths.get(avatarURL.toURI()));
             String avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
 
