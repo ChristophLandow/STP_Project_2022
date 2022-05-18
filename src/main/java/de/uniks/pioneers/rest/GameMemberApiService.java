@@ -2,6 +2,7 @@ package de.uniks.pioneers.rest;
 
 
 import de.uniks.pioneers.dto.CreateMemberDto;
+import de.uniks.pioneers.dto.UpdateMemberDto;
 import de.uniks.pioneers.model.Member;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
@@ -17,4 +18,7 @@ public interface GameMemberApiService {
 
     @DELETE("/api/v1/games/{gameId}/members/{userId}")
     Observable<Member> deleteMember(@Path("gameId") String gameId, @Path("userId") String userId);
+
+    @PATCH("/api/v1/games/{gameId}/members/{userId}")
+    Observable<Member> setReady(@Path("gameId") String gameId, @Path("userId") String userId, @Body UpdateMemberDto dto);
 }
