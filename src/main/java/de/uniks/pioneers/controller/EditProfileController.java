@@ -162,7 +162,8 @@ public class EditProfileController implements Controller {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
                         e.printStackTrace();
                     })
-                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get())));
+                    .doOnComplete(this::toLobby)
+                    .subscribe());
 
         } else if (changePassword) {
             // dont send patch request
@@ -180,6 +181,10 @@ public class EditProfileController implements Controller {
                     }));
         }
 
+    }
+
+    public void toLobby() {
+        app.show(lobbyScreenControllerProvider.get());
     }
 
     private void resetAvatar() {
