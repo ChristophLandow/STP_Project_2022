@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.model.Game;
@@ -11,6 +12,7 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -171,6 +173,12 @@ public class NewGameScreenLobbyController implements Controller {
         Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().get();
         userBox.getChildren().remove(removal);
         users.removeIf(user -> user._id().equals(member.userId()));
+
+        if(member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())){
+            app.show(lobbyScreenControllerProvider.get());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.HOST_LEFT_GAME_ALERT);
+            alert.showAndWait();
+        }
     }
 
     private void renderUser(Member member) {
@@ -246,7 +254,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public void stop() {
-
+        disposable.dispose();
     }
 
     @Override
@@ -269,6 +277,7 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame(MouseEvent mouseEvent) {
     }
     private final CompositeDisposable disposable = new CompositeDisposable();
+
     public void leaveLobby(MouseEvent mouseEvent) {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
