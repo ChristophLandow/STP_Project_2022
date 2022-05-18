@@ -20,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -31,6 +32,7 @@ import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -60,6 +62,7 @@ public class NewGameScreenLobbyController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     private final App app;
+    private Parent view;
     private final UserService userService;
     private final GameService gameService;
 
@@ -162,12 +165,13 @@ public class NewGameScreenLobbyController implements Controller {
         User user = userService.getUserById(member.userId()).blockingFirst();
         users.add(user);
 
+        // put new member information into HBox
+        HBox memberBox = new HBox();
+        memberBox.setId(user._id());
         Label memberId = new Label(user.name());
+        memberBox.getChildren().add(memberId);
 
-        //userName.setId(member.UserId());
-        memberId.setId(member.userId());
-        //userBox.getChildren().add(userName);
-        userBox.getChildren().add(memberId);
+        userBox.getChildren().add(memberBox);
     }
 
     /*private void initMessageListener() {
@@ -194,6 +198,10 @@ public class NewGameScreenLobbyController implements Controller {
                     if (memberEvent.event().endsWith(".created")) {
                         members.add(member);
                         initUserListener(member.userId(), member);
+                    } else if (memberEvent.event().endsWith(".updated")) {
+                        if (member.ready()) {
+                            showReadyCheckMark(member.userId());
+                        }
                     } else if (memberEvent.event().endsWith(".deleted")) {
                         members.remove(member);
                     } else {
@@ -233,16 +241,16 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public Parent render() {
-        Parent parent;
+        // Parent parent;
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/NewGameLobbyScreen.fxml"));
         loader.setControllerFactory(c -> this);
         try {
-            parent = loader.load();
+            view = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return parent;
+        return view;
     }
 
     public void setReadyTrue(MouseEvent mouseEvent) {
@@ -251,12 +259,16 @@ public class NewGameScreenLobbyController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(result -> {
                     System.out.println("set ready result: " + result.toString());
-                    this.showReadyCheckMark();
                 }, Throwable::printStackTrace));
     }
 
-    private void showReadyCheckMark() {
+    private void showReadyCheckMark(String memberId) {
         // TODO: set green checkmark next to current member
+        ImageView checkMarkImage = new ImageView(new Image(Objects.requireNonNull(App.class.getResource("checkmark.png")).toString()));
+        checkMarkImage.setFitWidth(20);
+        checkMarkImage.setFitHeight(20);
+        HBox currentMemberBox = (HBox) this.view.lookup("#" + memberId);
+        currentMemberBox.getChildren().add(checkMarkImage);
     }
 
     public void startGame(MouseEvent mouseEvent) {
