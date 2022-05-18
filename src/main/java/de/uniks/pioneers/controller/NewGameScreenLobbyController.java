@@ -92,22 +92,22 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void postNewMember(Game game, User user, String password) {
 
-            this.password = password;
-            this.game.set(game);
-            if (user._id().equals(game.owner())){
-                this.owner.set(user);
-            }
-            app.show(this);
-            // post new member to game
-            /*
-            newGameLobbyService.postMember(game._id(), true, this.password)
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(e -> System.out.println(" why this doenst work ? "))
-                    .subscribe(member -> members.add(member));
-             */
-            // rest
-            newGameLobbyService.getAll(game._id()).observeOn(FX_SCHEDULER)
-               .subscribe(this.members::setAll);
+        this.password = password;
+        this.game.set(game);
+        if (user._id().equals(game.owner())){
+            this.owner.set(user);
+        }
+        app.show(this);
+        // post new member to game
+        /*
+        newGameLobbyService.postMember(game._id(), true, this.password)
+                .observeOn(FX_SCHEDULER)
+                .doOnError(e -> System.out.println(" why this doenst work ? "))
+                .subscribe(member -> members.add(member));
+         */
+        // rest
+        newGameLobbyService.getAll(game._id()).observeOn(FX_SCHEDULER)
+           .subscribe(this.members::setAll);
         }
 
     @Override
@@ -224,7 +224,6 @@ public class NewGameScreenLobbyController implements Controller {
                         }
                     }
                 });
-
     }
 
     private void deleteMember(Member member) {
@@ -263,15 +262,40 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void showReadyCheckMark(String memberId) {
-        // TODO: set green checkmark next to current member
+        // set green checkmark next to current member
         ImageView checkMarkImage = new ImageView(new Image(Objects.requireNonNull(App.class.getResource("checkmark.png")).toString()));
         checkMarkImage.setFitWidth(20);
         checkMarkImage.setFitHeight(20);
+
         HBox currentMemberBox = (HBox) this.view.lookup("#" + memberId);
         currentMemberBox.getChildren().add(checkMarkImage);
     }
 
     public void startGame(MouseEvent mouseEvent) {
+        // check if all users are ready
+        if (allUsersReady()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "START GAME!");
+            alert.showAndWait();
+        }
+    }
+
+    private boolean allUsersReady() {
+        for (Node node: userBox.getChildren()) {
+            HBox memberBox = (HBox) node;
+
+            // check if there is a checkmark
+            if (memberBox.getChildren().size() < 2) {
+                System.out.println("Not all users ready!");
+                // show popup with unready user(s)
+                Label memberLabel = (Label) memberBox.getChildren().get(0);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, memberLabel.getText() + " is not ready yet!");
+                alert.showAndWait();
+                return false;
+            }
+        }
+
+        System.out.println("All users ready!");
+        return true;
     }
 
     public void leaveLobby(MouseEvent mouseEvent) {
