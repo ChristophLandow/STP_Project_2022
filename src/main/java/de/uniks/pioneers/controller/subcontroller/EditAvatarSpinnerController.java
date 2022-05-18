@@ -19,16 +19,13 @@ public class EditAvatarSpinnerController extends AvatarSpinnerController {
     @Override
     protected void initImageView() {
         // get current user's avatar and display it
-        disposable.add(this.userService.getCurrentUser()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(user -> {
-                    setValue(0);
-                    if (user.avatar() != null) {
-                        avatarImageView.setImage(new Image(user.avatar()));
-                    } else {
-                        avatarImageView.setImage(null);
-                    }
-                }));
+        String avatar = userService.getCurrentUser().avatar();
+        setValue(0);
+        if (avatar != null) {
+            avatarImageView.setImage(new Image(avatar));
+        } else {
+            avatarImageView.setImage(null);
+        }
     }
 
     public void setUserService(UserService userService) {

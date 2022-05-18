@@ -49,7 +49,7 @@ class LoginServiceTest {
         assertEquals(tokenStorage.getRefreshToken(), "456");
 
         verify(authApiService).login(new LoginDto("LoginServiceTestUser","12345678"));
-        verify(userService).setCurrentUserId("000");
+
     }
 
     @Test
@@ -72,7 +72,7 @@ class LoginServiceTest {
         assertEquals(tokenStorage.getRefreshToken(), "456");
 
         verify(authApiService).refresh(new RefreshDto("abc"));
-        verify(userService).setCurrentUserId("000");
+
     }
 
     @Test

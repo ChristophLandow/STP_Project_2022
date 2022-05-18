@@ -3,6 +3,7 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.dto.LoginDto;
 import de.uniks.pioneers.dto.RefreshDto;
 import de.uniks.pioneers.model.LoginResult;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.AuthApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ public class LoginService {
                 .doOnNext(result -> {
                     tokenStorage.setAccessToken(result.accessToken());
                     tokenStorage.setRefreshToken(result.refreshToken());
-                    userService.setCurrentUserId(result._id());
+                    userService.setCurrentUser(new User(result._id(), result.name(), result.status(), result.avatar()));
                 });
     }
 
@@ -42,7 +43,7 @@ public class LoginService {
                 .doOnNext(result -> {
                     tokenStorage.setAccessToken(result.accessToken());
                     tokenStorage.setRefreshToken(result.refreshToken());
-                    userService.setCurrentUserId(result._id());
+                    userService.setCurrentUser(new User(result._id(), result.name(), result.status(), result.avatar()));
                 });
     }
 
