@@ -15,6 +15,7 @@ public class UserService {
 
     private final UserApiService userApiService;
     private String currentUserId;
+    private User currentUser;
 
     @Inject
     public UserService(UserApiService userApiService) {
@@ -25,19 +26,21 @@ public class UserService {
         return userApiService.create(new CreateUserDto(userName, avatar, password));
     }
     public Observable<User> editProfile(String name, String avatar, String password, String status) {
-        return userApiService.update(this.currentUserId, new UpdateUserDto(name, avatar, password, status));
+        return userApiService.update(this.currentUser._id(), new UpdateUserDto(name, avatar, password, status))
+                .doOnNext(this::setCurrentUser);
     }
 
-    public Observable<User> getCurrentUser() {
-        return this.userApiService.getUser(this.currentUserId);
+    public User getCurrentUser() {
+        return currentUser;
+    }
+    public Observable<User> getUserById(String id) {
+        return this.userApiService.getUser(id);
     }
 
-    public void setCurrentUserId(String id) {
-        this.currentUserId = id;
+    public void setCurrentUser(User user) {
+        currentUser = user;
     }
-    public String getCurrentUserId() {
-        return this.currentUserId;
-    }
+
     public Observable<List<User>> findAll() {
         return this.userApiService.findAll();
     }

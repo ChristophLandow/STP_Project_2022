@@ -29,12 +29,8 @@ public class UserlistService {
     }
 
     public void init() {
-        this.userService.getCurrentUser()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(user -> {
-                    this.currentUser = user;
-                    users.removeIf(u->u._id().equals(currentUser._id()));
-                });
+        this.currentUser = userService.getCurrentUser();
+        users.removeIf(u->u._id().equals(currentUser._id()));
 
         userService.findAll().observeOn(FX_SCHEDULER)
                 .subscribe(this.users::setAll);

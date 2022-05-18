@@ -15,24 +15,14 @@ import java.util.List;
 public class GameService {
 
     private final GameApiService gameApiService;
-    private final MessageApiService messageApiService;
 
     @Inject
-    public GameService(GameApiService gameApiService, MessageApiService messageApiService) {
+    public GameService(GameApiService gameApiService) {
         this.gameApiService = gameApiService;
-        this.messageApiService = messageApiService;
     }
 
     public Observable<Game> deleteGame(String gameId) {
         return gameApiService.delete(gameId);
-    }
-
-    public Observable<MessageDto> sendMessage(String id, CreateMessageDto dto) {
-        return messageApiService.sendMessage("games", id, dto);
-    }
-
-    public Observable<List<MessageDto>> getMessages(String id){
-        return messageApiService.getChatMessages("games", id);
     }
 
 }
