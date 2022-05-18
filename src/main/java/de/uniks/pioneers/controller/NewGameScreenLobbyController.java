@@ -35,42 +35,24 @@ import java.util.List;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class NewGameScreenLobbyController implements Controller {
-    @FXML
-    public Pane root;
-    @FXML
-    public VBox vBoxRoot;
-    @FXML
-    public HBox topLevel;
-    @FXML
-    public VBox leftBox;
-    @FXML
-    public Label gameNameLabel;
-    @FXML
-    public Label passwordLabel;
-    @FXML
-    public VBox userBox;
-    @FXML
-    public VBox rightBox;
-    @FXML
-    public VBox messageBox;
-    @FXML
-    public ScrollPane chatScrollPane;
-    @FXML
-    public HBox messageHbox;
-    @FXML
-    public TextField messageText;
-    @FXML
-    public Button sendButton;
-    @FXML
-    public HBox buttonBox;
-    @FXML
-    public Button readyButton;
-    @FXML
-    public Button startGameButton;
-    @FXML
-    public Button leaveButton;
-    @FXML
-    public ImageView RulesButton;
+    @FXML public Pane root;
+    @FXML public VBox vBoxRoot;
+    @FXML public HBox topLevel;
+    @FXML public VBox leftBox;
+    @FXML public Label gameNameLabel;
+    @FXML public Label passwordLabel;
+    @FXML public VBox userBox;
+    @FXML public VBox rightBox;
+    @FXML public VBox messageBox;
+    @FXML public ScrollPane chatScrollPane;
+    @FXML public HBox messageHbox;
+    @FXML public TextField messageText;
+    @FXML public Button sendButton;
+    @FXML public HBox buttonBox;
+    @FXML public Button readyButton;
+    @FXML public Button startGameButton;
+    @FXML public Button leaveButton;
+    @FXML public ImageView RulesButton;
 
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -86,6 +68,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     private final List<User> users = new ArrayList<>();
+    private final CompositeDisposable disposable = new CompositeDisposable();
     //private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
     private String password;
 
@@ -123,7 +106,6 @@ public class NewGameScreenLobbyController implements Controller {
             newGameLobbyService.getAll(game._id()).observeOn(FX_SCHEDULER)
                .subscribe(this.members::setAll);
         }
-
 
     @Override
     public void init() {
@@ -264,11 +246,22 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     public void setReadyTrue(MouseEvent mouseEvent) {
+        // set member "ready" true in API
+        disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(result -> {
+                    System.out.println("set ready result: " + result.toString());
+                    this.showReadyCheckMark();
+                }, Throwable::printStackTrace));
+    }
+
+    private void showReadyCheckMark() {
+        // TODO: set green checkmark next to current member
     }
 
     public void startGame(MouseEvent mouseEvent) {
     }
-    private final CompositeDisposable disposable = new CompositeDisposable();
+
     public void leaveLobby(MouseEvent mouseEvent) {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())

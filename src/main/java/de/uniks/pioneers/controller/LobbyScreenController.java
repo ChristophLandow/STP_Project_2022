@@ -6,11 +6,9 @@ import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistControler;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.LobbyService;
-import de.uniks.pioneers.services.MessageService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -78,6 +76,7 @@ public class LobbyScreenController implements Controller {
     private final EventListener eventListener;
     private final LobbyService lobbyService;
     private final UserService userService;
+    private final NewGameLobbyService newGameLobbyService;
     private final Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
     private final Provider<GameListElementController> gameListElementControllerProvider;
     private final MessageService messageService;
@@ -102,6 +101,7 @@ public class LobbyScreenController implements Controller {
                                  Provider<GameListElementController> gameListElementControllerProvider,
                                  Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                  MessageService messageService,
+                                 NewGameLobbyService newGameLobbyService,
                                  PrefService prefService
     ) {
         this.app = app;
@@ -117,6 +117,7 @@ public class LobbyScreenController implements Controller {
         this.editProfileControllerProvider = editProfileControllerProvider;
         this.userlistControlerProvider = userlistControlerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
+        this.newGameLobbyService = newGameLobbyService;
         this.prefService = prefService;
     }
 
@@ -373,6 +374,7 @@ public class LobbyScreenController implements Controller {
     public void showNewGameLobby(Game game, String password) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.postNewMember(game, userService.getCurrentUser(), password);
+        newGameLobbyService.setCurrentMemberId(userService.getCurrentUser()._id());
     }
 
     public void newGame(ActionEvent actionEvent) {

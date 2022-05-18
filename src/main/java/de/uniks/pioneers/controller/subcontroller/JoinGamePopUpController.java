@@ -44,7 +44,7 @@ public class JoinGamePopUpController{
 
     public void joinGame() {
         String password = passwordInputField.getText();
-        disposable.add(newGameLobbyService.postMember(game._id(), true, password)
+        disposable.add(newGameLobbyService.postMember(game._id(), false, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(res -> {
                     lobbyScreenController.showNewGameLobby(game, password);
