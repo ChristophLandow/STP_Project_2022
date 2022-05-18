@@ -157,6 +157,7 @@ public class NewGameScreenLobbyController implements Controller {
         gameChatController.messageText = this.messageText;
         gameChatController.sendButton = this.sendButton;
         gameChatController.game = this.game.get();
+        gameChatController.users = this.users;
         gameChatController.render();
         gameChatController.init();
     }
@@ -202,7 +203,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     private void initMemberListener() {
         System.out.println(game.get()._id());
-        String patternToObserveGameMembers = String.format("games.%s.members.*", game.get()._id());
+        String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
         eventListener.listen(patternToObserveGameMembers, Member.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(memberEvent -> {
