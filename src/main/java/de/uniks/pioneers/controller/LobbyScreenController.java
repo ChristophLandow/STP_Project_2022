@@ -133,17 +133,14 @@ public class LobbyScreenController implements Controller {
         }
 
         // get current user from server and display name and avatar
-        this.userService.getCurrentUser()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(user -> {
-                    removeUser(user);
-                    this.UsernameLabel.setText(user.name());
-                    if (user.avatar() != null) {
-                        this.AvatarImageView.setImage(new Image(user.avatar()));
-                    } else {
-                        this.AvatarImageView.setImage(null);
-                    }
-                });
+        User currentUser = userService.getCurrentUser();
+        removeUser(currentUser);
+        this.UsernameLabel.setText(currentUser.name());
+        if (currentUser.avatar() != null) {
+            this.AvatarImageView.setImage(new Image(currentUser.avatar()));
+        } else {
+            this.AvatarImageView.setImage(null);
+        }
 
         LobbyUserlistControler userlistController = userlistControlerProvider.get();
         userlistController.usersVBox = this.UsersVBox;
@@ -375,10 +372,7 @@ public class LobbyScreenController implements Controller {
 
     public void showNewGameLobby(Game game, String password) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
-        userService.getCurrentUser().observeOn(FX_SCHEDULER)
-                                    .subscribe(user -> {
-                                        newGameScreenLobbyController.postNewMember(game, user, password);
-                                    });
+        newGameScreenLobbyController.postNewMember(game, userService.getCurrentUser(), password);
     }
 
     public void newGame(ActionEvent actionEvent) {

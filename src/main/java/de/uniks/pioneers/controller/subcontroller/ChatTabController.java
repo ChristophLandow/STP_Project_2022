@@ -125,13 +125,8 @@ public class ChatTabController {
             }
         });
 
-        disposable.add(this.userService.getCurrentUser()
-                .take(1)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(user -> {
-                    currentUser = user;
-                    getOrCreateGroup();
-                }));
+        currentUser = userService.getCurrentUser();
+        getOrCreateGroup();
     }
 
     public void init(){

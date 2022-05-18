@@ -270,7 +270,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
     private final CompositeDisposable disposable = new CompositeDisposable();
     public void leaveLobby(MouseEvent mouseEvent) {
-        if (game.get().owner().equals(userService.getCurrentUserId())) {
+        if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(res -> {
@@ -278,7 +278,7 @@ public class NewGameScreenLobbyController implements Controller {
                         app.show(lobbyScreenControllerProvider.get());
                     }, Throwable::printStackTrace));
         } else {
-            disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userService.getCurrentUserId())
+            disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userService.getCurrentUser()._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(res -> {
                         System.out.println(res.toString());

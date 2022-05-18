@@ -101,9 +101,7 @@ public class EditProfileController implements Controller {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
 
         // get currentUser from Server and display name
-        disposable.add(this.userService.getCurrentUser()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(user -> this.usernameLabel.setText(user.name())));
+        this.usernameLabel.setText(userService.getCurrentUser().name());
 
         // Spinner Code
         EditAvatarSpinnerController spinnerValueFactory = new EditAvatarSpinnerController(this::updateAvatarString);
@@ -177,7 +175,9 @@ public class EditProfileController implements Controller {
                         this.usernameStatusText.setText("Username already taken. Choose another one!");
                         e.printStackTrace();
                     })
-                    .subscribe(result -> app.show(lobbyScreenControllerProvider.get())));
+                    .subscribe(result -> {
+                        app.show(lobbyScreenControllerProvider.get());
+                    }));
         }
 
     }

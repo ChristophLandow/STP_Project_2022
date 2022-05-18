@@ -22,14 +22,14 @@ public class GroupService {
 
     public Observable<GroupDto> createNewGroupWithOtherUser(String otherUserId) {
         List<String> memberList = new ArrayList<>();
-        memberList.add(userService.getCurrentUserId());
+        memberList.add(userService.getCurrentUser()._id());
         memberList.add(otherUserId);
         System.out.println(memberList);
         return this.groupApiService.newGroup(new CreateGroupDto(memberList, otherUserId));
     }
 
     public Observable<List<GroupDto>> getGroupsWithUser(String otherUserId) {
-        String users = userService.getCurrentUserId() + "," + otherUserId;
+        String users = userService.getCurrentUser()._id() + "," + otherUserId;
         return this.groupApiService.getGroupsWithUsers(users);
     }
 
