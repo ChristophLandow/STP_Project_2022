@@ -21,6 +21,8 @@ import javafx.scene.text.Font;
 
 import javax.inject.Inject;
 
+import java.util.List;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class GameChatController {
@@ -34,6 +36,8 @@ public class GameChatController {
     private final UserService userService;
     private final NewGameLobbyService newGameLobbyService;
     public Game game;
+
+    public List<User> users;
 
     @Inject
     GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService){
@@ -75,7 +79,17 @@ public class GameChatController {
     }
 
     public void renderMessage(MessageDto message){
-        User user = userService.getUserById(message.sender()).blockingFirst();
+        User user = null;
+        for(User u: users){
+            if(u._id().equals(message.sender())){
+                user = u;
+            }
+        }
+
+        if(user == null){
+            user = userService.getUserById(message.sender()).blockingFirst();
+        }
+
         Label textLabel = new Label(user.name() + ": " + message.body());
         textLabel.setFont(new Font(15));
         this.messageBox.getChildren().add(textLabel);
