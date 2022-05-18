@@ -3,12 +3,12 @@ package de.uniks.pioneers.services;
 import javax.inject.Inject;
 import java.util.prefs.Preferences;
 
+import static de.uniks.pioneers.Constants.REMEMBER_ME;
+
 public class PrefService{
 
     private final Preferences preferences;
-
     private final TokenStorage tokenStorage;
-
     private final CryptService cryptService;
 
     @Inject
@@ -22,17 +22,16 @@ public class PrefService{
     public void remember(){
 
         String encryptedToken = this.cryptService.encrypt(tokenStorage.getRefreshToken());
-        System.out.println("Encrypted Token:" + encryptedToken);
-        preferences.put("RememberMe", encryptedToken);
+        preferences.put(REMEMBER_ME, encryptedToken);
     }
     public void forget(){
 
-        preferences.put("RememberMe", "");
+        preferences.put(REMEMBER_ME, "");
     }
 
     public String recall(){
 
-        String encryptedToken = preferences.get("RememberMe", "");
+        String encryptedToken = preferences.get(REMEMBER_ME, "");
         if(encryptedToken.equals("")){
             return "";
         }

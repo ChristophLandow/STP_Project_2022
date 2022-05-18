@@ -13,6 +13,7 @@ public class Constants {
     public static final String CHAT_SCREEN_TITLE = "Pioneers - Chat";
     public static final String RULES_SCREEN_TITLE = "Pioneers - Rules";
     public static final String NOOP = "noop";
+    public static final String REMEMBER_ME = "RememberMe";
 
     // network
     public static final String BASE_URL = "https://pioneers.uniks.de";

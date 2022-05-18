@@ -13,7 +13,6 @@ public class LoginService {
     private final AuthApiService authApiService;
     private final TokenStorage tokenStorage;
     private final UserService userService;
-
     private final PrefService prefService;
 
     @Inject

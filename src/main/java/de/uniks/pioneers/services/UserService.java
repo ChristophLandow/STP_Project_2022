@@ -14,7 +14,6 @@ import java.util.List;
 public class UserService {
 
     private final UserApiService userApiService;
-    private String currentUserId;
     private User currentUser;
 
     @Inject
