@@ -142,10 +142,10 @@ public class LobbyScreenController implements Controller {
             this.AvatarImageView.setImage(null);
         }
 
-        LobbyUserlistControler userlistController = userlistControlerProvider.get();
-        userlistController.usersVBox = this.UsersVBox;
-        userlistController.render();
-        userlistController.init();
+        LobbyUserlistControler userListController = userlistControlerProvider.get();
+        userListController.usersVBox = this.UsersVBox;
+        userListController.render();
+        userListController.init();
 
         return parent;
     }
@@ -205,7 +205,7 @@ public class LobbyScreenController implements Controller {
                 c.getAddedSubList().stream().filter(this::isGameValid)
                                             .forEach(this::renderGame);
             } else if (c.wasRemoved()) {
-                // fomr some reason this does not work anymore
+                // for some reason this does not work anymore
                 c.getRemoved().forEach(this::deleteGame);
             } else if (c.wasUpdated()) {
                 c.getList().forEach(this::updateGame);

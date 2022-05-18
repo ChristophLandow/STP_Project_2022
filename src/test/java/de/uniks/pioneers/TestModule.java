@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.pioneers.dto.Event;
-import de.uniks.pioneers.dto.LoginDto;
-import de.uniks.pioneers.dto.RefreshDto;
-import de.uniks.pioneers.model.LoginResult;
-import de.uniks.pioneers.model.LogoutResult;
+import de.uniks.pioneers.dto.*;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.TokenStorage;
@@ -23,6 +20,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.API_V1_PREFIX;
@@ -31,8 +30,6 @@ import static de.uniks.pioneers.Constants.BASE_URL;
 @Module
 public class TestModule {
 
-    //Provisionally uses Server functionality! Adjustments for respective Tests required!
-
     @Provides
     static EventListener eventListener(){
 
@@ -40,6 +37,13 @@ public class TestModule {
 
             @Override
             public <T> Observable<Event<T>> listen(String pattern, Class<T> type) {
+
+                if(pattern == "users.*.*" & type == User.class){
+
+                }
+                if(pattern == "\"games.*.*\"" & type == Game.class){
+
+                }
 
                 return Observable.empty();
             }
@@ -54,12 +58,14 @@ public class TestModule {
         return new AuthApiService() {
             @Override
             public Observable<LoginResult> login(LoginDto dto) {
-                return null;
+
+                return Observable.just(new LoginResult("000", "TestUser", "online", null, "accesToken", "refreshToken"));
             }
 
             @Override
             public Observable<LoginResult> refresh(RefreshDto dto) {
-                return null;
+
+                return Observable.just(new LoginResult("000", "TestUser", "online", null, "accesToken", "refreshToken"));
             }
 
             @Override
@@ -69,7 +75,8 @@ public class TestModule {
 
             @Override
             public Observable<LogoutResult> logout() {
-                return null;
+
+                return Observable.just(new LogoutResult());
             }
         };
     }
@@ -115,20 +122,123 @@ public class TestModule {
                 .build();
     }
     @Provides
-    static UserApiService userApiService(Retrofit retrofit){
-        return retrofit.create(UserApiService.class);
+    static UserApiService userApiService(){
+        return new UserApiService() {
+            @Override
+            public Observable<User> create(CreateUserDto dto) {
+                return Observable.just(new User("000","TestUser","online",null));
+            }
+
+            @Override
+            public Observable<User> getUser(String id) {
+
+                return Observable.just(new User("000","TestUser","online",null));
+            }
+
+            @Override
+            public Observable<User> update(String id, UpdateUserDto dto) {
+
+                return Observable.just(new User("000","TestUser","online",null));
+            }
+
+            @Override
+            public Call<List<User>> getOnlineUsers() {
+                return null;
+            }
+
+            @Override
+            public Observable<List<User>> findAll() {
+
+                ArrayList users = new ArrayList<>();
+                users.add(new User("000","TestUserA","online",null));
+                users.add(new User("000","TestUserB","online",null));
+                users.add(new User("000","TestUserC","online",null));
+                return Observable.just(users);
+            }
+        };
     }
     @Provides
-    static GameApiService gameApiService(Retrofit retrofit) { return retrofit.create(GameApiService.class); }
+    static GameApiService gameApiService() {
+
+        return new GameApiService() {
+            @Override
+            public Observable<List<Game>> getGames() {
+
+                ArrayList games = new ArrayList<>();
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","TestUserA",1));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","TestUserB",1));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","TestUserC",1));
+                return Observable.just(games);
+            }
+
+            @Override
+            public Observable<Game> getGame(String id) {
+
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","TestUserA",1));
+            }
+
+            @Override
+            public Observable<Game> create(CreateGameDto dto) {
+
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+
+            }
+
+            @Override
+            public Observable<Game> update(String id, UpdateGameDto dto) {
+
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+
+            }
+
+            @Override
+            public Observable<Game> delete(String id) {
+
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+
+            }
+        };
+
+    }
 
     @Provides
     static MessageApiService messageApiService(Retrofit retrofit) { return retrofit.create(MessageApiService.class); }
 
     @Provides
-    static GroupApiService groupApiService(Retrofit retrofit) { return retrofit.create(GroupApiService.class); }
+    static GroupApiService groupApiService() {
+        return new GroupApiService() {
+            @Override
+            public Observable<GroupDto> newGroup(CreateGroupDto dto) {
+                return null;
+            }
+
+            @Override
+            public Observable<List<GroupDto>> getGroupsWithUsers(String users) {
+                return null;
+            }
+        };
+    }
 
     @Provides
-    static GameMemberApiService gameMemberApiService(Retrofit retrofit) { return retrofit.create(GameMemberApiService.class); }
+    static GameMemberApiService gameMemberApiService() {
+
+        return new GameMemberApiService() {
+            @Override
+            public Observable<List<Member>> getAll(String gameId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Member> createMember(String gameId, CreateMemberDto dto) {
+                return null;
+            }
+
+            @Override
+            public Observable<Member> deleteMember(String gameId, String userId) {
+                return null;
+            }
+        };
+    }
 
     @Provides
     static PrefService prefService() {
@@ -140,6 +250,8 @@ public class TestModule {
 
                 return "";
             }
+            @Override
+            public void remember(){}
         };}
 
 

@@ -84,7 +84,7 @@ test {
         exceptionFormat = 'full'
         showStackTraces = true
     }
-
+/*
     systemProperties = [
             'java.awt.headless': 'true',
             'testfx.robot'     : 'glass',
@@ -100,7 +100,7 @@ test {
             '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
     ]
 
-
+*/
 }
 
 jar {
