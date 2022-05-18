@@ -15,6 +15,8 @@ public class Constants {
     public static final String NOOP = "noop";
     public static final String REMEMBER_ME = "RememberMe";
 
+    public static final String HOST_LEFT_GAME_ALERT = "The game is not active anymore, because the host left.";
+
     // network
     public static final String BASE_URL = "https://pioneers.uniks.de";
     public static final String BASE_URL_WSS = "wss://pioneers.uniks.de";
