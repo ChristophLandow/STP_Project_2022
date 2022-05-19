@@ -34,7 +34,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -173,6 +172,7 @@ public class LobbyScreenController implements Controller {
 
     @Override
     public void stop() {
+
     }
 
     private void initUserListTools() {
