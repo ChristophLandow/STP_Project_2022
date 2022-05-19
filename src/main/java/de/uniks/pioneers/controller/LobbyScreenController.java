@@ -100,6 +100,7 @@ public class LobbyScreenController implements Controller {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LobbyScreen.fxml"));
         loader.setControllerFactory(c -> this);
         final Parent parent;
+
         try {
             parent = loader.load();
         } catch (IOException e) {
