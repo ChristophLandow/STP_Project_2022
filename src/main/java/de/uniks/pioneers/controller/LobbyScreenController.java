@@ -3,13 +3,11 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
-import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
-import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +20,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -54,7 +51,7 @@ public class LobbyScreenController implements Controller {
     @FXML
     public Button NewGameButton;
 
-    private App app;
+    private final App app;
 
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
@@ -63,25 +60,20 @@ public class LobbyScreenController implements Controller {
     private final Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
 
     private final PrefService prefService;
-    private final EventListener eventListener;
     private final LobbyService lobbyService;
     private final UserService userService;
     private final NewGameLobbyService newGameLobbyService;
-    private final Provider<ChatController> chatControllerProvider;
     private final Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
-    private final Provider<GameListElementController> gameListElementControllerProvider;
     private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
     private final MessageService messageService;
 
     @Inject
-    public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService,
-                                 Provider<ChatController> chatControllerProvider,
+    public LobbyScreenController(App app, LobbyService lobbyService, UserService userService,
                                  Provider<LoginScreenController> loginScreenControllerProvider,
                                  Provider<EditProfileController> editProfileControllerProvider,
                                  Provider<LobbyUserlistController> userlistControlerProvider,
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
                                  Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider,
-                                 Provider<GameListElementController> gameListElementControllerProvider,
                                  Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                  Provider<LobbyGameListController> lobbyGameListControllerProvider,
                                  MessageService messageService,
@@ -89,12 +81,9 @@ public class LobbyScreenController implements Controller {
                                  PrefService prefService
     ) {
         this.app = app;
-        this.eventListener = eventListener;
         this.lobbyService = lobbyService;
         this.userService = userService;
-        this.chatControllerProvider = chatControllerProvider;
         this.createNewGamePopUpControllerProvider = createNewGamePopUpControllerProvider;
-        this.gameListElementControllerProvider = gameListElementControllerProvider;
         this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
         this.messageService = messageService;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
@@ -120,7 +109,6 @@ public class LobbyScreenController implements Controller {
 
         // get current user from server and display name and avatar
         User currentUser = userService.getCurrentUser();
-        removeUser(currentUser);
         this.UsernameLabel.setText(currentUser.name());
         if (currentUser.avatar() != null) {
             this.AvatarImageView.setImage(new Image(currentUser.avatar()));
@@ -161,14 +149,6 @@ public class LobbyScreenController implements Controller {
     public void stop() {
     }
 
-
-    public void removeUser(User user) {
-        UsersVBox.getChildren().removeIf(n -> {
-            GridPane gpane = (GridPane) n;
-            return ((Label) gpane.getChildren().get(2)).getText().equals(user._id());
-        });
-    }
-
     public void editProfile(ActionEvent actionEvent) {
         this.app.show(editProfileControllerProvider.get());
     }
@@ -178,11 +158,10 @@ public class LobbyScreenController implements Controller {
         controller.init();
     }
 
-    public void logout(ActionEvent ignoredActionEvent) {
+    public void logout(ActionEvent event) {
         this.messageService.getchatUserList().clear();
         prefService.forget();
         logout();
-        app.show(loginScreenControllerProvider.get());
     }
 
     public void logout() {
