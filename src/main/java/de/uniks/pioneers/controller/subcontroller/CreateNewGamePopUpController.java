@@ -109,7 +109,7 @@ public class CreateNewGamePopUpController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
                     LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
-                    //lobbyScreenController.showNewGameLobby(game, password);
+                    lobbyScreenController.showNewGameLobby(game, password);
                     Stage stage = (Stage) popUpBox.getScene().getWindow();
                     stage.close();
                 });

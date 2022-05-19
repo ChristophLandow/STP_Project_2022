@@ -36,6 +36,11 @@ public class LobbyGameListController {
     public ListView<Node> listViewGames;
 
     private final ObservableList<Game> games = FXCollections.observableArrayList();
+
+    public ObservableList<Game> getGames() {
+        return games;
+    }
+
     private ObservableList<User> users = FXCollections.observableArrayList();
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -83,7 +88,7 @@ public class LobbyGameListController {
                     } else if (gameEvent.event().endsWith(".deleted")) {
                         games.remove(gameEvent.data());
                     } else {
-                        updateGame(gameEvent.data());
+                        //updateGame(gameEvent.data());
                     }
                 });
 
@@ -93,11 +98,12 @@ public class LobbyGameListController {
 
 
     private void renderGame(Game game) {
+        System.out.println("rendering "+ game._id());
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
-        System.out.println(creator.name());
+        //System.out.println(creator.name());
         gameListElementController.creator.set(creator);
         gameListElementController.game.set(game);
         gameListElementController.setDataToGameListElement();
