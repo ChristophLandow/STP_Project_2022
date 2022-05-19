@@ -4,7 +4,9 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.NewGameLobbyService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +21,8 @@ import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 
 public class GameListDropDownController implements Controller {
@@ -35,13 +39,20 @@ public class GameListDropDownController implements Controller {
 
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
+    private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
+    private final Provider<LobbyService> lobbyServiceProvider;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
 
     @Inject
     public GameListDropDownController(
-            Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
+            Provider<LobbyScreenController> lobbyScreenControllerProvider,
+            Provider<NewGameLobbyService> newGameLobbyServiceProvider,
+            Provider<LobbyGameListController> lobbyGameListControllerProvider,
+            Provider<LobbyService> lobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.newGameLobbyServiceProvider = newGameLobbyServiceProvider;
+        this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
+        this.lobbyServiceProvider = lobbyServiceProvider;
     }
 
     @Override
@@ -85,9 +96,11 @@ public class GameListDropDownController implements Controller {
         stage.show();
     }
 
+    private final CompositeDisposable disposable = new CompositeDisposable();
+
     public void discardGame(MouseEvent mouseEvent) {
-        LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
-        //lobbyScreenController.getGames().remove(game);
-        lobbyScreenController.deleteGame(game.get());
+        LobbyService lobbyService = lobbyServiceProvider.get();
+        LobbyGameListController lobbyGameListController = lobbyGameListControllerProvider.get();
+        lobbyGameListController.deleteGame(game.get());
     }
 }

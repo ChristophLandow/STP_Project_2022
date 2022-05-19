@@ -3,6 +3,7 @@ package de.uniks.pioneers;
 import de.uniks.pioneers.controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 

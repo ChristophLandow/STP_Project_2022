@@ -21,14 +21,14 @@ import javafx.scene.text.Font;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class LobbyUserlistControler extends OnlineUserlistController {
+public class LobbyUserlistController extends OnlineUserlistController {
     public VBox usersVBox;
     private final App app;
     private final Provider<ChatController> chatControllerProvider;
 
     @Inject
-    public LobbyUserlistControler(App app, UserService userService, MessageService messageService, UserlistService userlistService,
-                                  EventListener eventListener, Provider<ChatController> chatControllerProvider){
+    public LobbyUserlistController(App app, UserService userService, MessageService messageService, UserlistService userlistService,
+                                   EventListener eventListener, Provider<ChatController> chatControllerProvider){
         super(userService, messageService, userlistService, eventListener);
         this.app = app;
         this.chatControllerProvider = chatControllerProvider;
