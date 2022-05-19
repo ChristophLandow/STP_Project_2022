@@ -178,8 +178,11 @@ public class NewGameScreenLobbyController implements Controller {
         memberBox.setId(user._id());
         Label memberId = new Label(user.name());
         memberBox.getChildren().add(memberId);
-
         userBox.getChildren().add(memberBox);
+
+        if (member.ready()) {
+            showReadyCheckMark(member.userId());
+        }
     }
 
     /*private void initMessageListener() {
