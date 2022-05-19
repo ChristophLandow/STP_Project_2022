@@ -34,17 +34,17 @@ class AppTest extends ApplicationTest {
         //LoginScreen
         write("TestUser\t");
         write("12345678\t");
-        clickOn("#textRegister");
-        //SignUpScreen
-        verifyThat("#textFieldUserName", TextInputControlMatchers.hasText("TestUser"));
-        verifyThat("#passwordField", TextInputControlMatchers.hasText("12345678"));
-        write("\t\t12345678\t\t\t");
-        type(KeyCode.ENTER);
-        //Dialog
-        verifyThat(".information", Node::isVisible);
-        type(KeyCode.ENTER);
-        //LoginScreen
-        write("\t12345678\t");
+        //clickOn("#textRegister");
+            //SignUpScreen
+        //verifyThat("#textFieldUserName", TextInputControlMatchers.hasText("TestUser"));
+        //verifyThat("#passwordField", TextInputControlMatchers.hasText("12345678"));
+        //write("\t\t12345678\t\t\t");
+        //type(KeyCode.ENTER);
+            //Dialog
+        //verifyThat(".information", Node::isVisible);
+        //type(KeyCode.ENTER);
+            //LoginScreen
+        //write("\t12345678\t");
         verifyThat("#textFieldUserName", TextInputControlMatchers.hasText("TestUser"));
         verifyThat("#passwordField", TextInputControlMatchers.hasText("12345678"));
         type(KeyCode.ENTER);
@@ -62,9 +62,9 @@ class AppTest extends ApplicationTest {
         write("TestGame\t");
         write("12345678\t\t");
         type(KeyCode.ENTER);
-        //NewGameLobbyScreen
-        verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame"));
-        verifyThat("#passwordLabel", LabeledMatchers.hasText("12345678"));
+            //NewGameLobbyScreen
+        //verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame"));
+        //verifyThat("#passwordLabel", LabeledMatchers.hasText("12345678"));
         write("Test\t");
         type(KeyCode.ENTER);
         write("\t\t");
