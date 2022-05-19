@@ -264,7 +264,7 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void setReadyTrue(MouseEvent mouseEvent) {
+    public void setReadyTrue() {
         // set member "ready" true in API
         disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId())
                 .observeOn(FX_SCHEDULER)
@@ -283,7 +283,7 @@ public class NewGameScreenLobbyController implements Controller {
         currentMemberBox.getChildren().add(checkMarkImage);
     }
 
-    public void startGame(MouseEvent mouseEvent) {
+    public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "START GAME!");
@@ -309,7 +309,7 @@ public class NewGameScreenLobbyController implements Controller {
         System.out.println("All users ready!");
         return true;
     }
-    public void leaveLobby(MouseEvent mouseEvent) {
+    public void leaveLobby() {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
