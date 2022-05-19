@@ -209,12 +209,16 @@ public class TestModule {
         return new GroupApiService() {
             @Override
             public Observable<GroupDto> newGroup(CreateGroupDto dto) {
-                return null;
+
+                return Observable.just(new GroupDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",new ArrayList<>(),"TestGroup"));
             }
 
             @Override
             public Observable<List<GroupDto>> getGroupsWithUsers(String users) {
-                return null;
+
+                ArrayList groups = new ArrayList<>();
+                groups.add(new GroupDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",new ArrayList<>(),"TestGroup"));
+                return Observable.just(groups);
             }
         };
     }
@@ -225,17 +229,23 @@ public class TestModule {
         return new GameMemberApiService() {
             @Override
             public Observable<List<Member>> getAll(String gameId) {
-                return null;
+
+                ArrayList users = new ArrayList<>();
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false));
+                return Observable.just(users);
             }
 
             @Override
             public Observable<Member> createMember(String gameId, CreateMemberDto dto) {
-                return null;
+
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
             }
 
             @Override
             public Observable<Member> deleteMember(String gameId, String userId) {
-                return null;
+
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
             }
         };
     }

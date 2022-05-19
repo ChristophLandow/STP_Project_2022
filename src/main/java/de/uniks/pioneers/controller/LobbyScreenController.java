@@ -199,6 +199,7 @@ public class LobbyScreenController implements Controller {
     }
 
     private void initGamesListTools() {
+
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {

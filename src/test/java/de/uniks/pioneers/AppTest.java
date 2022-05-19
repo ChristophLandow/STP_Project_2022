@@ -48,6 +48,7 @@ class AppTest extends ApplicationTest {
         write("\t");
         type(KeyCode.ENTER);
         //LobbyScreen
+        write("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
         type(KeyCode.ENTER);
         //EditProfileScreen
         FxAssert.verifyThat("#usernameLabel", TextMatchers.hasText("TestUser"));
