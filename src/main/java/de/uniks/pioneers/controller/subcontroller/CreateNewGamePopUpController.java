@@ -79,8 +79,6 @@ public class CreateNewGamePopUpController implements Controller {
 
     @Override
     public void init() {
-        createGameButton.setOnMouseClicked(this::createGame);
-        cancelButton.setOnMouseClicked(this::closePoPUp);
 
         IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
         IntegerBinding passwordLength = Bindings.length(passwordTextField.textProperty());
@@ -102,7 +100,7 @@ public class CreateNewGamePopUpController implements Controller {
 
     }
 
-    private void createGame(MouseEvent mouseEvent) {
+    public void createGame() {
         String name = gameNameTextField.getText();
         String password = passwordTextField.getText();
         lobbyServiceProvider.get().createGame(name,password)
@@ -115,7 +113,7 @@ public class CreateNewGamePopUpController implements Controller {
                 });
     }
 
-    private void closePoPUp(MouseEvent mouseEvent) {
+    public void closePopUp() {
         Stage stage = (Stage) popUpBox.getScene().getWindow();
         stage.close();
     }
