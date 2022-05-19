@@ -120,6 +120,9 @@ public class NewGameScreenLobbyController implements Controller {
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(this.getPassword());
 
+        // add mouse event for rules button
+        this.RulesButton.setOnMouseClicked(this::openRules);
+
         // init event listeners
         initMemberListener();
         //initMessageListener();
