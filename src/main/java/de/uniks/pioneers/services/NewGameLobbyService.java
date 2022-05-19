@@ -3,18 +3,22 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.dto.CreateMemberDto;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
+import de.uniks.pioneers.dto.UpdateMemberDto;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.rest.GameMemberApiService;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class NewGameLobbyService {
 
     private final GameMemberApiService gameMemberApiService;
     private final MessageApiService messageApiService;
+    private String currentMemberId;
 
     @Inject
     public NewGameLobbyService(GameMemberApiService gameMemberApiService, MessageApiService messageApiService) {
@@ -40,5 +44,17 @@ public class NewGameLobbyService {
 
     public Observable<List<MessageDto>> getMessages(String id){
         return messageApiService.getChatMessages("games", id);
+    }
+
+    public Observable<Member> setReady(String groupId, String userId) {
+        return gameMemberApiService.setReady(groupId, userId, new UpdateMemberDto(true));
+    }
+
+    public void setCurrentMemberId(String id) {
+        currentMemberId = id;
+    }
+
+    public String getCurrentMemberId() {
+        return currentMemberId;
     }
 }
