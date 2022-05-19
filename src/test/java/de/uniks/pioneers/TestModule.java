@@ -10,6 +10,7 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.TokenStorage;
+import de.uniks.pioneers.ws.ClientEndpoint;
 import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
@@ -18,41 +19,21 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import javax.inject.Singleton;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-import static de.uniks.pioneers.Constants.API_V1_PREFIX;
-import static de.uniks.pioneers.Constants.BASE_URL;
+import static de.uniks.pioneers.Constants.*;
 
 @Module
 public class TestModule {
 
     @Provides
-    static EventListener eventListener(){
-
-        return new EventListener(null,null){
-
-            @Override
-            public <T> Observable<Event<T>> listen(String pattern, Class<T> type) {
-
-                if(pattern == "users.*.*" & type == User.class){
-
-                }
-                if(pattern == "\"games.*.*\"" & type == Game.class){
-
-                }
-
-                return Observable.empty();
-            }
-
-            private void send(Object message){}
-        };
-    }
-
-    @Provides
+    @Singleton
     static AuthApiService authApiService(){
 
         return new AuthApiService() {
@@ -107,6 +88,7 @@ public class TestModule {
         }).build();
     }
     @Provides
+    @Singleton
     Preferences prefs(){
 
         return Preferences.userNodeForPackage(Main.class);
@@ -122,6 +104,7 @@ public class TestModule {
                 .build();
     }
     @Provides
+    @Singleton
     static UserApiService userApiService(){
         return new UserApiService() {
             @Override
@@ -149,7 +132,7 @@ public class TestModule {
             @Override
             public Observable<List<User>> findAll() {
 
-                ArrayList users = new ArrayList<>();
+                ArrayList<User> users = new ArrayList<>();
                 users.add(new User("000","TestUserA","online",null));
                 users.add(new User("000","TestUserB","online",null));
                 users.add(new User("000","TestUserC","online",null));
@@ -158,13 +141,14 @@ public class TestModule {
         };
     }
     @Provides
+    @Singleton
     static GameApiService gameApiService() {
 
         return new GameApiService() {
             @Override
             public Observable<List<Game>> getGames() {
 
-                ArrayList games = new ArrayList<>();
+                ArrayList<Game> games = new ArrayList<>();
                 games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","TestUserA",1));
                 games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","TestUserB",1));
                 games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","TestUserC",1));
@@ -202,9 +186,11 @@ public class TestModule {
     }
 
     @Provides
+    @Singleton
     static MessageApiService messageApiService(Retrofit retrofit) { return retrofit.create(MessageApiService.class); }
 
     @Provides
+    @Singleton
     static GroupApiService groupApiService() {
         return new GroupApiService() {
             @Override
@@ -216,7 +202,7 @@ public class TestModule {
             @Override
             public Observable<List<GroupDto>> getGroupsWithUsers(String users) {
 
-                ArrayList groups = new ArrayList<>();
+                ArrayList<GroupDto> groups = new ArrayList<>();
                 groups.add(new GroupDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",new ArrayList<>(),"TestGroup"));
                 return Observable.just(groups);
             }
@@ -224,13 +210,14 @@ public class TestModule {
     }
 
     @Provides
+    @Singleton
     static GameMemberApiService gameMemberApiService() {
 
         return new GameMemberApiService() {
             @Override
             public Observable<List<Member>> getAll(String gameId) {
 
-                ArrayList users = new ArrayList<>();
+                ArrayList<Member> users = new ArrayList<>();
                 users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
                 users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false));
                 return Observable.just(users);
@@ -257,6 +244,7 @@ public class TestModule {
     }
 
     @Provides
+    @Singleton
     static PrefService prefService() {
 
         return new PrefService(null, null,null){

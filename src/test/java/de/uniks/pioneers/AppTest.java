@@ -5,11 +5,9 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 
-import static org.mockito.Mockito.verify;
 
 class AppTest extends ApplicationTest {
 
@@ -48,13 +46,18 @@ class AppTest extends ApplicationTest {
         write("\t");
         type(KeyCode.ENTER);
         //LobbyScreen
-        write("qqqqqqqqqqqqqqqqqqqq");
         type(KeyCode.ENTER);
         //EditProfileScreen
         FxAssert.verifyThat("#usernameLabel", TextMatchers.hasText("TestUser"));
         write("\t\t\t\t\t");
         type(KeyCode.ENTER);
-        write("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+        //LobbyScreen
+        write("\t\t");
+        type(KeyCode.ENTER);
+        write("TestGame\t");
+        write("12345678\t\t");
+        type(KeyCode.ENTER);
+        write("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
     }
 
