@@ -69,7 +69,6 @@ public class EventListener {
         };
         endpoint.addMessageHandler(handler);
         emitter.setCancellable(()-> removeEventHandler(pattern,handler));
-
     });
     }
 

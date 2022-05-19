@@ -53,7 +53,7 @@ public class LobbyGameListController {
     }
 
     public void init(){
-        // after leaving a game
+        // after leaving a game this methods get called again, thats why the item list gets cleared
         listViewGames.getItems().clear();
 
         games.addListener((ListChangeListener<? super Game>) c -> {
@@ -79,7 +79,6 @@ public class LobbyGameListController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".created")) {
-                        System.out.println(gameEvent.data()._id());
                         games.add(gameEvent.data());
                     } else if (gameEvent.event().endsWith(".deleted")) {
                         games.remove(gameEvent.data());
@@ -87,6 +86,7 @@ public class LobbyGameListController {
                         updateGame(gameEvent.data());
                     }
                 });
+
 
         this.users=userlistService.getUsers();
     }
@@ -97,6 +97,7 @@ public class LobbyGameListController {
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
+        System.out.println(creator.name());
         gameListElementController.creator.set(creator);
         gameListElementController.game.set(game);
         gameListElementController.setDataToGameListElement();
@@ -106,8 +107,7 @@ public class LobbyGameListController {
 
     private boolean isGameValid(Game game) {
         // a game is valid as long his creator is online, we can update this if needed
-        //return users.stream().anyMatch(user -> user._id().equals(game.owner()));
-        return true;
+        return users.stream().anyMatch(user -> user._id().equals(game.owner()));
     }
 
     public void deleteGame(Game data) {
@@ -138,6 +138,10 @@ public class LobbyGameListController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public void stopListeners(){
+        // someone has to find out how to stop the listeners, i tried to solve it in few minutes, takes more time
     }
 
 }
