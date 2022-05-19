@@ -43,6 +43,8 @@ public class UserService {
     public Observable<List<User>> findAll() {
         return this.userApiService.findAll();
     }
+
+
 }
 
 

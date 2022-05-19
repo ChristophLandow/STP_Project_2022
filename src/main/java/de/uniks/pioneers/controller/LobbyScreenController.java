@@ -4,21 +4,16 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.GameListElementController;
-import de.uniks.pioneers.controller.subcontroller.LobbyUserlistControler;
+import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
+import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,18 +22,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
@@ -65,10 +56,9 @@ public class LobbyScreenController implements Controller {
 
     private App app;
 
-    private final Provider<ChatController> chatControllerProvider;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
-    private final Provider<LobbyUserlistControler> userlistControlerProvider;
+    private final Provider<LobbyUserlistController> userlistControlerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
 
@@ -77,29 +67,23 @@ public class LobbyScreenController implements Controller {
     private final LobbyService lobbyService;
     private final UserService userService;
     private final NewGameLobbyService newGameLobbyService;
+    private final Provider<ChatController> chatControllerProvider;
     private final Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
     private final Provider<GameListElementController> gameListElementControllerProvider;
+    private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
     private final MessageService messageService;
-
-    // List with games from Server
-    private final ObservableList<User> users = FXCollections.observableArrayList();
-    private ObservableList<Game> games = FXCollections.observableArrayList();
-
-    public SimpleObjectProperty<ObservableList<Game>> gamesProperty = new SimpleObjectProperty<>();
-
-    private List<GameListElementController> gameListElementControllers = new ArrayList<>();
-
 
     @Inject
     public LobbyScreenController(App app, EventListener eventListener, LobbyService lobbyService, UserService userService,
                                  Provider<ChatController> chatControllerProvider,
                                  Provider<LoginScreenController> loginScreenControllerProvider,
                                  Provider<EditProfileController> editProfileControllerProvider,
-                                 Provider<LobbyUserlistControler> userlistControlerProvider,
+                                 Provider<LobbyUserlistController> userlistControlerProvider,
                                  Provider<RulesScreenController> rulesScreenControllerProvider,
                                  Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider,
                                  Provider<GameListElementController> gameListElementControllerProvider,
                                  Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
+                                 Provider<LobbyGameListController> lobbyGameListControllerProvider,
                                  MessageService messageService,
                                  NewGameLobbyService newGameLobbyService,
                                  PrefService prefService
@@ -108,10 +92,11 @@ public class LobbyScreenController implements Controller {
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
         this.userService = userService;
+        this.chatControllerProvider = chatControllerProvider;
         this.createNewGamePopUpControllerProvider = createNewGamePopUpControllerProvider;
         this.gameListElementControllerProvider = gameListElementControllerProvider;
+        this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
         this.messageService = messageService;
-        this.chatControllerProvider = chatControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
         this.editProfileControllerProvider = editProfileControllerProvider;
@@ -143,10 +128,14 @@ public class LobbyScreenController implements Controller {
             this.AvatarImageView.setImage(null);
         }
 
-        LobbyUserlistControler userlistController = userlistControlerProvider.get();
+        LobbyUserlistController userlistController = userlistControlerProvider.get();
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
         userlistController.init();
+
+        LobbyGameListController lobbyGamesListController = lobbyGameListControllerProvider.get();
+        lobbyGamesListController.listViewGames = this.listViewGames;
+        lobbyGamesListController.init();
 
         return parent;
     }
@@ -166,184 +155,18 @@ public class LobbyScreenController implements Controller {
         // add mouse event to buttons
         this.RulesButton.setOnMouseClicked(this::openRules);
         this.EditProfileButton.setOnAction(this::editProfile);
-        //init listeners
-
-        initUserListTools();
-        initGamesListTools();
     }
 
     @Override
     public void stop() {
     }
 
-    private void initUserListTools() {
-        eventListener.listen("users.*.*", User.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(userEvent -> {
-                    final User user = userEvent.data();
-                    if (userEvent.event().endsWith(".created") && user.status().equals("online")) {
-                        users.add(user);
-                    } else if (userEvent.event().endsWith(".deleted")) {
-                        users.removeIf(u -> u._id().equals(user._id()));
-                    } else if (userEvent.event().endsWith(".updated")) {
-                        if (user.status().equals("online")) {
-                            users.removeIf(u -> u._id().equals(user._id()));
-                            users.add(user);
-                        } else {
-                            users.removeIf(u -> u._id().equals(user._id()));
-                        }
-                    }
-                });
-
-        userService.findAll().observeOn(FX_SCHEDULER)
-                .subscribe(this.users::setAll);
-    }
-
-    private void initGamesListTools() {
-        games.addListener((ListChangeListener<? super Game>) c -> {
-            c.next();
-            if (c.wasAdded()) {
-                c.getAddedSubList().stream().filter(this::isGameValid)
-                                            .forEach(this::renderGame);
-            } else if (c.wasRemoved()) {
-                // fomr some reason this does not work anymore
-                c.getRemoved().forEach(this::deleteGame);
-            } else if (c.wasUpdated()) {
-                c.getList().forEach(this::updateGame);
-            }
-        });
-
-        lobbyService.getGames().observeOn(FX_SCHEDULER)
-                .subscribe(this.games::setAll);
-        gamesProperty.set(games);
-
-        eventListener.listen("games.*.*", Game.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(gameEvent -> {
-                    if (gameEvent.event().endsWith(".created")) {
-                        games.add(gameEvent.data());
-                    } else if (gameEvent.event().endsWith(".deleted")) {
-                        games.remove(gameEvent.data());
-                    } else {
-                        updateGame(gameEvent.data());
-                    }
-                });
-    }
-
-    public ObservableList<Game> getGames() {
-        return games;
-    }
-
-    private void renderGame(Game game) {
-        //code not final
-        GameListElementController gameListElementController = gameListElementControllerProvider.get();
-        Parent node = gameListElementController.render();
-        node.setId(game._id());
-        User creator = returnUserById(game.owner());
-        gameListElementController.creator.set(creator);
-        gameListElementController.game.set(game);
-        gameListElementController.setDataToGameListElement();
-        gameListElementControllers.add(gameListElementController);
-        listViewGames.getItems().add(0, node);
-    }
-
-    private boolean isGameValid(Game game) {
-        // a game is valid as long his creator is online, we can update this if needed
-        return users.stream().anyMatch(user -> user._id().equals(game.owner()));
-        //return true;
-    }
-
-    public void deleteGame(Game data) {
-        //find node belonging to game and then remove it from ListView
-        try {
-            List<Node> removales = (List<Node>) listViewGames.getItems().stream().toList();
-            removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
-            listViewGames.getItems().removeAll(removales);
-        } catch (Exception e) {
-            return;
-        }
-    }
-
-    private void updateGame(Game game) {
-        //rerender
-        try {
-            GameListElementController gameListElementController = gameListElementControllers.stream()
-                    .filter(conroller -> conroller.game.get()._id().equals(game._id())).findAny().get();
-            gameListElementController.game.set(game);
-        } catch (Exception e) {
-            return;
-        }
-    }
-
-    public User returnUserById(String id) {
-        try {
-            return users.stream().filter(user -> user._id().equals(id)).findAny().get();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public void renderUser(User user) {
-        GridPane gridPane = new GridPane();
-
-        Label username = new Label(user.name());
-        username.setOnMouseClicked(this::openChat);
-
-        ImageView imgView;
-        try {
-            imgView = new ImageView(new Image(user.avatar()));
-        } catch (NullPointerException e) {
-            imgView = new ImageView(new Image(App.class.getResource("user-avatar.svg").toString()));
-        }
-
-        imgView.setOnMouseClicked(this::openChat);
-        imgView.setFitHeight(40);
-        imgView.setFitWidth(40);
-
-        Label userid = new Label(user._id());
-        userid.setVisible(false);
-        userid.setFont(new Font(0));
-
-        gridPane.addRow(0, username, imgView, userid);
-
-        gridPane.getColumnConstraints().addAll(new ColumnConstraints(200), new ColumnConstraints(45));
-
-        this.UsersVBox.getChildren().add(gridPane);
-    }
 
     public void removeUser(User user) {
         UsersVBox.getChildren().removeIf(n -> {
             GridPane gpane = (GridPane) n;
             return ((Label) gpane.getChildren().get(2)).getText().equals(user._id());
         });
-    }
-
-    public void updateUser(User user) {
-        for (Node n : UsersVBox.getChildren()) {
-            GridPane gpane = (GridPane) n;
-            Label chatWithUserid = ((Label) gpane.getChildren().get(2));
-
-            if (chatWithUserid.getText().equals(user._id())) {
-                ((Label) gpane.getChildren().get(0)).setText(user.name());
-                try {
-                    ((ImageView) gpane.getChildren().get(1)).setImage(new Image(user.avatar()));
-                } catch (NullPointerException e) {
-                    ((ImageView) gpane.getChildren().get(1)).setImage(new Image(App.class.getResource("user-avatar.svg").toString()));
-                }
-            }
-        }
-    }
-
-    public void openChat(MouseEvent event) {
-        GridPane newChatUserParent = (GridPane) ((Node) event.getSource()).getParent();
-        Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
-        ImageView chatWithAvatar = (ImageView) newChatUserParent.getChildren().get(1);
-        Label chatWithUserid = (Label) newChatUserParent.getChildren().get(2);
-
-        this.messageService.getchatUserList().removeIf(u -> u.name().equals(chatWithUsername.getText()));
-        this.messageService.addUserToChatUserList(
-                new User(chatWithUserid.getText(), chatWithUsername.getText(), "", chatWithAvatar.getImage().getUrl()));
-        app.show(chatControllerProvider.get());
     }
 
     public void editProfile(ActionEvent actionEvent) {
