@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.Label?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.EditProfileController">
    <children>
       <TextField fx:id="newUsernameInput" layoutX="36.0" layoutY="70.0" promptText="new username" />
@@ -18,7 +17,7 @@
       <Spinner fx:id="chooseAvatarSpinner" layoutX="365.0" layoutY="226.0" prefHeight="25.0" prefWidth="62.0" />
       <Text layoutX="36.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="current username:" />
       <Text layoutX="36.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to edit your password?" />
-      <Button fx:id="saveLeaveButton" layoutX="257.0" layoutY="334.0" mnemonicParsing="false" onAction="#edit" text="save &amp; leave" />
+      <Button fx:id="saveLeaveButton" layoutX="257.0" layoutY="334.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" text="save &amp; leave" />
       <ImageView fx:id="avatarImage" fitHeight="100.0" fitWidth="100.0" layoutX="455.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="uploadAvatarButton" layoutX="335.0" layoutY="269.0" mnemonicParsing="false" onAction="#uploadAvatar" text="upload avatar" />
       <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="user_394" />

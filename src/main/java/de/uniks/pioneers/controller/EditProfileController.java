@@ -3,9 +3,12 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.EditAvatarSpinnerController;
 import de.uniks.pioneers.model.LoginResult;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -50,7 +53,6 @@ public class EditProfileController implements Controller {
     private final UserService userService;
     private final LoginService loginService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    private final CompositeDisposable disposable = new CompositeDisposable();
     private String avatarStr;
     private String customAvatar = "";
 
@@ -114,7 +116,7 @@ public class EditProfileController implements Controller {
     public void stop() {
     }
 
-    public void edit(ActionEvent event) throws URISyntaxException, IOException {
+    public void onSaveButtonPressed(ActionEvent event) throws URISyntaxException, IOException {
         // set defaults
         String newUsername = null;
         String newAvatar = null;
@@ -156,35 +158,44 @@ public class EditProfileController implements Controller {
 
         if (changePassword && oldPasswordCorrect[0]) {
             // send patch request with changing password
-            disposable.add(this.userService.editProfile(newUsername, newAvatar, newPasswordInput.getText(), null)
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(e -> {
-                        this.usernameStatusText.setText("Username already taken. Choose another one!");
-                        e.printStackTrace();
-                    })
-                    .doOnComplete(this::toLobby)
-                    .subscribe());
-
+            updateProfile(newUsername, newAvatar, newPasswordInput.getText());
         } else if (changePassword) {
             // dont send patch request
             oldPasswordStatusText.setText("Incorrect password");
         } else {
             // send patch request without new password
-            disposable.add(this.userService.editProfile(newUsername, newAvatar, null, null)
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(e -> {
-                        this.usernameStatusText.setText("Username already taken. Choose another one!");
-                        e.printStackTrace();
-                    })
-                    .subscribe(result -> {
-                        app.show(lobbyScreenControllerProvider.get());
-                    }));
+            updateProfile(newUsername, newAvatar, null);
         }
 
     }
 
+    private void updateProfile(String username, String avatar, String password) {
+        // send patch request with changing password
+        this.userService.editProfile(username, avatar, password, null)
+                .observeOn(FX_SCHEDULER)
+                .doOnError(e -> {
+                    this.usernameStatusText.setText("Username already taken. Choose another one!");
+                    e.printStackTrace();
+                })
+                .doOnComplete(this::toLobby)
+                .subscribe(new Observer<>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+                    @Override
+                    public void onNext(@NonNull User user) {
+                    }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                    }
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
     public void toLobby() {
-        app.show(lobbyScreenControllerProvider.get());
+        this.app.show(lobbyScreenControllerProvider.get());
     }
 
     private void resetAvatar() {

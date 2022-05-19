@@ -17,12 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.base.NodeMatchers;
-import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextMatchers;
 
-import javax.inject.Provider;
-
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +36,7 @@ class EditProfileControllerTest extends ApplicationTest {
     EditProfileController editProfileController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         when(userService.getCurrentUser()).thenReturn(new User("1", "Bob", "online", null));
         app.start(stage);
         app.show(editProfileController);
