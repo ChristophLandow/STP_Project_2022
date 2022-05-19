@@ -276,7 +276,10 @@ public class NewGameScreenLobbyController implements Controller {
         checkMarkImage.setFitHeight(20);
 
         HBox currentMemberBox = (HBox) this.view.lookup("#" + memberId);
-        currentMemberBox.getChildren().add(checkMarkImage);
+        // only set checkmark if member was not ready before
+        if (currentMemberBox.getChildren().size() < 2) {
+            currentMemberBox.getChildren().add(checkMarkImage);
+        }
     }
 
     public void startGame(MouseEvent mouseEvent) {
