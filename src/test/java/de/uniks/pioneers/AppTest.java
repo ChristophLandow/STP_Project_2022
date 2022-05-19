@@ -1,10 +1,13 @@
 package de.uniks.pioneers;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.base.NodeMatchers;
+import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 
@@ -23,9 +26,6 @@ class AppTest extends ApplicationTest {
 
     @Test
     public void test() {
-
-
-        //Test module still provisionally uses Server functionality! Implementation of tests may require adjustment to respective classes in TestModule class!
 
         //LoginScreen
         write("TestUser\t");
@@ -57,7 +57,15 @@ class AppTest extends ApplicationTest {
         write("TestGame\t");
         write("12345678\t\t");
         type(KeyCode.ENTER);
-        write("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        //NewGameLobbyScreen
+        FxAssert.verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame"));
+        FxAssert.verifyThat("#passwordLabel", LabeledMatchers.hasText("12345678"));
+        write("Test\t");
+        type(KeyCode.ENTER);
+        write("\t\t");
+        type(KeyCode.ENTER);
+        write("\t");
+        type(KeyCode.ENTER);
 
     }
 

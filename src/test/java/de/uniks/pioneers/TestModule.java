@@ -40,13 +40,13 @@ public class TestModule {
             @Override
             public Observable<LoginResult> login(LoginDto dto) {
 
-                return Observable.just(new LoginResult("000", "TestUser", "online", null, "accesToken", "refreshToken"));
+                return Observable.just(new LoginResult("000", dto.name(), "online", null, "accessToken", "refreshToken"));
             }
 
             @Override
             public Observable<LoginResult> refresh(RefreshDto dto) {
 
-                return Observable.just(new LoginResult("000", "TestUser", "online", null, "accesToken", "refreshToken"));
+                return Observable.just(new LoginResult("000", "TestUser", "online", null, "accessToken", "refreshToken"));
             }
 
             @Override
@@ -109,19 +109,19 @@ public class TestModule {
         return new UserApiService() {
             @Override
             public Observable<User> create(CreateUserDto dto) {
-                return Observable.just(new User("000","TestUser","online",null));
+                return Observable.just(new User("000",dto.name(),"online",dto.avatar()));
             }
 
             @Override
             public Observable<User> getUser(String id) {
 
-                return Observable.just(new User("000","TestUser","online",null));
+                return Observable.just(new User(id,"TestUser_" + id,"online",null));
             }
 
             @Override
             public Observable<User> update(String id, UpdateUserDto dto) {
 
-                return Observable.just(new User("000","TestUser","online",null));
+                return Observable.just(new User(id,"TestUser",dto.status(),dto.avatar()));
             }
 
             @Override
@@ -164,7 +164,7 @@ public class TestModule {
             @Override
             public Observable<Game> create(CreateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"TestUser",1));
 
             }
 
@@ -187,7 +187,32 @@ public class TestModule {
 
     @Provides
     @Singleton
-    static MessageApiService messageApiService(Retrofit retrofit) { return retrofit.create(MessageApiService.class); }
+    static MessageApiService messageApiService() {
+
+        return new MessageApiService() {
+            @Override
+            public Observable<MessageDto> sendMessage(String namespace, String parent, CreateMessageDto dto) {
+
+                return Observable.just(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","A",dto.body()));
+            }
+
+            @Override
+            public Observable<List<MessageDto>> getChatMessages(String namespace, String parent) {
+
+                ArrayList<MessageDto> messages = new ArrayList<>();
+                messages.add(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","A","Hallo"));
+                messages.add(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","B","Hallo2"));
+                messages.add(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","C","Hallo3"));
+                return Observable.just(messages);
+            }
+
+            @Override
+            public Observable<MessageDto> updateMessage(String namespace, String parent, String id, UpdateMessageDto dto) {
+
+                return Observable.just(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","A",dto.body()));
+            }
+        };
+    }
 
     @Provides
     @Singleton
