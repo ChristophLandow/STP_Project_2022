@@ -48,11 +48,11 @@ class AppTest extends ApplicationTest {
         write("\t");
         type(KeyCode.ENTER);
         //LobbyScreen
-        write("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+        write("qqqqqqqqqqqqqqqqqqqq");
         type(KeyCode.ENTER);
         //EditProfileScreen
         FxAssert.verifyThat("#usernameLabel", TextMatchers.hasText("TestUser"));
-        write("\t");
+        write("\t\t\t\t\t");
         type(KeyCode.ENTER);
         write("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
 

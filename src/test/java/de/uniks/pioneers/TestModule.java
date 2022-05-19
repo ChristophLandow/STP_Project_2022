@@ -239,11 +239,17 @@ public class TestModule {
             @Override
             public Observable<Member> createMember(String gameId, CreateMemberDto dto) {
 
-                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false));
             }
 
             @Override
             public Observable<Member> deleteMember(String gameId, String userId) {
+
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false));
+            }
+
+            @Override
+            public Observable<Member> setReady(String gameId, String userId, UpdateMemberDto dto) {
 
                 return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
             }
