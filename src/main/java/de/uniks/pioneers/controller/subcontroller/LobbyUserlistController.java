@@ -42,6 +42,7 @@ public class LobbyUserlistController extends OnlineUserlistController {
 
     @Override
     public void renderUser(User user){
+        // For each user create a GridPane with username, hidden userid and avatar
         GridPane gridPane = new GridPane();
 
         Label username = new Label(user.name());
@@ -96,6 +97,7 @@ public class LobbyUserlistController extends OnlineUserlistController {
 
     @Override
     public void openChat(MouseEvent event){
+        // Open chat of user who was clicked
         GridPane newChatUserParent = (GridPane) ((Node) event.getSource()).getParent();
         Label chatWithUsername = (Label) newChatUserParent.getChildren().get(0);
 
