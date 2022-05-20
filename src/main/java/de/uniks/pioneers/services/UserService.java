@@ -28,7 +28,6 @@ public class UserService {
         return userApiService.update(this.currentUser._id(), new UpdateUserDto(name, avatar, password, status))
                 .doOnNext(this::setCurrentUser);
     }
-
     public User getCurrentUser() {
         return currentUser;
     }
