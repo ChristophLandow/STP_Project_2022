@@ -201,7 +201,6 @@ public class SignUpScreenController implements Controller{
     }
     private void registrationComplete(){
 
-
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Registration Successful!");
         alert.setHeaderText(null);

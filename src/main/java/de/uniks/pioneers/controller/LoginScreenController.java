@@ -47,9 +47,9 @@ public class LoginScreenController implements Controller {
     @FXML
     public CheckBox checkRememberMe;
     @FXML
-    public Text textRegister;
+    public Hyperlink textRegister;
     @FXML
-    public Text textRules;
+    public Hyperlink textRules;
 
     @Inject
     public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService) {
@@ -82,13 +82,6 @@ public class LoginScreenController implements Controller {
             userNameStatusText.textProperty().bind(Bindings.when(userNameLength.greaterThan(0)).then("").otherwise("Please enter a valid user name"));
             buttonLogin.disableProperty().bind(invalid);
 
-            this.textRegister.setOnMouseEntered(this::markRegister);
-            this.textRegister.setOnMouseExited(this::unmarkRegister);
-            this.textRegister.setOnMouseClicked(this::toSignUp);
-            this.textRules.setOnMouseEntered(this::markRules);
-            this.textRules.setOnMouseExited(this::unmarkRules);
-            this.textRules.setOnMouseClicked(this::toRules);
-
             return parent;
 
         } catch (Exception e) {
@@ -96,14 +89,6 @@ public class LoginScreenController implements Controller {
             return null;
         }
     }
-
-    private void markRegister(MouseEvent mouseEvent) {
-
-        this.textRegister.setFill(Color.rgb(0, 0, 255));
-    }
-    private void unmarkRegister(MouseEvent mouseEvent) {this.textRegister.setFill(Color.rgb(0, 0, 0));}
-    private void markRules(MouseEvent mouseEvent) {this.textRules.setFill(Color.rgb(0, 0, 255));}
-    private void unmarkRules(MouseEvent mouseEvent) {this.textRules.setFill(Color.rgb(0, 0, 0));}
     private void resetStatus(MouseEvent mouseEvent) {this.passwordStatusText.setText("");}
 
     @Override
@@ -154,7 +139,7 @@ public class LoginScreenController implements Controller {
         toLobby();
 
     }
-    public void toSignUp(MouseEvent mouseEvent) {
+    public void toSignUp() {
 
         SignUpScreenController signUpScreenController = this.signUpScreenControllerProvider.get();
         signUpScreenController.userName.set(textFieldUserName.getText());
@@ -163,7 +148,7 @@ public class LoginScreenController implements Controller {
         this.app.show(signUpScreenController);
     }
 
-    public void toRules(MouseEvent mouseEvent) {
+    public void toRules() {
 
         RulesScreenController controller = rulesScreenControllerProvider.get();
         controller.init();
