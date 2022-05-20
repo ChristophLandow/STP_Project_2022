@@ -48,7 +48,6 @@ public class JoinGamePopUpController{
                 .observeOn(FX_SCHEDULER)
                 .subscribe(res -> {
                     lobbyScreenController.showNewGameLobby(game, password);
-                    System.out.println(res.toString());
                     closePopUp();
                 }, throwable -> {
                     this.wrongPasswordLabel.visibleProperty().set(true);

@@ -64,7 +64,6 @@ public class LobbyGameListController {
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getAddedSubList().forEach(game -> System.out.println("game added +"+game.name()));
                 c.getAddedSubList().stream().filter(this::isGameValid)
                                             .forEach(this::renderGame);
             } else if (c.wasRemoved()) {
@@ -98,12 +97,10 @@ public class LobbyGameListController {
 
 
     private void renderGame(Game game) {
-        System.out.println("rendering "+ game._id());
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
-        //System.out.println(creator.name());
         gameListElementController.creator.set(creator);
         gameListElementController.game.set(game);
         gameListElementController.setDataToGameListElement();
@@ -144,10 +141,6 @@ public class LobbyGameListController {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public void stopListeners(){
-        // someone has to find out how to stop the listeners, i tried to solve it in few minutes, takes more time
     }
 
 }

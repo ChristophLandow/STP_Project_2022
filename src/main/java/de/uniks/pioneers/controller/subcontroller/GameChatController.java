@@ -67,7 +67,6 @@ public class GameChatController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(messageEvent -> {
                     final MessageDto message = messageEvent.data();
-                    System.out.println(message);
                     if (messageEvent.event().endsWith(".created") && !messageAlreadyRendered(message)){
                         messages.add(message);
                     }
@@ -110,10 +109,7 @@ public class GameChatController {
             disposable.add(newGameLobbyService.sendMessage(game._id(), new CreateMessageDto(message))
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
-                    .subscribe(result -> {
-                        System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body());
-                        this.messageText.clear();
-                    }));
+                    .subscribe(result -> this.messageText.clear()));
         }
     }
 }
