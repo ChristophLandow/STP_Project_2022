@@ -13,7 +13,6 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -79,6 +78,8 @@ public class NewGameScreenLobbyController implements Controller {
     //private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
     private String password;
 
+    private GameChatController gameChatController;
+
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                         Provider<GameChatController> gameChatControllerProvider,
@@ -105,21 +106,13 @@ public class NewGameScreenLobbyController implements Controller {
         }
         app.show(this);
         // post new member to game
-        /*
-        newGameLobbyService.postMember(game._id(), true, this.password)
+        disposable.add(newGameLobbyService.getAll(game._id())
                 .observeOn(FX_SCHEDULER)
-                .doOnError(e -> System.out.println(" why this doenst work ? "))
-                .subscribe(member -> members.add(member));
-         */
-        // rest
-        newGameLobbyService.getAll(game._id()).observeOn(FX_SCHEDULER)
-           .subscribe(this.members::setAll);
+                .subscribe(this.members::setAll));
         }
 
     @Override
     public void init() {
-        LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
-
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(this.getPassword());
@@ -129,23 +122,18 @@ public class NewGameScreenLobbyController implements Controller {
 
         // init event listeners
         initMemberListener();
-        //initMessageListener();
 
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();
             if (c.wasAdded()) {
-                /*c.getAddedSubList().stream().forEach(member -> {
-                    System.out.println(member);
-                    renderUser(member);
-                });*/
                 c.getAddedSubList().forEach(this::renderUser);
             } else if (c.wasRemoved()) {
                 c.getRemoved().forEach(this::deleteUser);
             }
         });
 
-        GameChatController gameChatController = gameChatControllerProvider.get();
+        gameChatController = gameChatControllerProvider.get();
         gameChatController.chatScrollPane = this.chatScrollPane;
         gameChatController.messageBox = this.messageBox;
         gameChatController.messageText = this.messageText;
@@ -174,9 +162,6 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void renderUser(Member member) {
-        //here i gona create a hbox with an image view
-        //User userToRender = lobbyScreenControllerProvider.get().returnUserById(member.UserId());
-        //Label userName = new Label(userToRender.name());
         User user = userService.getUserById(member.userId()).blockingFirst();
         users.add(user);
 
@@ -191,68 +176,27 @@ public class NewGameScreenLobbyController implements Controller {
             showReadyCheckMark(member.userId());
         }
     }
-
-    /*private void initMessageListener() {
-        String patternToObserveChatMessages = String.format("games.%s.messages.*.*", game.get()._id());
-        eventListener.listen(patternToObserveChatMessages, MessageDto.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(messageEvent -> {
-                    if (messageEvent.event().endsWith(".created")) {
-                        messages.add(messageEvent.data());
-                    } else if (messageEvent.event().endsWith(".deleted")) {
-                        messages.remove(messageEvent.data());
-                    }
-                });
-    }*/
-
     private void initMemberListener() {
-        System.out.println(game.get()._id());
         String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
-        eventListener.listen(patternToObserveGameMembers, Member.class)
+        disposable.add(eventListener.listen(patternToObserveGameMembers, Member.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(memberEvent -> {
                     final Member member = memberEvent.data();
-                    System.out.println(member);
                     if (memberEvent.event().endsWith(".created")) {
                         members.add(member);
-                        initUserListener(member.userId(), member);
                     } else if (memberEvent.event().endsWith(".updated")) {
                         if (member.ready()) {
                             showReadyCheckMark(member.userId());
                         }
                     } else if (memberEvent.event().endsWith(".deleted")) {
                         members.remove(member);
-                    } else {
-                        updateMember(member);
                     }
-                });
-    }
-
-    private void initUserListener(String userId, Member member) {
-        String patternToObserveGameUsers = String.format("users.%s.*", userId);
-        eventListener.listen(patternToObserveGameUsers, User.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(userEvent -> {
-                    final User user = userEvent.data();
-                    if (userEvent.event().endsWith(".updated")) {
-                        if (user.status().equals("online")) {
-                            updateMember(member);
-                        } else {
-                            deleteMember(member);
-                        }
-                    }
-                });
-    }
-
-    private void deleteMember(Member member) {
-    }
-
-
-    private void updateMember(Member data) {
+                }));
     }
 
     @Override
     public void stop() {
+        gameChatController.stop();
         disposable.dispose();
     }
 
@@ -274,9 +218,7 @@ public class NewGameScreenLobbyController implements Controller {
         // set member "ready" true in API
         disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(result -> {
-                    System.out.println("set ready result: " + result.toString());
-                }, Throwable::printStackTrace));
+                .subscribe(result -> {}, Throwable::printStackTrace));
     }
 
     private void showReadyCheckMark(String memberId) {
@@ -306,7 +248,6 @@ public class NewGameScreenLobbyController implements Controller {
 
             // check if there is a checkmark
             if (memberBox.getChildren().size() < 2) {
-                System.out.println("Not all users ready!");
                 // show popup with unready user(s)
                 Label memberLabel = (Label) memberBox.getChildren().get(0);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, memberLabel.getText() + " is not ready yet!");
@@ -314,8 +255,6 @@ public class NewGameScreenLobbyController implements Controller {
                 return false;
             }
         }
-
-        System.out.println("All users ready!");
         return true;
     }
     public void leaveLobby() {
@@ -323,20 +262,13 @@ public class NewGameScreenLobbyController implements Controller {
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(res -> {
-                        System.out.println(res.toString());
-                        /*@yannik, ich habe hier eingefügt, dass das game aus der lobby games liste gelöscht wird und nicht mehr
-                        gerendert wird
-                        */
-                        lobbyGameListControllerProvider.get().getGames().remove(game);
+                        lobbyGameListControllerProvider.get().getGames().remove(game.get());
                         app.show(lobbyScreenControllerProvider.get());
                     }, Throwable::printStackTrace));
         } else {
             disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userService.getCurrentUser()._id())
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(res -> {
-                        System.out.println(res.toString());
-                        app.show(lobbyScreenControllerProvider.get());
-                    }, Throwable::printStackTrace));
+                    .subscribe(res -> app.show(lobbyScreenControllerProvider.get()), Throwable::printStackTrace));
         }
     }
 
