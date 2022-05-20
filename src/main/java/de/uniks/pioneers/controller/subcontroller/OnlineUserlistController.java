@@ -25,7 +25,9 @@ public class OnlineUserlistController {
     }
 
     public void render(){
-        this.userlistService.getUsers().forEach(this::renderUser);
+        if (this.userlistService.getUsers().size() > 0) {
+            this.userlistService.getUsers().forEach(this::renderUser);
+        }
 
         this.userlistService.getUsers().addListener((ListChangeListener<? super User>) c->{
             c.next();
