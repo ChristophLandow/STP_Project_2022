@@ -152,12 +152,14 @@ public class LobbyScreenController implements Controller {
     }
 
     public void logout(ActionEvent event) {
+        //This function is only called by the logout button
         this.messageService.getchatUserList().clear();
         prefService.forget();
         logout();
     }
 
     public void logout() {
+        //This function is only called when the logout button is pressed or the stage is closed
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
         // set status offline after logout (leaving lobby)
