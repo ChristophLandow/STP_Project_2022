@@ -48,6 +48,7 @@ public class ChatMessage {
     }
 
     public void render(){
+        // Render a new message with the information of "message" and "sender"
         ImageView avatarImgView;
 
         try{
@@ -88,15 +89,17 @@ public class ChatMessage {
     }
 
     public void removeChat(MouseEvent event){
+        // Update the text of the deleted message
         disposable.add(messageService.updateMessage("groups", groupId.getValue(), message._id(),new UpdateMessageDto(DELETE_MESSAGE_TEXT))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(res -> System.out.println("Nachricht gelöscht!")));
+                .subscribe());
     }
 
     public void stop(){
         this.chatBox = null;
         this.tabChatBox.getChildren().remove(this.chatBox);
+        disposable.dispose();
     }
 
     public String getMessageID(){
@@ -106,6 +109,7 @@ public class ChatMessage {
     public void setMessageText(String newText){
         this.messageText.setText(newText);
 
+        // Change the style if this message was deleted
         if(newText.equals(DELETE_MESSAGE_TEXT)){
             deleteImgView.setOnMouseClicked(null);
             deleteImgView.setVisible(false);

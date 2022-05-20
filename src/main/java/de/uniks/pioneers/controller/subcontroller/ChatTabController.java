@@ -81,6 +81,7 @@ public class ChatTabController {
         this.messageService.getOpenChatQueue().add(this.chattingWith);
         this.messageService.increaseOpenChatCounter();
 
+        // Queue waiting list system, so that only one chat after another loads
         if(this.messageService.getOpenChatQueue().size() == 0){
             checkCounter();
         }
@@ -100,6 +101,7 @@ public class ChatTabController {
     }
 
     public void checkCounter(){
+        // Check if there were too many API calls in the last 10 seconds
         if(this.messageService.getOpenChatCounter().get() <= Constants.MAX_LOADING_CHATS){
             renderMessages();
         }
@@ -130,6 +132,7 @@ public class ChatTabController {
     }
 
     public void init(){
+        // groupId ChangeListener, so that the subscriptions only run, if the group ID is not null
         groupId.addListener(changeListener);
     }
 
@@ -142,7 +145,6 @@ public class ChatTabController {
                     .observeOn(FX_SCHEDULER)
                     .subscribe(messageEvent -> {
                         final MessageDto message = messageEvent.data();
-                        System.out.println(message);
                         if (messageEvent.event().endsWith(".created")){
                             messages.add(message);
                         }
@@ -161,7 +163,9 @@ public class ChatTabController {
     public void finishedInitialization(){
         this.messageService.getOpenChatQueue().removeIf(u->u._id().equals(chattingWith._id()));
         this.messageService.increaseOpenChatCounter();
+        //Inform the send button, that he should not be disabled anymore
         this.finishedInitialization.set(true);
+        //remove groupId ChangeListener, because it was only needed until the subscriptions where done
         groupId.removeListener(changeListener);
     }
 
@@ -204,6 +208,7 @@ public class ChatTabController {
     }
 
     public boolean messageAlreadyRendered(MessageDto message){
+        // Check if a message was already rendered
         for(ChatMessage cm : chatMessages){
             if(cm.getMessageID().equals(message._id())){
                 return true;
