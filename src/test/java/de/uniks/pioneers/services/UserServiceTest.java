@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -71,4 +72,14 @@ public class UserServiceTest {
         assertEquals(list.get(2).status(), "offline");
     }
 
+
+    @Test
+    void getUserById() {
+        when(userApiService.getUser(any())).thenReturn(Observable.just(new User("1", "Alice", "online", null)));
+
+        final String name = userService.getUserById("1").blockingFirst().name();
+        assertEquals("Alice", name);
+
+        verify(userApiService).getUser("1");
+    }
 }
