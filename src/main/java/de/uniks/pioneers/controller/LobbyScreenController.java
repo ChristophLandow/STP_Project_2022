@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -43,7 +44,7 @@ public class LobbyScreenController implements Controller {
     @FXML
     public VBox UsersVBox;
     @FXML
-    public ListView listViewGames;
+    public ListView<Node> listViewGames;
     @FXML
     public Button EditProfileButton;
     @FXML
@@ -51,48 +52,39 @@ public class LobbyScreenController implements Controller {
     @FXML
     public Button NewGameButton;
 
-    private final App app;
-
-    private final Provider<LoginScreenController> loginScreenControllerProvider;
-    private final Provider<EditProfileController> editProfileControllerProvider;
-    private final Provider<LobbyUserlistController> userlistControlerProvider;
-    private final Provider<RulesScreenController> rulesScreenControllerProvider;
-    private final Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
-
-    private final PrefService prefService;
-    private final LobbyService lobbyService;
-    private final UserService userService;
-    private final NewGameLobbyService newGameLobbyService;
-    private final Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
-    private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
-    private final MessageService messageService;
+    App app;
 
     @Inject
-    public LobbyScreenController(App app, LobbyService lobbyService, UserService userService,
-                                 Provider<LoginScreenController> loginScreenControllerProvider,
-                                 Provider<EditProfileController> editProfileControllerProvider,
-                                 Provider<LobbyUserlistController> userlistControlerProvider,
-                                 Provider<RulesScreenController> rulesScreenControllerProvider,
-                                 Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider,
-                                 Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
-                                 Provider<LobbyGameListController> lobbyGameListControllerProvider,
-                                 MessageService messageService,
-                                 NewGameLobbyService newGameLobbyService,
-                                 PrefService prefService
+    Provider<LoginScreenController> loginScreenControllerProvider;
+    @Inject
+    Provider<EditProfileController> editProfileControllerProvider;
+
+    @Inject
+    Provider<LobbyUserlistController> userlistControlerProvider;
+    @Inject
+    Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject
+    Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
+
+    @Inject
+    PrefService prefService;
+    @Inject
+    LobbyService lobbyService;
+    @Inject
+    UserService userService;
+    @Inject
+    NewGameLobbyService newGameLobbyService;
+    @Inject
+    Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
+    @Inject
+    Provider<LobbyGameListController> lobbyGameListControllerProvider;
+    @Inject
+    MessageService messageService;
+
+    @Inject
+    public LobbyScreenController(App app
     ) {
         this.app = app;
-        this.lobbyService = lobbyService;
-        this.userService = userService;
-        this.createNewGamePopUpControllerProvider = createNewGamePopUpControllerProvider;
-        this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
-        this.messageService = messageService;
-        this.loginScreenControllerProvider = loginScreenControllerProvider;
-        this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
-        this.editProfileControllerProvider = editProfileControllerProvider;
-        this.userlistControlerProvider = userlistControlerProvider;
-        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
-        this.newGameLobbyService = newGameLobbyService;
-        this.prefService = prefService;
     }
 
     @Override
@@ -160,12 +152,14 @@ public class LobbyScreenController implements Controller {
     }
 
     public void logout(ActionEvent event) {
+        //This function is only called by the logout button
         this.messageService.getchatUserList().clear();
         prefService.forget();
         logout();
     }
 
     public void logout() {
+        //This function is called when the logout button is pressed or the stage is closed
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
         // set status offline after logout (leaving lobby)
