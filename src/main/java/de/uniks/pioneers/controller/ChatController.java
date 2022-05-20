@@ -85,8 +85,12 @@ public class ChatController implements Controller {
 
         this.chatTabPane.getTabs().remove(0);
 
+        // Call sendButtonBinding if the opened tab changes
         this.chatTabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
             sendButtonBinding();
+
+            // Sometimes the chatTabController of the opened Tab is null
+            // This listener calls sendButtonBinding on changes of the ChatTabController list, until the chatTabController for the tab is created
             chatTabControllers.addListener(listChangeListener);
         });
 
@@ -115,6 +119,7 @@ public class ChatController implements Controller {
 
         this.messageService.increaseOpenChatCounter();
         this.messageService.increaseOpenChatCounter();
+        //Timer to deacrease openChatCounter every 10 seconds
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -159,12 +164,14 @@ public class ChatController implements Controller {
     }
 
     public void sendButtonBinding(){
+        //Bind the button with the opened tab and his controller
         Tab openTab = this.chatTabPane.getSelectionModel().getSelectedItem();
 
         if(openTab != null) {
             for (ChatTabController tabController : this.chatTabControllers) {
                 if (tabController.chattingWith.name().equals(openTab.getText())) {
                     sendButton.disableProperty().bind(tabController.getFinishedInitialization().not());
+                    //Remove listener after finding the ChatTabController. The listener is not needed until the open tab changes
                     chatTabControllers.removeListener(listChangeListener);
                     break;
                 }
@@ -182,8 +189,10 @@ public class ChatController implements Controller {
     }
 
     public void send(ActionEvent ignoredEvent) {
+        //Send messages
         Tab openTab = chatTabPane.getSelectionModel().getSelectedItem();
 
+        //Find the ChatTabController of the open tab
         for (ChatTabController chatTabController : chatTabControllers) {
             if (chatTabController.chattingWith.name().equals(openTab.getText())) {
                 currentGroupId = chatTabController.groupId.get();
@@ -196,10 +205,7 @@ public class ChatController implements Controller {
                 disposable.add(messageService.sendMessageToGroup(currentGroupId, new CreateMessageDto(message))
                         .observeOn(FX_SCHEDULER)
                         .doOnError(Throwable::printStackTrace)
-                        .subscribe(result -> {
-                            System.out.println("Message mit Id: " + result._id() + " von " + result.sender() + ":" + result.body());
-                            this.messageTextField.clear();
-                        }));
+                        .subscribe(result -> this.messageTextField.clear()));
             }
         }
     }

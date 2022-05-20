@@ -54,6 +54,7 @@ public class ChatUserlistController extends OnlineUserlistController {
 
     @Override
     public void openChat(MouseEvent event){
+        // Open chat of the user in the ListView who was clicked
         Label userLabel = userListView.getSelectionModel().getSelectedItem();
         User findUser = new User("","","","");
         for(User user : this.userlistService.getUsers()){
@@ -68,6 +69,7 @@ public class ChatUserlistController extends OnlineUserlistController {
         final User openUser = findUser;
 
         if(this.messageService.userlistContains(openUser)){
+            // If the chat with the user is already open, take the chat tab to the front of the TabPane
             ChatTabController chatTabController = null;
             Tab chatTab = null;
 
@@ -85,6 +87,7 @@ public class ChatUserlistController extends OnlineUserlistController {
                 }
             }
 
+            // If the tab is already in front in the TabPane, these lines of code are skipped
             if(this.chatTabPane.getTabs().get(this.chatTabPane.getTabs().size()-1) != chatTab){
                 this.messageService.getchatUserList().removeIf(user -> user._id().equals(openUser._id()));
                 this.chatTabControllers.removeIf(cm->cm.chattingWith._id().equals(openUser._id()));
@@ -98,6 +101,7 @@ public class ChatUserlistController extends OnlineUserlistController {
             }
         }
         else{
+            // If the chat does not exist, add the user and render the tab
             this.messageService.getchatUserList().add(openUser);
             chatController.addTab(openUser);
         }
