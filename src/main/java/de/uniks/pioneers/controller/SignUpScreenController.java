@@ -60,7 +60,6 @@ public class SignUpScreenController implements Controller{
     public Text userNameStatusText;
     @FXML
     public Text passwordStatusText;
-
     @FXML
     public Text avatarStatusText;
 
@@ -172,6 +171,7 @@ public class SignUpScreenController implements Controller{
     public void register() throws IOException, URISyntaxException {
 
         String avatarB64 = customAvatar;
+        //load default avatar if no custom one was selected
         if(customAvatar.equals("")){
 
             getClass().getResource("subcontroller/" + avatar);
@@ -185,18 +185,15 @@ public class SignUpScreenController implements Controller{
                 .doOnComplete(this::registrationComplete)
                 .subscribe(new Observer<>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                    }
+                    public void onSubscribe(@NonNull Disposable d) {}
                     @Override
-                    public void onNext(@NonNull User user) {
-                    }
+                    public void onNext(@NonNull User user) {}
                     @Override
                     public void onError(@NonNull Throwable e) {
                         System.out.println(e.getMessage());
                     }
                     @Override
-                    public void onComplete() {
-                    }
+                    public void onComplete() {}
                 });
     }
     private void registrationComplete(){

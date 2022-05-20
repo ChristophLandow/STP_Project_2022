@@ -68,11 +68,11 @@ public class LoginScreenController implements Controller {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LoginScreen.fxml"));
         loader.setControllerFactory(c -> this);
         try {
-
             parent = loader.load();
             textFieldUserName.textProperty().bindBidirectional(userName);
             passwordField.textProperty().bindBidirectional(password);
 
+            //clear error messages on interaction with text fields
             this.textFieldUserName.setOnMouseClicked(this::resetStatus);
             this.passwordField.setOnMouseClicked(this::resetStatus);
 
@@ -94,6 +94,7 @@ public class LoginScreenController implements Controller {
     @Override
     public void init() {
 
+        //attempt to retrieve refresh token fpr RememberMe login
         if(!this.prefService.recall().equals("")){
 
             this.loginService.refresh()
@@ -104,10 +105,8 @@ public class LoginScreenController implements Controller {
         }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
     }
-
     @Override
     public void stop(){}
-
     public void login() {
 
         this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
@@ -116,17 +115,13 @@ public class LoginScreenController implements Controller {
                 .doOnComplete(this::loginComplete)
                 .subscribe(new Observer<>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                    }
+                    public void onSubscribe(@NonNull Disposable d) {}
                     @Override
-                    public void onNext(@NonNull LoginResult loginResult) {
-                    }
+                    public void onNext(@NonNull LoginResult loginResult) {}
                     @Override
-                    public void onError(@NonNull Throwable e) {
-                    }
+                    public void onError(@NonNull Throwable e) {}
                     @Override
-                    public void onComplete() {
-                    }
+                    public void onComplete() {}
                 });
     }
 
@@ -144,7 +139,6 @@ public class LoginScreenController implements Controller {
         SignUpScreenController signUpScreenController = this.signUpScreenControllerProvider.get();
         signUpScreenController.userName.set(textFieldUserName.getText());
         signUpScreenController.password.set(passwordField.getText());
-
         this.app.show(signUpScreenController);
     }
 
