@@ -12,93 +12,89 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.NewGameScreenLobbyController">
-   <children>
-      <VBox fx:id="vBoxRoot" prefHeight="600.0" prefWidth="800.0">
-         <children>
-            <HBox fx:id="topLevel" prefHeight="500.0" prefWidth="800.0">
-               <children>
-                  <VBox fx:id="leftBox" prefHeight="480.0" prefWidth="350.0" spacing="40.0">
-                     <children>
-                        <Label fx:id="gameNameLabel" text="&lt;game name&gt;" textFill="#28d72b">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="passwordLabel" text="&lt;password&gt;" textFill="#28d72b">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <VBox fx:id="userBox" maxHeight="350.0" maxWidth="252.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="219.0" style="-fx-border-color: grey;">
-                           <VBox.margin>
-                              <Insets top="17.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets left="13.0" top="10.0" />
-                           </padding></VBox>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <padding>
-                        <Insets left="36.0" top="40.0" />
-                     </padding>
-                  </VBox>
-                  <VBox fx:id="rightBox" alignment="TOP_RIGHT" prefHeight="500.0" prefWidth="450.0" spacing="10.0">
-                     <children>
-                        <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="371.0">
-                           <content>
-                              <VBox fx:id="messageBox" maxHeight="460.0" maxWidth="392.0" prefHeight="406.0" prefWidth="351.0">
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </padding>
-                              </VBox>
-                           </content>
-                        </ScrollPane>
-                        <HBox fx:id="messageHbox" maxWidth="370.0" prefHeight="40.0" prefWidth="370.0">
-                           <children>
-                              <TextField fx:id="messageText" maxHeight="30.0" maxWidth="280.0" prefHeight="30.0" prefWidth="280.0" />
-                              <Button fx:id="sendButton" maxHeight="30.0" maxWidth="90.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="send">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font></Button>
-                           </children>
-                        </HBox>
-                     </children>
-                     <padding>
-                        <Insets right="40.0" top="40.0" />
-                     </padding>
-                  </VBox>
-               </children>
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.pioneers.controller.NewGameScreenLobbyController">
+   <VBox fx:id="vBoxRoot" prefHeight="600.0" prefWidth="800.0">
+      <HBox fx:id="topLevel" prefHeight="500.0" prefWidth="800.0">
+         <VBox fx:id="leftBox" prefHeight="480.0" prefWidth="350.0" spacing="40.0">
+            <HBox.margin>
+               <Insets/>
+            </HBox.margin>
+            <padding>
+               <Insets left="36.0" top="40.0"/>
+            </padding>
+            <Label fx:id="gameNameLabel" text="&lt;game name&gt;" textFill="#28d72b">
+               <font>
+                  <Font size="20.0"/>
+               </font>
+            </Label>
+            <Label fx:id="passwordLabel" text="&lt;password&gt;" textFill="#28d72b">
+               <font>
+                  <Font size="20.0"/>
+               </font>
+            </Label>
+            <VBox fx:id="userBox" maxHeight="350.0" maxWidth="252.0" minHeight="-Infinity" minWidth="-Infinity"
+                  prefHeight="287.0" prefWidth="219.0" style="-fx-border-color: grey;">
+               <VBox.margin>
+                  <Insets top="17.0"/>
+               </VBox.margin>
+               <padding>
+                  <Insets left="13.0" top="10.0"/>
+               </padding>
+            </VBox>
+         </VBox>
+         <VBox fx:id="rightBox" alignment="TOP_RIGHT" prefHeight="500.0" prefWidth="450.0" spacing="10.0">
+            <padding>
+               <Insets right="40.0" top="40.0"/>
+            </padding>
+            <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity"
+                        prefHeight="410.0" prefWidth="371.0">
+               <VBox fx:id="messageBox" maxHeight="460.0" maxWidth="392.0" prefHeight="406.0"
+                     prefWidth="351.0">
+                  <padding>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                  </padding>
+               </VBox>
+            </ScrollPane>
+            <HBox fx:id="messageHbox" maxWidth="370.0" prefHeight="40.0" prefWidth="370.0">
+               <TextField fx:id="messageText" maxHeight="30.0" maxWidth="280.0" prefHeight="30.0"
+                          prefWidth="280.0"/>
+               <Button fx:id="sendButton" maxHeight="30.0" maxWidth="90.0" mnemonicParsing="false"
+                       prefHeight="30.0" prefWidth="90.0" text="send">
+                  <font>
+                     <Font size="16.0"/>
+                  </font>
+               </Button>
             </HBox>
-            <HBox fx:id="buttonBox" alignment="CENTER" prefHeight="100.0" prefWidth="800.0" spacing="100.0">
-               <children>
-                  <Pane prefHeight="100.0" prefWidth="822.0">
-                     <children>
-                        <Button fx:id="startGameButton" layoutX="332.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#startGame" prefHeight="40.0" prefWidth="137.0" text="Start Game">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="readyButton" layoutX="175.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#setReadyTrue" prefHeight="40.0" prefWidth="123.0" text="Ready">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="leaveButton" layoutX="495.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#leaveLobby" prefHeight="40.0" prefWidth="84.0" text="Leave">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Button>
-                        <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="24.0" fitWidth="22.0" layoutX="628.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
-                           <Image url="@../question_mark_icon.jpg" />
-                        </ImageView>
-                     </children>
-                  </Pane>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
+         </VBox>
+      </HBox>
+      <HBox fx:id="buttonBox" alignment="CENTER" prefHeight="100.0" prefWidth="800.0" spacing="100.0">
+         <Pane prefHeight="100.0" prefWidth="822.0">
+            <Button fx:id="startGameButton" layoutX="332.0" layoutY="30.0" mnemonicParsing="false"
+                    onAction="#startGame" prefHeight="40.0" prefWidth="137.0" text="Start Game">
+               <font>
+                  <Font size="20.0"/>
+               </font>
+            </Button>
+            <Button fx:id="readyButton" layoutX="175.0" layoutY="30.0" mnemonicParsing="false"
+                    onAction="#setReadyTrue" prefHeight="40.0" prefWidth="123.0" text="Ready">
+               <font>
+                  <Font size="20.0"/>
+               </font>
+            </Button>
+            <Button fx:id="leaveButton" layoutX="495.0" layoutY="30.0" mnemonicParsing="false"
+                    onAction="#leaveLobby" prefHeight="40.0" prefWidth="84.0" text="Leave">
+               <font>
+                  <Font size="20.0"/>
+               </font>
+            </Button>
+            <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="24.0" fitWidth="22.0"
+                       layoutX="628.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true"
+                       style="border-color: black;">
+               <Image url="@../question_mark_icon.jpg"/>
+            </ImageView>
+         </Pane>
+      </HBox>
+   </VBox>
 </Pane>
