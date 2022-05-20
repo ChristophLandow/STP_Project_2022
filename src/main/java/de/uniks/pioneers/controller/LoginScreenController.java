@@ -152,6 +152,7 @@ public class LoginScreenController implements Controller {
             this.prefService.remember();
         }
         toLobby();
+
     }
     public void toSignUp(MouseEvent mouseEvent) {
 

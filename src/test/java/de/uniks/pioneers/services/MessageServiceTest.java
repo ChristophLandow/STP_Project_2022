@@ -3,6 +3,7 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.UpdateMessageDto;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -25,6 +27,7 @@ class MessageServiceTest {
 
     @Mock
     MessageApiService messageApiService;
+
     @InjectMocks
     MessageService messageService;
 
@@ -54,6 +57,34 @@ class MessageServiceTest {
         final String result = messageService.updateMessage("groups", "testGroupId", "1", msgUpdate).blockingFirst().body();
         assertEquals("Message updated", result);
         verify(messageApiService).updateMessage("groups", "testGroupId", "1", msgUpdate);
+    }
+
+    @Test
+    void decreaseChatCounter() {
+        messageService.getOpenChatCounter().set(5);
+        messageService.decreaseChatCounter(3);
+        assertEquals(2, messageService.getOpenChatCounter().get());
+    }
+
+    @Test
+    void increaseChatCounter() {
+        messageService.getOpenChatCounter().set(2);
+        messageService.increaseOpenChatCounter();
+        assertEquals(3, messageService.getOpenChatCounter().get());
+    }
+
+    @Test
+    void userListContains() {
+        User testUser = new User("12", "Test", "online", null);
+        messageService.getchatUserList().add(testUser);
+        assertTrue(messageService.userlistContains(testUser));
+    }
+
+    @Test
+    void addUserToChatUserList() {
+        User testUser = new User("12", "Test", "online", null);
+        messageService.addUserToChatUserList(testUser);
+        assertEquals(messageService.getchatUserList().get(0), testUser);
     }
 
 }

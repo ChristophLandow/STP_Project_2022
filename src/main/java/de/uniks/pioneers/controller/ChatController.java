@@ -213,6 +213,8 @@ public class ChatController implements Controller {
         });
     }
 
+    public void setCurrentGroupId(String groupId) { this.currentGroupId = groupId; }
+
     public void resetOpenChatCounter(){
         this.messageService.decreaseChatCounter(Constants.MAX_LOADING_CHATS);
     }
