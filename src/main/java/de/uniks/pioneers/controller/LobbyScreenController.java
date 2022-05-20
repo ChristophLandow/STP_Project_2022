@@ -159,7 +159,7 @@ public class LobbyScreenController implements Controller {
     }
 
     public void logout() {
-        //This function is only called when the logout button is pressed or the stage is closed
+        //This function is called when the logout button is pressed or the stage is closed
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
         // set status offline after logout (leaving lobby)
