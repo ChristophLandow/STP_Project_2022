@@ -26,7 +26,16 @@ public class OnlineUserlistController {
 
     public void render(){
         if (this.userlistService.getUsers().size() > 0) {
-            this.userlistService.getUsers().forEach(this::renderUser);
+            this.userlistService.getUsers().forEach(u->{
+                if (validUser(u)) {
+                    if(!u._id().equals(this.userlistService.getCurrentUser()._id())){
+                        renderUser(u);
+                    }
+                }
+                else{
+                    this.userlistService.getUsers().remove(u);
+                }
+            });
         }
 
         this.userlistService.getUsers().addListener((ListChangeListener<? super User>) c->{

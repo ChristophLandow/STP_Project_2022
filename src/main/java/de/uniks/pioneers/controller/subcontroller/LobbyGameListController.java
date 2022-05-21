@@ -59,18 +59,26 @@ public class LobbyGameListController {
 
     public void init(){
         // after leaving a game this methods get called again, thats why the item list gets cleared
-        listViewGames.getItems().clear();
+        games.forEach(g->{
+            if(isGameValid(g) && !isAlreadyRendered(g)){
+                renderGame(g);
+            }
+        });
 
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getAddedSubList().stream().filter(this::isGameValid)
-                                            .forEach(this::renderGame);
+                c.getAddedSubList().forEach(g->{
+                    if(isGameValid(g) && !isAlreadyRendered(g)){
+                        renderGame(g);
+                    }
+                });
             } else if (c.wasRemoved()) {
-                // for some reason this does not work anymore
                 c.getRemoved().forEach(this::deleteGame);
             } else if (c.wasUpdated()) {
-                c.getList().forEach(this::updateGame);
+                for(int i = c.getFrom(); i < c.getTo(); i++){
+                    updateGame(games.get(i));
+                }
             }
         });
 
@@ -82,12 +90,13 @@ public class LobbyGameListController {
         eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
+                    final Game game = gameEvent.data();
                     if (gameEvent.event().endsWith(".created")) {
-                        games.add(gameEvent.data());
+                        games.add(game);
                     } else if (gameEvent.event().endsWith(".deleted")) {
-                        games.remove(gameEvent.data());
+                        games.removeIf(g -> g._id().equals(game._id()));
                     } else {
-                        //updateGame(gameEvent.data());
+                        games.forEach(g -> g = (g._id().equals(game._id()) ? game : g));
                     }
                 });
 
@@ -111,6 +120,15 @@ public class LobbyGameListController {
     private boolean isGameValid(Game game) {
         // a game is valid as long his creator is online, we can update this if needed
         return users.stream().anyMatch(user -> user._id().equals(game.owner()));
+    }
+
+    public boolean isAlreadyRendered(Game game){
+        for(GameListElementController gameListElementController : gameListElementControllers){
+            if(gameListElementController.game.get()._id().equals(game._id())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void deleteGame(Game data) {
@@ -141,6 +159,12 @@ public class LobbyGameListController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public void stop(){
+        disposable.dispose();
+        listViewGames.getItems().clear();
+        games.clear();
     }
 
 }
