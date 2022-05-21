@@ -68,7 +68,6 @@ public class LobbyGameListController {
                     if (gameEvent.event().endsWith(".created")) {
                         games.add(gameEvent.data());
                     } else if (gameEvent.event().endsWith(".deleted")) {
-                        System.out.println(gameEvent.event());
                         deleteGame(gameEvent.data());
                     } else {
                         updateGame(gameEvent.data());
