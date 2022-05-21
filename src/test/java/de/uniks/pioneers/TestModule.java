@@ -8,6 +8,7 @@ import dagger.Provides;
 import de.uniks.pioneers.dto.*;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
+import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.TokenStorage;
 import de.uniks.pioneers.ws.ClientEndpoint;
@@ -267,6 +268,48 @@ public class TestModule {
             }
         };
     }
+
+    @Provides
+    static NewGameLobbyService newGameLobbyService(){
+        return new NewGameLobbyService(gameMemberApiService(),messageApiService()){
+
+            private String currentMemberId;
+
+            public Observable<List<Member>> getAll(String id){
+                return gameMemberApiService().getAll(id);
+            }
+
+            public Observable<Member> postMember(String id, boolean ready, String password){
+                return gameMemberApiService().createMember(id, new CreateMemberDto(ready, password));
+            }
+
+            public Observable<Member> deleteMember(String id, String userId){
+                return gameMemberApiService().deleteMember(id,userId);
+            }
+
+            public Observable<MessageDto> sendMessage(String id, CreateMessageDto dto) {
+                return messageApiService().sendMessage("games", id, dto);
+            }
+
+            public Observable<List<MessageDto>> getMessages(String id){
+                return messageApiService().getChatMessages("games", id);
+            }
+
+            public Observable<Member> setReady(String groupId, String userId) {
+                return gameMemberApiService().setReady(groupId, userId, new UpdateMemberDto(true));
+            }
+
+            public void setCurrentMemberId(String id) {
+                currentMemberId = id;
+            }
+
+            public String getCurrentMemberId() {
+                return currentMemberId;
+            }
+        };
+    }
+
+
 
     @Provides
     @Singleton

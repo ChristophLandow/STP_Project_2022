@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.DaggerTestComponent;
 import de.uniks.pioneers.MainComponent;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.model.Game;
@@ -70,9 +71,10 @@ class NewGameLobbyScreenControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) {
         newGameScreenLobbyController.game.set(testGame);
-        when(prefService.recall()).thenReturn("");
+        final App app = new App(null);
+        MainComponent testComponent = DaggerTestComponent.builder().mainApp(app).build();
         app.start(stage);
-        app.show(newGameScreenLobbyController);
+        app.show(testComponent.loginController());
     }
 
     @Test

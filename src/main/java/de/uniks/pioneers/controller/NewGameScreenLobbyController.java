@@ -73,6 +73,7 @@ public class NewGameScreenLobbyController implements Controller {
     public SimpleObjectProperty<User> owner = new SimpleObjectProperty<>();
 
     private final ObservableList<Member> members = FXCollections.observableArrayList();
+
     private final List<User> users = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     //private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
@@ -283,5 +284,9 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public ObservableList<Member> getMembers() {
+        return members;
     }
 }
