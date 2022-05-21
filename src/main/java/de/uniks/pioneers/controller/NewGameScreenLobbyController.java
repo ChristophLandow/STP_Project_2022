@@ -98,17 +98,23 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     public void postNewMember(Game game, User user, String password) {
-
         this.password = password;
         this.game.set(game);
         if (user._id().equals(game.owner())){
             this.owner.set(user);
+        } else {
+            disposable.add(newGameLobbyService.postMember(game._id(), true, this.password)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(member -> members.add(member)
+                            ,Throwable::printStackTrace));
         }
-        app.show(this);
-        // post new member to game
+        // rest
         disposable.add(newGameLobbyService.getAll(game._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(this.members::setAll));
+                .subscribe(this.members::setAll
+                        , Throwable::printStackTrace));
+
+        app.show(this);
         }
 
     @Override
