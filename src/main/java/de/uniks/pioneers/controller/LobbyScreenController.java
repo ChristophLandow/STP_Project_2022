@@ -78,6 +78,9 @@ public class LobbyScreenController implements Controller {
     Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
     @Inject
     Provider<LobbyGameListController> lobbyGameListControllerProvider;
+
+    private LobbyGameListController lobbyGameListController;
+
     @Inject
     MessageService messageService;
 
@@ -114,9 +117,9 @@ public class LobbyScreenController implements Controller {
         userlistController.render();
         userlistController.init();
 
-        LobbyGameListController lobbyGamesListController = lobbyGameListControllerProvider.get();
-        lobbyGamesListController.listViewGames = this.listViewGames;
-        lobbyGamesListController.init();
+        lobbyGameListController = lobbyGameListControllerProvider.get();
+        lobbyGameListController.listViewGames = this.listViewGames;
+        lobbyGameListController.init();
 
         return parent;
     }
@@ -140,6 +143,7 @@ public class LobbyScreenController implements Controller {
 
     @Override
     public void stop() {
+        lobbyGameListController.stop();
     }
 
     public void editProfile(ActionEvent actionEvent) {
