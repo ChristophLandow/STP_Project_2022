@@ -268,7 +268,6 @@ public class NewGameScreenLobbyController implements Controller {
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(res -> {
-                        lobbyGameListControllerProvider.get().getGames().remove(game.get());
                         app.show(lobbyScreenControllerProvider.get());
                     }, Throwable::printStackTrace));
         } else {
