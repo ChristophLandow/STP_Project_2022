@@ -58,9 +58,8 @@ public class LobbyScreenController implements Controller {
     Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject
     Provider<EditProfileController> editProfileControllerProvider;
-
     @Inject
-    Provider<LobbyUserlistController> userlistControlerProvider;
+    Provider<LobbyUserlistController> userlistControllerProvider;
     @Inject
     Provider<RulesScreenController> rulesScreenControllerProvider;
     @Inject
@@ -112,7 +111,7 @@ public class LobbyScreenController implements Controller {
             this.AvatarImageView.setImage(null);
         }
 
-        LobbyUserlistController userlistController = userlistControlerProvider.get();
+        LobbyUserlistController userlistController = userlistControllerProvider.get();
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
         userlistController.init();
@@ -174,7 +173,9 @@ public class LobbyScreenController implements Controller {
 
     public void showNewGameLobby(Game game, String password) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
-        newGameScreenLobbyController.postNewMember(game, userService.getCurrentUser(), password);
+        newGameScreenLobbyController.game.set(game);
+        app.show(newGameScreenLobbyController);
+        newGameScreenLobbyController.postNewMember(userService.getCurrentUser(), password);
         newGameLobbyService.setCurrentMemberId(userService.getCurrentUser()._id());
     }
 

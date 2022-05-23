@@ -39,24 +39,42 @@ import java.util.Objects;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class NewGameScreenLobbyController implements Controller {
-    @FXML public Pane root;
-    @FXML public VBox vBoxRoot;
-    @FXML public HBox topLevel;
-    @FXML public VBox leftBox;
-    @FXML public Label gameNameLabel;
-    @FXML public Label passwordLabel;
-    @FXML public VBox userBox;
-    @FXML public VBox rightBox;
-    @FXML public VBox messageBox;
-    @FXML public ScrollPane chatScrollPane;
-    @FXML public HBox messageHbox;
-    @FXML public TextField messageText;
-    @FXML public Button sendButton;
-    @FXML public HBox buttonBox;
-    @FXML public Button readyButton;
-    @FXML public Button startGameButton;
-    @FXML public Button leaveButton;
-    @FXML public ImageView RulesButton;
+    @FXML
+    public Pane root;
+    @FXML
+    public VBox vBoxRoot;
+    @FXML
+    public HBox topLevel;
+    @FXML
+    public VBox leftBox;
+    @FXML
+    public Label gameNameLabel;
+    @FXML
+    public Label passwordLabel;
+    @FXML
+    public VBox userBox;
+    @FXML
+    public VBox rightBox;
+    @FXML
+    public VBox messageBox;
+    @FXML
+    public ScrollPane chatScrollPane;
+    @FXML
+    public HBox messageHbox;
+    @FXML
+    public TextField messageText;
+    @FXML
+    public Button sendButton;
+    @FXML
+    public HBox buttonBox;
+    @FXML
+    public Button readyButton;
+    @FXML
+    public Button startGameButton;
+    @FXML
+    public Button leaveButton;
+    @FXML
+    public ImageView RulesButton;
 
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -76,7 +94,6 @@ public class NewGameScreenLobbyController implements Controller {
 
     private final List<User> users = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-    //private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
     private String password;
 
     private GameChatController gameChatController;
@@ -98,32 +115,29 @@ public class NewGameScreenLobbyController implements Controller {
         this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
     }
 
-    public void postNewMember(Game game, User user, String password) {
+    public void postNewMember(User user, String password) {
+        gameNameLabel.setText(game.get().name());
         this.password = password;
-        this.game.set(game);
-        if (user._id().equals(game.owner())){
-            this.owner.set(user);
-        } else {
-            disposable.add(newGameLobbyService.postMember(game._id(), true, this.password)
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(member -> members.add(member)
-                            ,Throwable::printStackTrace));
-        }
+        passwordLabel.setText(this.getPassword());
         // rest
-        disposable.add(newGameLobbyService.getAll(game._id())
+        disposable.add(newGameLobbyService.getAll(game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(this.members::setAll
                         , Throwable::printStackTrace));
 
-        app.show(this);
+        if (user._id().equals(game.get().owner())) {
+            this.owner.set(user);
+        } else {
+            disposable.add(newGameLobbyService.postMember(game.get()._id(), true, this.password)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(member -> initUserListener(user)
+                            , Throwable::printStackTrace));
         }
+    }
+
 
     @Override
     public void init() {
-        //set game name label and password text label
-        gameNameLabel.setText(game.get().name());
-        passwordLabel.setText(this.getPassword());
-
         // add mouse event for rules button
         this.RulesButton.setOnMouseClicked(this::openRules);
 
@@ -149,6 +163,7 @@ public class NewGameScreenLobbyController implements Controller {
         gameChatController.users = this.users;
         gameChatController.render();
         gameChatController.init();
+
     }
 
     private void openRules(MouseEvent mouseEvent) {
@@ -161,7 +176,7 @@ public class NewGameScreenLobbyController implements Controller {
         userBox.getChildren().remove(removal);
         users.removeIf(user -> user._id().equals(member.userId()));
 
-        if(member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())){
+        if (member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())) {
             app.show(lobbyScreenControllerProvider.get());
             Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.HOST_LEFT_GAME_ALERT);
             alert.showAndWait();
@@ -183,6 +198,26 @@ public class NewGameScreenLobbyController implements Controller {
             showReadyCheckMark(member.userId());
         }
     }
+
+    private void initUserListener(User user) {
+        String patternToObserveGameUsers = String.format("users.%s.*", user._id());
+        disposable.add(eventListener.listen(patternToObserveGameUsers, User.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(userEvent -> {
+                    User userFromEvent = userEvent.data();
+                    Member toRemove = members.stream().filter(member -> member.userId().equals(userFromEvent._id())).findAny().get();
+                    deleteUser(toRemove);
+                    if (userEvent.event().endsWith(".updated")) {
+                        if (userFromEvent.status().equals("online")) {
+                            disposable.add(newGameLobbyService.postMember(game.get()._id(), true, this.password)
+                                    .observeOn(FX_SCHEDULER)
+                                    .subscribe());
+                        }
+                    }
+                })
+        );
+    }
+
     private void initMemberListener() {
         String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveGameMembers, Member.class)
@@ -225,7 +260,8 @@ public class NewGameScreenLobbyController implements Controller {
         // set member "ready" true in API
         disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(result -> {}, Throwable::printStackTrace));
+                .subscribe(result -> {
+                }, Throwable::printStackTrace));
     }
 
     private void showReadyCheckMark(String memberId) {
@@ -250,7 +286,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private boolean allUsersReady() {
-        for (Node node: userBox.getChildren()) {
+        for (Node node : userBox.getChildren()) {
             HBox memberBox = (HBox) node;
 
             // check if there is a checkmark
@@ -264,6 +300,7 @@ public class NewGameScreenLobbyController implements Controller {
         }
         return true;
     }
+
     public void leaveLobby() {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())

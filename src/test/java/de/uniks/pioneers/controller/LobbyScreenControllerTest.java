@@ -42,8 +42,8 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @InjectMocks
     LoginScreenController loginScreenController;
 
-    @Mock(name = "userlistControlerProvider")
-    Provider<LobbyUserlistController> userlistControlerProvider;
+    @Mock(name = "userlistControllerProvider")
+    Provider<LobbyUserlistController> userlistControllerProvider;
 
     @Mock(name = "lobbyGameListControllerProvider")
     Provider<LobbyGameListController> lobbyGameListControllerProvider;
@@ -69,7 +69,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @Mock
     PrefService prefService;
 
-
     @InjectMocks
     LobbyScreenController lobbyScreenController;
 
@@ -89,7 +88,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
         when(lobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
         when(messageService.getchatUserList()).thenReturn(FXCollections.observableArrayList());
 
-        when(userlistControlerProvider.get()).thenReturn(userlistController);
+        when(userlistControllerProvider.get()).thenReturn(userlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
         when(loginScreenControllerProvider.get()).thenReturn(loginScreenController);
 
