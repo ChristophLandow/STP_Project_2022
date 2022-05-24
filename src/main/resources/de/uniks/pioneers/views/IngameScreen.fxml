@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.NewGameScreenLobbyController">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
    <children>
       <Pane fx:id="fieldPane" layoutX="26.0" layoutY="25.0" prefHeight="481.0" prefWidth="532.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
       <Button fx:id="giveUpButton" layoutX="580.0" layoutY="25.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="199.0" text="Give Up" />
