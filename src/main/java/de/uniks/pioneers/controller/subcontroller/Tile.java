@@ -18,13 +18,13 @@ public class Tile {
         this.r = r;
         this.s = s;
 
-        double[] kartCoords = cubeToKart(q, r);
+        double[] kartCoords = cubeToCart(q, r);
         x = kartCoords[0];
         y = kartCoords[1];
 
     }
 
-    private double[] cubeToKart(double q, double r){
+    private double[] cubeToCart(double q, double r){
 
         double[] coords = new double[2];
 
@@ -32,5 +32,12 @@ public class Tile {
         coords[1] = -(3.0/2.0) * r;
 
         return coords;
+    }
+
+    @Override
+    public String toString(){
+
+        return "X: " + this.x + "Y: " +this.y;
+
     }
 }
