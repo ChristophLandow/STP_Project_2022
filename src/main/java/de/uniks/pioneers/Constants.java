@@ -27,6 +27,9 @@ public class Constants {
     public static final String WS_V1_PREFIX = "/ws/v1";
     public static final String EVENTS_AUTH_TOKEN = "/events?authToken=";
 
+    public static final String API_V2_PIONEERS_PREFIX =  "/api/v2/games/{gameId}";
+
+
     public static final String LOGIN_URL = BASE_URL + API_V1_PREFIX + "/auth/login";
     public static final String SIGN_UP_URL = BASE_URL + API_V1_PREFIX + "/users";
 
@@ -50,5 +53,7 @@ public class Constants {
     public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
 
     public static final byte[] encryptKeySeed = "UGk8LmWKk2WXPEQGJAsOzOYUMfSjasH3".getBytes();
+
+
 
 }

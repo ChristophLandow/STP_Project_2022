@@ -77,8 +77,6 @@ public class NewGameScreenLobbyController implements Controller {
     public ImageView RulesButton;
 
     private final EventListener eventListener;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    private final Provider<GameChatController> gameChatControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     private final App app;
@@ -99,14 +97,16 @@ public class NewGameScreenLobbyController implements Controller {
     private GameChatController gameChatController;
 
     @Inject
-    public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
-                                        Provider<GameChatController> gameChatControllerProvider,
-                                        Provider<RulesScreenController> rulesScreenControllerProvider,
+    Provider<LobbyScreenController> lobbyScreenControllerProvider;
+
+    @Inject
+    Provider<GameChatController> gameChatControllerProvider;
+
+    @Inject
+    public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
                                         NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService,
                                         Provider<LobbyGameListController> lobbyGameListControllerProvider) {
         this.eventListener = eventListener;
-        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        this.gameChatControllerProvider = gameChatControllerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
         this.app = app;

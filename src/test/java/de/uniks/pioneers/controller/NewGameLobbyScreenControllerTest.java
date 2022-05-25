@@ -90,11 +90,13 @@ class NewGameLobbyScreenControllerTest extends ApplicationTest {
         patternToObserveGameMembers = String.format("games.%s.members.*.*", testGame._id());
         when(eventListener.listen(patternToObserveGameMembers, Member.class)).
                 thenReturn(Observable.just(new Event<Member>("games.3.member.3.created", nowMember)));
+        when(newGameLobbyService.getMessages(testGame._id())).thenReturn(Observable.just(List.of(message01,messaga02)));
+        when(eventListener.listen("games." + testGame._id() + ".messages.*.*", MessageDto.class))
+                .thenReturn(Observable.just(new Event<MessageDto>("games.3.messsages.1.created",message01)));
         when(userService.getUserById("1")).thenReturn(Observable.just(owner));
         when(userService.getUserById("2")).thenReturn(Observable.just(user02));
         when(userService.getUserById("3")).thenReturn(Observable.just(userJoining));
 
-        //MainComponent testComponent = DaggerTestComponent.builder().mainApp(app).build();
         newGameScreenLobbyController.game.set(testGame);
         app.start(stage);
         app.show(newGameScreenLobbyController);
@@ -145,7 +147,7 @@ class NewGameLobbyScreenControllerTest extends ApplicationTest {
         verify(userService).getUserById("2");
         verify(userService).getUserById("3");
         verify(eventListener).listen(patternToObserveGameMembers,Member.class);
-        //verify(gameChatControllerProvider).get();
+        verify(gameChatControllerProvider).get();
         verify(newGameLobbyService).getMessages(testGame._id());
         verify(eventListener.listen("games." + testGame._id() + ".messages.*.*", MessageDto.class));
         verify(newGameLobbyService).getAll("3");
@@ -153,7 +155,6 @@ class NewGameLobbyScreenControllerTest extends ApplicationTest {
 
     }
 }
-
-
  */
+
 
