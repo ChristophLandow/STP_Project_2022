@@ -69,6 +69,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public ColorPicker colorPicker;
     @FXML public SVGPath houseSVG;
     @FXML public ImageView clientAvatar;
+    @FXML public Label clientUserNameLabel;
 
 
     private final EventListener eventListener;
@@ -129,6 +130,7 @@ public class NewGameScreenLobbyController implements Controller {
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(this.getPassword());
+        clientUserNameLabel.setText(userService.getCurrentUser().name());
         colorPicker.setValue(Color.RED);
         houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
         try {
