@@ -1,10 +1,7 @@
 package de.uniks.pioneers.rest;
 
 import de.uniks.pioneers.dto.MoveDto;
-import de.uniks.pioneers.model.Building;
-import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.State;
-import de.uniks.pioneers.model.Tile;
+import de.uniks.pioneers.model.*;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
 

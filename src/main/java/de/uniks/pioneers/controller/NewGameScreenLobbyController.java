@@ -121,6 +121,7 @@ public class NewGameScreenLobbyController implements Controller {
                     .subscribe(member -> initUserListener(user)
                             , Throwable::printStackTrace));
         }
+    }
 
     @Override
     public void init() {
