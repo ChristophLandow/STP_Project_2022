@@ -64,6 +64,12 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public Button startGameButton;
     @FXML public Button leaveButton;
     @FXML public ImageView RulesButton;
+    @FXML public HBox clientReadyBox;
+    @FXML public Label clientReadyLabel;
+    @FXML public ColorPicker colorPicker;
+    @FXML public SVGPath houseSVG;
+    @FXML public ImageView clientAvatar;
+    @FXML public Label clientUserNameLabel;
 
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
