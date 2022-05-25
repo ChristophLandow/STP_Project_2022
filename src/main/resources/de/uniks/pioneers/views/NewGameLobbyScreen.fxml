@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -10,91 +11,175 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.pioneers.controller.NewGameScreenLobbyController">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.NewGameScreenLobbyController">
    <VBox fx:id="vBoxRoot" prefHeight="600.0" prefWidth="800.0">
       <HBox fx:id="topLevel" prefHeight="500.0" prefWidth="800.0">
-         <VBox fx:id="leftBox" prefHeight="480.0" prefWidth="350.0" spacing="40.0">
+         <VBox fx:id="leftBox" prefHeight="493.0" prefWidth="381.0" spacing="15.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
             <HBox.margin>
-               <Insets/>
+               <Insets />
             </HBox.margin>
             <padding>
-               <Insets left="36.0" top="40.0"/>
+               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            <Label fx:id="gameNameLabel" text="&lt;game name&gt;" textFill="#28d72b">
-               <font>
-                  <Font size="20.0"/>
-               </font>
-            </Label>
-            <Label fx:id="passwordLabel" text="&lt;password&gt;" textFill="#28d72b">
-               <font>
-                  <Font size="20.0"/>
-               </font>
-            </Label>
-            <VBox fx:id="userBox" maxHeight="350.0" maxWidth="252.0" minHeight="-Infinity" minWidth="-Infinity"
-                  prefHeight="287.0" prefWidth="219.0" style="-fx-border-color: grey;">
+            <HBox alignment="CENTER" prefHeight="92.0" prefWidth="335.0">
+               <children>
+                  <Label text="Welcome to: ">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="gameNameLabel" text="&lt;game name&gt;" textFill="#28d72b" wrapText="true">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="34.0" prefWidth="335.0">
+               <children>
+                  <Label text="The password of this game is: ">
+                     <font>
+                        <Font size="13.0" />
+                     </font></Label>
+                  <Label fx:id="passwordLabel" text="&lt;password&gt;" textFill="#28d72b">
+                     <font>
+                        <Font size="13.0" />
+                     </font></Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="76.0" prefWidth="311.0">
+               <children>
+                  <Pane fx:id="playererer" prefHeight="63.0" prefWidth="230.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin>
+                     <children>
+                        <ImageView fx:id="clientAvatar" fitHeight="38.0" fitWidth="38.0" layoutX="6.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label layoutX="53.0" layoutY="13.0" prefHeight="25.0" prefWidth="117.0" text="PlayerName">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <SVGPath fx:id="houseSVG" content="M 12.679688 11.316406 L 0.3125 22.601562 L 0.152344 23.316406 C 0.0078125 23.996094 0.0078125 24.074219 0.179688 24.75 C 0.554688 26.203125 0.546875 26.195312 1.332031 26.578125 C 1.992188 26.902344 2.09375 26.929688 3.253906 26.988281 C 3.933594 27.015625 4.914062 27.074219 5.453125 27.101562 L 6.414062 27.160156 L 6.414062 48.835938 L 6.8125 49.40625 L 7.21875 49.972656 L 14.292969 49.980469 L 21.367188 49.980469 L 21.914062 49.492188 L 22.453125 49.007812 L 22.394531 42.230469 L 22.332031 35.453125 L 25.953125 35.472656 L 29.574219 35.503906 L 29.539062 41.914062 C 29.5 49.226562 29.480469 49.023438 30.226562 49.644531 L 30.632812 49.980469 L 37.066406 49.980469 C 44.613281 49.980469 44.359375 50.007812 45.167969 49.140625 L 45.660156 48.613281 L 45.660156 27.027344 L 46.914062 27.082031 C 47.800781 27.132812 48.453125 27.113281 49.199219 27.007812 L 50.226562 26.863281 L 51.046875 26.023438 L 51.859375 25.179688 L 51.914062 24.273438 L 51.972656 23.367188 L 49.386719 20.738281 L 46.792969 18.109375 L 46.792969 4.148438 L 45.886719 3.25 L 39.945312 3.183594 L 34 3.125 L 33.507812 3.394531 L 33.027344 3.660156 L 32.972656 5.628906 L 30 2.914062 C 26.6875 -0.113281 27.160156 0.191406 25.566406 0.0664062 L 25.046875 0.0195312 Z M 12.679688 11.316406" layoutX="177.0" scaleX="0.7" scaleY="0.7" scaleZ="0.7" />
+                     </children></Pane>
+                  <HBox fx:id="clientReadyBox" alignment="CENTER" prefHeight="50.0" prefWidth="108.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: red">
+                     <children>
+                        <Label fx:id="clientReadyLabel" text="Not Ready">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children></HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="45.0" prefWidth="311.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="213.0" text="Choose your color here:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ColorPicker fx:id="colorPicker" onAction="#onColorChange" prefHeight="25.0" prefWidth="107.0">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </ColorPicker>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
                <VBox.margin>
-                  <Insets top="17.0"/>
+                  <Insets />
                </VBox.margin>
-               <padding>
-                  <Insets left="13.0" top="10.0"/>
-               </padding>
-            </VBox>
+            </HBox>
+            <Label prefHeight="79.0" prefWidth="311.0" text="Right now you are playing against the followingopponents:" wrapText="true">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <ScrollPane fx:id="userScrollPane" prefHeight="200.0" prefWidth="200.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
+               <content>
+                  <VBox fx:id="userBox" maxHeight="350.0" maxWidth="332.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="178.0" prefWidth="332.0">
+                     <padding>
+                        <Insets left="13.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
          </VBox>
-         <VBox fx:id="rightBox" alignment="TOP_RIGHT" prefHeight="500.0" prefWidth="450.0" spacing="10.0">
+         <VBox fx:id="rightBox" alignment="TOP_RIGHT" prefHeight="493.0" prefWidth="400.0" spacing="15.0">
             <padding>
-               <Insets right="40.0" top="40.0"/>
+               <Insets left="15.0" right="15.0" />
             </padding>
-            <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity"
-                        prefHeight="410.0" prefWidth="371.0">
-               <VBox fx:id="messageBox" maxHeight="460.0" maxWidth="392.0" prefHeight="406.0"
-                     prefWidth="351.0">
+            <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="371.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
+               <VBox fx:id="messageBox" maxHeight="460.0" maxWidth="392.0" prefHeight="445.0" prefWidth="354.0">
                   <padding>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                   </padding>
                </VBox>
             </ScrollPane>
             <HBox fx:id="messageHbox" maxWidth="370.0" prefHeight="40.0" prefWidth="370.0">
-               <TextField fx:id="messageText" maxHeight="30.0" maxWidth="280.0" prefHeight="30.0"
-                          prefWidth="280.0"/>
-               <Button fx:id="sendButton" maxHeight="30.0" maxWidth="90.0" mnemonicParsing="false"
-                       prefHeight="30.0" prefWidth="90.0" text="send">
+               <TextField fx:id="messageText" maxHeight="37.0" maxWidth="280.0" prefHeight="37.0" prefWidth="273.0">
+                  <HBox.margin>
+                     <Insets right="15.0" />
+                  </HBox.margin></TextField>
+               <Button fx:id="sendButton" maxHeight="30.0" maxWidth="90.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Send">
                   <font>
-                     <Font size="16.0"/>
+                     <Font size="16.0" />
                   </font>
                </Button>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </HBox>
          </VBox>
+         <VBox.margin>
+            <Insets left="15.0" top="15.0" />
+         </VBox.margin>
       </HBox>
-      <HBox fx:id="buttonBox" alignment="CENTER" prefHeight="100.0" prefWidth="800.0" spacing="100.0">
-         <Pane prefHeight="100.0" prefWidth="822.0">
-            <Button fx:id="startGameButton" layoutX="332.0" layoutY="30.0" mnemonicParsing="false"
-                    onAction="#startGame" prefHeight="40.0" prefWidth="137.0" text="Start Game">
-               <font>
-                  <Font size="20.0"/>
-               </font>
-            </Button>
-            <Button fx:id="readyButton" layoutX="175.0" layoutY="30.0" mnemonicParsing="false"
-                    onAction="#setReadyTrue" prefHeight="40.0" prefWidth="123.0" text="Ready">
-               <font>
-                  <Font size="20.0"/>
-               </font>
-            </Button>
-            <Button fx:id="leaveButton" layoutX="495.0" layoutY="30.0" mnemonicParsing="false"
-                    onAction="#leaveLobby" prefHeight="40.0" prefWidth="84.0" text="Leave">
-               <font>
-                  <Font size="20.0"/>
-               </font>
-            </Button>
-            <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="24.0" fitWidth="22.0"
-                       layoutX="628.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true"
-                       style="border-color: black;">
-               <Image url="@../question_mark_icon.jpg"/>
-            </ImageView>
-         </Pane>
+      <HBox fx:id="buttonBox" alignment="CENTER" prefHeight="100.0" prefWidth="800.0">
+         <Button fx:id="readyButton" mnemonicParsing="false" onAction="#setReadyTrue" prefHeight="44.0" prefWidth="100.0" text="Ready">
+            <font>
+               <Font size="20.0" />
+            </font>
+            <HBox.margin>
+               <Insets right="50.0" />
+            </HBox.margin>
+         </Button>
+         <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#startGame" prefHeight="44.0" prefWidth="150.0" text="Start Game">
+            <font>
+               <Font size="20.0" />
+            </font>
+            <HBox.margin>
+               <Insets right="50.0" />
+            </HBox.margin>
+         </Button>
+         <Button fx:id="leaveButton" mnemonicParsing="false" onAction="#leaveLobby" prefHeight="44.0" prefWidth="100.0" text="Leave">
+            <font>
+               <Font size="20.0" />
+            </font>
+            <HBox.margin>
+               <Insets right="50.0" />
+            </HBox.margin>
+         </Button>
+         <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="24.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
+            <Image url="@../question_mark_icon.jpg" />
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+         </ImageView>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </HBox>
    </VBox>
 </Pane>

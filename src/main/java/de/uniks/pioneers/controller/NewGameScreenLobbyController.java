@@ -22,13 +22,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -57,6 +64,12 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public Button startGameButton;
     @FXML public Button leaveButton;
     @FXML public ImageView RulesButton;
+    @FXML public HBox clientReadyBox;
+    @FXML public Label clientReadyLabel;
+    @FXML public ColorPicker colorPicker;
+    @FXML public SVGPath houseSVG;
+    @FXML public ImageView clientAvatar;
+
 
     private final EventListener eventListener;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -116,6 +129,13 @@ public class NewGameScreenLobbyController implements Controller {
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(this.getPassword());
+        colorPicker.setValue(Color.RED);
+        houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
+        try {
+            clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
+        } catch (IllegalArgumentException | NullPointerException e) {
+            clientAvatar.setImage(new Image(Constants.DEFAULT_AVATAR));
+        }
 
         // add mouse event for rules button
         this.RulesButton.setOnMouseClicked(this::openRules);
@@ -218,7 +238,10 @@ public class NewGameScreenLobbyController implements Controller {
         // set member "ready" true in API
         disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(result -> {}, Throwable::printStackTrace));
+                .subscribe(result -> {
+                    clientReadyLabel.setText("Ready");
+                    clientReadyBox.setBackground(Background.fill(Color.GREEN));
+                    }, Throwable::printStackTrace));
     }
 
     private void showReadyCheckMark(String memberId) {
@@ -278,5 +301,10 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void onColorChange()
+    {
+        houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
     }
 }

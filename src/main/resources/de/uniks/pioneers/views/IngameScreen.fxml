@@ -62,7 +62,7 @@
          <children>
             <ImageView fx:id="tradeImageView" fitHeight="160.0" fitWidth="100.0" layoutX="-20.0" layoutY="-52.0" scaleX="0.6" scaleY="0.38" scaleZ="0.4">
                <image>
-                  <Image url="@../ingame/trading.png" />
+                  <Image url="@../controller/ingame/trading.png" />
                </image>
             </ImageView>
          </children></Pane>
@@ -70,12 +70,12 @@
          <children>
             <ImageView fx:id="hourglassImageView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.28" scaleY="0.28" scaleZ="0.28">
                <image>
-                  <Image url="@../ingame/sanduhr.png" />
+                  <Image url="@../controller/ingame/sanduhr.png" />
                </image>
             </ImageView>
             <ImageView fx:id="nextTurnImageView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.25" scaleY="0.25" scaleZ="0.25" visible="false">
                <image>
-                  <Image url="@../ingame/next.png" />
+                  <Image url="@../controller/ingame/next.png" />
                </image>
             </ImageView>
          </children>
@@ -87,12 +87,12 @@
             <Label fx:id="situationLabel" layoutX="5.0" layoutY="20.0" text="Kristian: rolls the dice" />
             <ImageView fx:id="leftDiceImageView" fitHeight="200.0" fitWidth="200.0" layoutX="74.0" layoutY="-70.0" scaleX="0.25" scaleY="0.25" scaleZ="0.25">
                <image>
-                  <Image url="@../ingame/1.png" />
+                  <Image url="@../controller/ingame/1.png" />
                </image>
             </ImageView>
             <ImageView fx:id="rightDiceImageView" fitHeight="200.0" fitWidth="200.0" layoutX="128.0" layoutY="-70.0" scaleX="0.25" scaleY="0.25" scaleZ="0.25">
                <image>
-                  <Image url="@../ingame/1.png" />
+                  <Image url="@../controller/ingame/1.png" />
                </image>
             </ImageView>
          </children>
@@ -101,7 +101,7 @@
          <children>
             <ImageView fx:id="hammerImageView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.25" scaleY="0.25" scaleZ="0.25">
                <image>
-                  <Image url="@../ingame/hammer.png" />
+                  <Image url="@../controller/ingame/hammer.png" />
                </image>
             </ImageView>
          </children></Pane>
