@@ -249,7 +249,8 @@ public class NewGameScreenLobbyController implements Controller {
         // check if all users are ready
         if (allUsersReady()) {
             // only for testing purposes!! Was not my task.
-            app.show(ingameScreenControllerProvider.get());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "START GAME!");
+            alert.showAndWait();
         }
     }
 
