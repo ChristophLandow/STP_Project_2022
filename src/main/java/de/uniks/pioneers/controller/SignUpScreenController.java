@@ -26,10 +26,15 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.*;
@@ -173,10 +178,20 @@ public class SignUpScreenController implements Controller{
         String avatarB64 = customAvatar;
         //load default avatar if no custom one was selected
         if(customAvatar.equals("")){
-
-            getClass().getResource("subcontroller/" + avatar);
-            byte[] data = Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getResource("subcontroller/" + avatar)).toURI()));
-            avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+            if(getClass().getResource("subcontroller/" + avatar).toString().contains("!"))
+            {
+                final Map<String, String> env = new HashMap<>();
+                String[] array = getClass().getResource("subcontroller/" + avatar).toString().split("!");
+                FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
+                byte[] data = Files.readAllBytes(Objects.requireNonNull(fs.getPath(array[1])));
+                avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+                fs.close();
+            }
+            else
+            {
+                byte[] data = Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getResource("subcontroller/" + avatar)).toURI()));
+                avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
+            }
         }
 
         this.userService.register(this.textFieldUserName.getText(), avatarB64, this.passwordField.getText())

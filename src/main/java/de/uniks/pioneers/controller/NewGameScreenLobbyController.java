@@ -22,13 +22,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -39,42 +46,24 @@ import java.util.Objects;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class NewGameScreenLobbyController implements Controller {
-    @FXML
-    public Pane root;
-    @FXML
-    public VBox vBoxRoot;
-    @FXML
-    public HBox topLevel;
-    @FXML
-    public VBox leftBox;
-    @FXML
-    public Label gameNameLabel;
-    @FXML
-    public Label passwordLabel;
-    @FXML
-    public VBox userBox;
-    @FXML
-    public VBox rightBox;
-    @FXML
-    public VBox messageBox;
-    @FXML
-    public ScrollPane chatScrollPane;
-    @FXML
-    public HBox messageHbox;
-    @FXML
-    public TextField messageText;
-    @FXML
-    public Button sendButton;
-    @FXML
-    public HBox buttonBox;
-    @FXML
-    public Button readyButton;
-    @FXML
-    public Button startGameButton;
-    @FXML
-    public Button leaveButton;
-    @FXML
-    public ImageView RulesButton;
+    @FXML public Pane root;
+    @FXML public VBox vBoxRoot;
+    @FXML public HBox topLevel;
+    @FXML public VBox leftBox;
+    @FXML public Label gameNameLabel;
+    @FXML public Label passwordLabel;
+    @FXML public VBox userBox;
+    @FXML public VBox rightBox;
+    @FXML public VBox messageBox;
+    @FXML public ScrollPane chatScrollPane;
+    @FXML public HBox messageHbox;
+    @FXML public TextField messageText;
+    @FXML public Button sendButton;
+    @FXML public HBox buttonBox;
+    @FXML public Button readyButton;
+    @FXML public Button startGameButton;
+    @FXML public Button leaveButton;
+    @FXML public ImageView RulesButton;
 
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
@@ -89,7 +78,6 @@ public class NewGameScreenLobbyController implements Controller {
     public SimpleObjectProperty<User> owner = new SimpleObjectProperty<>();
 
     private final ObservableList<Member> members = FXCollections.observableArrayList();
-
     private final List<User> users = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String password;
@@ -133,11 +121,19 @@ public class NewGameScreenLobbyController implements Controller {
                     .subscribe(member -> initUserListener(user)
                             , Throwable::printStackTrace));
         }
-    }
-
 
     @Override
     public void init() {
+        //set game name label and password text label
+        clientUserNameLabel.setText(userService.getCurrentUser().name());
+        colorPicker.setValue(Color.RED);
+        houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
+        try {
+            clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
+        } catch (IllegalArgumentException | NullPointerException e) {
+            clientAvatar.setImage(new Image(Constants.DEFAULT_AVATAR));
+        }
+
         // add mouse event for rules button
         this.RulesButton.setOnMouseClicked(this::openRules);
 
@@ -163,7 +159,6 @@ public class NewGameScreenLobbyController implements Controller {
         gameChatController.users = this.users;
         gameChatController.render();
         gameChatController.init();
-
     }
 
     private void openRules(MouseEvent mouseEvent) {
@@ -176,7 +171,7 @@ public class NewGameScreenLobbyController implements Controller {
         userBox.getChildren().remove(removal);
         users.removeIf(user -> user._id().equals(member.userId()));
 
-        if (member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())) {
+        if(member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())){
             app.show(lobbyScreenControllerProvider.get());
             Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.HOST_LEFT_GAME_ALERT);
             alert.showAndWait();
@@ -261,7 +256,9 @@ public class NewGameScreenLobbyController implements Controller {
         disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(result -> {
-                }, Throwable::printStackTrace));
+                    clientReadyLabel.setText("Ready");
+                    clientReadyBox.setBackground(Background.fill(Color.GREEN));
+                    }, Throwable::printStackTrace));
     }
 
     private void showReadyCheckMark(String memberId) {
@@ -286,7 +283,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private boolean allUsersReady() {
-        for (Node node : userBox.getChildren()) {
+        for (Node node: userBox.getChildren()) {
             HBox memberBox = (HBox) node;
 
             // check if there is a checkmark
@@ -300,7 +297,6 @@ public class NewGameScreenLobbyController implements Controller {
         }
         return true;
     }
-
     public void leaveLobby() {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
@@ -321,6 +317,11 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void onColorChange()
+    {
+        houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
     }
 
     public ObservableList<Member> getMembers() {
