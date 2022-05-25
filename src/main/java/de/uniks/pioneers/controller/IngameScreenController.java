@@ -8,19 +8,21 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
+import static de.uniks.pioneers.GameConstants.scale;
 
 @Singleton
 public class IngameScreenController implements Controller {
@@ -52,14 +54,24 @@ public class IngameScreenController implements Controller {
         BoardGenerator generator = new BoardGenerator();
         List<Tile> tiles = generator.generate(2);
 
-        List<Circle> vtiles = new ArrayList<Circle>();
         for(int i = 0; i < tiles.size(); i++){
 
-            Circle circle = new Circle(50);
-            circle.setLayoutX(tiles.get(i).x + this.fieldPane.getPrefWidth()/2);
-            circle.setLayoutY(tiles.get(i).y + this.fieldPane.getPrefHeight()/2);
-            this.fieldPane.getChildren().add(circle);
-            vtiles.add(circle);
+            Polygon hex = new Polygon();
+            hex.getPoints().addAll(
+                    0.0, 1.0,
+                    Math.sqrt(3)/2, 0.5,
+                    Math.sqrt(3)/2, -0.5,
+                    0.0, -1.0,
+                    -Math.sqrt(3)/2, -0.5,
+                    -Math.sqrt(3)/2, 0.5);
+            hex.setScaleX(scale);
+            hex.setScaleY(scale);
+            Image image = new Image("ingame/tile_wald.png");
+            hex.setFill(new ImagePattern(image));
+            hex.setLayoutX(tiles.get(i).x + this.fieldPane.getPrefWidth()/2);
+            hex.setLayoutY(tiles.get(i).y + this.fieldPane.getPrefHeight()/2);
+            this.fieldPane.getChildren().add(hex);
+
 
         }
 
