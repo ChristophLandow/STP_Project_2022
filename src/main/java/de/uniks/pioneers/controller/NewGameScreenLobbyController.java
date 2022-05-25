@@ -13,6 +13,8 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -207,6 +209,11 @@ public class NewGameScreenLobbyController implements Controller {
         loader.setControllerFactory(c -> this);
         try {
             view = loader.load();
+
+            // set start button invisible if currentUser is not gameOwner
+            if (!userService.getCurrentUser()._id().equals(game.get().owner())) {
+                startGameButton.setVisible(false);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
