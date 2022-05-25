@@ -66,7 +66,7 @@ public class IngameScreenController implements Controller {
                     -Math.sqrt(3)/2, 0.5);
             hex.setScaleX(scale);
             hex.setScaleY(scale);
-            Image image = new Image("ingame/tile_wald.png");
+            Image image = new Image(getClass().getResource("ingame/weideland.png").toString());
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(tiles.get(i).x + this.fieldPane.getPrefWidth()/2);
             hex.setLayoutY(tiles.get(i).y + this.fieldPane.getPrefHeight()/2);
