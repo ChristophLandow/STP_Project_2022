@@ -2,6 +2,8 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.Tile;
+import de.uniks.pioneers.services.BoardGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,11 +11,14 @@ import javafx.scene.Parent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 
@@ -23,6 +28,8 @@ public class IngameScreenController implements Controller {
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
     @FXML public SVGPath citySVG;
+
+    @FXML public Pane fieldPane;
 
     private final App app;
 
@@ -42,6 +49,21 @@ public class IngameScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+        BoardGenerator generator = new BoardGenerator();
+        List<Tile> tiles = generator.generate(2);
+
+        List<Circle> vtiles = new ArrayList<Circle>();
+        for(int i = 0; i < tiles.size(); i++){
+
+            Circle circle = new Circle(50);
+            circle.setLayoutX(tiles.get(i).x + this.fieldPane.getPrefWidth()/2);
+            circle.setLayoutY(tiles.get(i).y + this.fieldPane.getPrefHeight()/2);
+            this.fieldPane.getChildren().add(circle);
+            vtiles.add(circle);
+
+        }
+
+
         return view;
     }
 

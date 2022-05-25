@@ -1,13 +1,15 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import static de.uniks.pioneers.GameConstants.scale;
+
 public class Tile {
 
     int q;
     int r;
     int s;
 
-    double x;
-    double y;
+    public double x;
+    public double y;
 
     String type = "";
     int number;
@@ -28,8 +30,8 @@ public class Tile {
 
         double[] coords = new double[2];
 
-        coords[0] = Math.sqrt(3) * (r/2 + q);
-        coords[1] = -(3.0/2.0) * r;
+        coords[0] = Math.sqrt(3) * (r/2 + q) * scale;
+        coords[1] = -(3.0/2.0) * r * scale;
 
         return coords;
     }

@@ -31,9 +31,6 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage){
 
-        BoardGenerator a = new BoardGenerator();
-        a.generate(1);
-
         this.stage = primaryStage;
         if(this.controller != null){
 
