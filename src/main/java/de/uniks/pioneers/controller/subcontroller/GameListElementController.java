@@ -57,7 +57,10 @@ public class GameListElementController implements Controller {
         this.gameListDropDownControllerProvider = gameListDropDownControllerProvider;
         this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
         this.newGameLobbyServiceProvider = newGameLobbyServiceProvider;
-        this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
+        this.game.addListener((ChangeListener) (game, oldVal, newVal) -> {
+            setDataToGameListElement();
+            System.out.println("kapppppppppa works");
+        });
     }
 
     @Override

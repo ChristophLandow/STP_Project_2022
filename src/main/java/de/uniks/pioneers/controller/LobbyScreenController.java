@@ -174,9 +174,9 @@ public class LobbyScreenController implements Controller {
     public void showNewGameLobby(Game game, String password) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
+        newGameLobbyService.setCurrentMemberId(userService.getCurrentUser()._id());
         app.show(newGameScreenLobbyController);
         newGameScreenLobbyController.postNewMember(userService.getCurrentUser(), password);
-        newGameLobbyService.setCurrentMemberId(userService.getCurrentUser()._id());
     }
 
     public void newGame(ActionEvent actionEvent) {

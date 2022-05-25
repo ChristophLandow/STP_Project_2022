@@ -81,7 +81,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
         when(userService.editProfile(null,null,null,"offline")).thenReturn(Observable.just(new User("","","","")));
         when(userService.getCurrentUser()).thenReturn(new User("","","",null));
 
-        when(eventListener.listen("games.*.*", Game.class)).thenReturn(Observable.just(new Event<>("", new Game("","","","","",0))));
+        when(eventListener.listen("games.*.*", Game.class)).thenReturn(Observable.just(new Event<>("", new Game("","","","","",0,false))));
 
         when(lobbyService.getGames()).thenReturn(Observable.just(new ArrayList<>()));
         when(userlistService.getUsers()).thenReturn(FXCollections.observableArrayList());

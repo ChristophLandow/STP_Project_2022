@@ -150,36 +150,36 @@ public class TestModule {
             public Observable<List<Game>> getGames() {
 
                 ArrayList<Game> games = new ArrayList<>();
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","TestUserA",1));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","TestUserB",1));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","TestUserC",1));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","TestUserA",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","TestUserB",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","TestUserC",1,false));
                 return Observable.just(games);
             }
 
             @Override
             public Observable<Game> getGame(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","TestUserA",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","TestUserA",1,false));
             }
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"TestUser",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"TestUser",1,false));
 
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1,false));
 
             }
 
             @Override
             public Observable<Game> delete(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1,false));
 
             }
         };
@@ -271,7 +271,7 @@ public class TestModule {
 
     @Provides
     static NewGameLobbyService newGameLobbyService(){
-        return new NewGameLobbyService(gameMemberApiService(),messageApiService()){
+        return new NewGameLobbyService(gameApiService(),gameMemberApiService(),messageApiService()){
 
             private String currentMemberId;
 

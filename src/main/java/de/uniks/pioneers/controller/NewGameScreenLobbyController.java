@@ -13,6 +13,10 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -97,6 +101,9 @@ public class NewGameScreenLobbyController implements Controller {
     Provider<GameChatController> gameChatControllerProvider;
 
     @Inject
+    Provider<IngameScreenController> ingameScreenControllerProvider;
+
+    @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
                                         NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService,
                                         Provider<LobbyGameListController> lobbyGameListControllerProvider) {
@@ -146,6 +153,7 @@ public class NewGameScreenLobbyController implements Controller {
 
         // init event listeners
         initMemberListener();
+        initGameListener();
 
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
@@ -238,6 +246,19 @@ public class NewGameScreenLobbyController implements Controller {
                 }));
     }
 
+    private void initGameListener(){
+        String patternToObserveGame= String.format("games.%s.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveGame, Game.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(gameEvent -> {
+                     if (gameEvent.event().endsWith(".updated") && gameEvent.data().started().equals(true)) {
+                         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
+                         app.show(ingameScreenController);
+                    }
+                })
+        );
+    }
+
     @Override
     public void stop() {
         gameChatController.stop();
@@ -284,8 +305,12 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "START GAME!");
-            alert.showAndWait();
+            disposable.add(newGameLobbyService.updateGame(game.get(),password,true)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(response -> {
+                        IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
+                        app.show(ingameScreenController);
+                    }, Throwable::printStackTrace));
         }
     }
 

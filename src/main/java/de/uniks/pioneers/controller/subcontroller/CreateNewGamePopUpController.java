@@ -103,7 +103,7 @@ public class CreateNewGamePopUpController implements Controller {
     public void createGame() {
         String name = gameNameTextField.getText();
         String password = passwordTextField.getText();
-        lobbyServiceProvider.get().createGame(name,password)
+        lobbyServiceProvider.get().createGame(name,false, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
                     LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();

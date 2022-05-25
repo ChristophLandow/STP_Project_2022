@@ -11,7 +11,7 @@ import static de.uniks.pioneers.Constants.API_V2_PIONEERS_PREFIX;
 
 public interface PioneersApiService {
     @GET(API_V2_PIONEERS_PREFIX+"/map")
-    Observable<List<Tile>> getAllTiles (@Path("gameId") String gameId);
+    Observable<Map> getMap (@Path("gameId") String gameId);
 
     @GET(API_V2_PIONEERS_PREFIX+"/players")
     Observable<List<Player>> getAllPlayers (@Path("gameId") String gameId);
@@ -30,14 +30,5 @@ public interface PioneersApiService {
 
     @POST(API_V2_PIONEERS_PREFIX+"/moves")
     Observable<Move> postMove (@Path("gameId") String gameId, @Body MoveDto dto);
-
-
-
-
-
-
-
-
-
 
 }
