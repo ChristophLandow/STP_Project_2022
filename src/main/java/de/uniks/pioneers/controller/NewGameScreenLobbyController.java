@@ -64,6 +64,7 @@ public class NewGameScreenLobbyController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<GameChatController> gameChatControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+    private final Provider<IngameScreenController> ingameScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     private final App app;
     private Parent view;
@@ -86,12 +87,14 @@ public class NewGameScreenLobbyController implements Controller {
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                         Provider<GameChatController> gameChatControllerProvider,
                                         Provider<RulesScreenController> rulesScreenControllerProvider,
+                                        Provider<IngameScreenController> ingameScreenControllerProvider,
                                         NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService,
                                         Provider<LobbyGameListController> lobbyGameListControllerProvider) {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.gameChatControllerProvider = gameChatControllerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
+        this.ingameScreenControllerProvider = ingameScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
         this.app = app;
         this.userService = userService;
@@ -178,6 +181,7 @@ public class NewGameScreenLobbyController implements Controller {
             showReadyCheckMark(member.userId());
         }
     }
+
     private void initMemberListener() {
         String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveGameMembers, Member.class)
@@ -244,8 +248,8 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "START GAME!");
-            alert.showAndWait();
+            // only for testing purposes!! Was not my task.
+            app.show(ingameScreenControllerProvider.get());
         }
     }
 
@@ -264,6 +268,7 @@ public class NewGameScreenLobbyController implements Controller {
         }
         return true;
     }
+
     public void leaveLobby() {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
