@@ -55,35 +55,45 @@ public class IngameScreenController implements Controller {
         }
         BoardGenerator generator = new BoardGenerator();
         List<Tile> tiles = generator.generateTiles(2);
+        List<Tile> edges = generator.generateEdges(5);
+        List<Tile> corners = generator.generateCorners(5);
 
-        for(int i = 0; i < tiles.size(); i++){
+        for (Tile tile : tiles) {
 
             Polygon hex = new Polygon();
             hex.getPoints().addAll(
                     0.0, 1.0,
-                    Math.sqrt(3)/2, 0.5,
-                    Math.sqrt(3)/2, -0.5,
+                    Math.sqrt(3) / 2, 0.5,
+                    Math.sqrt(3) / 2, -0.5,
                     0.0, -1.0,
-                    -Math.sqrt(3)/2, -0.5,
-                    -Math.sqrt(3)/2, 0.5);
+                    -Math.sqrt(3) / 2, -0.5,
+                    -Math.sqrt(3) / 2, 0.5);
             hex.setScaleX(scale);
             hex.setScaleY(scale);
             Image image = new Image(getClass().getResource("ingame/weideland.png").toString());
             hex.setFill(new ImagePattern(image));
-            hex.setLayoutX(tiles.get(i).x + this.fieldPane.getPrefWidth()/2);
-            hex.setLayoutY(tiles.get(i).y + this.fieldPane.getPrefHeight()/2);
+            hex.setLayoutX(tile.x + this.fieldPane.getPrefWidth() / 2);
+            hex.setLayoutY(tile.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(hex);
         }
 
-        List<Tile> corners = generator.generateCorners(5);
-
-        for(int i = 0; i < corners.size(); i++){
+        for (Tile edge : edges) {
 
             Circle circ = new Circle(2);
-            circ.setFill(Color.rgb(255,0,0));
+            circ.setFill(Color.rgb(255, 0, 0));
 
-            circ.setLayoutX(corners.get(i).x + this.fieldPane.getPrefWidth()/2);
-            circ.setLayoutY(corners.get(i).y + this.fieldPane.getPrefHeight()/2);
+            circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
+            this.fieldPane.getChildren().add(circ);
+        }
+
+        for (Tile corner : corners) {
+
+            Circle circ = new Circle(5);
+            circ.setFill(Color.rgb(255, 0, 0));
+
+            circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
         }
 
