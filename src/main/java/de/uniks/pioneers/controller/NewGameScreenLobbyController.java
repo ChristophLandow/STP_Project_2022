@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.model.Game;
@@ -85,23 +86,20 @@ public class NewGameScreenLobbyController implements Controller {
     private final UserService userService;
     private final GameService gameService;
     private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
-
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     public SimpleObjectProperty<User> owner = new SimpleObjectProperty<>();
-
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     private final List<User> users = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String password;
-
     private GameChatController gameChatController;
+    private ColorPickerController colorPickerController;
+    private boolean playerReady = false;
 
     @Inject
     Provider<LobbyScreenController> lobbyScreenControllerProvider;
-
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
-
     @Inject
     Provider<IngameScreenController> ingameScreenControllerProvider;
 
@@ -116,6 +114,7 @@ public class NewGameScreenLobbyController implements Controller {
         this.userService = userService;
         this.gameService = gameService;
         this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
+
     }
 
     public void postNewMember(User user, String password) {
@@ -128,10 +127,11 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(this.members::setAll
                         , Throwable::printStackTrace));
 
+        System.out.println(game.get()._id());
         if (user._id().equals(game.get().owner())) {
             this.owner.set(user);
         } else {
-            disposable.add(newGameLobbyService.postMember(game.get()._id(), true, this.password)
+            disposable.add(newGameLobbyService.postMember(game.get()._id(), true, colorPickerController.getColor(), this.password)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(member -> initUserListener(user)
                             , Throwable::printStackTrace));
@@ -144,8 +144,8 @@ public class NewGameScreenLobbyController implements Controller {
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(this.getPassword());
         clientUserNameLabel.setText(userService.getCurrentUser().name());
-        colorPicker.setValue(Color.RED);
-        houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
+        colorPickerController = new ColorPickerController(colorPicker, houseSVG);
+
         try {
             clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
         } catch (IllegalArgumentException | NullPointerException e) {
@@ -211,6 +211,7 @@ public class NewGameScreenLobbyController implements Controller {
         if (member.ready()) {
             showReadyCheckMark(member.userId());
         }
+
     }
 
     private void initUserListener(User user) {
@@ -223,7 +224,7 @@ public class NewGameScreenLobbyController implements Controller {
                     deleteUser(toRemove);
                     if (userEvent.event().endsWith(".updated")) {
                         if (userFromEvent.status().equals("online")) {
-                            disposable.add(newGameLobbyService.postMember(game.get()._id(), true, this.password)
+                            disposable.add(newGameLobbyService.postMember(game.get()._id(), true, colorPickerController.getColor(), this.password)
                                     .observeOn(FX_SCHEDULER)
                                     .subscribe());
                         }
@@ -288,13 +289,21 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void setReadyTrue() {
+    public void onSetReadyButton() {
         // set member "ready" true in API
-        disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId())
+        System.out.println("fehler");
+        playerReady = !playerReady;
+        disposable.add(newGameLobbyService.setReady(game.get()._id(), newGameLobbyService.getCurrentMemberId(), playerReady, colorPickerController.getColor())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(result -> {
-                    clientReadyLabel.setText("Ready");
+                    System.out.println("fehler2");
+                    if(playerReady) {
+                        clientReadyLabel.setText("Ready");
+                    } else {
+                        clientReadyLabel.setText("Not Ready");
+                    }
                     clientReadyBox.setBackground(Background.fill(Color.GREEN));
+                    colorPickerController.setDisable(true);
                     }, Throwable::printStackTrace));
     }
 
@@ -309,6 +318,9 @@ public class NewGameScreenLobbyController implements Controller {
         if (currentMemberBox.getChildren().size() < 2) {
             currentMemberBox.getChildren().add(checkMarkImage);
         }
+        else {
+
+        }
     }
 
     public void startGame() {
@@ -319,6 +331,7 @@ public class NewGameScreenLobbyController implements Controller {
                     .subscribe(response -> {
                         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
                         app.show(ingameScreenController);
+                        ingameScreenController.setPlayerColor(colorPickerController.getColor());
                     }, Throwable::printStackTrace));
         }
     }
@@ -363,7 +376,11 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void onColorChange()
     {
-        houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
+        colorPickerController.setColor();
+    }
+
+    public void setPlayerColor(String hexColor) {
+        colorPickerController.setColor(hexColor);
     }
 
     public ObservableList<Member> getMembers() {

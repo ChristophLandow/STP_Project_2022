@@ -25,11 +25,10 @@ public class IngameScreenController implements Controller {
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
     @FXML public SVGPath citySVG;
-
     @FXML public Button rulesButton;
+    private String clientPlayerColor;
 
     private final App app;
-
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
 
     @Inject
@@ -55,7 +54,6 @@ public class IngameScreenController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
-        setPlayerColor("#FF0000");
     }
 
     private void swapTurnSymbol() {
@@ -63,8 +61,9 @@ public class IngameScreenController implements Controller {
         turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
     }
 
-    private void setPlayerColor(String hexColor)
+    public void setPlayerColor(String hexColor)
     {
+        clientPlayerColor = hexColor;
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Paint.valueOf(hexColor));
         citySVG.setFill(Paint.valueOf(hexColor));

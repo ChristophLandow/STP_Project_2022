@@ -32,8 +32,8 @@ public class NewGameLobbyService {
         return gameMemberApiService.getAll(id);
     }
 
-    public Observable<Member> postMember(String id, boolean ready, String password){
-        return gameMemberApiService.createMember(id, new CreateMemberDto(ready, password));
+    public Observable<Member> postMember(String id, boolean ready, String color, String password){
+        return gameMemberApiService.createMember(id, new CreateMemberDto(ready, color, password));
     }
 
     public Observable<Member> deleteMember(String id, String userId){
@@ -48,8 +48,8 @@ public class NewGameLobbyService {
         return messageApiService.getChatMessages("games", id);
     }
 
-    public Observable<Member> setReady(String groupId, String userId) {
-        return gameMemberApiService.setReady(groupId, userId, new UpdateMemberDto(true));
+    public Observable<Member> setReady(String groupId, String userId, boolean ready, String color) {
+        return gameMemberApiService.setReady(groupId, userId, new UpdateMemberDto(ready, color));
     }
 
     public void setCurrentMemberId(String id) {
