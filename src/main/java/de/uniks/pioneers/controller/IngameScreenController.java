@@ -6,12 +6,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 
@@ -24,11 +26,16 @@ public class IngameScreenController implements Controller {
     @FXML public SVGPath houseSVG;
     @FXML public SVGPath citySVG;
 
+    @FXML public Button rulesButton;
+
     private final App app;
 
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
     @Inject
-    public IngameScreenController(App app) {
+    public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider) {
         this.app = app;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
     }
 
     @Override
@@ -67,6 +74,8 @@ public class IngameScreenController implements Controller {
     }
 
     public void toRules(ActionEvent actionEvent) {
+        RulesScreenController controller = rulesScreenControllerProvider.get();
+        controller.init();
     }
 
     public void toSettings(ActionEvent actionEvent) {
