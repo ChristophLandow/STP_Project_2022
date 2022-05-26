@@ -12,7 +12,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
@@ -52,7 +54,7 @@ public class IngameScreenController implements Controller {
             return null;
         }
         BoardGenerator generator = new BoardGenerator();
-        List<Tile> tiles = generator.generate(2);
+        List<Tile> tiles = generator.generateTiles(2);
 
         for(int i = 0; i < tiles.size(); i++){
 
@@ -71,8 +73,18 @@ public class IngameScreenController implements Controller {
             hex.setLayoutX(tiles.get(i).x + this.fieldPane.getPrefWidth()/2);
             hex.setLayoutY(tiles.get(i).y + this.fieldPane.getPrefHeight()/2);
             this.fieldPane.getChildren().add(hex);
+        }
 
+        List<Tile> corners = generator.generateCorners(5);
 
+        for(int i = 0; i < corners.size(); i++){
+
+            Circle circ = new Circle(2);
+            circ.setFill(Color.rgb(255,0,0));
+
+            circ.setLayoutX(corners.get(i).x + this.fieldPane.getPrefWidth()/2);
+            circ.setLayoutY(corners.get(i).y + this.fieldPane.getPrefHeight()/2);
+            this.fieldPane.getChildren().add(circ);
         }
 
 

@@ -14,19 +14,19 @@ public class Tile {
     String type = "";
     int number;
 
-    public Tile(int q, int r, int s){
+    public Tile(int q, int r, int s, double scale){
 
         this.q = q;
         this.r = r;
         this.s = s;
 
-        double[] kartCoords = cubeToCart(q, r);
+        double[] kartCoords = cubeToCart(q, r, scale);
         x = kartCoords[0];
         y = kartCoords[1];
 
     }
 
-    private double[] cubeToCart(double q, double r){
+    private double[] cubeToCart(double q, double r, double scale){
 
         double[] coords = new double[2];
 
