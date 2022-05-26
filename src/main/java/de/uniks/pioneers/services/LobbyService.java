@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.CreateGameDto;
+import de.uniks.pioneers.dto.UpdateGameDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.LogoutResult;
 import de.uniks.pioneers.rest.AuthApiService;
@@ -30,11 +31,11 @@ public class LobbyService {
         return gameApiService.getGames();
     }
 
-    public Observable<Game> createGame(String name, String password) {
-        return gameApiService.create(new CreateGameDto(name, password));
+    public Observable<Game> createGame(String name, Boolean started, String password) {
+        return gameApiService.create(new CreateGameDto(name, false, password));
     }
 
-    public Observable<Game> deleteGame(String id){
+    public Observable<Game> deleteGame(String id) {
         return gameApiService.delete(id);
     }
 }

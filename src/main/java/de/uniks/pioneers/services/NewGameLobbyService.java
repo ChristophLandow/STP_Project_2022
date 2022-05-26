@@ -1,10 +1,9 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.CreateMemberDto;
-import de.uniks.pioneers.dto.CreateMessageDto;
-import de.uniks.pioneers.dto.MessageDto;
-import de.uniks.pioneers.dto.UpdateMemberDto;
+import de.uniks.pioneers.dto.*;
+import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
+import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -16,12 +15,15 @@ import java.util.List;
 @Singleton
 public class NewGameLobbyService {
 
+    private final GameApiService gameApiService;
     private final GameMemberApiService gameMemberApiService;
     private final MessageApiService messageApiService;
     private String currentMemberId;
 
     @Inject
-    public NewGameLobbyService(GameMemberApiService gameMemberApiService, MessageApiService messageApiService) {
+    public NewGameLobbyService(GameApiService gameApiService, GameMemberApiService gameMemberApiService,
+                               MessageApiService messageApiService) {
+        this.gameApiService = gameApiService;
         this.gameMemberApiService = gameMemberApiService;
         this.messageApiService = messageApiService;
     }
@@ -56,5 +58,9 @@ public class NewGameLobbyService {
 
     public String getCurrentMemberId() {
         return currentMemberId;
+    }
+
+    public Observable<Game> updateGame(Game game, String password, Boolean started) {
+        return gameApiService.update(game._id(), new UpdateGameDto(game.name(), game.owner(), started, password));
     }
 }
