@@ -13,6 +13,8 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -76,6 +78,7 @@ public class NewGameScreenLobbyController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<GameChatController> gameChatControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+    private final Provider<IngameScreenController> ingameScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     private final App app;
     private Parent view;
@@ -98,12 +101,14 @@ public class NewGameScreenLobbyController implements Controller {
     public NewGameScreenLobbyController(EventListener eventListener, Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                         Provider<GameChatController> gameChatControllerProvider,
                                         Provider<RulesScreenController> rulesScreenControllerProvider,
+                                        Provider<IngameScreenController> ingameScreenControllerProvider,
                                         NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService,
                                         Provider<LobbyGameListController> lobbyGameListControllerProvider) {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.gameChatControllerProvider = gameChatControllerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
+        this.ingameScreenControllerProvider = ingameScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
         this.app = app;
         this.userService = userService;
@@ -198,6 +203,7 @@ public class NewGameScreenLobbyController implements Controller {
             showReadyCheckMark(member.userId());
         }
     }
+
     private void initMemberListener() {
         String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveGameMembers, Member.class)
@@ -229,6 +235,11 @@ public class NewGameScreenLobbyController implements Controller {
         loader.setControllerFactory(c -> this);
         try {
             view = loader.load();
+
+            // set start button invisible if currentUser is not gameOwner
+            if (!userService.getCurrentUser()._id().equals(game.get().owner())) {
+                startGameButton.setVisible(false);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -262,6 +273,7 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
+            // only for testing purposes!! Was not my task.
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "START GAME!");
             alert.showAndWait();
         }
@@ -282,6 +294,7 @@ public class NewGameScreenLobbyController implements Controller {
         }
         return true;
     }
+
     public void leaveLobby() {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
