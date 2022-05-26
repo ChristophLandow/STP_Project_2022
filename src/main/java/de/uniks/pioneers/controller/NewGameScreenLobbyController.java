@@ -13,6 +13,8 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -139,6 +141,8 @@ public class NewGameScreenLobbyController implements Controller {
     @Override
     public void init() {
         //set game name label and password text label
+        gameNameLabel.setText(game.get().name());
+        passwordLabel.setText(this.getPassword());
         clientUserNameLabel.setText(userService.getCurrentUser().name());
         colorPicker.setValue(Color.RED);
         houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
@@ -272,6 +276,11 @@ public class NewGameScreenLobbyController implements Controller {
         loader.setControllerFactory(c -> this);
         try {
             view = loader.load();
+
+            // set start button invisible if currentUser is not gameOwner
+            if (!userService.getCurrentUser()._id().equals(game.get().owner())) {
+                startGameButton.setVisible(false);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -329,6 +338,7 @@ public class NewGameScreenLobbyController implements Controller {
         }
         return true;
     }
+
     public void leaveLobby() {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
