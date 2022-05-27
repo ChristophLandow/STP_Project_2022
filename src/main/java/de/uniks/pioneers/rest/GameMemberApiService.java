@@ -16,9 +16,9 @@ public interface GameMemberApiService {
     @POST("games/{gameId}/members")
     Observable<Member> createMember(@Path("gameId") String gameId, @Body CreateMemberDto dto);
 
-    @DELETE("/api/v1/games/{gameId}/members/{userId}")
+    @DELETE("games/{gameId}/members/{userId}")
     Observable<Member> deleteMember(@Path("gameId") String gameId, @Path("userId") String userId);
 
-    @PATCH("/api/v1/games/{gameId}/members/{userId}")
-    Observable<Member> setReady(@Path("gameId") String gameId, @Path("userId") String userId, @Body UpdateMemberDto dto);
+    @PATCH("games/{gameId}/members/{userId}")
+    Observable<Member> patchMember(@Path("gameId") String gameId, @Path("userId") String userId, @Body UpdateMemberDto dto);
 }

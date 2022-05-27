@@ -12,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -45,42 +44,38 @@ public class LobbyGameListController {
         this.gameListElementControllerProvider = gameListElementControllerProvider;
     }
 
-    public void init() {
+    public void init(){
         // after leaving a game this methods get called again, thats why the item list gets cleared
-        this.users = userlistService.getUsers();
-        games = FXCollections.observableArrayList();
         listViewGames.getItems().clear();
+        games = FXCollections.observableArrayList();
         disposable = new CompositeDisposable();
 
+        games.addListener((ListChangeListener<? super Game>) c -> {
+            c.next();
+            if (c.wasAdded()) {
+                c.getAddedSubList().stream().forEach(this::renderGame);
+            }
+        });
 
         disposable.add(lobbyService.getGames()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(this.games::setAll,
                         Throwable::printStackTrace));
 
-        games.addListener((ListChangeListener<? super Game>) c -> {
-            c.next();
-            if (c.wasAdded()) {
-                c.getAddedSubList().forEach(this::renderGame);
-            }
-        });
-
         disposable.add(eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".created")) {
-                        if(!games.contains(gameEvent.data()))
-                        {
-                            games.add(gameEvent.data());
-                        }
+                        games.add(gameEvent.data());
                     } else if (gameEvent.event().endsWith(".deleted")) {
+                        System.out.println(gameEvent.event());
                         deleteGame(gameEvent.data());
                     } else {
                         updateGame(gameEvent.data());
                     }
-                })
-        );
+                }));
 
+        this.users=userlistService.getUsers();
     }
 
     private void renderGame(Game game) {
@@ -129,7 +124,8 @@ public class LobbyGameListController {
         }
     }
 
-    public void stop() {
+    public void stop()
+    {
         disposable.dispose();
     }
 }

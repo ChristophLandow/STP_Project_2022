@@ -24,6 +24,7 @@ public class Constants {
     public static final int AVATAR_CHAR_LIMIT = 16384;
 
     public static final String API_V1_PREFIX = "/api/v1";
+    public static final String API_V2_PREFIX = "/api/v2";
     public static final String WS_V1_PREFIX = "/ws/v1";
     public static final String EVENTS_AUTH_TOKEN = "/events?authToken=";
 
