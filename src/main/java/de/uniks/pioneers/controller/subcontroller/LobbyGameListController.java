@@ -66,9 +66,11 @@ public class LobbyGameListController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".created")) {
-                        games.add(gameEvent.data());
+                        if(!games.contains(gameEvent.data()))
+                        {
+                            games.add(gameEvent.data());
+                        }
                     } else if (gameEvent.event().endsWith(".deleted")) {
-                        System.out.println(gameEvent.event());
                         deleteGame(gameEvent.data());
                     } else {
                         updateGame(gameEvent.data());
