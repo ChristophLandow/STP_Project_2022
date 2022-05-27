@@ -51,7 +51,7 @@ public class BoardGenerator {
 
                 int s = -q-r;
                 if((max(max(q, r), s) - min(min(q, r), s)) % 3 != 0){
-                    if((max(max(q, r), s) - min(min(q, r), s)) < 2* size -1){
+                    if((max(max(q, r), s) - min(min(q, r), s)) < 2 * size -((size-1)/2)+1){
                     corners.add(new Tile(q,r,s, scale * eulerC, false));
 }
                 }

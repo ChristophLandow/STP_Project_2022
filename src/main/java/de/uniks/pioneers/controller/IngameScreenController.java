@@ -53,10 +53,12 @@ public class IngameScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+        int size = 2;
+
         BoardGenerator generator = new BoardGenerator();
-        List<Tile> tiles = generator.generateTiles(2);
-        List<Tile> edges = generator.generateEdges(5);
-        List<Tile> corners = generator.generateCorners(5);
+        List<Tile> tiles = generator.generateTiles(size);
+        List<Tile> edges = generator.generateEdges(2 * size + 1);
+        List<Tile> corners = generator.generateCorners(2 * size + 1);
 
         for (Tile tile : tiles) {
 
