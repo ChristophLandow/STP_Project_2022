@@ -296,7 +296,7 @@ public class NewGameScreenLobbyController implements Controller {
         boolean playersReady = true;
         Iterator<HashMap.Entry<String, PlayerEntryController>> it = playerEntries.entrySet().iterator();
 
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             HashMap.Entry<String, PlayerEntryController> entry = it.next();
             if(!entry.getValue().getReady()) {
                 playersReady = false;
