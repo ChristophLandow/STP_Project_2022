@@ -2,6 +2,10 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.GameChatController;
+import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.User;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 
@@ -54,9 +59,14 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView rightDiceImageView;
     @FXML public ImageView hammerImageView;
 
-    private String clientPlayerColor;
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    private List<User> users;
+
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
+    @Inject
+    Provider<GameChatController> gameChatControllerProvider;
 
     @Inject
     public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider) {
@@ -81,6 +91,16 @@ public class IngameScreenController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
+
+        // init game chat controller
+        GameChatController gameChatController = gameChatControllerProvider.get()
+                .setChatScrollPane(this.chatScrollPane)
+                .setMessageText(this.sendMessageField)
+                .setMessageBox(this.messageVBox)
+                .setGame(this.game.get())
+                .setUsers(this.users);
+        gameChatController.render();
+        gameChatController.init();
     }
 
     private void swapTurnSymbol() {
@@ -90,7 +110,6 @@ public class IngameScreenController implements Controller {
 
     public void setPlayerColor(String hexColor)
     {
-        clientPlayerColor = hexColor;
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Paint.valueOf(hexColor));
         citySVG.setFill(Paint.valueOf(hexColor));
@@ -132,5 +151,9 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void stop() {
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }
