@@ -1,7 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import static de.uniks.pioneers.GameConstants.eulerC;
-import static de.uniks.pioneers.GameConstants.scale;
+import static java.lang.Math.round;
+import static java.lang.Math.sqrt;
 
 public class Tile {
 
@@ -15,7 +15,11 @@ public class Tile {
     String type = "";
     int number;
 
+    double scale;
+
     public Tile(int q, int r, int s, double scale, boolean top){
+
+        this.scale = scale;
 
         this.q = q;
         this.r = r;
@@ -32,12 +36,40 @@ public class Tile {
         double[] coords = new double[2];
 
         if(top){
-            coords[0] = Math.sqrt(3) * (r/2 + q) * scale;
+            coords[0] = sqrt(3) * (r/2 + q) * scale;
             coords[1] = -(3.0/2.0) * r * scale;
         }else{
-            coords[1] = Math.sqrt(3) * (r/2 + q) * scale;
             coords[0] = -(3.0/2.0) * r * scale;
+            coords[1] = sqrt(3) * (r/2 + q) * scale;
         }
+
+        return coords;
+    }
+
+    public double[] cartToCube(double x, double y, double scale, boolean top){
+
+        double[] coords = new double[3];
+        double q;
+        double r;
+        double s;
+
+        if(top){
+
+            r = (2*y)/(3*scale);
+            q = (x/(sqrt(3)*scale)) - (r/2);
+            s = -q -r;
+
+        }else{
+
+            r = (2*y)/(3*scale);
+            s = (x/(sqrt(3)*scale)) - (r/2);
+            q = -s -r;
+
+        }
+
+        coords[0] = q;
+        coords[1] = r;
+        coords[2] = s;
 
         return coords;
     }
@@ -45,7 +77,7 @@ public class Tile {
     @Override
     public String toString(){
 
-        return "X: " + this.x + "Y: " +this.y;
+        return q + " " + r + " " + s + " \tX: " + x + " Y: " +y;
 
     }
 }

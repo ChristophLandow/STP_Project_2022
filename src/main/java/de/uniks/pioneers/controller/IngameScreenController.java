@@ -2,6 +2,8 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.BuildingPointController;
+import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import de.uniks.pioneers.controller.subcontroller.Tile;
 import de.uniks.pioneers.services.BoardGenerator;
 import javafx.event.ActionEvent;
@@ -21,6 +23,7 @@ import javafx.scene.paint.Paint;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
@@ -36,6 +39,10 @@ public class IngameScreenController implements Controller {
     @FXML public Pane fieldPane;
 
     private final App app;
+
+    private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
+    private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
+
 
     @Inject
     public IngameScreenController(App app) {
@@ -77,6 +84,7 @@ public class IngameScreenController implements Controller {
             hex.setLayoutX(tile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(tile.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(hex);
+            this.tileControllers.add(new HexTileController(tile, hex));
         }
 
         for (Tile edge : edges) {
@@ -97,6 +105,8 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
+            this.buildingControllers.add(new BuildingPointController(corner, circ));
+
         }
 
 
