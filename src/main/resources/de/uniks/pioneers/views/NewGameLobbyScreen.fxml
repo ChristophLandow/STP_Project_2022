@@ -57,8 +57,8 @@
                         <Insets right="15.0" />
                      </HBox.margin>
                      <children>
-                        <ImageView fx:id="clientAvatar" fitHeight="38.0" fitWidth="38.0" layoutX="6.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
-                        <Label fx:id="clientUserNameLabel" layoutX="53.0" layoutY="13.0" prefHeight="25.0" prefWidth="117.0" text="PlayerName">
+                        <ImageView fx:id="clientAvatar" fitHeight="35.0" fitWidth="35.0" layoutX="6.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="clientUserNameLabel" layoutX="51.0" layoutY="13.0" prefHeight="25.0" prefWidth="117.0" text="PlayerName">
                            <font>
                               <Font size="16.0" />
                            </font>

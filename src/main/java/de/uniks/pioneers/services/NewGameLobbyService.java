@@ -48,8 +48,8 @@ public class NewGameLobbyService {
         return messageApiService.getChatMessages("games", id);
     }
 
-    public Observable<Member> setReady(String groupId, String userId, boolean ready, String color) {
-        return gameMemberApiService.setReady(groupId, userId, new UpdateMemberDto(ready, color));
+    public Observable<Member> patchMember(String groupId, String userId, boolean ready, String color) {
+        return gameMemberApiService.patchMember(groupId, userId, new UpdateMemberDto(ready, color));
     }
 
     public void setCurrentMemberId(String id) {

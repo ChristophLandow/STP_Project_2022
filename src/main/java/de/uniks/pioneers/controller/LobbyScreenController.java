@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
@@ -175,13 +174,13 @@ public class LobbyScreenController implements Controller {
     public void showNewGameLobby(Game game, String password, String hexColor) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
+        newGameScreenLobbyController.setPassword(password);
         newGameLobbyService.setCurrentMemberId(userService.getCurrentUser()._id());
         app.show(newGameScreenLobbyController);
-        newGameScreenLobbyController.postNewMember(userService.getCurrentUser(), password);
         newGameScreenLobbyController.setPlayerColor(hexColor);
     }
 
-    public void newGame(ActionEvent actionEvent) {
+    public void newGame() {
         //create pop in order to create a new game lobby
         CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
         Parent node = createNewGamePopUpController.render();

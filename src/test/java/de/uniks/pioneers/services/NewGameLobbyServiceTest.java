@@ -81,10 +81,10 @@ class NewGameLobbyServiceTest {
 
     @Test
     void setReady() {
-        when(gameMemberApiService.setReady(anyString(), anyString(), any())).thenReturn(Observable.just(new Member("now", "now", "1", "u1", true, "#ff0000")));
+        when(gameMemberApiService.patchMember(anyString(), anyString(), any())).thenReturn(Observable.just(new Member("now", "now", "1", "u1", true, "#ff0000")));
 
-        final boolean result = newGameLobbyService.setReady("1", "u1", true, "#ff0000").blockingFirst().ready();
+        final boolean result = newGameLobbyService.patchMember("1", "u1", true, "#ff0000").blockingFirst().ready();
         assertTrue(result);
-        verify(gameMemberApiService).setReady("1", "u1", new UpdateMemberDto(true, "#ff0000"));
+        verify(gameMemberApiService).patchMember("1", "u1", new UpdateMemberDto(true, "#ff0000"));
     }
 }

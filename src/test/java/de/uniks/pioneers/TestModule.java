@@ -262,7 +262,7 @@ public class TestModule {
             }
 
             @Override
-            public Observable<Member> setReady(String gameId, String userId, UpdateMemberDto dto) {
+            public Observable<Member> patchMember(String gameId, String userId, UpdateMemberDto dto) {
 
                 return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
             }
@@ -296,7 +296,7 @@ public class TestModule {
             }
 
             public Observable<Member> setReady(String groupId, String userId) {
-                return gameMemberApiService().setReady(groupId, userId, new UpdateMemberDto(true));
+                return gameMemberApiService().patchMember(groupId, userId, new UpdateMemberDto(true));
             }
 
             public void setCurrentMemberId(String id) {
