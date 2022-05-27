@@ -40,7 +40,7 @@
                </content></ScrollPane>
          </children>
       </Pane>
-      <HBox fx:id="resourcenHBox" layoutX="16.0" layoutY="693.0" prefHeight="60.0" prefWidth="296.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
+      <HBox fx:id="resourcesHBox" layoutX="16.0" layoutY="693.0" prefHeight="60.0" prefWidth="296.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
       <Pane layoutX="399.0" layoutY="693.0" onMousePressed="#onStreetPressed" prefHeight="60.0" prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
          <children>
             <Label fx:id="streetCountLabel" alignment="CENTER" layoutX="42.0" prefHeight="18.0" prefWidth="18.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" text="5" />
