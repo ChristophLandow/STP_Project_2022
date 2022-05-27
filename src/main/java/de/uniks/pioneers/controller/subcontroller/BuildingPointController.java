@@ -6,7 +6,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 
 public class BuildingPointController {
-    private Circle view;
+    private final Circle view;
     public Tile tile;
 
     public BuildingPointController(Tile tile, Circle view){
@@ -31,5 +31,7 @@ public class BuildingPointController {
     }
     private void dye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(0,255,0));}
     private void undye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(255,0,0));}
+
+    public void mark(){this.view.setFill(Color.rgb(0,0,255));}
 
 }

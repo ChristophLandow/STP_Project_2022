@@ -109,6 +109,12 @@ public class IngameScreenController implements Controller {
 
         }
 
+        for(HexTileController tile : tileControllers){
+
+            tile.findCorners(this.buildingControllers);
+
+        }
+
 
         return view;
     }

@@ -4,16 +4,19 @@ package de.uniks.pioneers.controller.subcontroller;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Polygon;
 
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static de.uniks.pioneers.GameConstants.eulerC;
 import static de.uniks.pioneers.GameConstants.scale;
+import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class HexTileController {
 
-    private Polygon view;
+    private final Polygon view;
     public Tile tile;
+
+    public BuildingPointController[] corners = new BuildingPointController[6];
 
     public HexTileController(Tile tile, Polygon view){
 
@@ -25,45 +28,49 @@ public class HexTileController {
     public void init(){
 
         this.view.setOnMouseClicked(this::info);
+    }
+
+    public void findCorners(ArrayList<BuildingPointController> buildingPointControllers){
+
+        double[][] cornerCoords = new double[6][2];
+        cornerCoords[0] = new double[]{tile.x + 0, tile.y + 1 * tile.scale};
+        cornerCoords[1] = new double[]{tile.x - 0, tile.y - 1 * tile.scale};
+        cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
+        cornerCoords[3] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
+        cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+
+        for(int i = 0; i < 6; i++){
+
+            for(BuildingPointController buildingPoint : buildingPointControllers){
+
+                if(abs(buildingPoint.tile.x - cornerCoords[i][0]) < 1 && abs(buildingPoint.tile.y - cornerCoords[i][1]) < 1 ){
+
+                    this.corners[i] = buildingPoint;
+                }
+
+
+            }
+
+
+        }
+
 
     }
 
-    public void yield(){
-        //assigns resources
-    }
     private void info(MouseEvent mouseEvent){
 
+        this.yield();
 
-        System.out.println((tile.x + 1 * tile.scale) + " " + (0));
-        System.out.println((tile.x - 1 * tile.scale) + " " + (0));
-        System.out.println((tile.x + (sqrt(3)/2) * tile.scale) + " " + (tile.y + 0.5 * tile.scale));
-        System.out.println((tile.x + (sqrt(3)/2) * tile.scale) + " " + (tile.y - 0.5 * tile.scale));
-        System.out.println((tile.x - (sqrt(3)/2) * tile.scale) + " " + (tile.y + 0.5 * tile.scale));
-        System.out.println((tile.x - (sqrt(3)/2) * tile.scale) + " " + (tile.y - 0.5 * tile.scale));
-        System.out.println("\n");
+        System.out.println(tile);
+    }
+    public void yield(){
 
+        for(BuildingPointController buildingPointController : this.corners){
 
-        double[] A = tile.cartToCube((tile.x + 1 * tile.scale), 0, scale/2, true);
-        double[] B = tile.cartToCube((tile.x - 1 * tile.scale), 0, scale/2, true);
-        double[] C = tile.cartToCube((tile.x + (sqrt(3)/2) * tile.scale), (tile.y + 0.5 * tile.scale), scale/2, true);
-        double[] D = tile.cartToCube((tile.x + (sqrt(3)/2) * tile.scale), (tile.y - 0.5 * tile.scale), scale/2, true);
-        double[] E = tile.cartToCube((tile.x - (sqrt(3)/2) * tile.scale), (tile.y + 0.5 * tile.scale), scale/2, true);
-        double[] F = tile.cartToCube((tile.x - (sqrt(3)/2) * tile.scale), (tile.y - 0.5 * tile.scale), scale/2, true);
-
-        for (double v : A) {System.out.println(v);}
-        System.out.println("\n");
-        for (double v : B) {System.out.println(v);}
-        System.out.println("\n");
-        for (double v : C) {System.out.println(v);}
-        System.out.println("\n");
-        for (double v : D) {System.out.println(v);}
-        System.out.println("\n");
-        for (double v : E) {System.out.println(v);}
-        System.out.println("\n");
-        for (double v : F) {System.out.println(v);}
-        System.out.println("\n");
-
-        //System.out.println(tile);
+            if(buildingPointController != null){
+            buildingPointController.mark();}
+        }
     }
 
 }

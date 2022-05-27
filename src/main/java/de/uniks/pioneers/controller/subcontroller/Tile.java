@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import static de.uniks.pioneers.GameConstants.eulerC;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 
@@ -61,9 +62,9 @@ public class Tile {
 
         }else{
 
-            r = (2*y)/(3*scale);
-            s = (x/(sqrt(3)*scale)) - (r/2);
-            q = -s -r;
+            q = ((2*y)/(3*scale));
+            r = (x/(sqrt(3)*scale)) - (q/2);
+            s = -q -r;
 
         }
 
