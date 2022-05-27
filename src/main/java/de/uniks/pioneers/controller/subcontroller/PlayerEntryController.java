@@ -67,7 +67,6 @@ public class PlayerEntryController implements Controller {
             this.playerReadyLabel.setText("Not Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.RED));
-
         }
         this.ready = ready;
     }

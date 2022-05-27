@@ -176,12 +176,13 @@ public class NewGameScreenLobbyController implements Controller {
         if(!userService.getCurrentUser()._id().equals(member.userId())) {
             Image userImage;
             try {
-                userImage = new Image(userService.getCurrentUser().avatar());
+                userImage = new Image(user.avatar());
             } catch (IllegalArgumentException | NullPointerException e) {
                 userImage = new Image(Constants.DEFAULT_AVATAR);
             }
 
             PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
+            playerEntryController.setReady(false);
             playerEntries.put(user._id(), playerEntryController);
             userBox.getChildren().add(playerEntryController.getPlayerEntry());
 
