@@ -7,5 +7,5 @@ public record Game(
         String name,
         String owner,
         Integer members,
-        Boolean started
+        boolean started
 ) {}

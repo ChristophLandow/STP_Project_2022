@@ -34,7 +34,7 @@ public class EventListener {
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
         this.tokenStorage = tokenStorage;
         this.mapper = mapper;
-        toUri.set(BASE_URL_WSS + WS_V1_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getAccessToken());
+        toUri.set(BASE_URL_WSS + WS_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getAccessToken());
     }
 
     public EventListener(){

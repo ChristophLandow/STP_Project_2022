@@ -14,8 +14,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
-import static de.uniks.pioneers.Constants.API_V1_PREFIX;
-import static de.uniks.pioneers.Constants.BASE_URL;
+
+import static de.uniks.pioneers.Constants.*;
 
 @Module
 public class MainModule {
@@ -51,7 +51,7 @@ public class MainModule {
     @Singleton
     Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
         return new Retrofit.Builder()
-                .baseUrl(BASE_URL+API_V1_PREFIX+"/")
+                .baseUrl(BASE_URL+API_PREFIX+"/")
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createAsync())
