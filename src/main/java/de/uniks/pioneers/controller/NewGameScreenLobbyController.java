@@ -219,9 +219,7 @@ public class NewGameScreenLobbyController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                      if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
-                         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
-                         app.show(ingameScreenController);
-                         ingameScreenController.setPlayerColor(colorPickerController.getColor());
+                         this.toIngame();
                     }
                 })
         );
@@ -281,13 +279,17 @@ public class NewGameScreenLobbyController implements Controller {
             disposable.add(newGameLobbyService.updateGame(game.get(),password,true)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(response -> {
-                        IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
-                        ingameScreenController.game.set(this.game.get());
-                        ingameScreenController.setUsers(this.users);
-                        app.show(ingameScreenController);
-                        ingameScreenController.setPlayerColor(colorPickerController.getColor());
+                        this.toIngame();
                     }, Throwable::printStackTrace));
         }
+    }
+
+    private void toIngame() {
+        IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
+        ingameScreenController.game.set(this.game.get());
+        ingameScreenController.setUsers(this.users);
+        app.show(ingameScreenController);
+        ingameScreenController.setPlayerColor(colorPickerController.getColor());
     }
 
     private boolean allUsersReady() {
