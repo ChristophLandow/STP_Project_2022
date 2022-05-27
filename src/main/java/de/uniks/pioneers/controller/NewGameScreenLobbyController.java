@@ -140,7 +140,6 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(this.members::setAll
                         , Throwable::printStackTrace));
 
-        System.out.println(game.get()._id());
         gameChatController = gameChatControllerProvider.get();
         gameChatController.chatScrollPane = this.chatScrollPane;
         gameChatController.messageBox = this.messageBox;
@@ -175,7 +174,14 @@ public class NewGameScreenLobbyController implements Controller {
         users.add(user);
 
         if(!userService.getCurrentUser()._id().equals(member.userId())) {
-            PlayerEntryController playerEntryController = new PlayerEntryController(new Image(user.avatar()), user.name(), member.color(), user._id());
+            Image userImage;
+            try {
+                userImage = new Image(userService.getCurrentUser().avatar());
+            } catch (IllegalArgumentException | NullPointerException e) {
+                userImage = new Image(Constants.DEFAULT_AVATAR);
+            }
+
+            PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
             playerEntries.put(user._id(), playerEntryController);
             userBox.getChildren().add(playerEntryController.getPlayerEntry());
 
@@ -193,7 +199,6 @@ public class NewGameScreenLobbyController implements Controller {
                     final Member member = memberEvent.data();
                     if(memberEvent.event().endsWith(".created")) {
                         members.add(member);
-                        System.out.println(member.color());
                     } else if(memberEvent.event().endsWith(".updated")) {
                         if(member.ready()) {
                             setReady(member.userId(), true);
@@ -202,7 +207,6 @@ public class NewGameScreenLobbyController implements Controller {
                         }
                     } else if (memberEvent.event().endsWith(".deleted")) {
                         members.remove(member);
-                        System.out.println(member.userId());
                     }
                 }));
     }
