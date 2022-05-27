@@ -60,7 +60,7 @@ public class NewGameLobbyService {
         return currentMemberId;
     }
 
-    public Observable<Game> updateGame(Game game, String password, Boolean started) {
+    public Observable<Game> updateGame(Game game, String password, boolean started) {
         return gameApiService.update(game._id(), new UpdateGameDto(game.name(), game.owner(), started, password));
     }
 }

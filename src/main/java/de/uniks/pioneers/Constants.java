@@ -23,16 +23,15 @@ public class Constants {
 
     public static final int AVATAR_CHAR_LIMIT = 16384;
 
-    public static final String API_V1_PREFIX = "/api/v1";
-    public static final String API_V2_PREFIX = "/api/v2";
-    public static final String WS_V1_PREFIX = "/ws/v1";
+    public static final String API_PREFIX = "/api/v2";
+    public static final String WS_PREFIX = "/ws/v2";
     public static final String EVENTS_AUTH_TOKEN = "/events?authToken=";
 
     public static final String API_V2_PIONEERS_PREFIX =  "/api/v2/games/{gameId}";
 
 
-    public static final String LOGIN_URL = BASE_URL + API_V1_PREFIX + "/auth/login";
-    public static final String SIGN_UP_URL = BASE_URL + API_V1_PREFIX + "/users";
+    public static final String LOGIN_URL = BASE_URL + API_PREFIX + "/auth/login";
+    public static final String SIGN_UP_URL = BASE_URL + API_PREFIX + "/users";
 
 
     public static final String JSON_NAME = "name";

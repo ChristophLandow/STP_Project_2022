@@ -98,7 +98,7 @@ public class TestModule {
     @Singleton
     static Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
         return new Retrofit.Builder()
-                .baseUrl(BASE_URL+API_V1_PREFIX+"/")
+                .baseUrl(BASE_URL+API_PREFIX+"/")
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createAsync())

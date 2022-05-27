@@ -217,7 +217,7 @@ public class NewGameScreenLobbyController implements Controller {
         disposable.add(eventListener.listen(patternToObserveGame, Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                     if (gameEvent.event().endsWith(".updated") && gameEvent.data().started().equals(true)) {
+                     if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
                          IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
                          app.show(ingameScreenController);
                          ingameScreenController.setPlayerColor(colorPickerController.getColor());
@@ -280,6 +280,7 @@ public class NewGameScreenLobbyController implements Controller {
             disposable.add(newGameLobbyService.updateGame(game.get(),password,true)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(response -> {
+                        System.out.println("update response: " + response);
                         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
                         app.show(ingameScreenController);
                         ingameScreenController.setPlayerColor(colorPickerController.getColor());
