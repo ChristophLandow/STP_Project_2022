@@ -29,7 +29,7 @@
                   </VBox>
                </content>
             </ScrollPane>
-            <TextField fx:id="sendMessageField" alignment="CENTER" layoutX="4.0" layoutY="185.0" onKeyPressed="#sendMessage" prefHeight="25.0" prefWidth="250.0" promptText="Send a message" />
+            <TextField fx:id="sendMessageField" layoutX="4.0" layoutY="185.0" onKeyPressed="#sendMessage" prefHeight="25.0" prefWidth="250.0" promptText="Send a message" />
          </children>
       </Pane>
       <Pane layoutX="751.0" layoutY="332.0" prefHeight="319.0" prefWidth="258.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
