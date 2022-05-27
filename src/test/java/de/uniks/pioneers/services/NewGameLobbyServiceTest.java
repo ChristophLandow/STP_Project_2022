@@ -41,8 +41,8 @@ class NewGameLobbyServiceTest {
     @Test
     void getAll() {
         List<Member> gameMembers = new ArrayList<>();
-        gameMembers.add(new Member("now", "now", "1", "u1", true));
-        gameMembers.add(new Member("now", "now", "1", "u2", false));
+        gameMembers.add(new Member("now", "now", "1", "u1", true, "#ff0000"));
+        gameMembers.add(new Member("now", "now", "1", "u2", false, "#ff0000"));
         when(gameMemberApiService.getAll(anyString())).thenReturn(Observable.just(gameMembers));
 
         final String result = newGameLobbyService.getAll("1").blockingFirst().get(1).userId();
@@ -52,12 +52,12 @@ class NewGameLobbyServiceTest {
 
     @Test
     void postMember() {
-        Member member = new Member("now", "now", "1", "u1", true);
+        Member member = new Member("now", "now", "1", "u1", true, "#ff0000");
         when(gameMemberApiService.createMember(anyString(), any())).thenReturn(Observable.just(member));
 
-        final String result = newGameLobbyService.postMember("1", true, "password").blockingFirst().userId();
+        final String result = newGameLobbyService.postMember("1", true, "#ff0000", "password").blockingFirst().userId();
         assertEquals("u1", result);
-        verify(gameMemberApiService).createMember("1", new CreateMemberDto(true, "password"));
+        verify(gameMemberApiService).createMember("1", new CreateMemberDto(true, "#ff0000","password"));
     }
 
     @Test
@@ -81,10 +81,10 @@ class NewGameLobbyServiceTest {
 
     @Test
     void setReady() {
-        when(gameMemberApiService.setReady(anyString(), anyString(), any())).thenReturn(Observable.just(new Member("now", "now", "1", "u1", true)));
+        when(gameMemberApiService.patchMember(anyString(), anyString(), any())).thenReturn(Observable.just(new Member("now", "now", "1", "u1", true, "#ff0000")));
 
-        final boolean result = newGameLobbyService.setReady("1", "u1").blockingFirst().ready();
+        final boolean result = newGameLobbyService.patchMember("1", "u1", true, "#ff0000").blockingFirst().ready();
         assertTrue(result);
-        verify(gameMemberApiService).setReady("1", "u1", new UpdateMemberDto(true));
+        verify(gameMemberApiService).patchMember("1", "u1", new UpdateMemberDto(true, "#ff0000"));
     }
 }

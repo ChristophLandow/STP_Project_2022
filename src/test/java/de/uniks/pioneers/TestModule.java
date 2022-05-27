@@ -244,27 +244,27 @@ public class TestModule {
             public Observable<List<Member>> getAll(String gameId) {
 
                 ArrayList<Member> users = new ArrayList<>();
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false, "#ff0000"));
                 return Observable.just(users);
             }
 
             @Override
             public Observable<Member> createMember(String gameId, CreateMemberDto dto) {
 
-                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false));
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000"));
             }
 
             @Override
             public Observable<Member> deleteMember(String gameId, String userId) {
 
-                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false));
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000"));
             }
 
             @Override
-            public Observable<Member> setReady(String gameId, String userId, UpdateMemberDto dto) {
+            public Observable<Member> patchMember(String gameId, String userId, UpdateMemberDto dto) {
 
-                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000"));
             }
         };
     }
@@ -279,8 +279,8 @@ public class TestModule {
                 return gameMemberApiService().getAll(id);
             }
 
-            public Observable<Member> postMember(String id, boolean ready, String password){
-                return gameMemberApiService().createMember(id, new CreateMemberDto(ready, password));
+            public Observable<Member> postMember(String id, boolean ready, String color, String password){
+                return gameMemberApiService().createMember(id, new CreateMemberDto(ready, color, password));
             }
 
             public Observable<Member> deleteMember(String id, String userId){
@@ -296,7 +296,7 @@ public class TestModule {
             }
 
             public Observable<Member> setReady(String groupId, String userId) {
-                return gameMemberApiService().setReady(groupId, userId, new UpdateMemberDto(true));
+                return gameMemberApiService().patchMember(groupId, userId, new UpdateMemberDto(true, "#ff0000"));
             }
 
             public void setCurrentMemberId(String id) {

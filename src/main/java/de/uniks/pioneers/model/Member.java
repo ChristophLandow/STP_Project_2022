@@ -5,5 +5,6 @@ public record Member(
     String updatedAt,
     String gameId,
     String userId,
-    boolean ready
+    boolean ready,
+    String color
 ) {}
