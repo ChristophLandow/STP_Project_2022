@@ -168,8 +168,8 @@
                <Insets right="50.0" />
             </HBox.margin>
          </Button>
-         <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="24.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
-            <Image url="@../question_mark_icon.jpg" />
+         <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
+            <Image url="@/de/uniks/pioneers/question_mark_icon.jpg" />
             <HBox.margin>
                <Insets />
             </HBox.margin>
