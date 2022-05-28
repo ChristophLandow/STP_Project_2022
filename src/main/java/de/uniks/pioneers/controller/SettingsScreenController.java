@@ -1,7 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import javafx.scene.Parent;
-import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
 public class SettingsScreenController implements Controller{
 
