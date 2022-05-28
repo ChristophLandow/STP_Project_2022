@@ -2,20 +2,31 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.GameChatController;
+import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.User;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 
@@ -26,10 +37,36 @@ public class IngameScreenController implements Controller {
     @FXML public SVGPath houseSVG;
     @FXML public SVGPath citySVG;
     @FXML public Button rulesButton;
-    private String clientPlayerColor;
+    @FXML public Pane fieldPane;
+    @FXML public Button giveUpButton;
+    @FXML public Button settingsButton;
+    @FXML public ScrollPane chatScrollPane;
+    @FXML public VBox messageVBox;
+    @FXML public TextField sendMessageField;
+    @FXML public ScrollPane userScrollPane;
+    @FXML public VBox userVBox;
+    @FXML public HBox resourcesHBox;
+    @FXML public Label streetCountLabel;
+    @FXML public Label houseCountLabel;
+    @FXML public Label cityCountLabel;
+    @FXML public ImageView tradeImageView;
+    @FXML public ImageView hourglassImageView;
+    @FXML public ImageView nextTurnImageView;
+    @FXML public Label timeLabel;
+    @FXML public Pane situationPane;
+    @FXML public Label situationLabel;
+    @FXML public ImageView leftDiceImageView;
+    @FXML public ImageView rightDiceImageView;
+    @FXML public ImageView hammerImageView;
+
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    private List<User> users;
 
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
+    @Inject
+    Provider<GameChatController> gameChatControllerProvider;
 
     @Inject
     public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider) {
@@ -54,6 +91,16 @@ public class IngameScreenController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
+
+        // init game chat controller
+        GameChatController gameChatController = gameChatControllerProvider.get()
+                .setChatScrollPane(this.chatScrollPane)
+                .setMessageText(this.sendMessageField)
+                .setMessageBox(this.messageVBox)
+                .setGame(this.game.get())
+                .setUsers(this.users);
+        gameChatController.render();
+        gameChatController.init();
     }
 
     private void swapTurnSymbol() {
@@ -63,7 +110,6 @@ public class IngameScreenController implements Controller {
 
     public void setPlayerColor(String hexColor)
     {
-        clientPlayerColor = hexColor;
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Paint.valueOf(hexColor));
         citySVG.setFill(Paint.valueOf(hexColor));
@@ -105,5 +151,9 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void stop() {
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }
