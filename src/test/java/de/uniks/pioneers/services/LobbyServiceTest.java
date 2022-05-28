@@ -59,12 +59,12 @@ class LobbyServiceTest {
 
     @Test
     void createGame() {
-        Game testGame = new Game("1","2","3","n","o", 1);
+        Game testGame = new Game("1","2","3","n","o", 1, false);
         when(gameApiService.create(any())).thenReturn(Observable.just(testGame));
 
-        final Game result = lobbyService.createGame("n","p").blockingFirst();
+        final Game result = lobbyService.createGame("n",false,"p").blockingFirst();
         assertEquals(result.name(),"n");
 
-        verify(gameApiService).create(new CreateGameDto("n","p"));
+        verify(gameApiService).create(new CreateGameDto("n",false,"p"));
     }
 }

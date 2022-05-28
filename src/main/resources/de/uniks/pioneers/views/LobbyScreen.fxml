@@ -20,8 +20,8 @@
          <Font size="15.0" />
       </font>
    </Label>
-   <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="24.0" fitWidth="22.0" layoutX="730.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
-      <Image url="@../question_mark_icon.jpg" />
+   <ImageView fx:id="RulesButton" accessibleRole="BUTTON" fitHeight="40.0" fitWidth="40.0" layoutX="728.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" style="border-color: black;">
+      <Image url="@/de/uniks/pioneers/question_mark_icon.jpg" />
    </ImageView>
    <Button fx:id="EditProfileButton" layoutX="150.0" layoutY="550.0" mnemonicParsing="false" onAction="#editProfile" text="Edit Profile" />
    <Button fx:id="LogoutButton" layoutX="267.0" layoutY="550.0" mnemonicParsing="false" onAction="#logout" text="Logout" />

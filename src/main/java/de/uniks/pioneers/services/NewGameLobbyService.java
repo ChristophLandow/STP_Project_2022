@@ -1,10 +1,9 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.CreateMemberDto;
-import de.uniks.pioneers.dto.CreateMessageDto;
-import de.uniks.pioneers.dto.MessageDto;
-import de.uniks.pioneers.dto.UpdateMemberDto;
+import de.uniks.pioneers.dto.*;
+import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
+import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -16,12 +15,15 @@ import java.util.List;
 @Singleton
 public class NewGameLobbyService {
 
+    private final GameApiService gameApiService;
     private final GameMemberApiService gameMemberApiService;
     private final MessageApiService messageApiService;
     private String currentMemberId;
 
     @Inject
-    public NewGameLobbyService(GameMemberApiService gameMemberApiService, MessageApiService messageApiService) {
+    public NewGameLobbyService(GameApiService gameApiService, GameMemberApiService gameMemberApiService,
+                               MessageApiService messageApiService) {
+        this.gameApiService = gameApiService;
         this.gameMemberApiService = gameMemberApiService;
         this.messageApiService = messageApiService;
     }
@@ -30,8 +32,8 @@ public class NewGameLobbyService {
         return gameMemberApiService.getAll(id);
     }
 
-    public Observable<Member> postMember(String id, boolean ready, String password){
-        return gameMemberApiService.createMember(id, new CreateMemberDto(ready, password));
+    public Observable<Member> postMember(String id, boolean ready, String color, String password){
+        return gameMemberApiService.createMember(id, new CreateMemberDto(ready, color, password));
     }
 
     public Observable<Member> deleteMember(String id, String userId){
@@ -46,8 +48,8 @@ public class NewGameLobbyService {
         return messageApiService.getChatMessages("games", id);
     }
 
-    public Observable<Member> setReady(String groupId, String userId) {
-        return gameMemberApiService.setReady(groupId, userId, new UpdateMemberDto(true));
+    public Observable<Member> patchMember(String groupId, String userId, boolean ready, String color) {
+        return gameMemberApiService.patchMember(groupId, userId, new UpdateMemberDto(ready, color));
     }
 
     public void setCurrentMemberId(String id) {
@@ -56,5 +58,9 @@ public class NewGameLobbyService {
 
     public String getCurrentMemberId() {
         return currentMemberId;
+    }
+
+    public Observable<Game> updateGame(Game game, String password, boolean started) {
+        return gameApiService.update(game._id(), new UpdateGameDto(game.name(), game.owner(), started, password));
     }
 }

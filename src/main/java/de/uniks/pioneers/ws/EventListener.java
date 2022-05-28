@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.services.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.beans.property.SimpleStringProperty;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,11 +27,20 @@ public class EventListener {
     private final ObjectMapper mapper;
     public ClientEndpoint endpoint;
 
+    SimpleStringProperty toUri = new SimpleStringProperty();
+
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
         this.tokenStorage = tokenStorage;
         this.mapper = mapper;
+        toUri.set(BASE_URL_WSS + WS_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getAccessToken());
+    }
+
+    public EventListener(){
+        this.tokenStorage=null;
+        this.mapper=null;
+        this.toUri.set("http://localhost/path");
     }
 
     private void ensureOpen() {
@@ -39,7 +49,7 @@ public class EventListener {
         }
         try {
             endpoint = new ClientEndpoint(
-                    new URI(BASE_URL_WSS + WS_V1_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getAccessToken()));
+                    new URI(toUri.get()));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -102,6 +112,5 @@ public class EventListener {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
     }
 }

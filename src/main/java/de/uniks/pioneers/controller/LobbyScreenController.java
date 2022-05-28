@@ -58,9 +58,8 @@ public class LobbyScreenController implements Controller {
     Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject
     Provider<EditProfileController> editProfileControllerProvider;
-
     @Inject
-    Provider<LobbyUserlistController> userlistControlerProvider;
+    Provider<LobbyUserlistController> userlistControllerProvider;
     @Inject
     Provider<RulesScreenController> rulesScreenControllerProvider;
     @Inject
@@ -112,7 +111,7 @@ public class LobbyScreenController implements Controller {
             this.AvatarImageView.setImage(null);
         }
 
-        LobbyUserlistController userlistController = userlistControlerProvider.get();
+        LobbyUserlistController userlistController = userlistControllerProvider.get();
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
         userlistController.init();
@@ -172,13 +171,16 @@ public class LobbyScreenController implements Controller {
         app.show(loginScreenControllerProvider.get());
     }
 
-    public void showNewGameLobby(Game game, String password) {
+    public void showNewGameLobby(Game game, String password, String hexColor) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
-        newGameScreenLobbyController.postNewMember(game, userService.getCurrentUser(), password);
+        newGameScreenLobbyController.game.set(game);
+        newGameScreenLobbyController.setPassword(password);
         newGameLobbyService.setCurrentMemberId(userService.getCurrentUser()._id());
+        app.show(newGameScreenLobbyController);
+        newGameScreenLobbyController.setPlayerColor(hexColor);
     }
 
-    public void newGame(ActionEvent actionEvent) {
+    public void newGame() {
         //create pop in order to create a new game lobby
         CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
         Parent node = createNewGamePopUpController.render();

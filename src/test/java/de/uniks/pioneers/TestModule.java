@@ -8,6 +8,7 @@ import dagger.Provides;
 import de.uniks.pioneers.dto.*;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
+import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.TokenStorage;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
@@ -92,7 +93,7 @@ public class TestModule {
     @Singleton
     static Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
         return new Retrofit.Builder()
-                .baseUrl(BASE_URL+API_V1_PREFIX+"/")
+                .baseUrl(BASE_URL+API_PREFIX+"/")
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createAsync())
@@ -144,36 +145,36 @@ public class TestModule {
             public Observable<List<Game>> getGames() {
 
                 ArrayList<Game> games = new ArrayList<>();
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","TestUserA",1));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","TestUserB",1));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","TestUserC",1));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","TestUserA",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","TestUserB",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","TestUserC",1,false));
                 return Observable.just(games);
             }
 
             @Override
             public Observable<Game> getGame(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","TestUserA",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","TestUserA",1,false));
             }
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"TestUser",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"TestUser",1,false));
 
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1,false));
 
             }
 
             @Override
             public Observable<Game> delete(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1,false));
 
             }
         };
@@ -238,30 +239,72 @@ public class TestModule {
             public Observable<List<Member>> getAll(String gameId) {
 
                 ArrayList<Member> users = new ArrayList<>();
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false, "#ff0000"));
                 return Observable.just(users);
             }
 
             @Override
             public Observable<Member> createMember(String gameId, CreateMemberDto dto) {
 
-                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false));
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000"));
             }
 
             @Override
             public Observable<Member> deleteMember(String gameId, String userId) {
 
-                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false));
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000"));
             }
 
             @Override
-            public Observable<Member> setReady(String gameId, String userId, UpdateMemberDto dto) {
+            public Observable<Member> patchMember(String gameId, String userId, UpdateMemberDto dto) {
 
-                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true));
+                return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000"));
             }
         };
     }
+
+    @Provides
+    static NewGameLobbyService newGameLobbyService(){
+        return new NewGameLobbyService(gameApiService(),gameMemberApiService(),messageApiService()){
+
+            private String currentMemberId;
+
+            public Observable<List<Member>> getAll(String id){
+                return gameMemberApiService().getAll(id);
+            }
+
+            public Observable<Member> postMember(String id, boolean ready, String color, String password){
+                return gameMemberApiService().createMember(id, new CreateMemberDto(ready, color, password));
+            }
+
+            public Observable<Member> deleteMember(String id, String userId){
+                return gameMemberApiService().deleteMember(id,userId);
+            }
+
+            public Observable<MessageDto> sendMessage(String id, CreateMessageDto dto) {
+                return messageApiService().sendMessage("games", id, dto);
+            }
+
+            public Observable<List<MessageDto>> getMessages(String id){
+                return messageApiService().getChatMessages("games", id);
+            }
+
+            public Observable<Member> setReady(String groupId, String userId) {
+                return gameMemberApiService().patchMember(groupId, userId, new UpdateMemberDto(true, "#ff0000"));
+            }
+
+            public void setCurrentMemberId(String id) {
+                currentMemberId = id;
+            }
+
+            public String getCurrentMemberId() {
+                return currentMemberId;
+            }
+        };
+    }
+
+
 
     @Provides
     @Singleton
