@@ -30,11 +30,13 @@ public class IngameScreenController implements Controller {
 
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+    private final Provider<SettingsScreenController> settingsScreenControllerProvider;
 
     @Inject
-    public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider) {
+    public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider, Provider<SettingsScreenController> settingsScreenControllerProvider) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
+        this.settingsScreenControllerProvider = settingsScreenControllerProvider;
     }
 
     @Override
@@ -73,11 +75,12 @@ public class IngameScreenController implements Controller {
     }
 
     public void toRules(ActionEvent actionEvent) {
-        RulesScreenController controller = rulesScreenControllerProvider.get();
-        controller.init();
+        RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        rulesController.init();
     }
 
     public void toSettings(ActionEvent actionEvent) {
+        this.app.show(settingsScreenControllerProvider.get());
     }
 
     public void sendMessage(KeyEvent keyEvent) {
