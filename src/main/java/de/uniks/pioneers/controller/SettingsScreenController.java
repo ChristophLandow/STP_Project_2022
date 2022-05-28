@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import java.io.IOException;
 
-import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
 
