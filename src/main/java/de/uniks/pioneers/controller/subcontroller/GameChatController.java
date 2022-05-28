@@ -42,7 +42,7 @@ public class GameChatController {
     private List<User> users;
 
     @Inject
-    GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService){
+    public GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService){
         this.newGameLobbyService = newGameLobbyService;
         this.eventListener = eventListener;
         this.userService = userService;

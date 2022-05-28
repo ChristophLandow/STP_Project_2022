@@ -2,6 +2,10 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.BuildingPointController;
+import de.uniks.pioneers.controller.subcontroller.HexTileController;
+import de.uniks.pioneers.controller.subcontroller.Tile;
+import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
@@ -10,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -19,6 +24,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
@@ -26,9 +35,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
+import static de.uniks.pioneers.GameConstants.scale;
 
 @Singleton
 public class IngameScreenController implements Controller {
@@ -45,7 +57,6 @@ public class IngameScreenController implements Controller {
     @FXML public TextField sendMessageField;
     @FXML public ScrollPane userScrollPane;
     @FXML public VBox userVBox;
-    @FXML public HBox resourcesHBox;
     @FXML public Label streetCountLabel;
     @FXML public Label houseCountLabel;
     @FXML public Label cityCountLabel;
@@ -64,6 +75,10 @@ public class IngameScreenController implements Controller {
 
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
+    private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
+    private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
+
 
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
@@ -85,6 +100,62 @@ public class IngameScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+        int size = 2;
+
+        BoardGenerator generator = new BoardGenerator();
+        List<Tile> tiles = generator.generateTiles(size);
+        List<Tile> edges = generator.generateEdges(2 * size + 1);
+        List<Tile> corners = generator.generateCorners(2 * size + 1);
+
+        for (Tile tile : tiles) {
+
+            Polygon hex = new Polygon();
+            hex.getPoints().addAll(
+                    0.0, 1.0,
+                    Math.sqrt(3) / 2, 0.5,
+                    Math.sqrt(3) / 2, -0.5,
+                    0.0, -1.0,
+                    -Math.sqrt(3) / 2, -0.5,
+                    -Math.sqrt(3) / 2, 0.5);
+            hex.setScaleX(scale);
+            hex.setScaleY(scale);
+            Image image = new Image(getClass().getResource("ingame/weideland.png").toString());
+            hex.setFill(new ImagePattern(image));
+            hex.setLayoutX(tile.x + this.fieldPane.getPrefWidth() / 2);
+            hex.setLayoutY(tile.y + this.fieldPane.getPrefHeight() / 2);
+            this.fieldPane.getChildren().add(hex);
+            this.tileControllers.add(new HexTileController(tile, hex));
+        }
+
+        for (Tile edge : edges) {
+
+            Circle circ = new Circle(2);
+            circ.setFill(Color.rgb(255, 0, 0));
+
+            circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
+            this.fieldPane.getChildren().add(circ);
+        }
+
+        for (Tile corner : corners) {
+
+            Circle circ = new Circle(5);
+            circ.setFill(Color.rgb(255, 0, 0));
+
+            circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
+            this.fieldPane.getChildren().add(circ);
+            this.buildingControllers.add(new BuildingPointController(corner, circ));
+
+        }
+
+        for(HexTileController tile : tileControllers){
+
+            tile.findCorners(this.buildingControllers);
+
+        }
+
+
         return view;
     }
 
