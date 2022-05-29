@@ -140,13 +140,14 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(this.members::setAll
                         , Throwable::printStackTrace));
 
-        gameChatController = gameChatControllerProvider.get();
-        gameChatController.chatScrollPane = this.chatScrollPane;
-        gameChatController.messageBox = this.messageBox;
-        gameChatController.messageText = this.messageText;
-        gameChatController.sendButton = this.sendButton;
-        gameChatController.game = this.game.get();
-        gameChatController.users = this.users;
+        // init game chat controller
+        gameChatController = gameChatControllerProvider.get()
+                .setChatScrollPane(this.chatScrollPane)
+                .setMessageText(this.messageText)
+                .setMessageBox(this.messageBox)
+                .setSendButton(this.sendButton)
+                .setGame(this.game.get())
+                .setUsers(this.users);
         gameChatController.render();
         gameChatController.init();
     }
@@ -218,9 +219,7 @@ public class NewGameScreenLobbyController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                      if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
-                         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
-                         app.show(ingameScreenController);
-                         ingameScreenController.setPlayerColor(colorPickerController.getColor());
+                         this.toIngame();
                     }
                 })
         );
@@ -280,19 +279,24 @@ public class NewGameScreenLobbyController implements Controller {
             disposable.add(newGameLobbyService.updateGame(game.get(),password,true)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(response -> {
-                        System.out.println("update response: " + response);
-                        IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
-                        app.show(ingameScreenController);
-                        ingameScreenController.setPlayerColor(colorPickerController.getColor());
+                        this.toIngame();
                     }, Throwable::printStackTrace));
         }
+    }
+
+    private void toIngame() {
+        IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
+        ingameScreenController.game.set(this.game.get());
+        ingameScreenController.setUsers(this.users);
+        app.show(ingameScreenController);
+        ingameScreenController.setPlayerColor(colorPickerController.getColor());
     }
 
     private boolean allUsersReady() {
         boolean playersReady = true;
         Iterator<HashMap.Entry<String, PlayerEntryController>> it = playerEntries.entrySet().iterator();
 
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             HashMap.Entry<String, PlayerEntryController> entry = it.next();
             if(!entry.getValue().getReady()) {
                 playersReady = false;
