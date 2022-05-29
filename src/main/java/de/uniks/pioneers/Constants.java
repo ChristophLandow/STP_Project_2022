@@ -55,6 +55,9 @@ public class Constants {
     public static final byte[] encryptKeySeed = "UGk8LmWKk2WXPEQGJAsOzOYUMfSjasH3".getBytes();
 
     //ingame
-
     public static final String INGAME_SCREEN_TITLE = "Pioneers ";
+
+    //settings
+    public static final String SETTINGS_SCREEN_TITLE = "Pioneers - Settings";
+
 }
