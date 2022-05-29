@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ public class SettingsScreenController implements Controller{
     @FXML public ChoiceBox musicChoiceBox;
 
     private final App app;
+    private ToggleGroup radioButtongroup = new ToggleGroup();
 
     @Inject
     public SettingsScreenController(App app){
@@ -55,6 +57,13 @@ public class SettingsScreenController implements Controller{
             e.printStackTrace();
             return null;
         }
+        //Light-/Darkmode radio buttons
+        lightMode_RadioButton = new RadioButton("Light");
+        darkMode_RadioButton = new RadioButton("Dark");
+        lightMode_RadioButton.setToggleGroup(radioButtongroup);
+        darkMode_RadioButton.setToggleGroup(radioButtongroup);
+        lightMode_RadioButton.setSelected(true);
+
         return settingsView;
     }
 
