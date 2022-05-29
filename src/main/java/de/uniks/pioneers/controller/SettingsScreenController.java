@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
 
@@ -55,5 +56,9 @@ public class SettingsScreenController implements Controller{
             return null;
         }
         return settingsView;
+    }
+
+    public void darkMode(){
+        app.getStage().getScene().setFill(Color.rgb(35, 39, 42));
     }
 }
