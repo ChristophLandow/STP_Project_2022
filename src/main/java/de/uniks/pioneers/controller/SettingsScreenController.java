@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,11 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.swing.text.html.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,27 +24,17 @@ import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
 public class SettingsScreenController implements Controller, Initializable {
 
-    @FXML
-    public Button leaveButton;
+    @FXML public Button leaveButton;
 
-    @FXML
-    public RadioButton lightMode_RadioButton;
+    @FXML public RadioButton lightMode_RadioButton;
 
-    @FXML
-    public RadioButton darkMode_RadioButton;
+    @FXML public RadioButton darkMode_RadioButton;
 
-    @FXML
-    public ChoiceBox<String> musicChoiceBox;
-
-    @FXML
-    public Slider VolumeSlider;
+    @FXML public ChoiceBox musicChoiceBox;
 
     private final App app;
 
-    private final String[] songArray = {"Hardbass", "Ambient"};
-
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
-
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider){
@@ -56,7 +45,6 @@ public class SettingsScreenController implements Controller, Initializable {
     @Override
     public void init() {
         app.getStage().setTitle(SETTINGS_SCREEN_TITLE);
-
     }
 
     @Override
@@ -78,30 +66,21 @@ public class SettingsScreenController implements Controller, Initializable {
         return settingsView;
     }
 
-    //load choicebox after the init and set action
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        musicChoiceBox.getItems().addAll(songArray);
-        musicChoiceBox.setOnAction(this::setMusic);
-    }
-
-    //play
-    private void setMusic(ActionEvent actionEvent) {
-    }
-
-    public void setApperenceMode(ActionEvent event){
-        if(darkMode_RadioButton.isSelected()){
-            System.out.println("Hello");
-            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
-        }
-        if(lightMode_RadioButton.isSelected()){
+        if (lightMode_RadioButton.isSelected()){
             app.getStage().getScene().getStylesheets().clear();
         }
+        if(darkMode_RadioButton.isSelected()){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
+    }
+
+    public void setApperenceMode(){
+
     }
 
     public void leave(){
-        app.show(ingameScreenControllerProvider.get());
+        this.app.show(ingameScreenControllerProvider.get());
     }
-
-
 }
