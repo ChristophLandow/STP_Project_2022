@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,8 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -71,6 +70,10 @@ public class SettingsScreenController implements Controller, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         musicChoiceBox.getItems().addAll(songList);
+        musicChoiceBox.setOnAction(this::setMusic);
+    }
+
+    private void setMusic(ActionEvent actionEvent) {
     }
 
     public void setApperenceMode(){
