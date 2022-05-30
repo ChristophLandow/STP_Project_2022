@@ -4,36 +4,38 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-            prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.SettingsScreenController">
    <Label layoutX="102.0" layoutY="99.0" text="Appearance-Mode : ">
       <font>
-         <Font size="33.0"/>
+         <Font size="33.0" />
       </font>
    </Label>
-   <RadioButton fx:id="lightMode_RadioButton" layoutX="465.0" layoutY="106.0" mnemonicParsing="false" text="Light">
+   <RadioButton fx:id="lightMode_RadioButton" layoutX="465.0" layoutY="106.0" mnemonicParsing="false" onAction="#setApperenceMode" selected="true" text="Light" toggleGroup="$tg">
       <font>
-         <Font size="24.0"/>
+         <Font size="24.0" />
+      </font>
+      <toggleGroup>
+         <ToggleGroup fx:id="tg" />
+      </toggleGroup>
+   </RadioButton>
+   <RadioButton fx:id="darkMode_RadioButton" layoutX="614.0" layoutY="106.0" mnemonicParsing="false" onAction="#setApperenceMode" text="Dark" toggleGroup="$tg">
+      <font>
+         <Font size="24.0" />
       </font>
    </RadioButton>
-   <RadioButton fx:id="darkMode_RadioButton" layoutX="614.0" layoutY="106.0" mnemonicParsing="false" text="Dark">
-      <font>
-         <Font size="24.0"/>
-      </font>
-   </RadioButton>
-   <ImageView fx:id="musicNote_ImageView" fitHeight="150.0" fitWidth="150.0" layoutX="150.0" layoutY="240.0"
-              pickOnBounds="true" preserveRatio="true">
-      <Image url="@/de/uniks/pioneers/Note.png"/>
+   <ImageView fx:id="musicNote_ImageView" fitHeight="150.0" fitWidth="150.0" layoutX="150.0" layoutY="240.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@/de/uniks/pioneers/Note.png" />
    </ImageView>
-   <Button fx:id="leaveButton" layoutX="354.0" layoutY="473.0" mnemonicParsing="false" text="Leave">
+   <Button fx:id="leaveButton" layoutX="363.0" layoutY="472.0" mnemonicParsing="false" onAction="#leave" text="Leave">
       <font>
-         <Font size="24.0"/>
+         <Font size="24.0" />
       </font>
    </Button>
-   <ChoiceBox fx:id="musicChoiceBox" layoutX="354.0" layoutY="240.0" prefHeight="25.0" prefWidth="360.0"/>
+   <ChoiceBox fx:id="musicChoiceBox" layoutX="354.0" layoutY="240.0" prefHeight="25.0" prefWidth="360.0" />
 </AnchorPane>

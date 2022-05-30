@@ -2,16 +2,17 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import java.io.IOException;
 
@@ -20,25 +21,33 @@ import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
 public class SettingsScreenController implements Controller{
 
-    @FXML public Button leaveButton;
+    @FXML
+    public Button leaveButton;
 
-    @FXML public RadioButton lightMode_RadioButton;
+    @FXML
+    public RadioButton lightMode_RadioButton;
 
-    @FXML public RadioButton darkMode_RadioButton;
+    @FXML
+    public RadioButton darkMode_RadioButton;
 
-    @FXML public ChoiceBox musicChoiceBox;
+    @FXML
+    public ChoiceBox musicChoiceBox;
 
     private final App app;
-    private ToggleGroup radioButtongroup = new ToggleGroup();
+
+    private final Provider<IngameScreenController> ingameScreenControllerProvider;
+
 
     @Inject
-    public SettingsScreenController(App app){
+    public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider){
         this.app = app;
+        this.ingameScreenControllerProvider = ingameScreenControllerProvider;
     }
 
     @Override
     public void init() {
         app.getStage().setTitle(SETTINGS_SCREEN_TITLE);
+
     }
 
     @Override
@@ -57,17 +66,23 @@ public class SettingsScreenController implements Controller{
             e.printStackTrace();
             return null;
         }
-        //Light-/Darkmode radio buttons
-        lightMode_RadioButton = new RadioButton("Light");
-        darkMode_RadioButton = new RadioButton("Dark");
-        lightMode_RadioButton.setToggleGroup(radioButtongroup);
-        darkMode_RadioButton.setToggleGroup(radioButtongroup);
-        lightMode_RadioButton.setSelected(true);
 
+        //System.out.println(radioButtongroup.getSelectedToggle().toString());
         return settingsView;
+    }
+
+    public void setApperenceMode(ActionEvent event){
+        if(darkMode_RadioButton.isSelected()){
+            System.out.println("Hello");
+            darkMode();
+        }
     }
 
     public void darkMode(){
         app.getStage().getScene().setFill(Color.rgb(35, 39, 42));
+    }
+
+    public void leave(){
+        app.show(ingameScreenControllerProvider.get());
     }
 }
