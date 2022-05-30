@@ -30,9 +30,11 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @FXML public RadioButton darkMode_RadioButton;
 
-    @FXML public ChoiceBox musicChoiceBox;
+    @FXML public ChoiceBox<String> musicChoiceBox;
 
     private final App app;
+
+    private final String[] songList = {"Hardbass", "Ambient"};
 
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
 
@@ -68,15 +70,16 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        musicChoiceBox.getItems().addAll(songList);
+    }
+
+    public void setApperenceMode(){
         if (lightMode_RadioButton.isSelected()){
             app.getStage().getScene().getStylesheets().clear();
         }
         if(darkMode_RadioButton.isSelected()){
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
-    }
-
-    public void setApperenceMode(){
 
     }
 
