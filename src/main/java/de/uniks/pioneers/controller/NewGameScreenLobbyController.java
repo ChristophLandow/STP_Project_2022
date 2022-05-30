@@ -188,7 +188,7 @@ public class NewGameScreenLobbyController implements Controller {
             userBox.getChildren().add(playerEntryController.getPlayerEntry());
 
             if (member.ready()) {
-                setReady(member.userId(), true);
+                setReadyColor(member.userId(), member.ready(), member.color());
             }
         }
     }
@@ -202,11 +202,7 @@ public class NewGameScreenLobbyController implements Controller {
                     if(memberEvent.event().endsWith(".created")) {
                         members.add(member);
                     } else if(memberEvent.event().endsWith(".updated")) {
-                        if(member.ready()) {
-                            setReady(member.userId(), true);
-                        } else if(!member.ready()) {
-                            setReady(member.userId(), false);
-                        }
+                        setReadyColor(member.userId(), member.ready(), member.color());
                     } else if (memberEvent.event().endsWith(".deleted")) {
                         members.remove(member);
                     }
@@ -267,9 +263,10 @@ public class NewGameScreenLobbyController implements Controller {
                     }}, Throwable::printStackTrace));
     }
 
-    private void setReady(String memberId, boolean ready) {
+    private void setReadyColor(String memberId, boolean ready, String hexColor) {
         if(playerEntries.containsKey(memberId)) {
             playerEntries.get(memberId).setReady(ready);
+            playerEntries.get(memberId).setColor(hexColor);
         }
     }
 
