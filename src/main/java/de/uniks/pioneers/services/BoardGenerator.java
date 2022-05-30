@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.controller.subcontroller.HexTile;
+import de.uniks.pioneers.model.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +16,13 @@ public class BoardGenerator {
     private final List<HexTile> edges = new ArrayList<>();
     private final List<HexTile> corners = new ArrayList<>();
 
-    public List<HexTile> generateTiles(int size){
+    public List<HexTile> generateTiles(List<Tile> tiles){
 
-        for(int q = -size; q <= size; q++){
-            for(int r = max(-size, -q-size); r <= min(+size, -q+size); r++){
+        for(Tile tile : tiles) {
 
-                int s = -q-r;
-                board.add(new HexTile(q,r,s, scale, true));
-            }
+            HexTile newHexTile = new HexTile(tile.x(), tile.y(), tile.z(), scale, true);
+            newHexTile.setGameInfo(tile.type(), tile.numberToken());
+            board.add(newHexTile);
         }
         return this.board;
     }

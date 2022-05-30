@@ -187,14 +187,12 @@ public class IngameScreenController implements Controller {
     }
     private void buildBoardUI(){
 
-        System.out.println(this.gameStorage.getMap());
-
         BoardGenerator generator = new BoardGenerator();
-        List<HexTile> tiles = generator.generateTiles(this.gameSize);
+        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
         List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1);
         List<HexTile> corners = generator.generateCorners(2 * this.gameSize + 1);
 
-        for (HexTile tile : tiles) {
+        for (HexTile hexTile : tiles) {
 
             Polygon hex = new Polygon();
             hex.getPoints().addAll(
@@ -206,12 +204,12 @@ public class IngameScreenController implements Controller {
                     -Math.sqrt(3) / 2, 0.5);
             hex.setScaleX(scale);
             hex.setScaleY(scale);
-            Image image = new Image(getClass().getResource("ingame/weideland.png").toString());
+            Image image = new Image(getClass().getResource("ingame/" + hexTile.type + ".png").toString());
             hex.setFill(new ImagePattern(image));
-            hex.setLayoutX(tile.x + this.fieldPane.getPrefWidth() / 2);
-            hex.setLayoutY(tile.y + this.fieldPane.getPrefHeight() / 2);
+            hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
+            hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(hex);
-            this.tileControllers.add(new HexTileController(tile, hex));
+            this.tileControllers.add(new HexTileController(hexTile, hex));
         }
         for (HexTile edge : edges) {
 
