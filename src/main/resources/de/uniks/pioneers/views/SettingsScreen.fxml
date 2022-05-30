@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -37,5 +38,10 @@
          <Font size="24.0" />
       </font>
    </Button>
-   <ChoiceBox fx:id="musicChoiceBox" layoutX="354.0" layoutY="240.0" prefHeight="25.0" prefWidth="360.0" />
+   <ChoiceBox fx:id="musicChoiceBox" layoutX="354.0" layoutY="240.0" prefHeight="25.0" prefWidth="375.0" />
+   <Slider fx:id="VolumeSlider" layoutX="354.0" layoutY="339.0" max="200.0" prefHeight="35.0" prefWidth="304.0" />
+   <ImageView fx:id="soundImageView" fitHeight="51.0" fitWidth="48.0" layoutX="676.0" layoutY="331.0"
+              pickOnBounds="true" preserveRatio="true">
+      <Image url="@../Speaker_Icon.png"/>
+   </ImageView>
 </AnchorPane>

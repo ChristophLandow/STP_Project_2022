@@ -10,10 +10,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.paint.Color;
+import javafx.scene.control.Slider;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.swing.text.html.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +37,12 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML
     public ChoiceBox<String> musicChoiceBox;
 
+    @FXML
+    public Slider VolumeSlider;
+
     private final App app;
+
+    private final String[] songArray = {"Hardbass", "Ambient"};
 
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
 
@@ -72,9 +78,15 @@ public class SettingsScreenController implements Controller, Initializable {
         return settingsView;
     }
 
+    //load choicebox after the init and set action
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        musicChoiceBox.getItems().addAll(songArray);
+        musicChoiceBox.setOnAction(this::setMusic);
+    }
 
+    //play
+    private void setMusic(ActionEvent actionEvent) {
     }
 
     public void setApperenceMode(ActionEvent event){
