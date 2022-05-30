@@ -81,4 +81,8 @@ public class MainModule {
     @Singleton
     GameMemberApiService gameMemberApiService(Retrofit retrofit) { return  retrofit.create(GameMemberApiService.class);}
 
+    @Provides
+    @Singleton
+    PioneersApiService pioneersApiService(Retrofit retrofit) { return  retrofit.create(PioneersApiService.class);}
+
 }
