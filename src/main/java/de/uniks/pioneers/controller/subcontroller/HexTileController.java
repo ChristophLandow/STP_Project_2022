@@ -6,19 +6,17 @@ import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
 
-import static de.uniks.pioneers.GameConstants.eulerC;
-import static de.uniks.pioneers.GameConstants.scale;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class HexTileController {
 
     private final Polygon view;
-    public Tile tile;
+    public HexTile tile;
 
     public BuildingPointController[] corners = new BuildingPointController[6];
 
-    public HexTileController(Tile tile, Polygon view){
+    public HexTileController(HexTile tile, Polygon view){
 
         this.tile = tile;
         this.view = view;
@@ -48,14 +46,8 @@ public class HexTileController {
 
                     this.corners[i] = buildingPoint;
                 }
-
-
             }
-
-
         }
-
-
     }
 
     private void info(MouseEvent mouseEvent){

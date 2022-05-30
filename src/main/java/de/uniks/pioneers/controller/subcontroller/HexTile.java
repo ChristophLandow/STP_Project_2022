@@ -1,10 +1,9 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import static de.uniks.pioneers.GameConstants.eulerC;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 
-public class Tile {
+public class HexTile {
 
     int q;
     int r;
@@ -13,12 +12,12 @@ public class Tile {
     public double x;
     public double y;
 
-    String type = "";
-    int number;
+    public String type = "";
+    public int number;
 
     double scale;
 
-    public Tile(int q, int r, int s, double scale, boolean top){
+    public HexTile(int q, int r, int s, double scale, boolean top){
 
         this.scale = scale;
 
@@ -30,6 +29,12 @@ public class Tile {
         x = kartCoords[0];
         y = kartCoords[1];
 
+    }
+
+    public void setGameInfo(String type, int number){
+
+        this.type = type;
+        this.number = number;
     }
 
     private double[] cubeToCart(double q, double r, double scale, boolean top){

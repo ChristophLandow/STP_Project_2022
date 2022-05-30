@@ -4,11 +4,13 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.BuildingPointController;
 import de.uniks.pioneers.controller.subcontroller.HexTileController;
-import de.uniks.pioneers.controller.subcontroller.Tile;
+import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.GameStorage;
+import de.uniks.pioneers.services.IngameService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +24,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -37,8 +38,8 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.List;
 
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.scale;
 
@@ -71,26 +72,27 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView hammerImageView;
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    private int gameSize;
     private List<User> users;
-
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
-
+    private final IngameService ingameService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
 
-
+    private final GameStorage gameStorage;
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
 
     @Inject
-    public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider, Provider<SettingsScreenController> settingsScreenControllerProvider) {
+    public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider, Provider<SettingsScreenController> settingsScreenControllerProvider, IngameService ingameService, GameStorage gameStorage) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
+        this.ingameService = ingameService;
+        this.gameStorage = gameStorage;
     }
-
     @Override
     public Parent render() {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/IngameScreen.fxml"));
@@ -102,62 +104,6 @@ public class IngameScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
-        int size = 2;
-
-        BoardGenerator generator = new BoardGenerator();
-        List<Tile> tiles = generator.generateTiles(size);
-        List<Tile> edges = generator.generateEdges(2 * size + 1);
-        List<Tile> corners = generator.generateCorners(2 * size + 1);
-
-        for (Tile tile : tiles) {
-
-            Polygon hex = new Polygon();
-            hex.getPoints().addAll(
-                    0.0, 1.0,
-                    Math.sqrt(3) / 2, 0.5,
-                    Math.sqrt(3) / 2, -0.5,
-                    0.0, -1.0,
-                    -Math.sqrt(3) / 2, -0.5,
-                    -Math.sqrt(3) / 2, 0.5);
-            hex.setScaleX(scale);
-            hex.setScaleY(scale);
-            Image image = new Image(getClass().getResource("ingame/weideland.png").toString());
-            hex.setFill(new ImagePattern(image));
-            hex.setLayoutX(tile.x + this.fieldPane.getPrefWidth() / 2);
-            hex.setLayoutY(tile.y + this.fieldPane.getPrefHeight() / 2);
-            this.fieldPane.getChildren().add(hex);
-            this.tileControllers.add(new HexTileController(tile, hex));
-        }
-
-        for (Tile edge : edges) {
-
-            Circle circ = new Circle(2);
-            circ.setFill(Color.rgb(255, 0, 0));
-
-            circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
-            this.fieldPane.getChildren().add(circ);
-        }
-
-        for (Tile corner : corners) {
-
-            Circle circ = new Circle(5);
-            circ.setFill(Color.rgb(255, 0, 0));
-
-            circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
-            this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ));
-
-        }
-
-        for(HexTileController tile : tileControllers){
-
-            tile.findCorners(this.buildingControllers);
-
-        }
-
-
         return view;
     }
 
@@ -222,12 +168,71 @@ public class IngameScreenController implements Controller {
         // only for testing
         swapTurnSymbol();
     }
-
     @Override
     public void stop() {
     }
-
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public void loadMap(){
+
+        if(this.game.get().members() > 4){this.gameSize = 3;}
+        else{this.gameSize = 2;}
+
+        this.ingameService.getMap(this.game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .doOnComplete(this::buildBoardUI)
+                .subscribe();
+    }
+    private void buildBoardUI(){
+
+        BoardGenerator generator = new BoardGenerator();
+        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
+        List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1);
+        List<HexTile> corners = generator.generateCorners(2 * this.gameSize + 1);
+
+        for (HexTile hexTile : tiles) {
+
+            Polygon hex = new Polygon();
+            hex.getPoints().addAll(
+                    0.0, 1.0,
+                    Math.sqrt(3) / 2, 0.5,
+                    Math.sqrt(3) / 2, -0.5,
+                    0.0, -1.0,
+                    -Math.sqrt(3) / 2, -0.5,
+                    -Math.sqrt(3) / 2, 0.5);
+            hex.setScaleX(scale);
+            hex.setScaleY(scale);
+            Image image = new Image(getClass().getResource("ingame/" + hexTile.type + ".png").toString());
+            hex.setFill(new ImagePattern(image));
+            hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
+            hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
+            this.fieldPane.getChildren().add(hex);
+            this.tileControllers.add(new HexTileController(hexTile, hex));
+        }
+        for (HexTile edge : edges) {
+
+            Circle circ = new Circle(2);
+            circ.setFill(Color.rgb(255, 0, 0));
+
+            circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
+            this.fieldPane.getChildren().add(circ);
+        }
+        for (HexTile corner : corners) {
+
+            Circle circ = new Circle(5);
+            circ.setFill(Color.rgb(255, 0, 0));
+
+            circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
+            this.fieldPane.getChildren().add(circ);
+            this.buildingControllers.add(new BuildingPointController(corner, circ));
+        }
+        for(HexTileController tile : tileControllers){
+
+            tile.findCorners(this.buildingControllers);
+        }
     }
 }

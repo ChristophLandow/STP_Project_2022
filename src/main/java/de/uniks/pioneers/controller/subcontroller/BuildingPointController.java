@@ -3,13 +3,12 @@ package de.uniks.pioneers.controller.subcontroller;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 
 public class BuildingPointController {
     private final Circle view;
-    public Tile tile;
+    public HexTile tile;
 
-    public BuildingPointController(Tile tile, Circle view){
+    public BuildingPointController(HexTile tile, Circle view){
 
         this.tile = tile;
         this.view = view;

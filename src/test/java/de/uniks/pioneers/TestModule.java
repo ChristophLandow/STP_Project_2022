@@ -321,6 +321,10 @@ public class TestModule {
             public void remember(){}
         };}
 
+    @Provides
+    @Singleton
+    PioneersApiService pioneersApiService(Retrofit retrofit) { return  retrofit.create(PioneersApiService.class);}
+
 
 }
 

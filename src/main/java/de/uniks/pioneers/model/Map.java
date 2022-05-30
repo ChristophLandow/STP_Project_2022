@@ -1,4 +1,9 @@
 package de.uniks.pioneers.model;
 
-public record Map() {
+import java.util.List;
+
+public record Map(
+        String gameId,
+        List<Tile> tiles
+) {
 }

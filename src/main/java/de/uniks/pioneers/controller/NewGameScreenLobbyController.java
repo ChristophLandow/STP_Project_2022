@@ -287,6 +287,7 @@ public class NewGameScreenLobbyController implements Controller {
     private void toIngame() {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         ingameScreenController.game.set(this.game.get());
+        ingameScreenController.loadMap();
         ingameScreenController.setUsers(this.users);
         app.show(ingameScreenController);
         ingameScreenController.setPlayerColor(colorPickerController.getColor());

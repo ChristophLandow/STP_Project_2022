@@ -3,6 +3,7 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.model.Map;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Tile;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -14,10 +15,13 @@ import java.util.List;
 public class IngameService {
 
     private final PioneersApiService pioneersApiService;
+    private final GameStorage gameStorage;
 
     @Inject
-    public IngameService(PioneersApiService pioneersApiService) {
+    public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
+
         this.pioneersApiService = pioneersApiService;
+        this.gameStorage = gameStorage;
     }
 
     public Observable<List<Player>> getAllPlayers(String gameId){
@@ -25,7 +29,9 @@ public class IngameService {
     }
 
     public Observable<Map> getMap (String gameId){
-        return pioneersApiService.getMap(gameId);
+
+        return pioneersApiService.getMap(gameId)
+                .doOnNext(result -> gameStorage.setMap(result.tiles()));
     }
 
 
