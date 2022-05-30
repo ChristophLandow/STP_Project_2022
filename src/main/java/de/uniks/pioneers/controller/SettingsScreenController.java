@@ -5,6 +5,7 @@ import de.uniks.pioneers.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -15,11 +16,13 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
 
-public class SettingsScreenController implements Controller{
+public class SettingsScreenController implements Controller, Initializable {
 
     @FXML
     public Button leaveButton;
@@ -31,7 +34,7 @@ public class SettingsScreenController implements Controller{
     public RadioButton darkMode_RadioButton;
 
     @FXML
-    public ChoiceBox musicChoiceBox;
+    public ChoiceBox<String> musicChoiceBox;
 
     private final App app;
 
@@ -66,23 +69,27 @@ public class SettingsScreenController implements Controller{
             e.printStackTrace();
             return null;
         }
-
-        //System.out.println(radioButtongroup.getSelectedToggle().toString());
         return settingsView;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 
     public void setApperenceMode(ActionEvent event){
         if(darkMode_RadioButton.isSelected()){
             System.out.println("Hello");
-            darkMode();
+            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
-    }
-
-    public void darkMode(){
-        app.getStage().getScene().setFill(Color.rgb(35, 39, 42));
+        if(lightMode_RadioButton.isSelected()){
+            app.getStage().getScene().getStylesheets().clear();
+        }
     }
 
     public void leave(){
         app.show(ingameScreenControllerProvider.get());
     }
+
+
 }
