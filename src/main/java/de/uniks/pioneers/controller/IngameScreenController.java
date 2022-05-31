@@ -210,16 +210,15 @@ public class IngameScreenController implements Controller {
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
 
-            Label numberLabel = new Label();
-            numberLabel.setText(Integer.toString(hexTile.number));
-            numberLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD , 30));
-            numberLabel.setTextFill(Color.rgb(255,0,0));
-            numberLabel.setAlignment(Pos.CENTER);
-            numberLabel.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
-            numberLabel.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
+            String numberURL = "ingame/tile_" + hexTile.number + ".png";
+            ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
+            numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
+            numberImage.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
+            numberImage.setFitHeight(30);
+            numberImage.setFitWidth(30);
 
             this.fieldPane.getChildren().add(hex);
-            this.fieldPane.getChildren().add(numberLabel);
+            this.fieldPane.getChildren().add(numberImage);
             this.tileControllers.add(new HexTileController(hexTile, hex));
         }
         for (HexTile edge : edges) {
