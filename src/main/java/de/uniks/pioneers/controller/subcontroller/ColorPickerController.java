@@ -11,6 +11,7 @@ import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
 import java.util.Iterator;
+import java.util.Random;
 
 public class ColorPickerController {
     private ColorPicker colorPicker;
@@ -22,6 +23,7 @@ public class ColorPickerController {
         this.colorPicker = colorPicker;
         this.houseSVG = houseSVG;
         this.houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
+        Random random = new Random();
 
         this.colorPicker.showingProperty().addListener((obs,b,b1) -> {
             if(b1) {
@@ -30,7 +32,8 @@ public class ColorPickerController {
                 popup.lookupAll(".color-rect").stream().forEach(rect -> {
                     Color c = (Color)((Rectangle)rect).getFill();
                     // Replace with your custom color
-                    ((Rectangle)rect).setFill(Color.RED);
+                    String randColor = String.format("#%06x", random.nextInt(256*256*256));
+                    ((Rectangle)rect).setFill(Color.valueOf(randColor));
                 });
             }
         });
