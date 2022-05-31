@@ -82,8 +82,6 @@ class AppTest extends ApplicationTest {
         write("\t");
         type(KeyCode.ENTER);
 
-
-
     }
 
 
