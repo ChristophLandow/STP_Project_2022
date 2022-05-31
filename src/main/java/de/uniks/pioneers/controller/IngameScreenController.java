@@ -2,11 +2,8 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.controller.subcontroller.BuildingPointController;
-import de.uniks.pioneers.controller.subcontroller.HexTileController;
-import de.uniks.pioneers.controller.subcontroller.HexTile;
+import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.services.BoardGenerator;
-import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameStorage;
@@ -15,6 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.control.Button;
@@ -32,13 +30,14 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import javafx.scene.text.FontWeight;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.scale;
@@ -79,6 +78,8 @@ public class IngameScreenController implements Controller {
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
+
+    private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
 
     private final GameStorage gameStorage;
@@ -208,7 +209,17 @@ public class IngameScreenController implements Controller {
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
+
+            Label numberLabel = new Label();
+            numberLabel.setText(Integer.toString(hexTile.number));
+            numberLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD , 30));
+            numberLabel.setTextFill(Color.rgb(255,0,0));
+            numberLabel.setAlignment(Pos.CENTER);
+            numberLabel.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
+            numberLabel.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
+
             this.fieldPane.getChildren().add(hex);
+            this.fieldPane.getChildren().add(numberLabel);
             this.tileControllers.add(new HexTileController(hexTile, hex));
         }
         for (HexTile edge : edges) {
@@ -219,6 +230,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
+            this.streetControllers.add(new StreetPointController(edge, circ));
         }
         for (HexTile corner : corners) {
 
@@ -232,7 +244,9 @@ public class IngameScreenController implements Controller {
         }
         for(HexTileController tile : tileControllers){
 
+            tile.findEdges(this.streetControllers);
             tile.findCorners(this.buildingControllers);
+            tile.link();
         }
     }
 }
