@@ -234,6 +234,7 @@ public class IngameScreenController implements Controller {
 
             tile.findEdges(this.streetControllers);
             tile.findCorners(this.buildingControllers);
+            tile.link();
         }
     }
 }

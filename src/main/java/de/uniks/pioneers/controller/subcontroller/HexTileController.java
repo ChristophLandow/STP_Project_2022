@@ -24,7 +24,6 @@ public class HexTileController {
         this.view = view;
         init();
     }
-
     public void init(){
 
         this.view.setOnMouseClicked(this::info);
@@ -74,10 +73,27 @@ public class HexTileController {
         }
     }
 
+    //interconnects street and building controllers
+    public void link(){
+
+        for(int i = 0; i < 6; i++){
+
+            if(!this.corners[i].streets.contains(this.edges[i])){
+
+                this.corners[i].streets.add(this.edges[i]);
+                this.edges[i].buildings.add(this.corners[i]);
+            }
+            if(!this.corners[i].streets.contains(this.edges[((i-1)+6)%6])){
+
+                this.corners[i].streets.add(this.edges[((i-1)+6)%6]);
+                this.edges[((i-1)+6)%6].buildings.add(this.corners[i]);
+            }
+        }
+    }
+
     private void info(MouseEvent mouseEvent){
 
         this.yield();
-
         System.out.println(tile);
     }
     public void yield(){
@@ -93,5 +109,4 @@ public class HexTileController {
                 streetPointController.mark();}
         }
     }
-
 }

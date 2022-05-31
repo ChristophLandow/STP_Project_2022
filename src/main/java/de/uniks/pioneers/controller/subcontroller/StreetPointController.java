@@ -4,10 +4,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
+
 public class StreetPointController {
 
     private final Circle view;
     public HexTile tile;
+
+    public ArrayList<BuildingPointController> buildings = new ArrayList<>();
 
     public StreetPointController(HexTile tile, Circle view){
 
@@ -26,6 +30,10 @@ public class StreetPointController {
         //assigns building
     }
     private void info(MouseEvent mouseEvent){
+
+        for(BuildingPointController buildingPointController : this.buildings){
+            buildingPointController.mark();
+        }
 
         System.out.println(tile);
     }
