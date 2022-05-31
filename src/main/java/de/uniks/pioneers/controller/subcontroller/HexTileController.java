@@ -16,6 +16,8 @@ public class HexTileController {
 
     public BuildingPointController[] corners = new BuildingPointController[6];
 
+    public StreetPointController[] edges = new StreetPointController[6];
+
     public HexTileController(HexTile tile, Polygon view){
 
         this.tile = tile;
@@ -32,11 +34,11 @@ public class HexTileController {
 
         double[][] cornerCoords = new double[6][2];
         cornerCoords[0] = new double[]{tile.x + 0, tile.y + 1 * tile.scale};
-        cornerCoords[1] = new double[]{tile.x - 0, tile.y - 1 * tile.scale};
-        cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
-        cornerCoords[3] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
-        cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
-        cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[1] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
+        cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[3] = new double[]{tile.x - 0, tile.y - 1 * tile.scale};
+        cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
 
         for(int i = 0; i < 6; i++){
 
@@ -45,6 +47,28 @@ public class HexTileController {
                 if(abs(buildingPoint.tile.x - cornerCoords[i][0]) < 1 && abs(buildingPoint.tile.y - cornerCoords[i][1]) < 1 ){
 
                     this.corners[i] = buildingPoint;
+                }
+            }
+        }
+    }
+
+    public void findEdges(ArrayList<StreetPointController> streetPointControllers){
+
+        double[][] edgeCoords = new double[6][2];
+        edgeCoords[0] = new double[]{tile.x + (sqrt(3)/4) * tile.scale, tile.y + 0.75 * tile.scale};
+        edgeCoords[1] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0};
+        edgeCoords[2] = new double[]{tile.x + (sqrt(3)/4) * tile.scale, tile.y - 0.75 * tile.scale};
+        edgeCoords[3] = new double[]{tile.x - (sqrt(3)/4) * tile.scale, tile.y - 0.75 * tile.scale};
+        edgeCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0};
+        edgeCoords[5] = new double[]{tile.x - (sqrt(3)/4) * tile.scale, tile.y + 0.75 * tile.scale};
+
+        for(int i = 0; i < 6; i++){
+
+            for(StreetPointController streetPoint : streetPointControllers){
+
+                if(abs(streetPoint.tile.x - edgeCoords[i][0]) < 1 && abs(streetPoint.tile.y - edgeCoords[i][1]) < 1 ){
+
+                    this.edges[i] = streetPoint;
                 }
             }
         }
@@ -62,6 +86,11 @@ public class HexTileController {
 
             if(buildingPointController != null){
             buildingPointController.mark();}
+        }
+        for(StreetPointController streetPointController : this.edges){
+
+            if(streetPointController != null){
+                streetPointController.mark();}
         }
     }
 

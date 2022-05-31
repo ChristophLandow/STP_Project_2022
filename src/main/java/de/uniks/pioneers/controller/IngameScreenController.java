@@ -2,11 +2,8 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.controller.subcontroller.BuildingPointController;
-import de.uniks.pioneers.controller.subcontroller.HexTileController;
-import de.uniks.pioneers.controller.subcontroller.HexTile;
+import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.services.BoardGenerator;
-import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameStorage;
@@ -79,6 +76,8 @@ public class IngameScreenController implements Controller {
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
+
+    private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
 
     private final GameStorage gameStorage;
@@ -219,6 +218,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
+            this.streetControllers.add(new StreetPointController(edge, circ));
         }
         for (HexTile corner : corners) {
 
@@ -232,6 +232,7 @@ public class IngameScreenController implements Controller {
         }
         for(HexTileController tile : tileControllers){
 
+            tile.findEdges(this.streetControllers);
             tile.findCorners(this.buildingControllers);
         }
     }
