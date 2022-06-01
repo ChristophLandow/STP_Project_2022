@@ -110,16 +110,7 @@ public class NewGameScreenLobbyController implements Controller {
         passwordLabel.setText(this.getPassword());
         clientUserNameLabel.setText(userService.getCurrentUser().name());
         colorPickerController = new ColorPickerController(colorPicker, houseSVG);
-        readyButton.setDisable(true);
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(10000);
-                readyButton.setDisable(false);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
+        this.reactivateReadyButton();
 
         try {
             clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
@@ -280,6 +271,7 @@ public class NewGameScreenLobbyController implements Controller {
                             clientReadyBox.setBackground(Background.fill(Color.RED));
                             colorPickerController.setDisable(false);
                         }}, Throwable::printStackTrace));
+            this.reactivateReadyButton();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Selected color is too similar to another player's color!");
             alert.showAndWait();
@@ -367,5 +359,17 @@ public class NewGameScreenLobbyController implements Controller {
 
     public ObservableList<Member> getMembers() {
         return members;
+    }
+
+    private void reactivateReadyButton() {
+        this.readyButton.setDisable(true);
+        new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+                readyButton.setDisable(false);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 }
