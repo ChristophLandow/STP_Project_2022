@@ -24,7 +24,9 @@ public class PlayerEntryController implements Controller {
     @FXML SVGPath playerHouseSVG;
     @FXML HBox playerReadyBox;
     @FXML Label playerReadyLabel;
+    private String playerColor;
     private boolean ready;
+
 
     public PlayerEntryController(Image playerAvatar, String playerName, String hexColor, String playerID) {
         this.render();
@@ -32,6 +34,8 @@ public class PlayerEntryController implements Controller {
         this.playerAvatar.setImage(playerAvatar);
         this.playerNameLabel.setText(playerName);
         this.playerHouseSVG.setFill(Paint.valueOf(hexColor));
+        this.playerHouseSVG.setVisible(false);
+        this.playerColor = hexColor;
         this.ready = false;
     }
 
@@ -60,10 +64,12 @@ public class PlayerEntryController implements Controller {
 
     public void setReady(boolean ready) {
         if(ready) {
+            this.playerHouseSVG.setVisible(true);
             this.playerReadyLabel.setText("Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.GREEN));
         } else {
+            this.playerHouseSVG.setVisible(false);
             this.playerReadyLabel.setText("Not Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.RED));
@@ -73,10 +79,15 @@ public class PlayerEntryController implements Controller {
 
     public void setColor(String hexColor) {
         this.playerHouseSVG.setFill(Paint.valueOf(hexColor));
+        this.playerColor = hexColor;
     }
 
     public HBox getPlayerEntry() {
         return this.playerEntry;
+    }
+
+    public String getPlayerColor() {
+        return this.playerColor;
     }
 
     public boolean getReady() {
