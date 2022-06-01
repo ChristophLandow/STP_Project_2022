@@ -163,21 +163,31 @@ public class IngameScreenController implements Controller {
 
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
-        String gameId = currentState.gameId();
         ExpectedMove move = currentState.expectedMoves().get(0);
 
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
-            this.enableFoundingRoll(move.action());
+            if (move.action().equals(FOUNDING_ROLL)) {
+                this.enableFoundingRoll();
+            } else if (move.action().equals(FOUNDING_SETTLEMENT_1) || move.action().equals(FOUNDING_SETTLEMENT_2)) {
+                // enable building points
+                for (BuildingPointController controller : buildingControllers) {
+                    controller.init();
+                }
+            } else if (move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2)) {
+                // enable road points
+                for (StreetPointController controller : streetControllers) {
+                    controller.init();
+                }
+            }
+
         }
     }
 
-    private void enableFoundingRoll(String action) {
-        if (action.equals(FOUNDING_ROLL)) {
-            // temporary solution!
-            this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
-        }
+    private void enableFoundingRoll() {
+        // temporary solution!
+        this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
     }
 
     private void foundingRoll(MouseEvent mouseEvent) {

@@ -17,7 +17,7 @@ public class BuildingPointController {
 
         this.tile = tile;
         this.view = view;
-        init();
+        // init();
     }
 
     public void init(){
@@ -26,6 +26,13 @@ public class BuildingPointController {
         this.view.setOnMouseExited(this::undye);
 
     }
+
+    public void reset() {
+        this.view.setOnMouseClicked(null);
+        this.view.setOnMouseEntered(null);
+        this.view.setOnMouseExited(null);
+    }
+
     public void build(){
         //assigns building
     }
