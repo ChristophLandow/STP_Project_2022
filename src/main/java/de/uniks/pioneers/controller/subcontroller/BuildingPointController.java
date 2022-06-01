@@ -79,7 +79,6 @@ public class BuildingPointController {
     private void showBuilding(Move move) {
         Image house = new Image(Objects.requireNonNull(getClass().getResource("images/house.svg.png")).toString());
         this.view.setFill(new ImagePattern(house));
-        this.view.setRadius(7);
     }
 
     private void dye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(0,255,0));}
