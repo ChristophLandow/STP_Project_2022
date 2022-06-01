@@ -52,34 +52,6 @@ public class HexTile {
         return coords;
     }
 
-    public double[] cartToCube(double x, double y, double scale, boolean top){
-
-        double[] coords = new double[3];
-        double q;
-        double r;
-        double s;
-
-        if(top){
-
-            r = (2*y)/(3*scale);
-            q = (x/(sqrt(3)*scale)) - (r/2);
-            s = -q -r;
-
-        }else{
-
-            q = ((2*y)/(3*scale));
-            r = (x/(sqrt(3)*scale)) - (q/2);
-            s = -q -r;
-
-        }
-
-        coords[0] = q;
-        coords[1] = r;
-        coords[2] = s;
-
-        return coords;
-    }
-
     @Override
     public String toString(){
 

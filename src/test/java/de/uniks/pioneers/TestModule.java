@@ -145,36 +145,36 @@ public class TestModule {
             public Observable<List<Game>> getGames() {
 
                 ArrayList<Game> games = new ArrayList<>();
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","TestUserA",1,false));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","TestUserB",1,false));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","TestUserC",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","002",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","003",1,false));
                 return Observable.just(games);
             }
 
             @Override
             public Observable<Game> getGame(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","TestUserA",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","000",1,false));
             }
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"TestUser",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false));
 
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false));
 
             }
 
             @Override
             public Observable<Game> delete(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","TestUser",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false));
 
             }
         };
@@ -240,7 +240,7 @@ public class TestModule {
 
                 ArrayList<Member> users = new ArrayList<>();
                 users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false, "#ff0000"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",true, "#ff0000"));
                 return Observable.just(users);
             }
 
@@ -323,7 +323,70 @@ public class TestModule {
 
     @Provides
     @Singleton
-    PioneersApiService pioneersApiService(Retrofit retrofit) { return  retrofit.create(PioneersApiService.class);}
+    PioneersApiService pioneersApiService() {
+
+        return new PioneersApiService() {
+            @Override
+            public Observable<Map> getMap(String gameId) {
+
+                List<Tile> tiles = new ArrayList<>();
+                tiles.add(new Tile(0,0,0,"desert",12));
+
+                tiles.add(new Tile(0,1,-1,"pasture",2));
+                tiles.add(new Tile(0,-1,1,"fields",3));
+                tiles.add(new Tile(1,-1,0,"forest",4));
+                tiles.add(new Tile(-1,1,0,"hills",5));
+                tiles.add(new Tile(1,0,-1,"mountains",6));
+                tiles.add(new Tile(-1,0,1,"pasture",7));
+
+                tiles.add(new Tile(2,-1,-1,"pasture",2));
+                tiles.add(new Tile(-2,1,1,"fields",3));
+                tiles.add(new Tile(-1,-1,2,"forest",4));
+                tiles.add(new Tile(1,1,-2,"hills",5));
+                tiles.add(new Tile(-1,2,-1,"mountains",6));
+                tiles.add(new Tile(1,-2,1,"pasture",7));
+                tiles.add(new Tile(2,-2,0,"pasture",2));
+                tiles.add(new Tile(-2,2,0,"fields",3));
+                tiles.add(new Tile(0,2,-2,"forest",4));
+                tiles.add(new Tile(0,-2,2,"hills",5));
+                tiles.add(new Tile(2,0,-2,"mountains",6));
+                tiles.add(new Tile(-2,0,2,"pasture",7));
+
+                return Observable.just(new Map("000", tiles));
+            }
+
+            @Override
+            public Observable<List<Player>> getAllPlayers(String gameId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Player> getPlayer(String gameId, String userId) {
+                return null;
+            }
+
+            @Override
+            public Observable<State> getCurrentState(String gameId) {
+                return null;
+            }
+
+            @Override
+            public Observable<List<Building>> getAllBuildings(String gameId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Building> getBuilding(String gameId, String buildingId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Move> postMove(String gameId, MoveDto dto) {
+                return null;
+            }
+        };
+
+        }
 
 
 }
