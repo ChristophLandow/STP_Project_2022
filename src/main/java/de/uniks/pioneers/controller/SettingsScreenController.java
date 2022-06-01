@@ -54,7 +54,6 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage = new Stage();
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(SETTINGS_SCREEN_TITLE);
-            //this.stage.setX(100);
             this.stage.show();
         } else {
             // bring to front if already open
@@ -94,10 +93,15 @@ public class SettingsScreenController implements Controller, Initializable {
 
     public void setApperenceMode(){
         if (lightMode_RadioButton.isSelected()){
-            app.getStage().getScene().getStylesheets().clear();
+            IngameScreenController controller = ingameScreenControllerProvider.get();
+            controller.getApp().getStage().getScene().getStylesheets().clear();
+            stage.getScene().getStylesheets().clear();
         }
         if(darkMode_RadioButton.isSelected()){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            IngameScreenController controller = ingameScreenControllerProvider.get();
+            controller.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            System.out.println(controller.getGameSize());
+            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
 
     }
