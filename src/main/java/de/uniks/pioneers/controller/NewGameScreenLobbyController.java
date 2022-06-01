@@ -20,7 +20,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -74,13 +73,12 @@ public class NewGameScreenLobbyController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
     private final App app;
-    private Parent view;
     private final UserService userService;
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     private final List<User> users = new ArrayList<>();
-    private final Map<String, PlayerEntryController> playerEntries = new HashMap<String, PlayerEntryController>();
+    private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String password;
     private GameChatController gameChatController;
@@ -188,9 +186,9 @@ public class NewGameScreenLobbyController implements Controller {
             playerEntries.put(user._id(), playerEntryController);
             userBox.getChildren().add(playerEntryController.getPlayerEntry());
 
-            if (member.ready()) {
-                setReadyColor(member.userId(), member.ready(), member.color());
-            }
+            //if (member.ready()) {
+            //    setReadyColor(member.userId(), member.ready(), member.color());
+            //}
         }
     }
 
@@ -233,6 +231,7 @@ public class NewGameScreenLobbyController implements Controller {
         // Parent parent;
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/NewGameLobbyScreen.fxml"));
         loader.setControllerFactory(c -> this);
+        final Parent view;
         try {
             view = loader.load();
 
@@ -251,7 +250,6 @@ public class NewGameScreenLobbyController implements Controller {
         // set member "ready" true in API
         Iterator<PlayerEntryController> it = playerEntries.values().iterator();
         boolean difference = true;
-        clientReady = !clientReady;
 
         while(it.hasNext()) {
             PlayerEntryController entry = it.next();
@@ -262,6 +260,7 @@ public class NewGameScreenLobbyController implements Controller {
         }
 
         if(difference) {
+            clientReady = !clientReady;
             disposable.add(newGameLobbyService.patchMember(game.get()._id(), newGameLobbyService.getCurrentMemberId(), clientReady, colorPickerController.getColor())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(result -> {
@@ -292,9 +291,7 @@ public class NewGameScreenLobbyController implements Controller {
         if (allUsersReady()) {
             disposable.add(newGameLobbyService.updateGame(game.get(),password,true)
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(response -> {
-                        this.toIngame();
-                    }, Throwable::printStackTrace));
+                    .subscribe(response -> this.toIngame(), Throwable::printStackTrace));
         }
     }
 
@@ -309,11 +306,9 @@ public class NewGameScreenLobbyController implements Controller {
 
     private boolean allUsersReady() {
         boolean playersReady = true;
-        Iterator<PlayerEntryController> it = playerEntries.values().iterator();
 
-        while(it.hasNext()) {
-            PlayerEntryController entry = it.next();
-            if(!entry.getReady()) {
+        for (PlayerEntryController entry : playerEntries.values()) {
+            if (!entry.getReady()) {
                 playersReady = false;
                 break;
             }
@@ -333,9 +328,7 @@ public class NewGameScreenLobbyController implements Controller {
         if (game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(res -> {
-                        app.show(lobbyScreenControllerProvider.get());
-                    }, Throwable::printStackTrace));
+                    .subscribe(res -> app.show(lobbyScreenControllerProvider.get()), Throwable::printStackTrace));
         } else {
             disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userService.getCurrentUser()._id())
                     .observeOn(FX_SCHEDULER)

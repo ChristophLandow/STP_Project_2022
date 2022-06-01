@@ -4,7 +4,6 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;

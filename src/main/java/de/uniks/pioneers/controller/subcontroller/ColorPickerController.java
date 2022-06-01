@@ -9,11 +9,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.PopupWindow;
 import javafx.stage.Window;
-import java.util.Iterator;
 
 public class ColorPickerController {
-    private ColorPicker colorPicker;
-    private SVGPath houseSVG;
+    private final ColorPicker colorPicker;
+    private final SVGPath houseSVG;
     private String hexColor;
     private String[] pickerColors;
     private int colorIndex = 0;
@@ -53,11 +52,7 @@ public class ColorPickerController {
 
         double distance = Math.sqrt(Math.pow((ownLab[0] - otherLab[0]), 2) + Math.pow((ownLab[1] - otherLab[1]), 2) + Math.pow((ownLab[2] - otherLab[2]), 2));
 
-        if(distance > 35) {
-            return true;
-        } else {
-            return false;
-        }
+        return distance > 35;
     }
 
     public double[] rgbToLab(String hexString)
@@ -128,10 +123,8 @@ public class ColorPickerController {
 
     private PopupWindow getPopupWindow() {
         final ObservableList<Window> windows = Window.getWindows();
-        final Iterator windowIterator = windows.iterator();
-        while (windowIterator.hasNext()) {
-            final Window window = (Window) windowIterator.next();
-            if(window instanceof PopupWindow) {
+        for(Window window : windows) {
+            if (window instanceof PopupWindow) {
                 return (PopupWindow) window;
             }
         }
@@ -164,10 +157,10 @@ public class ColorPickerController {
         this.colorPicker.showingProperty().addListener((obs,b,b1) -> {
             if(b1) {
                 PopupWindow popupWindow = getPopupWindow();
+                assert popupWindow != null;
                 Node popup = popupWindow.getScene().getRoot().getChildrenUnmodifiable().get(0);
-                popup.lookupAll(".color-rect").stream().forEach(rect -> {
-                    Color c = (Color) ((Rectangle) rect).getFill();
-                    // Replace with your custom color
+                popup.lookupAll(".color-rect").forEach(rect -> {
+                    // Replace with custom color
                     ((Rectangle) rect).setFill(Color.valueOf(pickerColors[colorIndex]));
                     this.colorIndex += 1;
                 });
