@@ -20,6 +20,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -248,19 +249,35 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void onSetReadyButton() {
         // set member "ready" true in API
+        Iterator<PlayerEntryController> it = playerEntries.values().iterator();
+        boolean difference = true;
         clientReady = !clientReady;
-        disposable.add(newGameLobbyService.patchMember(game.get()._id(), newGameLobbyService.getCurrentMemberId(), clientReady, colorPickerController.getColor())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(result -> {
-                    if(clientReady) {
-                        clientReadyLabel.setText("Ready");
-                        clientReadyBox.setBackground(Background.fill(Color.GREEN));
-                        colorPickerController.setDisable(true);
-                    } else {
-                        clientReadyLabel.setText("Not Ready");
-                        clientReadyBox.setBackground(Background.fill(Color.RED));
-                        colorPickerController.setDisable(false);
-                    }}, Throwable::printStackTrace));
+
+        while(it.hasNext()) {
+            PlayerEntryController entry = it.next();
+            if(entry.getReady() && !colorPickerController.checkColorDifference(entry.getPlayerColor())) {
+                difference = false;
+                break;
+            }
+        }
+
+        if(difference) {
+            disposable.add(newGameLobbyService.patchMember(game.get()._id(), newGameLobbyService.getCurrentMemberId(), clientReady, colorPickerController.getColor())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(result -> {
+                        if(clientReady) {
+                            clientReadyLabel.setText("Ready");
+                            clientReadyBox.setBackground(Background.fill(Color.GREEN));
+                            colorPickerController.setDisable(true);
+                        } else {
+                            clientReadyLabel.setText("Not Ready");
+                            clientReadyBox.setBackground(Background.fill(Color.RED));
+                            colorPickerController.setDisable(false);
+                        }}, Throwable::printStackTrace));
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Selected color is too similar to another player's color!");
+            alert.showAndWait();
+        }
     }
 
     private void setReadyColor(String memberId, boolean ready, String hexColor) {
@@ -292,11 +309,11 @@ public class NewGameScreenLobbyController implements Controller {
 
     private boolean allUsersReady() {
         boolean playersReady = true;
-        Iterator<HashMap.Entry<String, PlayerEntryController>> it = playerEntries.entrySet().iterator();
+        Iterator<PlayerEntryController> it = playerEntries.values().iterator();
 
-        while (it.hasNext()) {
-            HashMap.Entry<String, PlayerEntryController> entry = it.next();
-            if(!entry.getValue().getReady()) {
+        while(it.hasNext()) {
+            PlayerEntryController entry = it.next();
+            if(!entry.getReady()) {
                 playersReady = false;
                 break;
             }

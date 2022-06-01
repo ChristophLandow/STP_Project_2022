@@ -4,6 +4,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -24,14 +25,18 @@ public class PlayerEntryController implements Controller {
     @FXML SVGPath playerHouseSVG;
     @FXML HBox playerReadyBox;
     @FXML Label playerReadyLabel;
+    private String playerColor;
     private boolean ready;
+
 
     public PlayerEntryController(Image playerAvatar, String playerName, String hexColor, String playerID) {
         this.render();
         this.playerEntry.setId(playerID);
+        //this.playerEntry.setPadding(new Insets(0, 0, 7, 0));
         this.playerAvatar.setImage(playerAvatar);
         this.playerNameLabel.setText(playerName);
         this.playerHouseSVG.setFill(Paint.valueOf(hexColor));
+        this.playerColor = hexColor;
         this.ready = false;
     }
 
@@ -73,10 +78,15 @@ public class PlayerEntryController implements Controller {
 
     public void setColor(String hexColor) {
         this.playerHouseSVG.setFill(Paint.valueOf(hexColor));
+        this.playerColor = hexColor;
     }
 
     public HBox getPlayerEntry() {
         return this.playerEntry;
+    }
+
+    public String getPlayerColor() {
+        return this.playerColor;
     }
 
     public boolean getReady() {
