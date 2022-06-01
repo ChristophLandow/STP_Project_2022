@@ -110,6 +110,16 @@ public class NewGameScreenLobbyController implements Controller {
         passwordLabel.setText(this.getPassword());
         clientUserNameLabel.setText(userService.getCurrentUser().name());
         colorPickerController = new ColorPickerController(colorPicker, houseSVG);
+        readyButton.setDisable(true);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+                readyButton.setDisable(false);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
 
         try {
             clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
@@ -157,6 +167,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void deleteUser(Member member) {
+        System.out.println("deleteUser");
         Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().get();
         userBox.getChildren().remove(removal);
         playerEntries.remove(member.userId());
@@ -173,22 +184,20 @@ public class NewGameScreenLobbyController implements Controller {
         User user = userService.getUserById(member.userId()).blockingFirst();
         users.add(user);
 
-        if(!userService.getCurrentUser()._id().equals(member.userId())) {
-            Image userImage;
-            try {
-                userImage = new Image(user.avatar());
-            } catch (IllegalArgumentException | NullPointerException e) {
-                userImage = new Image(Constants.DEFAULT_AVATAR);
+        if(!playerEntries.containsKey(user._id())) {
+            if(!userService.getCurrentUser()._id().equals(member.userId())) {
+                Image userImage;
+                try {
+                    userImage = new Image(user.avatar());
+                } catch (IllegalArgumentException | NullPointerException e) {
+                    userImage = new Image(Constants.DEFAULT_AVATAR);
+                }
+
+                PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
+                playerEntryController.setReady(false);
+                playerEntries.put(user._id(), playerEntryController);
+                userBox.getChildren().add(playerEntryController.getPlayerEntry());
             }
-
-            PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
-            playerEntryController.setReady(false);
-            playerEntries.put(user._id(), playerEntryController);
-            userBox.getChildren().add(playerEntryController.getPlayerEntry());
-
-            //if (member.ready()) {
-            //    setReadyColor(member.userId(), member.ready(), member.color());
-            //}
         }
     }
 
@@ -201,9 +210,13 @@ public class NewGameScreenLobbyController implements Controller {
                     if(memberEvent.event().endsWith(".created")) {
                         members.add(member);
                     } else if(memberEvent.event().endsWith(".updated")) {
+                        members.replaceAll(m -> m.userId().equals(member.userId()) ? member : m);
                         setReadyColor(member.userId(), member.ready(), member.color());
                     } else if (memberEvent.event().endsWith(".deleted")) {
+                        System.out.println("remove" + member.userId());
+                        System.out.println(members);
                         members.remove(member);
+                        System.out.println(members);
                     }
                 }));
     }
@@ -248,11 +261,9 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void onSetReadyButton() {
         // set member "ready" true in API
-        Iterator<PlayerEntryController> it = playerEntries.values().iterator();
         boolean difference = true;
 
-        while(it.hasNext()) {
-            PlayerEntryController entry = it.next();
+        for(PlayerEntryController entry : playerEntries.values()) {
             if(entry.getReady() && !colorPickerController.checkColorDifference(entry.getPlayerColor())) {
                 difference = false;
                 break;
@@ -307,7 +318,7 @@ public class NewGameScreenLobbyController implements Controller {
     private boolean allUsersReady() {
         boolean playersReady = true;
 
-        for (PlayerEntryController entry : playerEntries.values()) {
+        for(PlayerEntryController entry : playerEntries.values()) {
             if (!entry.getReady()) {
                 playersReady = false;
                 break;
@@ -354,9 +365,7 @@ public class NewGameScreenLobbyController implements Controller {
         if(game.get().owner().equals(userService.getCurrentUser()._id())) {
             disposable.add(newGameLobbyService.patchMember(game.get()._id(), newGameLobbyService.getCurrentMemberId(), clientReady, colorPickerController.getColor())
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(result -> {
-
-                    }, Throwable::printStackTrace));
+                    .subscribe(result -> {}, Throwable::printStackTrace));
         }
     }
 
