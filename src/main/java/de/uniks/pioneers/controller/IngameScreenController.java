@@ -174,6 +174,7 @@ public class IngameScreenController implements Controller {
                 // enable building points
                 for (BuildingPointController controller : buildingControllers) {
                     controller.init();
+                    controller.setAction(move.action());
                 }
             } else if (move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2)) {
                 // enable road points
@@ -326,7 +327,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ));
+            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id()));
         }
         for(HexTileController tile : tileControllers){
 
