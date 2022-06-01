@@ -40,7 +40,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
-
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class NewGameScreenLobbyController implements Controller {
@@ -77,7 +76,7 @@ public class NewGameScreenLobbyController implements Controller {
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final ObservableList<Member> members = FXCollections.observableArrayList();
-    private final List<User> users = new ArrayList<>();
+    private final Map<String, User> users = new HashMap<>();
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String password;
@@ -147,7 +146,7 @@ public class NewGameScreenLobbyController implements Controller {
                 .setMessageBox(this.messageBox)
                 .setSendButton(this.sendButton)
                 .setGame(this.game.get())
-                .setUsers(this.users);
+                .setUsers(this.users.values().stream().toList());
         gameChatController.render();
         gameChatController.init();
     }
@@ -161,7 +160,7 @@ public class NewGameScreenLobbyController implements Controller {
         Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().get();
         userBox.getChildren().remove(removal);
         playerEntries.remove(member.userId());
-        users.removeIf(user -> user._id().equals(member.userId()));
+        users.remove(member.userId());
 
         if(member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())){
             app.show(lobbyScreenControllerProvider.get());
@@ -171,10 +170,10 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void renderUser(Member member) {
-        User user = userService.getUserById(member.userId()).blockingFirst();
-        users.add(user);
+        if(!users.containsKey(member.userId())) {
+            User user = userService.getUserById(member.userId()).blockingFirst();
+            users.put(user._id(), user);
 
-        if(!playerEntries.containsKey(user._id())) {
             if(!userService.getCurrentUser()._id().equals(member.userId())) {
                 Image userImage;
                 try {
@@ -298,7 +297,7 @@ public class NewGameScreenLobbyController implements Controller {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         ingameScreenController.game.set(this.game.get());
         ingameScreenController.loadMap();
-        ingameScreenController.setUsers(this.users);
+        ingameScreenController.setUsers(this.users.values().stream().toList());
         app.show(ingameScreenController);
         ingameScreenController.setPlayerColor(colorPickerController.getColor());
     }
@@ -365,7 +364,7 @@ public class NewGameScreenLobbyController implements Controller {
         this.readyButton.setDisable(true);
         new Thread(() -> {
             try {
-                Thread.sleep(10000);
+                Thread.sleep(2000);
                 readyButton.setDisable(false);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
