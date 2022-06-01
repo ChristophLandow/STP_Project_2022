@@ -5,7 +5,6 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
-import de.uniks.pioneers.rest.PioneersApiService;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
@@ -168,18 +167,22 @@ public class IngameScreenController implements Controller {
         ExpectedMove move = currentState.expectedMoves().get(0);
 
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
-            // TODO: enable posting move
+            // enable posting move
             System.out.println("It's your turn now!");
-            this.enableMoving(gameId, move.action());
+            this.enableFoundingRoll(move.action());
         }
     }
 
-    private void enableMoving(String gameId, String action) {
+    private void enableFoundingRoll(String action) {
         if (action.equals(FOUNDING_ROLL)) {
-            disposable.add(ingameService.postMove(gameId, new CreateMoveDto(FOUNDING_ROLL, null))
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe());
+            this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
         }
+    }
+
+    private void foundingRoll(MouseEvent mouseEvent) {
+        disposable.add(ingameService.postMove(game.get()._id(), new CreateMoveDto(FOUNDING_ROLL, null))
+                .observeOn(FX_SCHEDULER)
+                .subscribe());
     }
 
     public App getApp(){
