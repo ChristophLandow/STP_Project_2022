@@ -30,7 +30,6 @@ public class HexTile {
         y = kartCoords[1];
 
     }
-
     public void setGameInfo(String type, int number){
 
         this.type = type;

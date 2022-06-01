@@ -7,9 +7,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
+import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -33,6 +35,8 @@ public class SettingsScreenController implements Controller, Initializable {
 
     private final App app;
 
+    private Stage stage;
+
     private final String[] songList = {"Hardbass", "Ambient"};
 
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
@@ -45,7 +49,19 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @Override
     public void init() {
-        app.getStage().setTitle(SETTINGS_SCREEN_TITLE);
+        // check if rules screen is not open yet
+        if (this.stage == null) {
+            this.stage = new Stage();
+            this.stage.setScene(new Scene(render()));
+            this.stage.setTitle(SETTINGS_SCREEN_TITLE);
+            //this.stage.setX(100);
+            this.stage.show();
+        } else {
+            // bring to front if already open
+            this.stage.show();
+            this.stage.toFront();
+        }
+        app.setIcons(stage);
     }
 
     @Override
@@ -87,6 +103,6 @@ public class SettingsScreenController implements Controller, Initializable {
     }
 
     public void leave(){
-        this.app.show(ingameScreenControllerProvider.get());
+        stage.close();
     }
 }

@@ -144,7 +144,8 @@ public class IngameScreenController implements Controller {
     }
 
     public void toSettings(ActionEvent actionEvent) {
-        this.app.show(settingsScreenControllerProvider.get());
+        SettingsScreenController settingsController = settingsScreenControllerProvider.get();
+        settingsController.init();
     }
 
     public void sendMessage(KeyEvent keyEvent) {
