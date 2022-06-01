@@ -43,7 +43,6 @@ public class JoinGamePopUpController{
 
     public void joinGame() {
         String password = passwordInputField.getText();
-        System.out.println("join fehler");
         disposable.add(newGameLobbyService.postMember(game._id(), false, randomColor, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(res -> {

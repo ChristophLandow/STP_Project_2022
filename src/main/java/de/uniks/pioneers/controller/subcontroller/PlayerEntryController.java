@@ -31,10 +31,10 @@ public class PlayerEntryController implements Controller {
     public PlayerEntryController(Image playerAvatar, String playerName, String hexColor, String playerID) {
         this.render();
         this.playerEntry.setId(playerID);
-        //this.playerEntry.setPadding(new Insets(0, 0, 7, 0));
         this.playerAvatar.setImage(playerAvatar);
         this.playerNameLabel.setText(playerName);
         this.playerHouseSVG.setFill(Paint.valueOf(hexColor));
+        this.playerHouseSVG.setVisible(false);
         this.playerColor = hexColor;
         this.ready = false;
     }
@@ -64,10 +64,12 @@ public class PlayerEntryController implements Controller {
 
     public void setReady(boolean ready) {
         if(ready) {
+            this.playerHouseSVG.setVisible(true);
             this.playerReadyLabel.setText("Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.GREEN));
         } else {
+            this.playerHouseSVG.setVisible(false);
             this.playerReadyLabel.setText("Not Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.RED));
