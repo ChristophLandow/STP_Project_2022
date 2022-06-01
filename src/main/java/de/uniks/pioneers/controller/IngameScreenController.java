@@ -183,7 +183,10 @@ public class IngameScreenController implements Controller {
     private void foundingRoll(MouseEvent mouseEvent) {
         disposable.add(ingameService.postMove(game.get()._id(), new CreateMoveDto(FOUNDING_ROLL, null))
                 .observeOn(FX_SCHEDULER)
-                .subscribe());
+                .subscribe(result -> {
+                    // disable another roll
+                    this.leftDiceImageView.setOnMouseClicked(null);
+                }));
     }
 
     public App getApp(){
