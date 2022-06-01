@@ -161,8 +161,10 @@ public class ColorPickerController {
                 Node popup = popupWindow.getScene().getRoot().getChildrenUnmodifiable().get(0);
                 popup.lookupAll(".color-rect").forEach(rect -> {
                     // Replace with custom color
-                    ((Rectangle) rect).setFill(Color.valueOf(pickerColors[colorIndex]));
-                    this.colorIndex += 1;
+                    if(colorIndex < 132) {
+                        ((Rectangle) rect).setFill(Color.valueOf(pickerColors[colorIndex]));
+                        this.colorIndex += 1;
+                    }
                 });
             }
             this.colorIndex = 0;
