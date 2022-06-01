@@ -1,9 +1,7 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.model.Map;
-import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.Tile;
-import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.dto.CreateMoveDto;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -32,6 +30,18 @@ public class IngameService {
 
         return pioneersApiService.getMap(gameId)
                 .doOnNext(result -> gameStorage.setMap(result.tiles()));
+    }
+
+    public Observable<Player> getPlayer(String gameId, String playerId) {
+        return pioneersApiService.getPlayer(gameId, playerId);
+    }
+
+    public Observable<State> getCurrentState(String gameId) {
+        return pioneersApiService.getCurrentState(gameId);
+    }
+
+    public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
+        return pioneersApiService.postMove(gameId, dto);
     }
 
 
