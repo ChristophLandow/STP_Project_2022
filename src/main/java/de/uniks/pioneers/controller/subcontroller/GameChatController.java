@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
@@ -16,8 +17,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -108,9 +112,22 @@ public class GameChatController {
             user = userService.getUserById(message.sender()).blockingFirst();
         }
 
+        Image userImage;
+        try {
+            userImage = new Image(user.avatar());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            userImage = new Image(Constants.DEFAULT_AVATAR);
+        }
+
+        ImageView avatarView = new ImageView(userImage);
+        avatarView.setFitHeight(25);
+        avatarView.setFitWidth(25);
         Label textLabel = new Label(user.name() + ": " + message.body());
         textLabel.setFont(new Font(15));
-        this.messageBox.getChildren().add(textLabel);
+        HBox hbox = new HBox(avatarView, textLabel);
+        hbox.setSpacing(7);
+
+        this.messageBox.getChildren().add(hbox);
     }
 
     public boolean messageAlreadyRendered(MessageDto message){
