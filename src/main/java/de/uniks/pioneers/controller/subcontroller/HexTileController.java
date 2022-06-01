@@ -24,6 +24,7 @@ public class HexTileController {
         this.view = view;
         init();
     }
+
     public void init(){
 
         this.view.setOnMouseClicked(this::info);
@@ -33,11 +34,11 @@ public class HexTileController {
 
         double[][] cornerCoords = new double[6][2];
         cornerCoords[0] = new double[]{tile.x + 0, tile.y + 1 * tile.scale};
-        cornerCoords[1] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
-        cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
-        cornerCoords[3] = new double[]{tile.x - 0, tile.y - 1 * tile.scale};
-        cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
-        cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
+        cornerCoords[1] = new double[]{tile.x - 0, tile.y - 1 * tile.scale};
+        cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
+        cornerCoords[3] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
+        cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
 
         for(int i = 0; i < 6; i++){
 
@@ -94,6 +95,7 @@ public class HexTileController {
     private void info(MouseEvent mouseEvent){
 
         this.yield();
+
         System.out.println(tile);
     }
     public void yield(){
@@ -103,10 +105,6 @@ public class HexTileController {
             if(buildingPointController != null){
             buildingPointController.mark();}
         }
-        for(StreetPointController streetPointController : this.edges){
-
-            if(streetPointController != null){
-                streetPointController.mark();}
-        }
     }
+
 }
