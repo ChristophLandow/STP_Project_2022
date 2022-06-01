@@ -123,6 +123,14 @@ public class IngameScreenController implements Controller {
         gameChatController.init();
     }
 
+    public App getApp(){
+        return this.app;
+    }
+
+    public int getGameSize(){
+        return this.gameSize;
+    }
+
     private void swapTurnSymbol() {
         turnPane.getChildren().get(0).setVisible(!turnPane.getChildren().get(0).isVisible());
         turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
@@ -144,7 +152,8 @@ public class IngameScreenController implements Controller {
     }
 
     public void toSettings(ActionEvent actionEvent) {
-        this.app.show(settingsScreenControllerProvider.get());
+        SettingsScreenController settingsController = settingsScreenControllerProvider.get();
+        settingsController.init();
     }
 
     public void sendMessage(KeyEvent keyEvent) {
