@@ -5,3 +5,13 @@
 #root{
     -fx-background-color:  #495766;
 }
+
+#messageVBox{
+    -fx-background-color:  #495766;
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+#userVBox{
+    -fx-background-color:  #495766;
+    -fx-text-fill: rgb(255, 255, 255);
+}
