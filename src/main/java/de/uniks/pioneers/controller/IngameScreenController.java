@@ -175,6 +175,7 @@ public class IngameScreenController implements Controller {
 
     private void enableFoundingRoll(String action) {
         if (action.equals(FOUNDING_ROLL)) {
+            // temporary solution!
             this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
         }
     }
