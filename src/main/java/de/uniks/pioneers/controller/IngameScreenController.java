@@ -209,16 +209,18 @@ public class IngameScreenController implements Controller {
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
-
-            String numberURL = "ingame/tile_" + hexTile.number + ".png";
-            ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
-            numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
-            numberImage.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
-            numberImage.setFitHeight(30);
-            numberImage.setFitWidth(30);
-
             this.fieldPane.getChildren().add(hex);
-            this.fieldPane.getChildren().add(numberImage);
+
+            if(!hexTile.type.equals("desert")){
+                String numberURL = "ingame/tile_" + hexTile.number + ".png";
+                ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
+                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
+                numberImage.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
+                numberImage.setFitHeight(30);
+                numberImage.setFitWidth(30);
+                this.fieldPane.getChildren().add(numberImage);
+            }
+
             this.tileControllers.add(new HexTileController(hexTile, hex));
         }
         for (HexTile edge : edges) {
