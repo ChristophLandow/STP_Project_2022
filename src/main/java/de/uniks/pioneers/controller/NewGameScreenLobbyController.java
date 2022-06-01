@@ -167,7 +167,6 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void deleteUser(Member member) {
-        System.out.println("deleteUser");
         Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().get();
         userBox.getChildren().remove(removal);
         playerEntries.remove(member.userId());
@@ -213,10 +212,7 @@ public class NewGameScreenLobbyController implements Controller {
                         members.replaceAll(m -> m.userId().equals(member.userId()) ? member : m);
                         setReadyColor(member.userId(), member.ready(), member.color());
                     } else if (memberEvent.event().endsWith(".deleted")) {
-                        System.out.println("remove" + member.userId());
-                        System.out.println(members);
                         members.remove(member);
-                        System.out.println(members);
                     }
                 }));
     }
