@@ -3,11 +3,14 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
+import de.uniks.pioneers.model.State;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -79,20 +82,27 @@ public class IngameScreenController implements Controller {
     private final IngameService ingameService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
+    private final EventListener eventListener;
     private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final GameStorage gameStorage;
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
 
     @Inject
-    public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider, Provider<SettingsScreenController> settingsScreenControllerProvider, IngameService ingameService, GameStorage gameStorage) {
+    public IngameScreenController(App app,
+                                  Provider<RulesScreenController> rulesScreenControllerProvider,
+                                  Provider<SettingsScreenController> settingsScreenControllerProvider,
+                                  IngameService ingameService, GameStorage gameStorage,
+                                  EventListener eventListener) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
+        this.eventListener = eventListener;
     }
     @Override
     public Parent render() {
@@ -121,6 +131,25 @@ public class IngameScreenController implements Controller {
                 .setUsers(this.users);
         gameChatController.render();
         gameChatController.init();
+
+        // TODO: init game listener
+        initGameListener();
+    }
+
+    private void initGameListener() {
+        // add game state listener
+        String patternToObserveGameState= String.format("games.%s.state.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveGameState, State.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(gameEvent -> {
+                    if (gameEvent.event().endsWith(".updated")) {
+                        this.handleGameState(gameEvent.data());
+                    }
+                })
+        );
+    }
+
+    private void handleGameState(State currentState) {
     }
 
     public App getApp(){
