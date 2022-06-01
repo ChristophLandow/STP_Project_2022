@@ -69,7 +69,6 @@ public class BuildingPointController {
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
-                    System.out.println(move);
                     this.showBuilding(move);
                     this.reset();
                 }));
