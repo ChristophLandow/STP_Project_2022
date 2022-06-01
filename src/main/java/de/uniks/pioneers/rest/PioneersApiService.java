@@ -1,5 +1,6 @@
 package de.uniks.pioneers.rest;
 
+import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.MoveDto;
 import de.uniks.pioneers.model.*;
 import io.reactivex.rxjava3.core.Observable;
@@ -28,6 +29,6 @@ public interface PioneersApiService {
     Observable<Building> getBuilding (@Path("gameId") String gameId, @Path("buildingId") String buildingId);
 
     @POST(API_V2_PIONEERS_PREFIX+"/moves")
-    Observable<Move> postMove (@Path("gameId") String gameId, @Body MoveDto dto);
+    Observable<Move> postMove (@Path("gameId") String gameId, @Body CreateMoveDto dto);
 
 }

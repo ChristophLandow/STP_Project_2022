@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
+import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import de.uniks.pioneers.services.BoardGenerator;
@@ -43,7 +44,7 @@ import java.util.List;
 import javafx.scene.text.FontWeight;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
-import static de.uniks.pioneers.GameConstants.scale;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameScreenController implements Controller {
@@ -138,7 +139,10 @@ public class IngameScreenController implements Controller {
         // get current game state
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(this::handleGameState));
+                .subscribe(state -> {
+                    System.out.println(state);
+                    handleGameState(state);
+                }));
 
         // init game listener
         initGameListener();
@@ -151,6 +155,7 @@ public class IngameScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".updated")) {
+                        System.out.println("new game state: " + gameEvent.data());
                         this.handleGameState(gameEvent.data());
                     }
                 })
@@ -160,16 +165,20 @@ public class IngameScreenController implements Controller {
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         String gameId = currentState.gameId();
-        List<ExpectedMove> expectedMoves = currentState.expectedMoves();
+        ExpectedMove move = currentState.expectedMoves().get(0);
 
-        for (ExpectedMove move : expectedMoves) {
-            String action = move.action();
-            for (String playerId : move.players()) {
-                if (playerId.equals(userService.getCurrentUser()._id())) {
-                    // TODO: enable posting move
-                    System.out.println("It's your turn now!");
-                }
-            }
+        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            // TODO: enable posting move
+            System.out.println("It's your turn now!");
+            this.enableMoving(gameId, move.action());
+        }
+    }
+
+    private void enableMoving(String gameId, String action) {
+        if (action.equals(FOUNDING_ROLL)) {
+            disposable.add(ingameService.postMove(gameId, new CreateMoveDto(FOUNDING_ROLL, null))
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe());
         }
     }
 

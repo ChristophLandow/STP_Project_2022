@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -37,6 +38,10 @@ public class IngameService {
 
     public Observable<State> getCurrentState(String gameId) {
         return pioneersApiService.getCurrentState(gameId);
+    }
+
+    public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
+        return pioneersApiService.postMove(gameId, dto);
     }
 
 
