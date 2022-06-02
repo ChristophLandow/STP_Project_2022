@@ -1,9 +1,9 @@
 package de.uniks.pioneers.dto;
 
 public record CreateBuildingDto(
-        int x,
-        int y,
-        int z,
+        double x,
+        double y,
+        double z,
         int side,
         String type
 ) {

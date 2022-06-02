@@ -149,7 +149,7 @@ public class IngameScreenController implements Controller {
 
     private void initGameListener() {
         // add game state listener
-        String patternToObserveGameState= String.format("games.%s.state.*", game.get()._id());
+        String patternToObserveGameState = String.format("games.%s.state.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveGameState, State.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
@@ -159,6 +159,24 @@ public class IngameScreenController implements Controller {
                     }
                 })
         );
+
+        // TODO: add building listener
+        String patternToObserveBuildings = String.format("games.%s.building.*.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveBuildings, Building.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(buildingEvent -> {
+                    if (buildingEvent.event().endsWith(".created")) {
+                        final Building building = buildingEvent.data();
+                        renderBuilding(building);
+                    }
+                }));
+    }
+
+    private void renderBuilding(Building building) {
+        // TODO: place building on right position
+        double x = building.x();
+        double y = building.y();
+        double z = building.z();
     }
 
     private void handleGameState(State currentState) {

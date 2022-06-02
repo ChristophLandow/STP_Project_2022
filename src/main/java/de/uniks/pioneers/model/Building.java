@@ -1,9 +1,9 @@
 package de.uniks.pioneers.model;
 
 public record Building(
-        int x,
-        int y,
-        int z,
+        double x,
+        double y,
+        double z,
         String _id,
         int side,
         String type,
