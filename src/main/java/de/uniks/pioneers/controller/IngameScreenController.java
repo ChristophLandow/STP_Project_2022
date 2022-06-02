@@ -295,7 +295,7 @@ public class IngameScreenController implements Controller {
         for (HexTile edge : edges) {
 
             Circle circ = new Circle(2);
-            circ.setFill(Color.rgb(255, 0, 0));
+            circ.setFill(RED);
 
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
@@ -305,7 +305,7 @@ public class IngameScreenController implements Controller {
         for (HexTile corner : corners) {
 
             Circle circ = new Circle(5);
-            circ.setFill(Color.rgb(255, 0, 0));
+            circ.setFill(RED);
 
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
