@@ -34,11 +34,11 @@ public class HexTileController {
 
         double[][] cornerCoords = new double[6][2];
         cornerCoords[0] = new double[]{tile.x + 0, tile.y + 1 * tile.scale};
-        cornerCoords[1] = new double[]{tile.x - 0, tile.y - 1 * tile.scale};
-        cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
-        cornerCoords[3] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
-        cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
-        cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[1] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
+        cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[3] = new double[]{tile.x - 0, tile.y - 1 * tile.scale};
+        cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  - 0.5 * tile.scale};
+        cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * tile.scale, tile.y  + 0.5 * tile.scale};
 
         for(int i = 0; i < 6; i++){
 
