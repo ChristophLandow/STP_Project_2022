@@ -100,7 +100,6 @@ public class SettingsScreenController implements Controller, Initializable {
         if(darkMode_RadioButton.isSelected()){
             IngameScreenController controller = ingameScreenControllerProvider.get();
             controller.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
-            System.out.println(controller.getGameSize());
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
 
