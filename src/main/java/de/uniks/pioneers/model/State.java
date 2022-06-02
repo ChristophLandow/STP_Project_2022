@@ -1,4 +1,10 @@
 package de.uniks.pioneers.model;
 
-public record State() {
+import java.util.List;
+
+public record State(
+        String updatedAt,
+        String gameId,
+        List<ExpectedMove> expectedMoves
+) {
 }

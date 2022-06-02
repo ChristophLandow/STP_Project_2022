@@ -3,11 +3,14 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
+import de.uniks.pioneers.dto.CreateMoveDto;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.BoardGenerator;
-import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,7 +43,7 @@ import java.util.List;
 import javafx.scene.text.FontWeight;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
-import static de.uniks.pioneers.GameConstants.scale;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameScreenController implements Controller {
@@ -77,22 +80,32 @@ public class IngameScreenController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
+    private final UserService userService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
+    private final EventListener eventListener;
     private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final GameStorage gameStorage;
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
 
     @Inject
-    public IngameScreenController(App app, Provider<RulesScreenController> rulesScreenControllerProvider, Provider<SettingsScreenController> settingsScreenControllerProvider, IngameService ingameService, GameStorage gameStorage) {
+    public IngameScreenController(App app,
+                                  Provider<RulesScreenController> rulesScreenControllerProvider,
+                                  Provider<SettingsScreenController> settingsScreenControllerProvider,
+                                  IngameService ingameService, UserService userService,
+                                  GameStorage gameStorage,
+                                  EventListener eventListener) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
         this.ingameService = ingameService;
+        this.userService = userService;
         this.gameStorage = gameStorage;
+        this.eventListener = eventListener;
     }
     @Override
     public Parent render() {
@@ -121,6 +134,56 @@ public class IngameScreenController implements Controller {
                 .setUsers(this.users);
         gameChatController.render();
         gameChatController.init();
+
+        // get current game state
+        disposable.add(ingameService.getCurrentState(game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(state -> {
+                    System.out.println(state);
+                    handleGameState(state);
+                }));
+
+        // init game listener
+        initGameListener();
+    }
+
+    private void initGameListener() {
+        // add game state listener
+        String patternToObserveGameState= String.format("games.%s.state.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveGameState, State.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(gameEvent -> {
+                    if (gameEvent.event().endsWith(".updated")) {
+                        System.out.println("new game state: " + gameEvent.data());
+                        this.handleGameState(gameEvent.data());
+                    }
+                })
+        );
+    }
+
+    private void handleGameState(State currentState) {
+        // enable corresponding user to perform their action
+        String gameId = currentState.gameId();
+        ExpectedMove move = currentState.expectedMoves().get(0);
+
+        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            // enable posting move
+            System.out.println("It's your turn now!");
+            this.enableFoundingRoll(move.action());
+        }
+    }
+
+    private void enableFoundingRoll(String action) {
+        if (action.equals(FOUNDING_ROLL)) {
+            // temporary solution!
+            this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
+        }
+    }
+
+    private void foundingRoll(MouseEvent mouseEvent) {
+        disposable.add(ingameService.postMove(game.get()._id(), new CreateMoveDto(FOUNDING_ROLL, null))
+                .observeOn(FX_SCHEDULER)
+                .subscribe());
     }
 
     public App getApp(){
@@ -215,17 +278,18 @@ public class IngameScreenController implements Controller {
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
-
-            Label numberLabel = new Label();
-            numberLabel.setText(Integer.toString(hexTile.number));
-            numberLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD , 30));
-            numberLabel.setTextFill(Color.rgb(255,0,0));
-            numberLabel.setAlignment(Pos.CENTER);
-            numberLabel.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
-            numberLabel.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
-
             this.fieldPane.getChildren().add(hex);
-            this.fieldPane.getChildren().add(numberLabel);
+
+            if(!hexTile.type.equals("desert")){
+                String numberURL = "ingame/tile_" + hexTile.number + ".png";
+                ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
+                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
+                numberImage.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
+                numberImage.setFitHeight(30);
+                numberImage.setFitWidth(30);
+                this.fieldPane.getChildren().add(numberImage);
+            }
+
             this.tileControllers.add(new HexTileController(hexTile, hex));
         }
         for (HexTile edge : edges) {

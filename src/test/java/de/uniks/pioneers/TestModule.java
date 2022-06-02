@@ -381,7 +381,7 @@ public class TestModule {
             }
 
             @Override
-            public Observable<Move> postMove(String gameId, MoveDto dto) {
+            public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
                 return null;
             }
         };
