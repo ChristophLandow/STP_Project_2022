@@ -29,6 +29,11 @@ public class StreetPointController {
     public void build(){
         //assigns building
     }
+
+    public ArrayList<BuildingPointController> getBuildings(){
+        return this.buildings;
+    }
+
     private void info(MouseEvent mouseEvent){
 
         for(BuildingPointController buildingPointController : this.buildings){

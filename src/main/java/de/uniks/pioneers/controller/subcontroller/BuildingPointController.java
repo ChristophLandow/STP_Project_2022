@@ -3,8 +3,6 @@ package de.uniks.pioneers.controller.subcontroller;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class BuildingPointController {
@@ -29,14 +27,33 @@ public class BuildingPointController {
     public void build(){
         //assigns building
     }
+
+    public ArrayList<StreetPointController> getStreets(){
+        return this.streets;
+    }
+
     private void info(MouseEvent mouseEvent){
 
         for(StreetPointController streetPointController : this.streets){
+            checkSurroundings();
             streetPointController.mark();
         }
 
         System.out.println(tile);
     }
+
+    private void checkSurroundings() {
+        for(StreetPointController street : streets){
+            System.out.println("street");
+            for(BuildingPointController building : street.getBuildings()){
+                if(building != this) {
+                    System.out.println("test");
+                }
+            }
+        }
+
+    }
+
     private void dye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(0,255,0));}
     private void undye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(255,0,0));}
     public void mark(){this.view.setFill(Color.rgb(0,0,255));}

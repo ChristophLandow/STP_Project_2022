@@ -127,9 +127,6 @@ public class IngameScreenController implements Controller {
         return this.app;
     }
 
-    public int getGameSize(){
-        return this.gameSize;
-    }
 
     private void swapTurnSymbol() {
         turnPane.getChildren().get(0).setVisible(!turnPane.getChildren().get(0).isVisible());
