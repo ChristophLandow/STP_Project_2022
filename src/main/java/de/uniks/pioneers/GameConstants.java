@@ -16,4 +16,8 @@ public class GameConstants {
     public static final String ROLL = "roll";
     public static final String BUILD = "build";
     public static final Color RED = Color.RED;
+    public static final Color BLUE = Color.BLUE;
+
+    public static final Color GREEN = Color.GREEN;
+
 }
