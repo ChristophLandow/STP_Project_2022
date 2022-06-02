@@ -308,7 +308,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ, userService));
+            this.buildingControllers.add(new BuildingPointController(corner, circ));
         }
         for(HexTileController tile : tileControllers){
 

@@ -1,10 +1,8 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.services.UserService;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.GameConstants.*;
@@ -16,14 +14,10 @@ public class BuildingPointController {
 
     public ArrayList<StreetPointController> streets = new ArrayList<>();
 
-    private final UserService userService;
 
-    @Inject
-    public BuildingPointController(HexTile tile, Circle view, UserService userService){
-
+    public BuildingPointController(HexTile tile, Circle view){
         this.tile = tile;
         this.view = view;
-        this.userService = userService;
         init();
     }
 
@@ -50,13 +44,8 @@ public class BuildingPointController {
         mark();
     }
 
-    public boolean checkActualPlayerClicked(UserService userService){
-        System.out.println(userService.getCurrentUser().toString());
-        return false;
-    }
 
     private void info(MouseEvent mouseEvent){
-        checkActualPlayerClicked(userService);
         boolean surrounded = false;
         for(StreetPointController street : streets){
             for(BuildingPointController building : street.getBuildings()){
