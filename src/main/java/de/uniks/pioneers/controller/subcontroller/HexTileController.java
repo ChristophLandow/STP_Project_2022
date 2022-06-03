@@ -5,6 +5,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
@@ -74,7 +75,7 @@ public class HexTileController {
         }
     }
 
-    //interconnects street and building controllers
+    // interconnects street and building controllers
     public void link(){
 
         for(int i = 0; i < 6; i++){

@@ -17,7 +17,7 @@ public class StreetPointController {
 
         this.tile = tile;
         this.view = view;
-        init();
+        // init();
     }
 
     public void init(){
