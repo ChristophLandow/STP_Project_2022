@@ -38,7 +38,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javafx.scene.text.FontWeight;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -86,6 +88,7 @@ public class IngameScreenController implements Controller {
     private final EventListener eventListener;
     private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
+    private HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final GameStorage gameStorage;
@@ -161,11 +164,13 @@ public class IngameScreenController implements Controller {
         );
 
         // TODO: add building listener
-        String patternToObserveBuildings = String.format("games.%s.building.*.*", game.get()._id());
+        String patternToObserveBuildings = String.format("games.%s.buildings.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveBuildings, Building.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(buildingEvent -> {
                     if (buildingEvent.event().endsWith(".created")) {
+                        // render new building
+                        System.out.println("new Building created: " + buildingEvent.data());
                         final Building building = buildingEvent.data();
                         renderBuilding(building);
                     }
@@ -173,10 +178,12 @@ public class IngameScreenController implements Controller {
     }
 
     private void renderBuilding(Building building) {
-        // TODO: place building on right position
-        double x = building.x();
-        double y = building.y();
-        double z = building.z();
+        // find corresponding buildingPointController
+        String coords = building.x() + " " + building.y() + " " + building.z();
+        BuildingPointController controller = buildingPointControllerHashMap.get(coords);
+
+        // set building on controller view
+        controller.showBuilding(building);
     }
 
     private void handleGameState(State currentState) {
@@ -186,19 +193,25 @@ public class IngameScreenController implements Controller {
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
-            if (move.action().equals(FOUNDING_ROLL)) {
-                this.enableFoundingRoll();
-            } else if (move.action().equals(FOUNDING_SETTLEMENT_1) || move.action().equals(FOUNDING_SETTLEMENT_2)) {
-                // enable building points
-                for (BuildingPointController controller : buildingControllers) {
-                    controller.init();
-                    controller.setAction(move.action());
-                }
-            } else if (move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2)) {
-                // enable road points
-                for (StreetPointController controller : streetControllers) {
-                    controller.init();
-                }
+            switch (move.action()) {
+                case FOUNDING_ROLL:
+                    this.enableFoundingRoll();
+                    break;
+                case FOUNDING_SETTLEMENT_1:
+                case FOUNDING_SETTLEMENT_2:
+                    // enable building points
+                    for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
+                        controller.init();
+                        controller.setAction(move.action());
+                    }
+                    break;
+                case FOUNDING_ROAD_1:
+                case FOUNDING_ROAD_2:
+                    // enable road points
+                    for (StreetPointController controller : streetControllers) {
+                        controller.init();
+                    }
+                    break;
             }
 
         }
@@ -324,9 +337,9 @@ public class IngameScreenController implements Controller {
                 numberImage.setFitWidth(30);
                 this.fieldPane.getChildren().add(numberImage);
             }
-
             this.tileControllers.add(new HexTileController(hexTile, hex));
         }
+
         for (HexTile edge : edges) {
 
             Circle circ = new Circle(2);
@@ -337,6 +350,7 @@ public class IngameScreenController implements Controller {
             this.fieldPane.getChildren().add(circ);
             this.streetControllers.add(new StreetPointController(edge, circ));
         }
+
         for (HexTile corner : corners) {
 
             Circle circ = new Circle(5);
@@ -346,7 +360,14 @@ public class IngameScreenController implements Controller {
             circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane));
+
+            // put buildingPointControllers in Hashmap to access with coordinates
+            this.buildingPointControllerHashMap.put(
+                    corner.generateKeyString(),
+                    new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane)
+            );
         }
+
         for(HexTileController tile : tileControllers){
 
             tile.findEdges(this.streetControllers);

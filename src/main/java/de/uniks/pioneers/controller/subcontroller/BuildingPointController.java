@@ -3,12 +3,12 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
+import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
@@ -70,21 +70,36 @@ public class BuildingPointController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
                     System.out.println(move);
-                    this.showBuilding(move);
                     this.reset();
                 }));
 
     }
 
-    private void showBuilding(Move move) {
-        SVGPath houseSVG = new SVGPath();
-        houseSVG.setContent(GameConstants.SETTLEMENT_SVG);
-        houseSVG.setScaleX(0.7);
-        houseSVG.setScaleY(0.7);
+    public void showBuilding(Building building) {
+        // create new settlement svg
+        SVGPath settlementSVG = new SVGPath();
+        settlementSVG.setContent(GameConstants.SETTLEMENT_SVG);
+        final Region svgShape = new Region();
+        svgShape.setShape(settlementSVG);
+        svgShape.setMinSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
+        svgShape.setPrefSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
+        svgShape.setMaxSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
+        svgShape.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        houseSVG.setLayoutX(view.getLayoutX()-fieldpane.getLayoutX());
-        houseSVG.setLayoutY(view.getLayoutY()-fieldpane.getLayoutY());
-        this.fieldpane.getChildren().add(houseSVG);
+        // set color of building
+        disposable.add(ingameService.getPlayer(building.gameId(), building.owner())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(player -> {
+                    svgShape.setStyle("-fx-background-color: " + player.color());
+                }));
+
+        // set position on game field
+        svgShape.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH/2);
+        svgShape.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT/2);
+        this.fieldpane.getChildren().add(svgShape);
+
+        System.out.println("Placed on: " + svgShape.getLayoutX() + " " + svgShape.getLayoutY());
     }
 
     private void dye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(0,255,0));}

@@ -1,4 +1,13 @@
 package de.uniks.pioneers.model;
 
-public record Player() {
+import java.util.List;
+
+public record Player(
+        String gameId,
+        String userId,
+        String color,
+        int foundingRoll
+//        List<Integer> resources,
+//        List<Integer> remainingBuildings
+) {
 }
