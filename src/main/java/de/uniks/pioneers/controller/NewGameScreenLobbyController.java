@@ -18,6 +18,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -78,12 +79,14 @@ public class NewGameScreenLobbyController implements Controller {
     private final UserService userService;
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public SimpleStringProperty password = new SimpleStringProperty();
     private final ObservableList<Member> members = FXCollections.observableArrayList();
     public SimpleIntegerProperty memberCount = new SimpleIntegerProperty();
     private final Map<String, User> users = new HashMap<>();
+    private User currentUser;
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private String password;
+
     private GameChatController gameChatController;
     private ColorPickerController colorPickerController;
     private boolean clientReady = false;
@@ -110,16 +113,13 @@ public class NewGameScreenLobbyController implements Controller {
     public void init() {
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
-        passwordLabel.setText(this.getPassword());
-        clientUserNameLabel.setText(userService.getCurrentUser().name());
+        passwordLabel.setText(password.get());
+        clientUserNameLabel.setText(currentUser.name());
         colorPickerController = new ColorPickerController(colorPicker, houseSVG);
         this.reactivateReadyButton();
 
-        try {
-            clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
-        } catch (IllegalArgumentException | NullPointerException e) {
-            clientAvatar.setImage(new Image(Constants.DEFAULT_AVATAR));
-        }
+        // set on close request ...
+
 
         // when member count less than three games cant not be started
         final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 3);
@@ -180,22 +180,38 @@ public class NewGameScreenLobbyController implements Controller {
     private void renderUser(Member member) {
         if(!users.containsKey(member.userId())) {
             User user = userService.getUserById(member.userId()).blockingFirst();
+            // when we make the application multi stage, we need a userlistener or if a user dies
+            initUserListener(user);
+
             users.put(user._id(), user);
 
-            if(!userService.getCurrentUser()._id().equals(member.userId())) {
-                Image userImage;
-                try {
-                    userImage = new Image(user.avatar());
-                } catch (IllegalArgumentException | NullPointerException e) {
-                    userImage = new Image(Constants.DEFAULT_AVATAR);
-                }
+            Image userImage;
+            try {
+                userImage = new Image(user.avatar());
+            } catch (IllegalArgumentException | NullPointerException e) {
+                userImage = new Image(Constants.DEFAULT_AVATAR);
+            }
 
+            if(!currentUser._id().equals(member.userId())) {
                 PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
                 playerEntryController.setReady(false);
                 playerEntries.put(user._id(), playerEntryController);
                 userBox.getChildren().add(playerEntryController.getPlayerEntry());
             }
         }
+    }
+    private void initUserListener(User user) {
+        String patternToObserveGameUsers = String.format("users.%s.updated", user._id());
+        disposable.add(eventListener.listen(patternToObserveGameUsers, User.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(userEvent -> {
+                    User userFromEvent = userEvent.data();
+                    if (userFromEvent.status().equals("offline")) {
+                        Member toRemove = members.stream().filter(member -> member.userId().equals(userFromEvent._id())).findAny().get();
+                        deleteUser(toRemove);
+                    }
+                })
+        );
     }
 
     private void initMemberListener() {
@@ -238,6 +254,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Override
     public Parent render() {
         // Parent parent;
+        currentUser = userService.getCurrentUser();
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/NewGameLobbyScreen.fxml"));
         loader.setControllerFactory(c -> this);
         final Parent view;
@@ -245,7 +262,7 @@ public class NewGameScreenLobbyController implements Controller {
             view = loader.load();
 
             // set start button invisible if currentUser is not gameOwner
-            if (!userService.getCurrentUser()._id().equals(game.get().owner())) {
+            if (!currentUser._id().equals(game.get().owner())) {
                 startGameButton.setVisible(false);
             }
         } catch (IOException e) {
@@ -268,7 +285,7 @@ public class NewGameScreenLobbyController implements Controller {
 
         if(difference) {
             clientReady = !clientReady;
-            disposable.add(newGameLobbyService.patchMember(game.get()._id(), newGameLobbyService.getCurrentMemberId(), clientReady, colorPickerController.getColor())
+            disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(result -> {
                         if(clientReady) {
@@ -297,7 +314,7 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
-            disposable.add(newGameLobbyService.updateGame(game.get(),password,true)
+            disposable.add(newGameLobbyService.updateGame(game.get(),password.get(),true)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(response -> this.toIngame(), Throwable::printStackTrace));
         }
@@ -333,23 +350,15 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     public void leaveLobby() {
-        if (game.get().owner().equals(userService.getCurrentUser()._id())) {
+        if (game.get().owner().equals(currentUser._id())) {
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(res -> app.show(lobbyScreenControllerProvider.get()), Throwable::printStackTrace));
         } else {
-            disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userService.getCurrentUser()._id())
+            disposable.add(newGameLobbyService.deleteMember(game.get()._id(), currentUser._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(res -> app.show(lobbyScreenControllerProvider.get()), Throwable::printStackTrace));
         }
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void onColorChange() {
@@ -359,8 +368,8 @@ public class NewGameScreenLobbyController implements Controller {
     public void setPlayerColor(String hexColor) {
         colorPickerController.setColor(hexColor);
 
-        if(game.get().owner().equals(userService.getCurrentUser()._id())) {
-            disposable.add(newGameLobbyService.patchMember(game.get()._id(), newGameLobbyService.getCurrentMemberId(), clientReady, colorPickerController.getColor())
+        if(game.get().owner().equals(currentUser._id())) {
+            disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(result -> {}, Throwable::printStackTrace));
         }

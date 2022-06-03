@@ -52,14 +52,6 @@ public class NewGameLobbyService {
         return gameMemberApiService.patchMember(groupId, userId, new UpdateMemberDto(ready, color));
     }
 
-    public void setCurrentMemberId(String id) {
-        currentMemberId = id;
-    }
-
-    public String getCurrentMemberId() {
-        return currentMemberId;
-    }
-
     public Observable<Game> updateGame(Game game, String password, boolean started) {
         return gameApiService.update(game._id(), new UpdateGameDto(game.name(), game.owner(), started, password));
     }
