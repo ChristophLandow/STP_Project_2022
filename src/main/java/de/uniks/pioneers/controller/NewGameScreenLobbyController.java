@@ -14,6 +14,9 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -76,6 +79,7 @@ public class NewGameScreenLobbyController implements Controller {
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final ObservableList<Member> members = FXCollections.observableArrayList();
+    public SimpleIntegerProperty memberCount = new SimpleIntegerProperty();
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -116,6 +120,10 @@ public class NewGameScreenLobbyController implements Controller {
         } catch (IllegalArgumentException | NullPointerException e) {
             clientAvatar.setImage(new Image(Constants.DEFAULT_AVATAR));
         }
+
+        // when member count less than three games cant not be started
+        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 3);
+        startGameButton.disableProperty().bind(lessThanThree);
 
         // add mouse event for rules button
         this.RulesButton.setOnMouseClicked(this::openRules);
@@ -212,6 +220,8 @@ public class NewGameScreenLobbyController implements Controller {
         disposable.add(eventListener.listen(patternToObserveGame, Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
+                    game.set(gameEvent.data());
+                    memberCount.set(game.get().members());
                      if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
                          this.toIngame();
                     }
