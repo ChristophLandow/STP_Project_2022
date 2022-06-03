@@ -79,8 +79,8 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         write("\t\t");
         type(KeyCode.ENTER);
-        write("\t");
-        type(KeyCode.ENTER);
+        //write("\t");
+        //type(KeyCode.ENTER);
 
     }
 

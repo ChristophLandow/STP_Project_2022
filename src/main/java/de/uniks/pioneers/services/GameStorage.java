@@ -14,6 +14,7 @@ public class GameStorage {
     @Inject
     public GameStorage() {
     }
+
     public List<Tile> getMap() {
         return map;
     }

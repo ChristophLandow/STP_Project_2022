@@ -16,6 +16,9 @@ import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
+import static de.uniks.pioneers.GameConstants.*;
+
+
 public class BuildingPointController {
     private Pane fieldpane;
     private Circle view;
@@ -38,20 +41,25 @@ public class BuildingPointController {
         this.fieldpane = fieldpane;
     }
 
-    public void init(){
-        this.view.setOnMouseClicked(this::build);
+    public void init() {
+        this.view.setOnMouseClicked(this::info);
         this.view.setOnMouseEntered(this::dye);
         this.view.setOnMouseExited(this::undye);
-
     }
 
-    public void reset() {
-        this.view.setOnMouseClicked(null);
-        this.view.setOnMouseEntered(null);
-        this.view.setOnMouseExited(null);
+    public Circle getView(){
+        return this.view;
     }
 
-    private void build(MouseEvent mouseEvent){
+    public HexTile getTile(){
+        return this.tile;
+    }
+
+    public ArrayList<StreetPointController> getStreets(){
+        return this.streets;
+    }
+
+    public void build() {
         // print info
         for(StreetPointController streetPointController : this.streets){
             streetPointController.mark();
@@ -73,6 +81,12 @@ public class BuildingPointController {
                     this.reset();
                 }));
 
+    }
+
+    public void reset() {
+        this.view.setOnMouseClicked(null);
+        this.view.setOnMouseEntered(null);
+        this.view.setOnMouseExited(null);
     }
 
     public void showBuilding(Building building) {
@@ -102,9 +116,34 @@ public class BuildingPointController {
         System.out.println("Placed on: " + svgShape.getLayoutX() + " " + svgShape.getLayoutY());
     }
 
-    private void dye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(0,255,0));}
-    private void undye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(255,0,0));}
-    public void mark(){this.view.setFill(Color.rgb(0,0,255));}
+    private void info(MouseEvent mouseEvent){
+        boolean surrounded = false;
+        for(StreetPointController street : streets){
+            for(BuildingPointController building : street.getBuildings()){
+                if(building != this) {
+                    if(building.getView().getFill() != RED){
+                        surrounded = true;
+                    }
+                }
+            }
+        }
+        if(surrounded){
+            System.out.println("You can't build here!");
+        } else {
+            build();
+        }
+    }
+    private void dye(MouseEvent mouseEvent) {
+        this.view.setFill(GREEN);
+    }
+
+    private void undye(MouseEvent mouseEvent) {
+        this.view.setFill(RED);
+    }
+
+    public void mark() {
+        this.view.setFill(BLUE);
+    }
 
     public void setAction(String action) {
         this.action = action;

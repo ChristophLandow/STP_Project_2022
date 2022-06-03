@@ -1,5 +1,7 @@
 package de.uniks.pioneers;
 
+import javafx.scene.paint.Color;
+
 public class GameConstants {
 
     public static final double scale = 75;
@@ -19,4 +21,9 @@ public class GameConstants {
 
     public static final double HOUSE_WIDTH = 30;
     public static final double HOUSE_HEIGHT = 30;
+    public static final Color RED = Color.RED;
+    public static final Color BLUE = Color.BLUE;
+
+    public static final Color GREEN = Color.GREEN;
+
 }
