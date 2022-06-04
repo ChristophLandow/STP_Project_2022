@@ -36,7 +36,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +85,7 @@ public class IngameScreenController implements Controller {
     private final EventListener eventListener;
     private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
-    private HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
+    private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final GameStorage gameStorage;
