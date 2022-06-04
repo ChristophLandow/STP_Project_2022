@@ -136,6 +136,7 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
+
         // get current game state
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
