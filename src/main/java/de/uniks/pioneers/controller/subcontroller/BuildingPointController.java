@@ -73,6 +73,7 @@ public class BuildingPointController {
         } else {
             buildingType = "city";
         }
+
         CreateBuildingDto newBuilding = new CreateBuildingDto(tile.q, tile.r, tile.s, 6, buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
