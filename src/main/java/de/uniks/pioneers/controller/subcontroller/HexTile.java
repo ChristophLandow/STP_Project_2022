@@ -5,9 +5,9 @@ import static java.lang.Math.sqrt;
 
 public class HexTile {
 
-    int q;
-    int r;
-    int s;
+    public int q;
+    public int r;
+    public int s;
 
     public double x;
     public double y;
