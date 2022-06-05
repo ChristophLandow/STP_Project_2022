@@ -240,7 +240,9 @@ public class TestModule {
 
                 ArrayList<Member> users = new ArrayList<>();
                 users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",true, "#ff0000"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",true, "#00ff00"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"002",true, "#0000ff"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"003",true, "#ffffff"));
                 return Observable.just(users);
             }
 
