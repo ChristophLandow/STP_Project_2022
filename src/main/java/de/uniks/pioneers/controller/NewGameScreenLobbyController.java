@@ -90,7 +90,6 @@ public class NewGameScreenLobbyController implements Controller {
     private GameChatController gameChatController;
     private ColorPickerController colorPickerController;
     private boolean clientReady = false;
-
     @Inject
     Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject
