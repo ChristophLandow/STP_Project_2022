@@ -53,26 +53,32 @@ public class HexTileController {
                                 buildingPoint.uploadCoords[1] = tile.r;
                                 buildingPoint.uploadCoords[2] = tile.s;
                                 buildingPoint.uploadCoords[3] = 0;
+                                break;
                         case 1: buildingPoint.uploadCoords[0] = tile.q+1;
                                 buildingPoint.uploadCoords[1] = tile.r-1;
                                 buildingPoint.uploadCoords[2] = tile.s;
                                 buildingPoint.uploadCoords[3] = 6;
+                                break;
                         case 2: buildingPoint.uploadCoords[0] = tile.q;
                                 buildingPoint.uploadCoords[1] = tile.r+1;
                                 buildingPoint.uploadCoords[2] = tile.s-1;
                                 buildingPoint.uploadCoords[3] = 0;
+                                break;
                         case 3: buildingPoint.uploadCoords[0] = tile.q;
                                 buildingPoint.uploadCoords[1] = tile.r;
                                 buildingPoint.uploadCoords[2] = tile.s;
                                 buildingPoint.uploadCoords[3] = 6;
+                                break;
                         case 4: buildingPoint.uploadCoords[0] = tile.q-1;
                                 buildingPoint.uploadCoords[1] = tile.r+1;
                                 buildingPoint.uploadCoords[2] = tile.s;
                                 buildingPoint.uploadCoords[3] = 0;
+                                break;
                         case 5: buildingPoint.uploadCoords[0] = tile.q;
                                 buildingPoint.uploadCoords[1] = tile.r-1;
                                 buildingPoint.uploadCoords[2] = tile.s+1;
                                 buildingPoint.uploadCoords[3] = 6;
+                                break;
                     }
 
                     this.corners[i] = buildingPoint;
@@ -134,6 +140,7 @@ public class HexTileController {
             if(buildingPointController != null){
             buildingPointController.mark();}
         }
+
     }
 
 }

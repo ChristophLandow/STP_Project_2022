@@ -319,15 +319,15 @@ public class IngameScreenController implements Controller {
             hex.setScaleY(scale);
             Image image = new Image(getClass().getResource("ingame/" + hexTile.type + ".png").toString());
             hex.setFill(new ImagePattern(image));
-            hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
-            hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
+            hex.setLayoutX(-hexTile.x + this.fieldPane.getPrefWidth() / 2);
+            hex.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(hex);
 
             if(!hexTile.type.equals("desert")){
                 String numberURL = "ingame/tile_" + hexTile.number + ".png";
                 ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
-                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
-                numberImage.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
+                numberImage.setLayoutX(-hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
+                numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
                 numberImage.setFitHeight(30);
                 numberImage.setFitWidth(30);
                 this.fieldPane.getChildren().add(numberImage);
@@ -340,8 +340,8 @@ public class IngameScreenController implements Controller {
             Circle circ = new Circle(2);
             circ.setFill(RED);
 
-            circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
+            circ.setLayoutX(-edge.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             this.streetControllers.add(new StreetPointController(edge, circ));
         }
@@ -351,8 +351,8 @@ public class IngameScreenController implements Controller {
             Circle circ = new Circle(5);
             circ.setFill(RED);
 
-            circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
+            circ.setLayoutX(-corner.x + this.fieldPane.getPrefWidth() / 2);
+            circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane));
 
