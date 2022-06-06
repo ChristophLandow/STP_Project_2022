@@ -2,7 +2,9 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
+import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.ExpectedMove;
+import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -59,7 +61,6 @@ public class StreetPointController {
             if ((move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2))) {
                 if (buildings.stream().anyMatch(c -> gameStorage.checkRoadSpot(c.tile.q, c.tile.r, c.tile.s))) {
                     determineSide();
-                    renderRoad();
                     CreateBuildingDto newBuilding = new CreateBuildingDto(tile.q, tile.r, tile.s, side.get(), "road");
                     disposable.add(ingameService.postMove(gameStorage.game.get()._id(), new CreateMoveDto(move.action(), newBuilding))
                             .observeOn(FX_SCHEDULER)
@@ -69,7 +70,31 @@ public class StreetPointController {
         }
     }
 
-    private void renderRoad() {
+    public void renderRoad(Building building) {
+        /*final PhongMaterial redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(Color.valueOf(gameStorage.currentPlayer.color()));
+        redMaterial.setSpecularColor(Color.valueOf(gameStorage.currentPlayer.color()));
+        box.setMaterial(redMaterial);*/
+
+        Player player = gameStorage.players.get(building.owner());
+        side.set(building.side());
+        Rectangle road =  new Rectangle(60,7, Paint.valueOf(player.color()));
+        Scene scene = view.getScene();
+        Pane root = (Pane) scene.getRoot();
+        root.getChildren().add(road);
+        road.setLayoutX(view.getLayoutX()-14);
+        road.setLayoutY(view.getLayoutY()+12);
+        if (side.get() == 3) {
+            road.setRotate(90);
+        } else if (side.get() == 7) {
+            road.setRotate(30);
+        }else {
+            road.setRotate(-30);
+        }
+    }
+
+
+    public void renderRoad() {
         /*final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.valueOf(gameStorage.currentPlayer.color()));
         redMaterial.setSpecularColor(Color.valueOf(gameStorage.currentPlayer.color()));

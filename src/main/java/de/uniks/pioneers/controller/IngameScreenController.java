@@ -179,7 +179,7 @@ public class IngameScreenController implements Controller {
         disposable.add(ingameService.getAllPlayers(game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
-                            gameStorage.players.setAll(list);
+                            list.forEach(player -> gameStorage.players.put(player.userId(),player));
                             gameStorage.findMe();
                         }
                         , Throwable::printStackTrace));
@@ -247,11 +247,10 @@ public class IngameScreenController implements Controller {
             controller.showBuilding(building);
         } else {
             String coords = building.x() + " " + building.y() + " " + building.z();
+            // find corresponding streetPointController
             StreetPointController controller = streetControllers.get(coords);
-
+            controller.renderRoad(building);
         }
-
-        // set building on controller view
     }
 
     private void deleteBuilding(Building building) {
