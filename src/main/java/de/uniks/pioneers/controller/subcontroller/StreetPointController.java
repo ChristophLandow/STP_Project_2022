@@ -10,6 +10,7 @@ public class StreetPointController {
 
     private final Circle view;
     public HexTile tile;
+    public int orientation;
 
     public ArrayList<BuildingPointController> buildings = new ArrayList<>();
 
@@ -40,7 +41,8 @@ public class StreetPointController {
             buildingPointController.mark();
         }
 
-        System.out.println(tile);
+        //System.out.println(tile);
+        System.out.println(this.orientation);
     }
     private void dye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(0,255,0));}
     private void undye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(255,0,0));}
