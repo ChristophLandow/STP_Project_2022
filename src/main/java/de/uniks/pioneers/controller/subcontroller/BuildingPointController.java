@@ -62,7 +62,7 @@ public class BuildingPointController {
     public void build() {
         // print info
         for(StreetPointController streetPointController : this.streets){
-            streetPointController.mark();
+            //streetPointController.mark();
         }
         System.out.println(tile);
 

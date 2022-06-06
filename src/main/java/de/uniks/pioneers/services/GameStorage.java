@@ -1,9 +1,7 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.model.Building;
-import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.State;
-import de.uniks.pioneers.model.Tile;
+import de.uniks.pioneers.model.*;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -19,6 +17,7 @@ public class GameStorage {
     private List<Tile> map;
     public final ObservableList<Player> players = FXCollections.observableArrayList();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
+    public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
     public Player currentPlayer;
     public State currentState;
 

@@ -156,7 +156,7 @@ public class IngameScreenController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
-
+        gameStorage.game.set(game.get());
         // init game chat controller
         GameChatController gameChatController = gameChatControllerProvider.get()
                 .setChatScrollPane(this.chatScrollPane)
