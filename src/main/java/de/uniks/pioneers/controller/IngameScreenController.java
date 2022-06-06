@@ -81,11 +81,11 @@ public class IngameScreenController implements Controller {
     private final IngameService ingameService;
     private final UserService userService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
-
-    private final EventListener eventListener;
     private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
+
+    private final EventListener eventListener;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final GameStorage gameStorage;
@@ -176,9 +176,10 @@ public class IngameScreenController implements Controller {
 
     private void renderBuilding(Building building) {
         // find corresponding buildingPointController
-        String coords = building.x() + " " + building.y() + " " + building.z();
+        String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
         BuildingPointController controller = buildingPointControllerHashMap.get(coords);
 
+        System.out.println(coords);
         // set building on controller view
         controller.showBuilding(building);
     }
@@ -355,18 +356,20 @@ public class IngameScreenController implements Controller {
             this.fieldPane.getChildren().add(circ);
             this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane));
 
-            // put buildingPointControllers in Hashmap to access with coordinates
-            this.buildingPointControllerHashMap.put(
-                    corner.generateKeyString(),
-                    new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane)
-            );
         }
-
         for(HexTileController tile : tileControllers){
 
             tile.findEdges(this.streetControllers);
             tile.findCorners(this.buildingControllers);
             tile.link();
+        }
+        for(BuildingPointController buildingPoint : this.buildingControllers){
+
+            // put buildingPointControllers in Hashmap to access with coordinates
+            this.buildingPointControllerHashMap.put(
+                    buildingPoint.generateKeyString(),
+                    buildingPoint);
+
         }
     }
 }
