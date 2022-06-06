@@ -72,8 +72,6 @@ public class IngameScreenController implements Controller {
     @FXML
     public ScrollPane userScrollPane;
     @FXML
-    public VBox userVBox;
-    @FXML
     public Label streetCountLabel;
     @FXML
     public Label houseCountLabel;
@@ -98,7 +96,7 @@ public class IngameScreenController implements Controller {
     @FXML
     public ImageView hammerImageView;
     @FXML
-    public ListView playerListView;
+    public ListView<IngamePlayerListElementController> playerListView;
 
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
@@ -157,8 +155,15 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void init() {
+
+        // init player list
+        IngamePlayerListController ingamePlayerListController = ingamePlayerListControllerProvider.get();
+        ingamePlayerListController.init(playerListView);
+
+        // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         gameStorage.game.set(game.get());
+
         // init game chat controller
         GameChatController gameChatController = gameChatControllerProvider.get()
                 .setChatScrollPane(this.chatScrollPane)
@@ -178,13 +183,24 @@ public class IngameScreenController implements Controller {
                         }
                         , Throwable::printStackTrace));
 
-        // get current game state
+        // REST - get current game state
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(state -> {
                     System.out.println(state);
                     handleGameState(state);
                 }));
+
+
+        // add listener for observable buildings list
+        gameStorage.buildings.addListener((ListChangeListener<? super Building>) c -> {
+            c.next();
+            if (c.wasAdded()) {
+                c.getAddedSubList().forEach(this::renderBuilding);
+            } else if (c.wasRemoved()) {
+                c.getRemoved().forEach(this::deleteBuilding);
+            }
+        });
 
 
         // Rest - get list of all buildings from server
@@ -196,20 +212,9 @@ public class IngameScreenController implements Controller {
                         }
                         , Throwable::printStackTrace));
 
-        // add listener for member observable
-        gameStorage.buildings.addListener((ListChangeListener<? super Building>) c -> {
-            c.next();
-            if (c.wasAdded()) {
-                c.getAddedSubList().forEach(this::renderBuilding);
-            } else if (c.wasRemoved()) {
-                c.getRemoved().forEach(this::deleteBuilding);
-            }
-        });
 
-        // init player list
-        IngamePlayerListController ingamePlayerListController = ingamePlayerListControllerProvider.get();
-        ingamePlayerListController.init();
-
+        // init player listener in game storage
+        gameStorage.initPlayerListener();
         // init game listener
         initGameListener();
         initBuildingListener();

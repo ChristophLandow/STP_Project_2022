@@ -2,90 +2,64 @@ package de.uniks.pioneers.controller.subcontroller;
 
 
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameStorage;
-import de.uniks.pioneers.services.LobbyService;
-import de.uniks.pioneers.services.UserlistService;
-import de.uniks.pioneers.ws.EventListener;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.MapChangeListener;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-
 @Singleton
 public class IngamePlayerListController {
 
-    private final UserlistService userlistService;
-    private final Provider<GameListElementController> gameListElementControllerProvider;
-    private final GameStorage gameStorage;
-    private final EventListener eventListener;
-    private final LobbyService lobbyService;
-    public ListView<Node> listViewGames;
-    private ObservableList<Game> games;
-    private ObservableList<User> users = FXCollections.observableArrayList();
-    private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
-    private CompositeDisposable disposable;
-
+    public ListView<IngamePlayerListElementController> listViewGames;
+    private final List<IngamePlayerListElementController> elementControllers = new ArrayList<>();
 
     @Inject
-    public IngamePlayerListController(EventListener eventListener,
-                                   LobbyService lobbyService,
-                                   UserlistService userlistService,
-                                   Provider<GameListElementController> gameListElementControllerProvider,
-                                   GameStorage gameStorage
-    ) {
-        this.eventListener = eventListener;
-        this.lobbyService = lobbyService;
-        this.userlistService = userlistService;
-        this.gameListElementControllerProvider = gameListElementControllerProvider;
-        this.gameStorage = gameStorage;
-    }
+    GameStorage gameStorage;
 
-    public void init(){
-        // after leaving a game this methods get called again, thats why the item list gets cleared
-        listViewGames.getItems().clear();
-        games = FXCollections.observableArrayList();
-        disposable = new CompositeDisposable();
+    @Inject
+    Provider <IngamePlayerListElementController> ingamePlayerListElementControllerProvider;
 
-        games.addListener((ListChangeListener<? super Game>) c -> {
-            c.next();
+    @Inject
+    public IngamePlayerListController() {}
+
+
+
+    public void init(ListView<IngamePlayerListElementController> playerListView) {
+
+        this.listViewGames = playerListView;
+        gameStorage.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
+            c.wasAdded();
             if (c.wasAdded()) {
-                c.getAddedSubList().stream().forEach(this::renderGame);
+                renderPlayer(c.getValueAdded());
+            }else if (c.wasRemoved()){
+                removePlayer(c.getValueRemoved());
+            }else{
+                updatePlayer(c.getValueAdded());
             }
         });
 
-        disposable.add(lobbyService.getGames()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(this.games::setAll,
-                        Throwable::printStackTrace));
-
-        disposable.add(eventListener.listen("games.*.*", Game.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(gameEvent -> {
-                    if (gameEvent.event().endsWith(".created")) {
-                        if(!games.contains(gameEvent.data()))
-                        {
-                            games.add(gameEvent.data());
-                        }
-                    } else if (gameEvent.event().endsWith(".deleted")) {
-                        deleteGame(gameEvent.data());
-                    } else {
-                        updateGame(gameEvent.data());
-                    }
-                }));
-
-        this.users=userlistService.getUsers();
     }
+
+
+    private void renderPlayer(Player valueAdded) {
+    }
+
+    private void updatePlayer(Player valueAdded) {
+    }
+
+    private void removePlayer(Player valueRemoved) {
+    }
+
+
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
@@ -99,9 +73,6 @@ public class IngamePlayerListController {
         listViewGames.getItems().add(0, node);
     }
 
-    public ObservableList<Game> getGames() {
-        return games;
-    }
 
     public void deleteGame(Game data) {
         //find node belonging to game and then remove it from ListView
@@ -125,16 +96,4 @@ public class IngamePlayerListController {
         }
     }
 
-    public User returnUserById(String id) {
-        try {
-            return users.stream().filter(user -> user._id().equals(id)).findAny().get();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public void stop()
-    {
-        disposable.dispose();
-    }
 }

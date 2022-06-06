@@ -1,6 +1,8 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.model.*;
+import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +13,8 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+
 @Singleton
 public class GameStorage {
 
@@ -19,15 +23,34 @@ public class GameStorage {
     private List<Tile> map;
     public final ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
-    public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     public Player me;
     public List<Player> currentPlayers;
     public State currentState;
+    private CompositeDisposable disposable;
 
+    @Inject
+    EventListener eventListener;
 
     @Inject
     public GameStorage(UserService userService) {
         this.userService = userService;
+    }
+
+    public void initPlayerListener() {
+        String patternToObservePlayers = String.format("games.%s.players.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(gameEvent -> {
+                    Player player = gameEvent.data();
+                    String id = player.userId();
+                    if (gameEvent.event().endsWith(".updated")) {
+                        players.replace(id, players.get(id), player);
+                    } else if (gameEvent.event().endsWith(".deleted")) {
+                        players.remove(id);
+                    }
+                })
+        );
     }
 
     public void findMe() {
