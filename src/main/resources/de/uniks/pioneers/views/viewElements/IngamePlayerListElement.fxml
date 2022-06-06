@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
+
+
+<HBox fx:id="playerBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="230.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerListElementController">
+   <children>
+      <Circle fx:id="playerColor" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
+      <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <HBox.margin>
+            <Insets left="-10.0" />
+         </HBox.margin>
+      </ImageView>
+      <SVGPath fx:id="resourcesCards" content="M40,60 C42,48 44,30 25,32" translateX="20.0" />
+      <Label fx:id="resourceCardsCount" text="4" textFill="#fc0808" translateX="-7.0" translateY="-10.0" />
+      <SVGPath fx:id="developmentCards" content="M40,60 C42,48 44,30 25,32" translateX="-15.0" />
+      <Label fx:id="devolpmentCardsCount" text="4" textFill="#fc0808" translateX="-42.0" translateY="-10.0" />
+      <SVGPath fx:id="cityImg" content="M40,60 C42,48 44,30 25,32" translateX="-35.0" />
+      <Label fx:id="cityCount" text="4" textFill="#fc0808" translateX="-65.0" translateY="14.0" />
+      <SVGPath fx:id="settlmentImg" content="M40,60 C42,48 44,30 25,32" translateX="-70.0" />
+      <Label fx:id="settlementCount" text="4" textFill="#fc0808" translateX="-100.0" translateY="14.0" />
+   </children>
+   <padding>
+      <Insets left="5.0" />
+   </padding>
+</HBox>

@@ -27,7 +27,7 @@ public class GameStorage {
     public Player me;
     public List<Player> currentPlayers;
     public State currentState;
-    private CompositeDisposable disposable;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     EventListener eventListener;
@@ -62,7 +62,6 @@ public class GameStorage {
     public boolean checkRoadSpot(int x, int y, int z) {
         return buildings.stream().anyMatch(building -> building.x() == x && building.y() == y && building.z() == z
                 && building.owner().equals(me.userId())
-                // the last conjunct is redundant but might be usefull later
                 && building.type().equals("settlement"));
     }
 

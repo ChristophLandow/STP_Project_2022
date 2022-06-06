@@ -18,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -96,7 +97,7 @@ public class IngameScreenController implements Controller {
     @FXML
     public ImageView hammerImageView;
     @FXML
-    public ListView<IngamePlayerListElementController> playerListView;
+    public ListView<Node> playerListView;
 
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
@@ -122,7 +123,7 @@ public class IngameScreenController implements Controller {
     @Inject
     Provider<StreetPointController> streetPointControllerProvider;
     @Inject
-    Provider<IngamePlayerListController> ingamePlayerListControllerProvider;
+    Provider<IngamePlayerListElementController> elementProvider;
 
 
     @Inject
@@ -155,11 +156,6 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void init() {
-
-        // init player list
-        IngamePlayerListController ingamePlayerListController = ingamePlayerListControllerProvider.get();
-        ingamePlayerListController.init(playerListView);
-
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         gameStorage.game.set(game.get());
@@ -178,8 +174,12 @@ public class IngameScreenController implements Controller {
         disposable.add(ingameService.getAllPlayers(game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
-                            list.forEach(player -> gameStorage.players.put(player.userId(),player));
-                            gameStorage.findMe();
+                            list.forEach(player -> {
+                                gameStorage.players.put(player.userId(), player);
+                                gameStorage.findMe();
+                                IngamePlayerListElementController playerListElement = elementProvider.get();
+                                playerListElement.render(playerListView, player.userId());
+                            });
                         }
                         , Throwable::printStackTrace));
 
