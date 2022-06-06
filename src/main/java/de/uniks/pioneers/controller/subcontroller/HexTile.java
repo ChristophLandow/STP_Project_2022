@@ -51,10 +51,6 @@ public class HexTile {
         return coords;
     }
 
-    public String generateKeyString() {
-        return q + " " + r + " " + s;
-    }
-
     @Override
     public String toString(){
 

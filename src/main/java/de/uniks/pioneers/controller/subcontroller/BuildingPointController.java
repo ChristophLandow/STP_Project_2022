@@ -27,6 +27,9 @@ public class BuildingPointController {
     private String action;
     public HexTile tile;
 
+    //coordinates to be uploaded to the server as: x, y, z, side
+    public int[] uploadCoords = new int[4];
+
     public ArrayList<StreetPointController> streets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -73,7 +76,11 @@ public class BuildingPointController {
         } else {
             buildingType = "city";
         }
-        CreateBuildingDto newBuilding = new CreateBuildingDto(tile.q, tile.r, tile.s, 6, buildingType);
+        System.out.println(uploadCoords[0]);
+        System.out.println(uploadCoords[1]);
+        System.out.println(uploadCoords[2]);
+        System.out.println(uploadCoords[3]);
+        CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
@@ -147,5 +154,9 @@ public class BuildingPointController {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public String generateKeyString() {
+        return uploadCoords[0] + " " + uploadCoords[1] + " " + uploadCoords[2] + " " + uploadCoords[3];
     }
 }

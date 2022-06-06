@@ -10,7 +10,9 @@ public class StreetPointController {
 
     private final Circle view;
     public HexTile tile;
-    public int orientation;
+
+    //coordinates to be uploaded to the server as: x, y, z, side
+    public int[] uploadCoords = new int[4];
 
     public ArrayList<BuildingPointController> buildings = new ArrayList<>();
 
@@ -37,15 +39,18 @@ public class StreetPointController {
 
     private void info(MouseEvent mouseEvent){
 
-        for(BuildingPointController buildingPointController : this.buildings){
+    /*    for(BuildingPointController buildingPointController : this.buildings){
             buildingPointController.mark();
         }
-
-        //System.out.println(tile);
-        System.out.println(this.orientation);
+    */
+        System.out.println(tile);
+        System.out.println(uploadCoords[0] + " " + uploadCoords[1] + " " + uploadCoords[2] + " " + uploadCoords[3]);
     }
     private void dye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(0,255,0));}
     private void undye(MouseEvent mouseEvent){this.view.setFill(Color.rgb(255,0,0));}
-
     public void mark(){this.view.setFill(Color.rgb(0,0,255));}
+
+    public String generateKeyString() {
+        return uploadCoords[0] + " " + uploadCoords[1] + " " + uploadCoords[2] + " " + uploadCoords[3];
+    }
 }
