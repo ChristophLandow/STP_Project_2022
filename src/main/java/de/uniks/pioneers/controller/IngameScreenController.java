@@ -181,7 +181,7 @@ public class IngameScreenController implements Controller {
 
         System.out.println(coords);
         // set building on controller view
-        controller.showBuilding(building);
+        controller.placeBuilding(building);
     }
 
     private void handleGameState(State currentState) {

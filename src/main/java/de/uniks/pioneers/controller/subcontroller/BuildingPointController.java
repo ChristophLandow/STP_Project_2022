@@ -4,7 +4,6 @@ import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
-import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.input.MouseEvent;
@@ -32,6 +31,7 @@ public class BuildingPointController {
 
     public ArrayList<StreetPointController> streets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private Building building;
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
@@ -96,7 +96,7 @@ public class BuildingPointController {
         this.view.setOnMouseExited(null);
     }
 
-    public void showBuilding(Building building) {
+    public void placeBuilding(Building building) {
         // create new settlement svg
         SVGPath settlementSVG = new SVGPath();
         settlementSVG.setContent(GameConstants.SETTLEMENT_SVG);
@@ -119,6 +119,9 @@ public class BuildingPointController {
         svgShape.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH/2);
         svgShape.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT/2);
         this.fieldpane.getChildren().add(svgShape);
+
+        // set building of this controller
+        this.building = building;
 
         System.out.println("Placed on: " + svgShape.getLayoutX() + " " + svgShape.getLayoutY());
     }
@@ -158,5 +161,9 @@ public class BuildingPointController {
 
     public String generateKeyString() {
         return uploadCoords[0] + " " + uploadCoords[1] + " " + uploadCoords[2] + " " + uploadCoords[3];
+    }
+
+    public Building getBuilding() {
+        return building;
     }
 }
