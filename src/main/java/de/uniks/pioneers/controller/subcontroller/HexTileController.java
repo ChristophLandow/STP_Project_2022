@@ -69,6 +69,10 @@ public class HexTileController {
 
                 if(abs(streetPoint.tile.x - edgeCoords[i][0]) < 1 && abs(streetPoint.tile.y - edgeCoords[i][1]) < 1 ){
 
+                    if(i % 3 == 0){streetPoint.orientation = 11;}
+                    if(i % 3 == 1){streetPoint.orientation = 3;}
+                    if(i % 3 == 2){streetPoint.orientation = 7;}
+
                     this.edges[i] = streetPoint;
                 }
             }
