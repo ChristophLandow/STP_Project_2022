@@ -19,11 +19,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -100,6 +97,9 @@ public class IngameScreenController implements Controller {
     public ImageView rightDiceImageView;
     @FXML
     public ImageView hammerImageView;
+    @FXML
+    public ListView playerListView;
+
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
@@ -123,6 +123,9 @@ public class IngameScreenController implements Controller {
     Provider<GameChatController> gameChatControllerProvider;
     @Inject
     Provider<StreetPointController> streetPointControllerProvider;
+    @Inject
+    Provider<IngamePlayerListController> ingamePlayerListControllerProvider;
+
 
     @Inject
     public IngameScreenController(App app,
@@ -166,6 +169,14 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
+        // REST - get list of all players from server and set current player
+        disposable.add(ingameService.getAllPlayers(game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(list -> {
+                            list.forEach(player -> gameStorage.players.put(player.userId(),player));
+                            gameStorage.findMe();
+                        }
+                        , Throwable::printStackTrace));
 
         // get current game state
         disposable.add(ingameService.getCurrentState(game.get()._id())
@@ -175,14 +186,6 @@ public class IngameScreenController implements Controller {
                     handleGameState(state);
                 }));
 
-        // REST - get list of all players from server and set current player
-        disposable.add(ingameService.getAllPlayers(game.get()._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(list -> {
-                            list.forEach(player -> gameStorage.players.put(player.userId(),player));
-                            gameStorage.findMe();
-                        }
-                        , Throwable::printStackTrace));
 
         // Rest - get list of all buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
@@ -202,6 +205,10 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
+
+        // init player list
+        IngamePlayerListController ingamePlayerListController = ingamePlayerListControllerProvider.get();
+        ingamePlayerListController.init();
 
         // init game listener
         initGameListener();

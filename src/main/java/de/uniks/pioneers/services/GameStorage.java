@@ -33,7 +33,7 @@ public class GameStorage {
     public void findMe() {
         me = players.get(userService.getCurrentUser()._id());
         assert me != null;
-        System.out.println("Player id" + me.userId());
+        System.out.println("Player id " + me.userId());
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {
@@ -45,6 +45,8 @@ public class GameStorage {
 
     public void setCurrentPlayers(List<String> playerIdS) {
         currentPlayers = players.values().stream().filter(player -> playerIdS.contains(player.userId())).toList();
+        assert currentPlayers != null;
+        System.out.println("Current players " + currentPlayers);
     }
 
     public List<Tile> getMap() {

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -36,7 +37,7 @@
          <children>
             <ScrollPane fx:id="userScrollPane" hbarPolicy="NEVER" layoutX="1.0" layoutY="1.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="317.0" prefWidth="256.0">
                <content>
-                  <VBox fx:id="userVBox" prefHeight="318.0" prefWidth="241.0" />
+                  <ListView fx:id="playerListView" prefHeight="320.0" prefWidth="240.0" />
                </content></ScrollPane>
          </children>
       </Pane>
