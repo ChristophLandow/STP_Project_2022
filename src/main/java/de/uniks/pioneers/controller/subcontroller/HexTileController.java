@@ -103,6 +103,40 @@ public class HexTileController {
 
                 if(abs(streetPoint.tile.x - edgeCoords[i][0]) < 1 && abs(streetPoint.tile.y - edgeCoords[i][1]) < 1 ){
 
+                    switch(i){
+
+                        case 0: streetPoint.uploadCoords[0] = tile.q+1;
+                                streetPoint.uploadCoords[1] = tile.r-1;
+                                streetPoint.uploadCoords[2] = tile.s;
+                                streetPoint.uploadCoords[3] = 7;
+                            break;
+                        case 1: streetPoint.uploadCoords[0] = tile.q;
+                                streetPoint.uploadCoords[1] = tile.r;
+                                streetPoint.uploadCoords[2] = tile.s;
+                                streetPoint.uploadCoords[3] = 3;
+                            break;
+                        case 2: streetPoint.uploadCoords[0] = tile.q;
+                                streetPoint.uploadCoords[1] = tile.r+1;
+                                streetPoint.uploadCoords[2] = tile.s-1;
+                                streetPoint.uploadCoords[3] = 11;
+                            break;
+                        case 3: streetPoint.uploadCoords[0] = tile.q;
+                                streetPoint.uploadCoords[1] = tile.r;
+                                streetPoint.uploadCoords[2] = tile.s;
+                                streetPoint.uploadCoords[3] = 7;
+                            break;
+                        case 4: streetPoint.uploadCoords[0] = tile.q-1;
+                                streetPoint.uploadCoords[1] = tile.r;
+                                streetPoint.uploadCoords[2] = tile.s+1;
+                                streetPoint.uploadCoords[3] = 3;
+                            break;
+                        case 5: streetPoint.uploadCoords[0] = tile.q;
+                                streetPoint.uploadCoords[1] = tile.r;
+                                streetPoint.uploadCoords[2] = tile.s;
+                                streetPoint.uploadCoords[3] = 11;
+                            break;
+                    }
+
                     this.edges[i] = streetPoint;
                 }
             }

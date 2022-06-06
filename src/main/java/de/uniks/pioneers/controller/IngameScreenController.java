@@ -82,9 +82,9 @@ public class IngameScreenController implements Controller {
     private final UserService userService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
     private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
+    private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
-
     private final EventListener eventListener;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -369,6 +369,14 @@ public class IngameScreenController implements Controller {
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),
                     buildingPoint);
+
+        }
+        for(StreetPointController streetPoint : this.streetControllers){
+
+            // put buildingPointControllers in Hashmap to access with coordinates
+            this.streetPointControllerHashMap.put(
+                    streetPoint.generateKeyString(),
+                    streetPoint);
 
         }
     }
