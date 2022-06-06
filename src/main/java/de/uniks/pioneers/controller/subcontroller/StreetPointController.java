@@ -6,6 +6,7 @@ import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -30,7 +31,7 @@ public class StreetPointController {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     public ArrayList<BuildingPointController> buildings = new ArrayList<>();
-    int side;
+    SimpleIntegerProperty side = new SimpleIntegerProperty();
 
     @Inject
     public StreetPointController(GameStorage gameStorage, IngameService ingameService) {
@@ -54,12 +55,12 @@ public class StreetPointController {
         ExpectedMove move = gameStorage.currentState.expectedMoves().get(0);
         renderRoad();
 
-        if (move.players().get(0).equals(gameStorage.currentPlayer.userId())) {
+        if (move.players().get(0).equals(gameStorage.me.userId())) {
             if ((move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2))) {
                 if (buildings.stream().anyMatch(c -> gameStorage.checkRoadSpot(c.tile.q, c.tile.r, c.tile.s))) {
                     determineSide();
                     renderRoad();
-                    CreateBuildingDto newBuilding = new CreateBuildingDto(tile.q, tile.r, tile.s, side, "road");
+                    CreateBuildingDto newBuilding = new CreateBuildingDto(tile.q, tile.r, tile.s, side.get(), "road");
                     disposable.add(ingameService.postMove(gameStorage.game.get()._id(), new CreateMoveDto(move.action(), newBuilding))
                             .observeOn(FX_SCHEDULER)
                             .subscribe());
@@ -74,31 +75,30 @@ public class StreetPointController {
         redMaterial.setSpecularColor(Color.valueOf(gameStorage.currentPlayer.color()));
         box.setMaterial(redMaterial);*/
 
-        Rectangle road =  new Rectangle(60,7, Paint.valueOf(gameStorage.currentPlayer.color()));
+        Rectangle road =  new Rectangle(60,7, Paint.valueOf(gameStorage.me.color()));
         Scene scene = view.getScene();
         Pane root = (Pane) scene.getRoot();
         root.getChildren().add(road);
         road.setLayoutX(view.getLayoutX()-14);
         road.setLayoutY(view.getLayoutY()+12);
-        if (side == 3) {
+        if (side.get() == 3) {
             road.setRotate(90);
-        } else if (side == 7) {
+        } else if (side.get() == 7) {
             road.setRotate(30);
         }else {
             road.setRotate(-30);
         }
-
     }
 
     private void determineSide() {
         BuildingPointController neighbor = buildings.get(0);
         BuildingPointController neighborOther = buildings.get(1);
         if (neighbor.tile.q == neighborOther.tile.s || neighborOther.tile.q == neighbor.tile.s) {
-            side = 3;
+            side.set(3);
         } else if (neighbor.tile.q == neighborOther.tile.r || neighborOther.tile.q == neighbor.tile.r) {
-            side = 7;
+            side.set(7);
         } else {
-            side = 11;
+            side.set(11);
         }
     }
 

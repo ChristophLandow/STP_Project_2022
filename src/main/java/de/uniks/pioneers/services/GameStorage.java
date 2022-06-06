@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class GameStorage {
@@ -18,7 +19,8 @@ public class GameStorage {
     public final ObservableList<Player> players = FXCollections.observableArrayList();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public SimpleObjectProperty <Game> game = new SimpleObjectProperty<>();
-    public Player currentPlayer;
+    public Player me;
+    public List<Player> currentPlayers;
     public State currentState;
 
 
@@ -28,13 +30,15 @@ public class GameStorage {
     }
 
     public void findMe() {
-        currentPlayer = players.stream()
+        me = players.stream()
                 .filter(player -> userService.getCurrentUser()._id().equals(player.userId())).findFirst().orElse(null);
+        assert me != null;
+        System.out.println("Player id" + me.userId());
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {
         return buildings.stream().anyMatch(building -> building.x() == x && building.y() == y && building.z() == z
-                && building.owner().equals(currentPlayer.userId())
+                && building.owner().equals(me.userId())
                 // the last conjunct is redundant but might be usefull later
                 && building.type().equals("settlement"));
     }
@@ -45,5 +49,9 @@ public class GameStorage {
 
     public void setMap(List<Tile> map) {
         this.map = map;
+    }
+
+    public void setCurrentPlayers(List<String> playerIdS) {
+        currentPlayers = players.stream().filter(player -> playerIdS.contains(player.userId())).toList();
     }
 }
