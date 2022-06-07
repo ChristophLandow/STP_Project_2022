@@ -29,6 +29,7 @@ public class BuildingPointController {
     private String action;
     public HexTile tile;
 
+
     //coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
 
