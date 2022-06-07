@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -263,7 +264,7 @@ public class IngameScreenController implements Controller {
             // find corresponding buildingPointController
             String coords = building.x() + " " + building.y() + " " + building.z();
             BuildingPointController controller = buildingPointControllerHashMap.get(coords);
-            controller.showBuilding(building);
+            controller.placeBuilding(building);
         } else {
             System.out.println("baue Straße");
             String coords = building.x() + " " + building.y() + " " + building.z();
@@ -298,15 +299,7 @@ public class IngameScreenController implements Controller {
                         controller.setAction(move.action());
                     }
                     break;
-                case FOUNDING_ROAD_1:
-                case FOUNDING_ROAD_2:
-                    // enable road points
-                    for (StreetPointController controller : streetControllers) {
-                        controller.init();
-                    }
-                    break;
             }
-
         }
     }
 
@@ -466,7 +459,7 @@ public class IngameScreenController implements Controller {
         }
         for(HexTileController tile : tileControllers){
 
-            tile.findEdges(this.streetControllers);
+            tile.findEdges(this.streetPointControllers);
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
@@ -478,10 +471,10 @@ public class IngameScreenController implements Controller {
                     buildingPoint);
 
         }
-        for(StreetPointController streetPoint : this.streetControllers){
+        for(StreetPointController streetPoint : this.streetPointControllers){
 
             // put buildingPointControllers in Hashmap to access with coordinates
-            this.streetPointControllerHashMap.put(
+            this.streetControllers.put(
                     streetPoint.generateKeyString(),
                     streetPoint);
 
