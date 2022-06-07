@@ -21,20 +21,20 @@ public class ColorPickerController {
     {
         this.colorPicker = colorPicker;
         this.houseSVG = houseSVG;
-        this.houseSVG.setFill(Paint.valueOf(colorPicker.getValue().toString()));
+        this.houseSVG.setStroke(Paint.valueOf(colorPicker.getValue().toString()));
         this.initPickerColors();
         this.changePickerColors();
     }
 
     public void setColor() {
         this.hexColor = "#" + colorPicker.getValue().toString().substring(2,8);
-        this.houseSVG.setFill(Paint.valueOf(hexColor));
+        this.houseSVG.setStroke(Paint.valueOf(hexColor));
     }
 
     public void setColor(String hexColor) {
         this.hexColor = hexColor;
         this.colorPicker.setValue(Color.valueOf(hexColor));
-        this.houseSVG.setFill(Paint.valueOf(hexColor));
+        this.houseSVG.setStroke(Paint.valueOf(hexColor));
     }
 
     public String getColor() {
@@ -66,19 +66,19 @@ public class ColorPickerController {
         rgb[1] = color.getGreen();
         rgb[2] = color.getBlue();
 
-        if (rgb[0] > 0.04045) {
+        if(rgb[0] > 0.04045) {
             rgb[0] = Math.pow((rgb[0] + 0.055) / 1.055, 2.4);
         } else {
             rgb[0] = rgb[0] / 12.92;
         }
 
-        if (rgb[1] > 0.04045) {
+        if(rgb[1] > 0.04045) {
             rgb[1] = Math.pow((rgb[1] + 0.055) / 1.055, 2.4);
         } else {
             rgb[1] = rgb[1] / 12.92;
         }
 
-        if (rgb[2] > 0.04045) {
+        if(rgb[2] > 0.04045) {
             rgb[2] = Math.pow((rgb[2] + 0.055) / 1.055, 2.4);
         } else {
             rgb[2] = rgb[2] / 12.92;
@@ -96,19 +96,19 @@ public class ColorPickerController {
         xyz[1] = xyz[1] / 100.0;
         xyz[2] = xyz[2] / 108.883;
 
-        if (xyz[0] > .008856) {
+        if(xyz[0] > 0.008856) {
             xyz[0] = Math.pow(xyz[0], (1.0 / 3.0));
         } else {
             xyz[0] = (xyz[0] * 7.787) + (16.0 / 116.0);
         }
 
-        if (xyz[1] > 0.008856) {
+        if(xyz[1] > 0.008856) {
             xyz[1] = Math.pow(xyz[1], 1.0 / 3.0);
         } else {
             xyz[1] = (xyz[1] * 7.787) + (16.0 / 116.0);
         }
 
-        if (xyz[2] > 0.008856) {
+        if(xyz[2] > 0.008856) {
             xyz[2] = Math.pow(xyz[2], 1.0 / 3.0);
         } else {
             xyz[2] = (xyz[2] * 7.787) + (16.0 / 116.0);

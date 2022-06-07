@@ -25,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -242,8 +243,12 @@ public class IngameScreenController implements Controller {
     public void setPlayerColor(String hexColor)
     {
         streetSVG.setFill(Paint.valueOf(hexColor));
-        houseSVG.setFill(Paint.valueOf(hexColor));
-        citySVG.setFill(Paint.valueOf(hexColor));
+        houseSVG.setFill(Color.WHITE);
+        houseSVG.setStroke(Paint.valueOf(hexColor));
+        houseSVG.setStrokeWidth(1.5);
+        citySVG.setFill(Color.WHITE);
+        citySVG.setStroke(Paint.valueOf(hexColor));
+        citySVG.setStrokeWidth(2.0);
     }
 
     public void giveUp(ActionEvent actionEvent) {

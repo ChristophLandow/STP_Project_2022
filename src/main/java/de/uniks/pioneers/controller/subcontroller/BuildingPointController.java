@@ -9,8 +9,11 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.StrokeType;
+
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -100,30 +103,26 @@ public class BuildingPointController {
         // create new settlement svg
         SVGPath settlementSVG = new SVGPath();
         settlementSVG.setContent(GameConstants.SETTLEMENT_SVG);
-        final Region svgShape = new Region();
-        svgShape.setShape(settlementSVG);
-        svgShape.setMinSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
-        svgShape.setPrefSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
-        svgShape.setMaxSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
-        svgShape.setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        settlementSVG.setFill(Color.WHITE);
+        settlementSVG.setStrokeWidth(1.5);
+        settlementSVG.setStrokeType(StrokeType.OUTSIDE);
 
         // set color of building
         disposable.add(ingameService.getPlayer(building.gameId(), building.owner())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(player -> {
-                    svgShape.setStyle("-fx-background-color: " + player.color());
+                    settlementSVG.setStroke(Paint.valueOf(player.color()));
                 }));
 
         // set position on game field
-        svgShape.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH/2);
-        svgShape.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT/2);
-        this.fieldpane.getChildren().add(svgShape);
+        settlementSVG.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH/1.2);
+        settlementSVG.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT);
+        this.fieldpane.getChildren().add(settlementSVG);
 
         // set building of this controller
         this.building = building;
 
-        System.out.println("Placed on: " + svgShape.getLayoutX() + " " + svgShape.getLayoutY());
+        System.out.println("Placed on: " + settlementSVG.getLayoutX() + " " + settlementSVG.getLayoutY());
     }
 
     private void info(MouseEvent mouseEvent){
