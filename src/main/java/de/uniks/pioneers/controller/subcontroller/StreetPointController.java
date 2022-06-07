@@ -30,11 +30,9 @@ public class StreetPointController {
     private final IngameService ingameService;
     public HexTile tile;
     private Circle view;
-
     private final CompositeDisposable disposable = new CompositeDisposable();
     //coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
-
     public ArrayList<BuildingPointController> buildings = new ArrayList<>();
     SimpleIntegerProperty side = new SimpleIntegerProperty();
 
@@ -63,6 +61,12 @@ public class StreetPointController {
             if ((move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2))) {
                 if (buildings.stream().anyMatch(c -> gameStorage.checkRoadSpot(c.uploadCoords[0], c.uploadCoords[1], c.uploadCoords[2]))) {
                     System.out.println("baue straße von feld aus ");
+                    System.out.println(uploadCoords[0]);
+                    System.out.println(uploadCoords[1]);
+                    System.out.println(uploadCoords[2]);
+                    System.out.println(uploadCoords[3]);
+                    System.out.println(gameStorage.game.get()._id());
+                    System.out.println(move.action());
                     //determineSide();
                     CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
                     disposable.add(ingameService.postMove(gameStorage.game.get()._id(), new CreateMoveDto(move.action(), newBuilding))

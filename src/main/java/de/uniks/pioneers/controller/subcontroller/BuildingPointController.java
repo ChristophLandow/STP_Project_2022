@@ -38,7 +38,7 @@ public class BuildingPointController {
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
-                                   Pane fieldpane){
+                                   Pane fieldpane) {
 
         this.tile = tile;
         this.view = view;
@@ -53,21 +53,21 @@ public class BuildingPointController {
         this.view.setOnMouseExited(this::undye);
     }
 
-    public Circle getView(){
+    public Circle getView() {
         return this.view;
     }
 
-    public HexTile getTile(){
+    public HexTile getTile() {
         return this.tile;
     }
 
-    public ArrayList<StreetPointController> getStreets(){
+    public ArrayList<StreetPointController> getStreets() {
         return this.streets;
     }
 
     public void build() {
         // print info
-        for(StreetPointController streetPointController : this.streets){
+        for (StreetPointController streetPointController : this.streets) {
             //streetPointController.mark();
         }
 
@@ -83,7 +83,6 @@ public class BuildingPointController {
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
-                    System.out.println(move);
                     this.reset();
                 }));
 
@@ -111,7 +110,7 @@ public class BuildingPointController {
                 }));
 
         // set position on game field
-        settlementSVG.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH/1.2);
+        settlementSVG.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH / 1.2);
         settlementSVG.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT);
         this.fieldpane.getChildren().add(settlementSVG);
 
@@ -120,23 +119,24 @@ public class BuildingPointController {
 
     }
 
-    private void info(MouseEvent mouseEvent){
+    private void info(MouseEvent mouseEvent) {
         boolean surrounded = false;
-        for(StreetPointController street : streets){
-            for(BuildingPointController building : street.getBuildings()){
-                if(building != this) {
-                    if(building.getView().getFill() != RED){
+        for (StreetPointController street : streets) {
+            for (BuildingPointController building : street.getBuildings()) {
+                if (building != this) {
+                    if (building.getView().getFill() != RED) {
                         surrounded = true;
                     }
                 }
             }
         }
-        if(surrounded){
+        if (surrounded) {
             System.out.println("You can't build here!");
         } else {
             build();
         }
     }
+
     private void dye(MouseEvent mouseEvent) {
         this.view.setFill(GREEN);
     }

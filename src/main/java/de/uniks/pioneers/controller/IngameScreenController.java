@@ -207,19 +207,14 @@ public class IngameScreenController implements Controller {
         // Rest - get list of all buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(list -> {
-                            gameStorage.buildings.setAll(list);
-                        }
+                .subscribe(gameStorage.buildings::setAll
                         , Throwable::printStackTrace));
 
 
         // REST - get current game state
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(state -> {
-                    System.out.println(state);
-                    handleGameState(state);
-                }));
+                .subscribe(this::handleGameState));
 
         // init game listener
         gameStorage.initPlayerListener();

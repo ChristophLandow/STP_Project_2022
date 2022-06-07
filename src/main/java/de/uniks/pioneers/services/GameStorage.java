@@ -67,8 +67,6 @@ public class GameStorage {
 
     public void setCurrentPlayers(List<String> playerIdS) {
         currentPlayers = players.values().stream().filter(player -> playerIdS.contains(player.userId())).toList();
-        assert currentPlayers != null;
-        System.out.println("Current players " + currentPlayers);
     }
 
     public List<Tile> getMap() {
