@@ -4,14 +4,16 @@ import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
-import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.StrokeType;
+
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -27,8 +29,12 @@ public class BuildingPointController {
     private String action;
     public HexTile tile;
 
+    //coordinates to be uploaded to the server as: x, y, z, side
+    public int[] uploadCoords = new int[4];
+
     public ArrayList<StreetPointController> streets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private Building building;
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
@@ -62,7 +68,7 @@ public class BuildingPointController {
     public void build() {
         // print info
         for(StreetPointController streetPointController : this.streets){
-            //streetPointController.mark();
+            streetPointController.mark();
         }
         System.out.println(tile);
 
@@ -73,8 +79,11 @@ public class BuildingPointController {
         } else {
             buildingType = "city";
         }
-
-        CreateBuildingDto newBuilding = new CreateBuildingDto(tile.q, tile.r, tile.s, 6, buildingType);
+        System.out.println(uploadCoords[0]);
+        System.out.println(uploadCoords[1]);
+        System.out.println(uploadCoords[2]);
+        System.out.println(uploadCoords[3]);
+        CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
@@ -90,31 +99,30 @@ public class BuildingPointController {
         this.view.setOnMouseExited(null);
     }
 
-    public void showBuilding(Building building) {
+    public void placeBuilding(Building building) {
         // create new settlement svg
         SVGPath settlementSVG = new SVGPath();
         settlementSVG.setContent(GameConstants.SETTLEMENT_SVG);
-        final Region svgShape = new Region();
-        svgShape.setShape(settlementSVG);
-        svgShape.setMinSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
-        svgShape.setPrefSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
-        svgShape.setMaxSize(GameConstants.HOUSE_WIDTH, GameConstants.HOUSE_HEIGHT);
-        svgShape.setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        settlementSVG.setFill(Color.WHITE);
+        settlementSVG.setStrokeWidth(1.5);
+        settlementSVG.setStrokeType(StrokeType.OUTSIDE);
 
         // set color of building
         disposable.add(ingameService.getPlayer(building.gameId(), building.owner())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(player -> {
-                    svgShape.setStyle("-fx-background-color: " + player.color());
+                    settlementSVG.setStroke(Paint.valueOf(player.color()));
                 }));
 
         // set position on game field
-        svgShape.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH/2);
-        svgShape.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT/2);
-        this.fieldpane.getChildren().add(svgShape);
+        settlementSVG.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH/1.2);
+        settlementSVG.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT);
+        this.fieldpane.getChildren().add(settlementSVG);
 
-        System.out.println("Placed on: " + svgShape.getLayoutX() + " " + svgShape.getLayoutY());
+        // set building of this controller
+        this.building = building;
+
+        System.out.println("Placed on: " + settlementSVG.getLayoutX() + " " + settlementSVG.getLayoutY());
     }
 
     private void info(MouseEvent mouseEvent){
@@ -148,5 +156,13 @@ public class BuildingPointController {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public String generateKeyString() {
+        return uploadCoords[0] + " " + uploadCoords[1] + " " + uploadCoords[2] + " " + uploadCoords[3];
+    }
+
+    public Building getBuilding() {
+        return building;
     }
 }

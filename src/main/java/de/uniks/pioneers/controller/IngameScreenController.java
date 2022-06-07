@@ -22,6 +22,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -117,6 +121,7 @@ public class IngameScreenController implements Controller {
     private final HashMap<String, StreetPointController> streetControllers = new HashMap<>();
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
+
     private final GameStorage gameStorage;
 
     @Inject
@@ -296,7 +301,7 @@ public class IngameScreenController implements Controller {
                 case FOUNDING_ROAD_1:
                 case FOUNDING_ROAD_2:
                     // enable road points
-                    for (StreetPointController controller : streetPointControllers) {
+                    for (StreetPointController controller : streetControllers) {
                         controller.init();
                     }
                     break;
@@ -329,10 +334,15 @@ public class IngameScreenController implements Controller {
         turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
     }
 
-    public void setPlayerColor(String hexColor) {
+    public void setPlayerColor(String hexColor)
+    {
         streetSVG.setFill(Paint.valueOf(hexColor));
-        houseSVG.setFill(Paint.valueOf(hexColor));
-        citySVG.setFill(Paint.valueOf(hexColor));
+        houseSVG.setFill(Color.WHITE);
+        houseSVG.setStroke(Paint.valueOf(hexColor));
+        houseSVG.setStrokeWidth(1.5);
+        citySVG.setFill(Color.WHITE);
+        citySVG.setStroke(Paint.valueOf(hexColor));
+        citySVG.setStrokeWidth(2.0);
     }
 
     public void giveUp(ActionEvent actionEvent) {
@@ -370,11 +380,9 @@ public class IngameScreenController implements Controller {
         // only for testing
         swapTurnSymbol();
     }
-
     @Override
     public void stop() {
     }
-
     public void setUsers(List<User> users) {
         this.users = users;
     }
@@ -415,14 +423,14 @@ public class IngameScreenController implements Controller {
             Image image = new Image(getClass().getResource("ingame/" + hexTile.type + ".png").toString());
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
-            hex.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2);
+            hex.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(hex);
 
             if (!hexTile.type.equals("desert")) {
                 String numberURL = "ingame/tile_" + hexTile.number + ".png";
                 ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
                 numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
-                numberImage.setLayoutY(hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
+                numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
                 numberImage.setFitHeight(30);
                 numberImage.setFitWidth(30);
                 this.fieldPane.getChildren().add(numberImage);
@@ -436,7 +444,7 @@ public class IngameScreenController implements Controller {
             circ.setFill(RED);
 
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(edge.y + this.fieldPane.getPrefHeight() / 2);
+            circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             StreetPointController streetPointController = streetPointControllerProvider.get();
             streetPointController.post(edge, circ);
@@ -451,22 +459,32 @@ public class IngameScreenController implements Controller {
             circ.setFill(RED);
 
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(corner.y + this.fieldPane.getPrefHeight() / 2);
+            circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane));
 
-            // put buildingPointControllers in Hashmap to access with coordinates
-            this.buildingPointControllerHashMap.put(
-                    corner.generateKeyString(),
-                    new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane)
-            );
         }
+        for(HexTileController tile : tileControllers){
 
-        for (HexTileController tile : tileControllers) {
-
-            tile.findEdges(this.streetPointControllers);
+            tile.findEdges(this.streetControllers);
             tile.findCorners(this.buildingControllers);
             tile.link();
+        }
+        for(BuildingPointController buildingPoint : this.buildingControllers){
+
+            // put buildingPointControllers in Hashmap to access with coordinates
+            this.buildingPointControllerHashMap.put(
+                    buildingPoint.generateKeyString(),
+                    buildingPoint);
+
+        }
+        for(StreetPointController streetPoint : this.streetControllers){
+
+            // put buildingPointControllers in Hashmap to access with coordinates
+            this.streetPointControllerHashMap.put(
+                    streetPoint.generateKeyString(),
+                    streetPoint);
+
         }
     }
 }

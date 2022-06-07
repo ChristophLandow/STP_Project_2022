@@ -32,6 +32,9 @@ public class StreetPointController {
     private Circle view;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
+    //coordinates to be uploaded to the server as: x, y, z, side
+    public int[] uploadCoords = new int[4];
+
     public ArrayList<BuildingPointController> buildings = new ArrayList<>();
     SimpleIntegerProperty side = new SimpleIntegerProperty();
 
@@ -137,8 +140,13 @@ public class StreetPointController {
         this.view.setFill(Color.rgb(255, 0, 0));
     }
 
+    public String generateKeyString() {
+        return uploadCoords[0] + " " + uploadCoords[1] + " " + uploadCoords[2] + " " + uploadCoords[3];
+    }
+
     public ArrayList<BuildingPointController> getBuildings() {
         return this.buildings;
     }
+
 
 }

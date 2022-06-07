@@ -53,6 +53,7 @@ public class EditProfileController implements Controller {
     @FXML public Text newPasswordStatusText;
     @FXML public Text oldPasswordStatusText;
     @FXML public Text avatarStatusText;
+    @FXML public Button cancelButton;
 
     private final App app;
     private final UserService userService;

@@ -90,7 +90,6 @@ public class NewGameScreenLobbyController implements Controller {
     private GameChatController gameChatController;
     private ColorPickerController colorPickerController;
     private boolean clientReady = false;
-
     @Inject
     Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject
@@ -117,6 +116,12 @@ public class NewGameScreenLobbyController implements Controller {
         clientUserNameLabel.setText(currentUser.name());
         colorPickerController = new ColorPickerController(colorPicker, houseSVG);
         this.reactivateReadyButton();
+
+        try {
+            clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
+        } catch (IllegalArgumentException | NullPointerException e) {
+            clientAvatar.setImage(new Image(Constants.DEFAULT_AVATAR));
+        }
 
         // set on close request ...
 

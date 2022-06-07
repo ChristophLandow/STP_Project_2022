@@ -199,7 +199,7 @@ class AsMember extends ApplicationTest {
         assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
 
 
-        verify(userService).getCurrentUser();
+        //verify(userService).getCurrentUser();
         //verify(newGameLobbyService).patchMember(anyString(),anyString(),anyBoolean(), anyString());
         verify(newGameLobbyService).getAll("3");
         verify(userService,times(2)).getUserById("1");

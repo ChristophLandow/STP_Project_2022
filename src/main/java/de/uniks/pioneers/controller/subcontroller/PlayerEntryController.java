@@ -33,7 +33,7 @@ public class PlayerEntryController implements Controller {
         this.playerEntry.setId(playerID);
         this.playerAvatar.setImage(playerAvatar);
         this.playerNameLabel.setText(playerName);
-        this.playerHouseSVG.setFill(Paint.valueOf(hexColor));
+        this.playerHouseSVG.setStroke(Paint.valueOf(hexColor));
         this.playerHouseSVG.setVisible(false);
         this.playerColor = hexColor;
         this.ready = false;
@@ -41,12 +41,10 @@ public class PlayerEntryController implements Controller {
 
     @Override
     public void init() {
-
     }
 
     @Override
     public void stop() {
-
     }
 
     @Override
@@ -78,7 +76,7 @@ public class PlayerEntryController implements Controller {
     }
 
     public void setColor(String hexColor) {
-        this.playerHouseSVG.setFill(Paint.valueOf(hexColor));
+        this.playerHouseSVG.setStroke(Paint.valueOf(hexColor));
         this.playerColor = hexColor;
     }
 
