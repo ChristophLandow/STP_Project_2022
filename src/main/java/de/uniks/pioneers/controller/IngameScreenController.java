@@ -41,6 +41,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
@@ -176,21 +177,13 @@ public class IngameScreenController implements Controller {
                 .subscribe(list -> {
                             list.forEach(player -> {
                                 gameStorage.players.put(player.userId(), player);
-                                gameStorage.findMe();
                                 IngamePlayerListElementController playerListElement = elementProvider.get();
                                 playerListElement.nodeListView=playerListView;
                                 playerListElement.render(player.userId());
-                            });
+                            }
+                            ); gameStorage.findMe();
                         }
                         , Throwable::printStackTrace));
-
-        // REST - get current game state
-        disposable.add(ingameService.getCurrentState(game.get()._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(state -> {
-                    System.out.println(state);
-                    handleGameState(state);
-                }));
 
 
         // add listener for observable buildings list
@@ -214,11 +207,18 @@ public class IngameScreenController implements Controller {
                         , Throwable::printStackTrace));
 
 
-        // init player listener in game storage
-        gameStorage.initPlayerListener();
+        // REST - get current game state
+        disposable.add(ingameService.getCurrentState(game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(state -> {
+                    System.out.println(state);
+                    handleGameState(state);
+                }));
+
         // init game listener
-        initGameListener();
+        gameStorage.initPlayerListener();
         initBuildingListener();
+        initGameListener();
     }
 
 
@@ -253,12 +253,14 @@ public class IngameScreenController implements Controller {
 
 
     private void renderBuilding(Building building) {
-        if (building.type() == "settlement" || building.type() == "city") {
+        System.out.println("gebäudetyp: " + building.type());
+        if (Objects.equals(building.type(), "settlement") || Objects.equals(building.type(), "city")) {
             // find corresponding buildingPointController
             String coords = building.x() + " " + building.y() + " " + building.z();
             BuildingPointController controller = buildingPointControllerHashMap.get(coords);
             controller.showBuilding(building);
         } else {
+            System.out.println("baue Straße");
             String coords = building.x() + " " + building.y() + " " + building.z();
             // find corresponding streetPointController
             StreetPointController controller = streetControllers.get(coords);
