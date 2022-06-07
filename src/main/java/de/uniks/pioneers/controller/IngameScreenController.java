@@ -441,8 +441,6 @@ public class IngameScreenController implements Controller {
             this.fieldPane.getChildren().add(circ);
             StreetPointController streetPointController = streetPointControllerProvider.get();
             streetPointController.post(edge, circ);
-            String keyString = edge.generateKeyString();
-            this.streetControllers.put(keyString, streetPointController);
             streetPointControllers.add(streetPointController);
         }
 

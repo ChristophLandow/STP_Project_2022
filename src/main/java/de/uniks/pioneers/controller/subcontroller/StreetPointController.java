@@ -59,13 +59,12 @@ public class StreetPointController {
     private void placeStreet(MouseEvent mouseEvent) {
         ExpectedMove move = gameStorage.currentState.expectedMoves().get(0);
 
-
         if (move.players().get(0).equals(gameStorage.me.userId())) {
             if ((move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2))) {
-                if (buildings.stream().anyMatch(c -> gameStorage.checkRoadSpot(c.tile.q, c.tile.r, c.tile.s))) {
+                if (buildings.stream().anyMatch(c -> gameStorage.checkRoadSpot(c.uploadCoords[0], c.uploadCoords[1], c.uploadCoords[2]))) {
                     System.out.println("baue straße von feld aus ");
-                    determineSide();
-                    CreateBuildingDto newBuilding = new CreateBuildingDto(tile.q, tile.r, tile.s, side.get(), "road");
+                    //determineSide();
+                    CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
                     disposable.add(ingameService.postMove(gameStorage.game.get()._id(), new CreateMoveDto(move.action(), newBuilding))
                             .observeOn(FX_SCHEDULER)
                             .subscribe());
@@ -103,6 +102,7 @@ public class StreetPointController {
         redMaterial.setDiffuseColor(Color.valueOf(gameStorage.currentPlayer.color()));
         redMaterial.setSpecularColor(Color.valueOf(gameStorage.currentPlayer.color()));
         box.setMaterial(redMaterial);*/
+
         System.out.println(" render road");
         Rectangle road =  new Rectangle(60,7, Paint.valueOf(gameStorage.me.color()));
         Scene scene = view.getScene();
@@ -130,7 +130,6 @@ public class StreetPointController {
             side.set(11);
         }
     }
-
 
     private void dye(MouseEvent mouseEvent) {
         this.view.setFill(Color.rgb(0, 255, 0));
