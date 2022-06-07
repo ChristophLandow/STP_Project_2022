@@ -178,7 +178,8 @@ public class IngameScreenController implements Controller {
                                 gameStorage.players.put(player.userId(), player);
                                 gameStorage.findMe();
                                 IngamePlayerListElementController playerListElement = elementProvider.get();
-                                playerListElement.render(playerListView, player.userId());
+                                playerListElement.nodeListView=playerListView;
+                                playerListElement.render(player.userId());
                             });
                         }
                         , Throwable::printStackTrace));
