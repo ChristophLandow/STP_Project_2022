@@ -34,37 +34,27 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class IngamePlayerListElementController {
 
-    @FXML
-    public HBox playerBox;
-    @FXML
-    public Circle playerColor;
-    @FXML
-    public ImageView playerAvatar;
-    @FXML
-    public SVGPath resourcesCards;
-    @FXML
-    public Label resourceCardsCount;
-    @FXML
-    public SVGPath developmentCards;
-    @FXML
-    public Label devolpmentCardsCount;
-    @FXML
-    public SVGPath cityImg;
-    @FXML
-    public Label cityCount;
-    @FXML
-    public SVGPath settlmentImg;
-    @FXML
-    public Label settlementCount;
+
 
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameStorage gameStorage;
     private final UserService userService;
     private final EventListener eventListener;
-    private Player toRender;
-    public ListView<Node> nodeListView;
     boolean online;
+    @FXML public HBox playerBox;
+    @FXML public Circle playerColor;
+    @FXML public ImageView playerAvatar;
+    @FXML public Label resourceCardsCount;
+    @FXML public ImageView resourceCards;
+    @FXML public Label devolopmentCardsCount;
+    @FXML public ImageView developmentCards;
+    @FXML public Label settlementCount;
+    @FXML public ImageView settlement;
+    @FXML public Label cityCount;
+    @FXML public ImageView city;
+    @FXML private Player toRender;
+    @FXML public ListView<Node> nodeListView;
 
 
     @Inject
@@ -91,7 +81,7 @@ public class IngamePlayerListElementController {
             e.printStackTrace();
         }
 
-        // set values to gui elements
+        // set valures to gui
         playerColor.setFill(Paint.valueOf(toRender.color()));
         disposable.add(userService.getUserById(toRender.userId())
                 .observeOn(FX_SCHEDULER)
@@ -102,6 +92,19 @@ public class IngamePlayerListElementController {
         );
 
         addPlayerListener();
+    }
+
+    private void setImages() {
+        // set values to gui elements
+        setImages();
+        Image resourceImage = new Image(getClass().getResource("/images/card_question_mark.png").toString());
+        resourceCards.setImage(resourceImage);
+        Image developmentImage = new Image(getClass().getResource("/images/card_hammer.png").toString());
+        developmentCards.setImage(developmentImage);
+        Image cityImage = new Image(getClass().getResource("/images/steine_3.png").toString());
+        city.setImage(cityImage);
+        Image settlementImage = new Image(getClass().getResource("/images/ruinsCorner.png").toString());
+        settlement.setImage(settlementImage);
     }
 
     private void addUserListener(String id) {
@@ -123,7 +126,7 @@ public class IngamePlayerListElementController {
                     })
             );
         }
-    }
+
 
     private void addPlayerListener() {
         // add listener for observable players list
@@ -143,7 +146,7 @@ public class IngamePlayerListElementController {
         Resources resources = valueAdded.resources();
         int resoureceCount = resources.brick()+ resources.grain()+ resources.ore()+ resources.lumber()+ resources.wool();
         resourceCardsCount.setText(String.valueOf(resoureceCount));
-        devolpmentCardsCount.setText(String.valueOf(resources.unknown()));
+        devolopmentCardsCount.setText(String.valueOf(resources.unknown()));
 
 
 
