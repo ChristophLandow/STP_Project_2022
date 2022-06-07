@@ -69,8 +69,6 @@ public class IngamePlayerListElementController {
     }
 
     public void render(String playerId) {
-        playerBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        toRender = gameStorage.players.get(playerId);
         Parent node;
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/IngamePlayerListElement.fxml"));
         loader.setControllerFactory(c -> this);
@@ -81,7 +79,11 @@ public class IngamePlayerListElementController {
             e.printStackTrace();
         }
 
+        toRender = gameStorage.players.get(playerId);
+        playerBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+
         // set valures to gui
+        setImages();
         playerColor.setFill(Paint.valueOf(toRender.color()));
         disposable.add(userService.getUserById(toRender.userId())
                 .observeOn(FX_SCHEDULER)
@@ -96,14 +98,13 @@ public class IngamePlayerListElementController {
 
     private void setImages() {
         // set values to gui elements
-        setImages();
-        Image resourceImage = new Image(getClass().getResource("/images/card_question_mark.png").toString());
+        Image resourceImage = new Image(getClass().getResource("images/card_question_mark.png").toString());
         resourceCards.setImage(resourceImage);
-        Image developmentImage = new Image(getClass().getResource("/images/card_hammer.png").toString());
+        Image developmentImage = new Image(getClass().getResource("images/card_hammer.png").toString());
         developmentCards.setImage(developmentImage);
-        Image cityImage = new Image(getClass().getResource("/images/steine_3.png").toString());
+        Image cityImage = new Image(getClass().getResource("images/steine_3.png").toString());
         city.setImage(cityImage);
-        Image settlementImage = new Image(getClass().getResource("/images/ruinsCorner.png").toString());
+        Image settlementImage = new Image(getClass().getResource("images/ruinsCorner.png").toString());
         settlement.setImage(settlementImage);
     }
 
