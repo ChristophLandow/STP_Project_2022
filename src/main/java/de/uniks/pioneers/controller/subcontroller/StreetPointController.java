@@ -78,7 +78,6 @@ public class StreetPointController {
         redMaterial.setDiffuseColor(Color.valueOf(gameStorage.currentPlayer.color()));
         redMaterial.setSpecularColor(Color.valueOf(gameStorage.currentPlayer.color()));
         box.setMaterial(redMaterial);*/
-        System.out.println("render road building ");
         Player player = gameStorage.players.get(building.owner());
         side.set(building.side());
         Rectangle road =  new Rectangle(60,7, Paint.valueOf(player.color()));
@@ -96,28 +95,6 @@ public class StreetPointController {
         }
     }
 
-
-    public void renderRoad() {
-        /*final PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.valueOf(gameStorage.currentPlayer.color()));
-        redMaterial.setSpecularColor(Color.valueOf(gameStorage.currentPlayer.color()));
-        box.setMaterial(redMaterial);*/
-
-        System.out.println(" render road");
-        Rectangle road =  new Rectangle(60,7, Paint.valueOf(gameStorage.me.color()));
-        Scene scene = view.getScene();
-        Pane root = (Pane) scene.getRoot();
-        root.getChildren().add(road);
-        road.setLayoutX(view.getLayoutX()-14);
-        road.setLayoutY(view.getLayoutY()+12);
-        if (side.get() == 3) {
-            road.setRotate(90);
-        } else if (side.get() == 7) {
-            road.setRotate(30);
-        }else {
-            road.setRotate(-30);
-        }
-    }
 
     private void determineSide() {
         BuildingPointController neighbor = buildings.get(0);

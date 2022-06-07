@@ -182,12 +182,13 @@ public class IngameScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                             list.forEach(player -> {
-                                gameStorage.players.put(player.userId(), player);
-                                IngamePlayerListElementController playerListElement = elementProvider.get();
-                                playerListElement.nodeListView=playerListView;
-                                playerListElement.render(player.userId());
-                            }
-                            ); gameStorage.findMe();
+                                        gameStorage.players.put(player.userId(), player);
+                                        IngamePlayerListElementController playerListElement = elementProvider.get();
+                                        playerListElement.nodeListView = playerListView;
+                                        playerListElement.render(player.userId());
+                                    }
+                            );
+                            gameStorage.findMe();
                         }
                         , Throwable::printStackTrace));
 
@@ -208,7 +209,6 @@ public class IngameScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                             gameStorage.buildings.setAll(list);
-                            System.out.println(" Es gibt soviele Gebäude " + gameStorage.buildings.size());
                         }
                         , Throwable::printStackTrace));
 
@@ -262,12 +262,11 @@ public class IngameScreenController implements Controller {
         System.out.println("gebäudetyp: " + building.type());
         if (Objects.equals(building.type(), "settlement") || Objects.equals(building.type(), "city")) {
             // find corresponding buildingPointController
-            String coords = building.x() + " " + building.y() + " " + building.z();
+            String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
             BuildingPointController controller = buildingPointControllerHashMap.get(coords);
             controller.placeBuilding(building);
         } else {
-            System.out.println("baue Straße");
-            String coords = building.x() + " " + building.y() + " " + building.z();
+            String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
             // find corresponding streetPointController
             StreetPointController controller = streetControllers.get(coords);
             controller.renderRoad(building);
@@ -327,8 +326,7 @@ public class IngameScreenController implements Controller {
         turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
     }
 
-    public void setPlayerColor(String hexColor)
-    {
+    public void setPlayerColor(String hexColor) {
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Color.WHITE);
         houseSVG.setStroke(Paint.valueOf(hexColor));
@@ -373,9 +371,11 @@ public class IngameScreenController implements Controller {
         // only for testing
         swapTurnSymbol();
     }
+
     @Override
     public void stop() {
     }
+
     public void setUsers(List<User> users) {
         this.users = users;
     }
@@ -455,22 +455,22 @@ public class IngameScreenController implements Controller {
             this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane));
 
         }
-        for(HexTileController tile : tileControllers){
+        for (HexTileController tile : tileControllers) {
 
             tile.findEdges(this.streetPointControllers);
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
-        for(BuildingPointController buildingPoint : this.buildingControllers){
+        for (BuildingPointController buildingPoint : this.buildingControllers) {
 
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),
                     buildingPoint);
-
         }
-        for(StreetPointController streetPoint : this.streetPointControllers){
 
+        for (StreetPointController streetPoint : this.streetPointControllers) {
+            System.out.println(streetPoint.generateKeyString());
             // put buildingPointControllers in Hashmap to access with coordinates
             this.streetControllers.put(
                     streetPoint.generateKeyString(),

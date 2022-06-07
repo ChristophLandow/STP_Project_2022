@@ -70,7 +70,6 @@ public class BuildingPointController {
         for(StreetPointController streetPointController : this.streets){
             //streetPointController.mark();
         }
-        System.out.println(tile);
 
         // post build move
         String buildingType;
@@ -79,10 +78,7 @@ public class BuildingPointController {
         } else {
             buildingType = "city";
         }
-        System.out.println(uploadCoords[0]);
-        System.out.println(uploadCoords[1]);
-        System.out.println(uploadCoords[2]);
-        System.out.println(uploadCoords[3]);
+
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
@@ -122,7 +118,6 @@ public class BuildingPointController {
         // set building of this controller
         this.building = building;
 
-        System.out.println("Placed on: " + settlementSVG.getLayoutX() + " " + settlementSVG.getLayoutY());
     }
 
     private void info(MouseEvent mouseEvent){
