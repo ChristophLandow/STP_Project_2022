@@ -10,6 +10,7 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -172,12 +173,12 @@ public class IngameScreenController implements Controller {
 
         // add change listeners
         // players change listener
-        gameService.currentPlayers.addListener((ListChangeListener<? super Player>) c -> {
-            c.next();
+        gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if (c.wasAdded()) {
-                c.getAddedSubList().forEach(this::renderPlayer);
+                System.out.println("Player was added!");
+                this.renderPlayer(c.getValueAdded());
             } else if (c.wasRemoved()) {
-                c.getRemoved().forEach(this::deletePlayer);
+                this.deletePlayer(c.getValueRemoved());
             }
         });
 
