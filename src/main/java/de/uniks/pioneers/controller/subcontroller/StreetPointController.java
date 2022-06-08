@@ -48,7 +48,6 @@ public class StreetPointController {
     public void post(HexTile tile, Circle view) {
         this.tile = tile;
         this.view = view;
-        // init();
     }
 
     public void init() {

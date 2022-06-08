@@ -205,13 +205,12 @@ public class IngameScreenController implements Controller {
 
     private void renderBuilding(Building building) {
         System.out.println("building type: " + building.type());
+        String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
         if (Objects.equals(building.type(), "settlement") || Objects.equals(building.type(), "city")) {
             // find corresponding buildingPointController
-            String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
             BuildingPointController controller = buildingPointControllerHashMap.get(coords);
             controller.placeBuilding(building);
         } else {
-            String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
             // find corresponding streetPointController
             StreetPointController controller = streetPointControllerHashMap.get(coords);
             controller.renderRoad(building);
@@ -224,6 +223,15 @@ public class IngameScreenController implements Controller {
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
+
+        // set game state label
+        String playerName;
+        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            playerName = "ME";
+        } else {
+            playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
+        }
+        this.situationLabel.setText(playerName + ": " + move.action());
 
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
