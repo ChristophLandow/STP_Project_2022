@@ -231,7 +231,7 @@ public class IngameScreenController implements Controller {
         } else {
             playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
         }
-        this.situationLabel.setText(playerName + ": " + move.action());
+        this.situationLabel.setText(playerName + ":\n" + move.action());
 
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
