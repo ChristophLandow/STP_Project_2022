@@ -12,10 +12,15 @@ import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -37,9 +42,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
@@ -47,31 +54,57 @@ import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameScreenController implements Controller {
-    @FXML public Pane turnPane;
-    @FXML public SVGPath streetSVG;
-    @FXML public SVGPath houseSVG;
-    @FXML public SVGPath citySVG;
-    @FXML public Button rulesButton;
-    @FXML public Pane fieldPane;
-    @FXML public Button giveUpButton;
-    @FXML public Button settingsButton;
-    @FXML public ScrollPane chatScrollPane;
-    @FXML public VBox messageVBox;
-    @FXML public TextField sendMessageField;
-    @FXML public ScrollPane userScrollPane;
-    @FXML public VBox userVBox;
-    @FXML public Label streetCountLabel;
-    @FXML public Label houseCountLabel;
-    @FXML public Label cityCountLabel;
-    @FXML public ImageView tradeImageView;
-    @FXML public ImageView hourglassImageView;
-    @FXML public ImageView nextTurnImageView;
-    @FXML public Label timeLabel;
-    @FXML public Pane situationPane;
-    @FXML public Label situationLabel;
-    @FXML public ImageView leftDiceImageView;
-    @FXML public ImageView rightDiceImageView;
-    @FXML public ImageView hammerImageView;
+    @FXML
+    public Pane turnPane;
+    @FXML
+    public SVGPath streetSVG;
+    @FXML
+    public SVGPath houseSVG;
+    @FXML
+    public SVGPath citySVG;
+    @FXML
+    public Button rulesButton;
+    @FXML
+    public Pane fieldPane;
+    @FXML
+    public Button giveUpButton;
+    @FXML
+    public Button settingsButton;
+    @FXML
+    public ScrollPane chatScrollPane;
+    @FXML
+    public VBox messageVBox;
+    @FXML
+    public TextField sendMessageField;
+    @FXML
+    public ScrollPane userScrollPane;
+    @FXML
+    public Label streetCountLabel;
+    @FXML
+    public Label houseCountLabel;
+    @FXML
+    public Label cityCountLabel;
+    @FXML
+    public ImageView tradeImageView;
+    @FXML
+    public ImageView hourglassImageView;
+    @FXML
+    public ImageView nextTurnImageView;
+    @FXML
+    public Label timeLabel;
+    @FXML
+    public Pane situationPane;
+    @FXML
+    public Label situationLabel;
+    @FXML
+    public ImageView leftDiceImageView;
+    @FXML
+    public ImageView rightDiceImageView;
+    @FXML
+    public ImageView hammerImageView;
+    @FXML
+    public ListView<Node> playerListView;
+
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
@@ -80,41 +113,47 @@ public class IngameScreenController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
-    private final UserService userService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
-    private final ArrayList<StreetPointController> streetControllers = new ArrayList<>();
-    private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
+
+    private final EventListener eventListener;
+
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
-    private final EventListener eventListener;
+    private final HashMap<String, StreetPointController> streetControllers = new HashMap<>();
+    private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final GameStorage gameStorage;
+
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
+    @Inject
+    Provider<StreetPointController> streetPointControllerProvider;
+    @Inject
+    Provider<IngamePlayerListElementController> elementProvider;
+
 
     @Inject
     public IngameScreenController(App app,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
-                                  IngameService ingameService, UserService userService,
-                                  GameStorage gameStorage,
+                                  IngameService ingameService, GameStorage gameStorage,
                                   EventListener eventListener) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
         this.ingameService = ingameService;
-        this.userService = userService;
         this.gameStorage = gameStorage;
         this.eventListener = eventListener;
     }
+
     @Override
     public Parent render() {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/IngameScreen.fxml"));
-        loader.setControllerFactory(c->this);
+        loader.setControllerFactory(c -> this);
         final Parent view;
         try {
-            view =  loader.load();
+            view = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -124,7 +163,9 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void init() {
+        // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
+        gameStorage.game.set(game.get());
 
         // init game chat controller
         GameChatController gameChatController = gameChatControllerProvider.get()
@@ -136,17 +177,51 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        // get current game state
+        // REST - get list of all players from server and set current player
+        disposable.add(ingameService.getAllPlayers(game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(list -> {
+                            list.forEach(player -> {
+                                        gameStorage.players.put(player.userId(), player);
+                                        IngamePlayerListElementController playerListElement = elementProvider.get();
+                                        playerListElement.nodeListView = playerListView;
+                                        playerListElement.render(player.userId());
+                                    }
+                            );
+                            gameStorage.findMe();
+                        }
+                        , Throwable::printStackTrace));
+
+
+        // add listener for observable buildings list
+        gameStorage.buildings.addListener((ListChangeListener<? super Building>) c -> {
+            c.next();
+            if (c.wasAdded()) {
+                c.getAddedSubList().forEach(this::renderBuilding);
+            } else if (c.wasRemoved()) {
+                c.getRemoved().forEach(this::deleteBuilding);
+            }
+        });
+
+
+        // Rest - get list of all buildings from server
+        disposable.add(ingameService.getAllBuildings(game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(gameStorage.buildings::setAll
+                        , Throwable::printStackTrace));
+
+
+        // REST - get current game state
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(state -> {
-                    System.out.println(state);
-                    handleGameState(state);
-                }));
+                .subscribe(this::handleGameState));
 
         // init game listener
+        gameStorage.initPlayerListener();
+        initBuildingListener();
         initGameListener();
     }
+
 
     private void initGameListener() {
         // add game state listener
@@ -160,36 +235,50 @@ public class IngameScreenController implements Controller {
                     }
                 })
         );
+    }
 
-        // TODO: add building listener
+    private void initBuildingListener() {
+        // add buildingListener
         String patternToObserveBuildings = String.format("games.%s.buildings.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveBuildings, Building.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(buildingEvent -> {
+                    final Building building = buildingEvent.data();
                     if (buildingEvent.event().endsWith(".created")) {
                         // render new building
                         System.out.println("new Building created: " + buildingEvent.data());
-                        final Building building = buildingEvent.data();
-                        renderBuilding(building);
+                        gameStorage.buildings.add(building);
                     }
                 }));
     }
 
-    private void renderBuilding(Building building) {
-        // find corresponding buildingPointController
-        String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
-        BuildingPointController controller = buildingPointControllerHashMap.get(coords);
 
-        System.out.println(coords);
-        // set building on controller view
-        controller.placeBuilding(building);
+    private void renderBuilding(Building building) {
+        System.out.println("gebäudetyp: " + building.type());
+        if (Objects.equals(building.type(), "settlement") || Objects.equals(building.type(), "city")) {
+            // find corresponding buildingPointController
+            String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
+            BuildingPointController controller = buildingPointControllerHashMap.get(coords);
+            controller.placeBuilding(building);
+        } else {
+            String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
+            // find corresponding streetPointController
+            StreetPointController controller = streetControllers.get(coords);
+            controller.renderRoad(building);
+        }
+    }
+
+    private void deleteBuilding(Building building) {
     }
 
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
+        // update gameState in gameStorage
+        gameStorage.currentState = currentState;
+        gameStorage.setCurrentPlayers(move.players());
 
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+        if (move.players().get(0).equals(gameStorage.me.userId())) {
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
@@ -204,15 +293,7 @@ public class IngameScreenController implements Controller {
                         controller.setAction(move.action());
                     }
                     break;
-                case FOUNDING_ROAD_1:
-                case FOUNDING_ROAD_2:
-                    // enable road points
-                    for (StreetPointController controller : streetControllers) {
-                        controller.init();
-                    }
-                    break;
             }
-
         }
     }
 
@@ -230,7 +311,7 @@ public class IngameScreenController implements Controller {
                 }));
     }
 
-    public App getApp(){
+    public App getApp() {
         return this.app;
     }
 
@@ -240,8 +321,7 @@ public class IngameScreenController implements Controller {
         turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
     }
 
-    public void setPlayerColor(String hexColor)
-    {
+    public void setPlayerColor(String hexColor) {
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Color.WHITE);
         houseSVG.setStroke(Paint.valueOf(hexColor));
@@ -286,24 +366,30 @@ public class IngameScreenController implements Controller {
         // only for testing
         swapTurnSymbol();
     }
+
     @Override
     public void stop() {
     }
+
     public void setUsers(List<User> users) {
         this.users = users;
     }
 
-    public void loadMap(){
+    public void loadMap() {
 
-        if(this.game.get().members() > 4){this.gameSize = 3;}
-        else{this.gameSize = 2;}
+        if (this.game.get().members() > 4) {
+            this.gameSize = 3;
+        } else {
+            this.gameSize = 2;
+        }
 
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnComplete(this::buildBoardUI)
                 .subscribe();
     }
-    private void buildBoardUI(){
+
+    private void buildBoardUI() {
 
         BoardGenerator generator = new BoardGenerator();
         List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
@@ -328,7 +414,7 @@ public class IngameScreenController implements Controller {
             hex.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(hex);
 
-            if(!hexTile.type.equals("desert")){
+            if (!hexTile.type.equals("desert")) {
                 String numberURL = "ingame/tile_" + hexTile.number + ".png";
                 ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
                 numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
@@ -348,7 +434,9 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.streetControllers.add(new StreetPointController(edge, circ));
+            StreetPointController streetPointController = streetPointControllerProvider.get();
+            streetPointController.post(edge, circ);
+            streetPointControllers.add(streetPointController);
         }
 
         for (HexTile corner : corners) {
@@ -362,24 +450,24 @@ public class IngameScreenController implements Controller {
             this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane));
 
         }
-        for(HexTileController tile : tileControllers){
+        for (HexTileController tile : tileControllers) {
 
-            tile.findEdges(this.streetControllers);
+            tile.findEdges(this.streetPointControllers);
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
-        for(BuildingPointController buildingPoint : this.buildingControllers){
+        for (BuildingPointController buildingPoint : this.buildingControllers) {
 
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),
                     buildingPoint);
-
         }
-        for(StreetPointController streetPoint : this.streetControllers){
 
+        for (StreetPointController streetPoint : this.streetPointControllers) {
+            System.out.println(streetPoint.generateKeyString());
             // put buildingPointControllers in Hashmap to access with coordinates
-            this.streetPointControllerHashMap.put(
+            this.streetControllers.put(
                     streetPoint.generateKeyString(),
                     streetPoint);
 

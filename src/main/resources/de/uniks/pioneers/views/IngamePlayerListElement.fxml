@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+
+<HBox fx:id="playerBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="230.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerListElementController">
+   <children>
+      <Circle fx:id="playerColor" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
+      <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <HBox.margin>
+            <Insets left="-10.0" />
+         </HBox.margin>
+      </ImageView>
+      <Label fx:id="resourceCardsCount" text="4" textFill="#fc0808" translateX="-5.0" translateY="15.0" />
+      <ImageView fx:id="resourceCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="3.0" scaleY="3.0" translateX="-30.0">
+         <image>
+            <Image url="@../../../../../../../../../../Desktop/card_question_mark.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="devolopmentCardsCount" text="2" textFill="#fc0808" translateX="-40.0" translateY="15.0" />
+      <ImageView fx:id="developmentCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="3.0" scaleY="3.0" translateX="-70.0" translateY="2.0">
+         <image>
+            <Image url="@../../../../../../../../../../Desktop/card_hammer.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="settlementCount" text="4" textFill="#fc0808" translateX="-35.0" translateY="15.0" />
+      <ImageView fx:id="city" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleY="1.5" translateX="-110.0">
+         <image>
+            <Image url="@../../../../../../../../../../Desktop/steine_3.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="cityCount" text="3" textFill="#fc0808" translateX="-150.0" translateY="15.0" />
+      <ImageView fx:id="settlement" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="-150.0">
+         <image>
+            <Image url="@../../../../../../../../../../Desktop/ruinsCorner.png" />
+         </image>
+      </ImageView>
+   </children>
+   <padding>
+      <Insets left="5.0" />
+   </padding>
+</HBox>

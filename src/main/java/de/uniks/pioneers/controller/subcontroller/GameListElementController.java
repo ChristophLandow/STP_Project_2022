@@ -38,9 +38,7 @@ public class GameListElementController implements Controller {
     public Label memberCount;
 
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    private final Provider<LobbyService> lobbyServiceProvider;
     private final Provider<GameListDropDownController> gameListDropDownControllerProvider;
-    private final Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
 
     public SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
@@ -53,11 +51,9 @@ public class GameListElementController implements Controller {
                                      Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
                                      Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        this.lobbyServiceProvider = lobbyServiceProvider;
         this.gameListDropDownControllerProvider = gameListDropDownControllerProvider;
-        this.newGameScreenLobbyControllerProvider = newGameScreenLobbyControllerProvider;
         this.newGameLobbyServiceProvider = newGameLobbyServiceProvider;
-        this.game.addListener((ChangeListener) (game, oldVal, newVal) -> setDataToGameListElement());
+        this.game.addListener((game, oldVal, newVal) -> setDataToGameListElement());
     }
 
     @Override
@@ -148,6 +144,7 @@ public class GameListElementController implements Controller {
             String toolTipTxt = String.format("Created by: %s  id: %s", "unknown", game.get()._id());
             tt.setText(toolTipTxt);
         }
+
         // style not final
         tt.setStyle("-fx-font: normal bold 4 Langdon; "
                 + "-fx-base: #AE3522; "
