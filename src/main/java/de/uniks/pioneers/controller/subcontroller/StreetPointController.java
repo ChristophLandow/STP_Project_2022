@@ -5,10 +5,12 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.model.Player;
+import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -26,26 +28,26 @@ import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_2;
 
 public class StreetPointController {
 
-    private final GameStorage gameStorage;
+    private final GameService gameService;
     private final IngameService ingameService;
     public HexTile tile;
     private Circle view;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    //coordinates to be uploaded to the server as: x, y, z, side
+    // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
     public ArrayList<BuildingPointController> buildings = new ArrayList<>();
     SimpleIntegerProperty side = new SimpleIntegerProperty();
+    private String action;
 
     @Inject
-    public StreetPointController(GameStorage gameStorage, IngameService ingameService) {
-        this.gameStorage = gameStorage;
+    public StreetPointController(GameService gameService, IngameService ingameService) {
+        this.gameService = gameService;
         this.ingameService = ingameService;
     }
 
     public void post(HexTile tile, Circle view) {
         this.tile = tile;
         this.view = view;
-        init();
     }
 
     public void init() {
@@ -54,35 +56,32 @@ public class StreetPointController {
         this.view.setOnMouseExited(this::undye);
     }
 
-    private void placeStreet(MouseEvent mouseEvent) {
-        ExpectedMove move = gameStorage.currentState.expectedMoves().get(0);
-
-        if (move.players().get(0).equals(gameStorage.me.userId())) {
-            if ((move.action().equals(FOUNDING_ROAD_1) || move.action().equals(FOUNDING_ROAD_2))) {
-                if (buildings.stream().anyMatch(c -> gameStorage.checkRoadSpot(c.uploadCoords[0], c.uploadCoords[1], c.uploadCoords[2]))) {
-                    System.out.println("baue straße von feld aus ");
-                    System.out.println(uploadCoords[0]);
-                    System.out.println(uploadCoords[1]);
-                    System.out.println(uploadCoords[2]);
-                    System.out.println(uploadCoords[3]);
-                    System.out.println(gameStorage.game.get()._id());
-                    System.out.println(move.action());
-                    //determineSide();
-                    CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
-                    disposable.add(ingameService.postMove(gameStorage.game.get()._id(), new CreateMoveDto(move.action(), newBuilding))
-                            .observeOn(FX_SCHEDULER)
-                            .subscribe());
-                }
-            }
+    public void placeStreet(MouseEvent mouseEvent) {
+        if (buildings.stream().anyMatch(c -> gameService.checkRoadSpot(c.uploadCoords[0], c.uploadCoords[1], c.uploadCoords[2]))) {
+            System.out.println("baue straße von feld aus ");
+            System.out.println(uploadCoords[0]);
+            System.out.println(uploadCoords[1]);
+            System.out.println(uploadCoords[2]);
+            System.out.println(uploadCoords[3]);
+            //determineSide();
+            CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
+            disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(move -> {
+                        Pane fieldPane = (Pane) this.view.getScene().getRoot().lookup("#fieldPane");
+                        fieldPane.getChildren().forEach(this::reset);
+                    }));
         }
     }
 
+    private void reset(Node node) {
+        node.setOnMouseClicked(null);
+        node.setOnMouseEntered(null);
+        node.setOnMouseExited(null);
+    }
+
     public void renderRoad(Building building) {
-        /*final PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.valueOf(gameStorage.currentPlayer.color()));
-        redMaterial.setSpecularColor(Color.valueOf(gameStorage.currentPlayer.color()));
-        box.setMaterial(redMaterial);*/
-        Player player = gameStorage.players.get(building.owner());
+        Player player = gameService.players.get(building.owner());
         side.set(building.side());
         Rectangle road =  new Rectangle(60,7, Paint.valueOf(player.color()));
         Scene scene = view.getScene();
@@ -129,4 +128,7 @@ public class StreetPointController {
     }
 
 
+    public void setAction(String action) {
+        this.action = action;
+    }
 }
