@@ -226,16 +226,22 @@ public class IngameScreenController implements Controller {
 
         // set game state label
         String playerName;
+        // if this user is current player
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             playerName = "ME";
+            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/next.png")).toString()));
         } else {
             playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
+            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/sanduhr.png")).toString()));
         }
         this.situationLabel.setText(playerName + ":\n" + move.action());
 
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
+
+            // TODO: show end turn button
+
             switch (move.action()) {
                 case FOUNDING_ROLL:
                     this.enableFoundingRoll();
