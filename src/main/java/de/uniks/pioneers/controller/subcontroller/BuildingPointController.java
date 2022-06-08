@@ -6,6 +6,8 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -15,6 +17,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -22,15 +25,15 @@ import static de.uniks.pioneers.GameConstants.*;
 
 
 public class BuildingPointController {
-    private Pane fieldpane;
-    private Circle view;
+    private final Pane fieldpane;
+    private final Circle view;
     private final IngameService ingameService;
     private final String gameId;
     private String action;
     public HexTile tile;
 
 
-    //coordinates to be uploaded to the server as: x, y, z, side
+    // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
 
     public ArrayList<StreetPointController> streets = new ArrayList<>();
@@ -67,11 +70,6 @@ public class BuildingPointController {
     }
 
     public void build() {
-        // print info
-        for (StreetPointController streetPointController : this.streets) {
-            //streetPointController.mark();
-        }
-
         // post build move
         String buildingType;
         if (this.action.contains("settlement")) {
@@ -84,15 +82,15 @@ public class BuildingPointController {
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
-                    this.reset();
+                    this.fieldpane.getChildren().forEach(this::reset);
                 }));
 
     }
 
-    public void reset() {
-        this.view.setOnMouseClicked(null);
-        this.view.setOnMouseEntered(null);
-        this.view.setOnMouseExited(null);
+    private void reset(Node node) {
+        node.setOnMouseClicked(null);
+        node.setOnMouseEntered(null);
+        node.setOnMouseExited(null);
     }
 
     public void placeBuilding(Building building) {

@@ -10,6 +10,7 @@ import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -32,7 +33,7 @@ public class StreetPointController {
     public HexTile tile;
     private Circle view;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    //coordinates to be uploaded to the server as: x, y, z, side
+    // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
     public ArrayList<BuildingPointController> buildings = new ArrayList<>();
     SimpleIntegerProperty side = new SimpleIntegerProperty();
@@ -68,15 +69,16 @@ public class StreetPointController {
             disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
                     .observeOn(FX_SCHEDULER)
                     .subscribe(move -> {
-                        this.reset();
+                        Pane fieldPane = (Pane) this.view.getScene().getRoot().lookup("#fieldPane");
+                        fieldPane.getChildren().forEach(this::reset);
                     }));
         }
     }
 
-    private void reset() {
-        this.view.setOnMouseClicked(null);
-        this.view.setOnMouseEntered(null);
-        this.view.setOnMouseExited(null);
+    private void reset(Node node) {
+        node.setOnMouseClicked(null);
+        node.setOnMouseEntered(null);
+        node.setOnMouseExited(null);
     }
 
     public void renderRoad(Building building) {
