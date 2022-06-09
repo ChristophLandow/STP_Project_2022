@@ -30,7 +30,7 @@ public class EventListener {
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
-        System.out.println(this);
+
         this.tokenStorage = tokenStorage;
         this.mapper = mapper;
         toUri.set(BASE_URL_WSS + WS_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getAccessToken());

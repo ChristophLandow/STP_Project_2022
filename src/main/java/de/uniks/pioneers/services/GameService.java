@@ -70,7 +70,6 @@ public class GameService {
 
         // init buildings listener
         String patternToObserveBuildings = String.format("games.%s.buildings.*.*", game.get()._id());
-        System.out.println(patternToObserveBuildings);
         disposable.add(eventListener.listen(patternToObserveBuildings, Building.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(buildingEvent -> {
@@ -85,7 +84,6 @@ public class GameService {
 
     private void initPlayerListener() {
         String patternToObservePlayers = String.format("games.%s.players.*", game.get()._id());
-        System.out.println(patternToObservePlayers);
         disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
@@ -103,7 +101,6 @@ public class GameService {
     public void findMe() {
         me = players.get(userService.getCurrentUser()._id());
         assert me != null;
-        System.out.println("Player id " + me.userId());
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {

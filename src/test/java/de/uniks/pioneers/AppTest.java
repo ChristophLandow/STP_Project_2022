@@ -1,27 +1,17 @@
 package de.uniks.pioneers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.model.Member;
-import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.TokenStorage;
-import de.uniks.pioneers.ws.EventListener;
-import de.uniks.pioneers.ws.EventListener_Factory;
-import io.reactivex.rxjava3.subjects.PublishSubject;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 
 @ExtendWith(MockitoExtension.class)
