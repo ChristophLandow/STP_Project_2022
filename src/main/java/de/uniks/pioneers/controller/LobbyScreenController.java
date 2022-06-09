@@ -23,12 +23,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
-
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 

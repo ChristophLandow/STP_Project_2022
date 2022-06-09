@@ -85,6 +85,7 @@ test {
         showStackTraces = true
     }
 
+
     systemProperties = [
             'java.awt.headless': 'true',
             'testfx.robot'     : 'glass',
