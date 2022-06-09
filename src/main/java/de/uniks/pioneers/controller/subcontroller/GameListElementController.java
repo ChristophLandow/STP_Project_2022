@@ -89,7 +89,7 @@ public class GameListElementController implements Controller {
         String createdAt = game.get().createdAt();
         int start = createdAt.indexOf("T");
         int end = createdAt.indexOf(".");
-        String time = game.get().createdAt().substring(start + 1, end) + " :";
+        String time = game.get().createdAt().substring(5, end) + " :";
         creationTime.setText(time);
         // set game title to title label
         title.setText(game.get().name());

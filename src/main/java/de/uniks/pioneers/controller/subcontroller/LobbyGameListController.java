@@ -85,13 +85,24 @@ public class LobbyGameListController {
     }
 
     private boolean checkDate(Game game) {
-        String createdAT = game.createdAt();
-
-        "2022-06-09T18:40:27.214Z"
-
+        // get date from somewhere
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
-        System.out.println(dtf.format(now));
+        String today = dtf.format(now);
+        LocalDateTime nowMinusOneDay = LocalDateTime.now().minusDays(1);
+        String yesterday = dtf.format(nowMinusOneDay);
+
+        //get date from game
+        String createdAt = game.createdAt();
+        int end = createdAt.indexOf("T");
+        String date = game.createdAt().substring(0, end);
+
+        // is game from today or yesterday
+        if (today.equals(date) || yesterday.equals(date)){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     private void renderGame(Game game) {
