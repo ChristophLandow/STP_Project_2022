@@ -123,6 +123,7 @@ public class IngamePlayerListElementController {
     // have to fix style
     private void addUserListener(String id) {
         String patternToObserveUser = String.format("users.%s.updated", id);
+        System.out.println(patternToObserveUser);
         disposable.add(eventListener.listen(patternToObserveUser, User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {

@@ -11,8 +11,10 @@ import de.uniks.pioneers.rest.*;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.TokenStorage;
+import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -22,11 +24,13 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
-
 import static de.uniks.pioneers.Constants.*;
+import static org.mockito.Mockito.*;
 
 @Module
 public class TestModule {
+
+    public static PublishSubject gameMemberSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -82,6 +86,29 @@ public class TestModule {
                     .build();
             return chain.proceed(newRequest);
         }).build();
+    }
+
+    @Provides
+    @Singleton
+    static EventListener eventListener(){
+
+        EventListener eventListener = mock(EventListener.class);
+
+        when(eventListener.listen("users.*.*", User.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.*.*", Game.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.members.*.*", Member.class)).thenReturn(gameMemberSubject);
+        when(eventListener.listen("games.000.*", Game.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
+
+        when(eventListener.listen("users.000.updated", User.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("users.001.updated", User.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("users.002.updated", User.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("users.003.updated", User.class)).thenReturn(PublishSubject.create());
+
+
+
+        return eventListener;
+
     }
     @Provides
     @Singleton
@@ -239,10 +266,10 @@ public class TestModule {
             public Observable<List<Member>> getAll(String gameId) {
 
                 ArrayList<Member> users = new ArrayList<>();
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",true, "#00ff00"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"002",true, "#0000ff"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"003",true, "#ffffff"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false, "#00ff00"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"002",false, "#0000ff"));
+                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"003",false, "#ffffff"));
                 return Observable.just(users);
             }
 
@@ -305,8 +332,6 @@ public class TestModule {
             }
         };
     }
-
-
 
     @Provides
     @Singleton

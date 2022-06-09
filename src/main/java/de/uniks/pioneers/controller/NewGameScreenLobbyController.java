@@ -207,6 +207,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
     private void initUserListener(User user) {
         String patternToObserveGameUsers = String.format("users.%s.updated", user._id());
+        System.out.println(patternToObserveGameUsers);
         disposable.add(eventListener.listen(patternToObserveGameUsers, User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
@@ -221,6 +222,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     private void initMemberListener() {
         String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
+        System.out.println(patternToObserveGameMembers);
         disposable.add(eventListener.listen(patternToObserveGameMembers, Member.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(memberEvent -> {
@@ -238,6 +240,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     private void initGameListener(){
         String patternToObserveGame= String.format("games.%s.*", game.get()._id());
+        System.out.println(patternToObserveGame);
         disposable.add(eventListener.listen(patternToObserveGame, Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {

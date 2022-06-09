@@ -1,27 +1,30 @@
 package de.uniks.pioneers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.uniks.pioneers.dto.Event;
+import de.uniks.pioneers.model.Member;
+import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.TokenStorage;
+import de.uniks.pioneers.ws.EventListener;
+import de.uniks.pioneers.ws.EventListener_Factory;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxAssert;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
-import org.testfx.util.WaitForAsyncUtils;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 
-
+@ExtendWith(MockitoExtension.class)
 class AppTest extends ApplicationTest {
 
     @Override
@@ -31,7 +34,6 @@ class AppTest extends ApplicationTest {
         MainComponent testComponent = DaggerTestComponent.builder().mainApp(app).build();
         app.start(stage);
         app.show(testComponent.loginController());
-
     }
 
     @Test
@@ -65,7 +67,6 @@ class AppTest extends ApplicationTest {
         //LobbyScreen
         write("\t\t");
         type(KeyCode.ENTER);
-
         clickOn("#gameNameTextField");
         write("TestGame\t");
         verifyThat("#gameNameTextField", TextInputControlMatchers.hasText("TestGame"));
@@ -75,10 +76,9 @@ class AppTest extends ApplicationTest {
         //NewGameLobbyScreen
         verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame"));
         verifyThat("#passwordLabel", LabeledMatchers.hasText("12345678"));
-        write("Test\t");
-        type(KeyCode.ENTER);
-        write("\t\t");
-        type(KeyCode.ENTER);
+        TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","001", true, "#ffffff")));
+        TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","002", true, "#000000")));
+        TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","003", true, "#888888")));
         //write("\t");
         //type(KeyCode.ENTER);
 

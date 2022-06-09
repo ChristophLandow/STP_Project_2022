@@ -62,6 +62,7 @@ public class LobbyGameListController {
                 .subscribe(this.games::setAll,
                         Throwable::printStackTrace));
 
+        System.out.println("games.*.*");
         disposable.add(eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {

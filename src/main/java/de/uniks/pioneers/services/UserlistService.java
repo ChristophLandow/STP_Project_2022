@@ -35,6 +35,7 @@ public class UserlistService {
         userService.findAll().observeOn(FX_SCHEDULER)
                 .subscribe(this.users::setAll);
 
+        System.out.println("users.*.*");
         eventListener.listen("users.*.*", User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {

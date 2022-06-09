@@ -161,6 +161,7 @@ public class IngameScreenController implements Controller {
 
         // init game state listener
         String patternToObserveGameState = String.format("games.%s.state.*", game.get()._id());
+        System.out.println(patternToObserveGameState);
         disposable.add(eventListener.listen(patternToObserveGameState, State.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
@@ -432,7 +433,6 @@ public class IngameScreenController implements Controller {
             this.streetPointControllerHashMap.put(
                     streetPoint.generateKeyString(),
                     streetPoint);
-
         }
     }
 }
