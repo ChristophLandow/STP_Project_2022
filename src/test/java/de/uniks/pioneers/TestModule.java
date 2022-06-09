@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 public class TestModule {
 
     public static PublishSubject<Event<Member>> gameMemberSubject = PublishSubject.create();
+    public static PublishSubject<Event<Game>> gameSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -97,7 +98,7 @@ public class TestModule {
         when(eventListener.listen("users.*.*", User.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.*.*", Game.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.members.*.*", Member.class)).thenReturn(gameMemberSubject);
-        when(eventListener.listen("games.000.*", Game.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.*", Game.class)).thenReturn(gameSubject);
         when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
 
         when(eventListener.listen("users.000.updated", User.class)).thenReturn(PublishSubject.create());
@@ -271,10 +272,6 @@ public class TestModule {
             public Observable<List<Member>> getAll(String gameId) {
 
                 ArrayList<Member> users = new ArrayList<>();
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"001",false, "#00ff00"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"002",false, "#0000ff"));
-                users.add(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"003",false, "#ffffff"));
                 return Observable.just(users);
             }
 
