@@ -23,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -87,6 +86,7 @@ public class IngameScreenController implements Controller {
 
     private final UserService userService;
     private final EventListener eventListener;
+    private final DiceSubcontroller diceSubcontroller;
 
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
@@ -119,6 +119,7 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
+        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
     }
 
     @Override
@@ -150,6 +151,10 @@ public class IngameScreenController implements Controller {
                 .setUsers(this.users);
         gameChatController.render();
         gameChatController.init();
+
+        // set dice subcontroller
+        this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
+                .setRightDiceView(this.rightDiceImageView);
 
         // init game attributes and event listeners
         gameService.initGame();
@@ -230,7 +235,7 @@ public class IngameScreenController implements Controller {
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
-                case FOUNDING_ROLL -> this.enableFoundingRoll();
+                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
                 case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
                 case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
                 case BUILD -> this.enableEndTurn();
@@ -278,18 +283,10 @@ public class IngameScreenController implements Controller {
         this.situationLabel.setText(playerName + ":\n" + move.action());
     }
 
-    private void enableFoundingRoll() {
-        // temporary solution!
-        this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
-    }
-
-    private void foundingRoll(MouseEvent mouseEvent) {
-        disposable.add(ingameService.postMove(game.get()._id(), new CreateMoveDto(FOUNDING_ROLL, null))
-                .observeOn(FX_SCHEDULER)
-                .subscribe(result -> {
-                    // disable another roll
-                    this.leftDiceImageView.setOnMouseClicked(null);
-                }));
+    private void enableRoll(String action) {
+        // init dice subcontroller
+        this.diceSubcontroller.setAction(action);
+        this.diceSubcontroller.init();
     }
 
     public App getApp() {
