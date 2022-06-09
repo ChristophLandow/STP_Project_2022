@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,18 @@ public class LobbyGameListController {
             }
         });
 
+        Comparator<Game> gameComparator = new Comparator<>() {
+            @Override
+            public int compare(Game o1, Game o2) {
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+
         disposable.add(lobbyService.getGames()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(games -> {
@@ -65,6 +78,7 @@ public class LobbyGameListController {
                                     !game.started() && checkDate(game) && users.stream()
                                             .anyMatch(user -> user._id().equals(game.owner()))).toList();
                             this.games.setAll(validGames);
+                            games.so
                             System.out.println(" amount of games " + games.size());
                         },
                         Throwable::printStackTrace));
