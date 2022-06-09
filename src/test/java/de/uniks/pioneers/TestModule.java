@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 @Module
 public class TestModule {
 
-    public static PublishSubject gameMemberSubject = PublishSubject.create();
+    public static PublishSubject<Event<Member>> gameMemberSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -105,6 +105,11 @@ public class TestModule {
         when(eventListener.listen("users.002.updated", User.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("users.003.updated", User.class)).thenReturn(PublishSubject.create());
 
+        when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.players.*", Player.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.state.*", State.class)).thenReturn(PublishSubject.create());
+
 
 
         return eventListener;
@@ -138,7 +143,7 @@ public class TestModule {
             @Override
             public Observable<User> getUser(String id) {
 
-                return Observable.just(new User(id,"TestUser_" + id,"online",null));
+                return Observable.just(new User(id,"TestUser_" + id,"online",""));
             }
 
             @Override
@@ -384,7 +389,15 @@ public class TestModule {
 
             @Override
             public Observable<List<Player>> getAllPlayers(String gameId) {
-                return null;
+
+                List<Player> players = new ArrayList<>();
+
+                players.add(new Player("000","000","#ff0000",1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
+                players.add(new Player("000","001","#00ff00",2, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
+                players.add(new Player("000","002","#0000ff",3, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
+                players.add(new Player("000","003","#ffffff",4, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
+
+                return Observable.just(players);
             }
 
             @Override
@@ -394,12 +407,19 @@ public class TestModule {
 
             @Override
             public Observable<State> getCurrentState(String gameId) {
-                return null;
+
+                ArrayList<String> players = new ArrayList<>();
+                players.add("000");
+                ArrayList<ExpectedMove> expectedMoves = new ArrayList<>();
+                expectedMoves.add(new ExpectedMove("founding-roll",players));
+
+                return Observable.just(new State("2022-06-09T15:11:51.795Z","000", expectedMoves));
             }
 
             @Override
             public Observable<List<Building>> getAllBuildings(String gameId) {
-                return null;
+
+                return Observable.just(new ArrayList<>());
             }
 
             @Override
@@ -409,7 +429,7 @@ public class TestModule {
 
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
-                return null;
+                return Observable.just(new Move("000","2022-06-09T15:11:51.795Z","000","000","founding-roll",1,""));
             }
         };
 

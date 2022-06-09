@@ -79,8 +79,11 @@ class AppTest extends ApplicationTest {
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","001", true, "#ffffff")));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","002", true, "#000000")));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","003", true, "#888888")));
-        //write("\t");
-        //type(KeyCode.ENTER);
+        write("\tHallo Test Test\t");
+        type(KeyCode.ENTER);
+        write("\t");
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
 
     }
 
