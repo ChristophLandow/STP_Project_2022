@@ -9,7 +9,14 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,6 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -27,6 +35,8 @@ import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import javax.xml.stream.EventFilter;
+import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -79,9 +89,11 @@ public class LobbyScreenController implements Controller {
     Provider<LobbyGameListController> lobbyGameListControllerProvider;
 
     private LobbyGameListController lobbyGameListController;
+    public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
 
     @Inject
     MessageService messageService;
+    private Stage appStage;
 
     @Inject
     public LobbyScreenController(App app
@@ -125,12 +137,38 @@ public class LobbyScreenController implements Controller {
 
     @Override
     public void init() {
-        this.app.getStage().setOnCloseRequest(event -> {
+        appStage = this.app.getStage();
+        appStage.setOnCloseRequest(event -> {
             logout();
             Platform.exit();
             System.exit(0);
         });
 
+        // when create new game pop up is openend, create new game button gets disabled
+        NewGameButton.disableProperty().bind(isCreatingGame);
+
+
+        EventHandler<InputEvent> mouseEventFilter = new EventHandler<>() {
+            @Override
+            public void handle(InputEvent event) {
+                event.consume();
+            }
+        };
+
+        ChangeListener<BooleanProperty> changeListener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends BooleanProperty> observable, BooleanProperty oldValue, BooleanProperty newValue) {
+                if (!oldValue.get() && newValue.get()){
+                    NewGameButton.disableProperty().set(true);
+                }else if (oldValue.get() && !newValue.get()){
+                    NewGameButton.disableProperty().set(false);
+                }
+
+            }
+        };
+
+
+        // set title to stage
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
@@ -187,6 +225,9 @@ public class LobbyScreenController implements Controller {
         stage.setTitle("create new game pop up");
         Scene scene = new Scene(node);
         stage.setScene(scene);
+        stage.initOwner(appStage);
+        isCreatingGame.set(true);
+        createNewGamePopUpController.init();
         stage.show();
     }
 }

@@ -64,7 +64,6 @@ public class JoinGamePopUpController{
     {
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
-        String colorCode = String.format("#%06x", rand_num);
-        return colorCode;
+        return String.format("#%06x", rand_num);
     }
 }

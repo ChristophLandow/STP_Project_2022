@@ -27,7 +27,7 @@ public class GameStorage {
     public Player me;
     public List<Player> currentPlayers;
     public State currentState;
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     EventListener eventListener;
