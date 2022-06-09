@@ -16,10 +16,10 @@
       <Circle fx:id="playerColor" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
       <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateY="5.0">
          <HBox.margin>
-            <Insets left="-10.0" right="15.0" />
+            <Insets left="-10.0" />
          </HBox.margin>
       </ImageView>
-      <Label fx:id="playerName" ellipsisString="kappa" text="juggernaut" translateX="-60.0" translateY="-15.0">
+      <Label fx:id="playerName" alignment="CENTER" ellipsisString="" maxHeight="40.0" maxWidth="70.0" minHeight="5.0" minWidth="40.0" prefHeight="5.0" prefWidth="40.0" text="kappa" translateX="-50.0" translateY="-15.0">
          <HBox.margin>
             <Insets right="-45.0" />
          </HBox.margin>
@@ -28,6 +28,9 @@
          <image>
             <Image url="@../../../../../../../../../../../Desktop/card_question_mark.png" />
          </image>
+         <HBox.margin>
+            <Insets left="5.0" />
+         </HBox.margin>
       </ImageView>
       <Label fx:id="resourceCardsCount" text="4" translateX="-35.0" translateY="-12.0">
          <textFill>
@@ -57,7 +60,7 @@
             <Image url="@../../../../../../../../../../../Desktop/steine_3.png" />
          </image>
       </ImageView>
-      <Label fx:id="cityCount" text="3" textFill="RED" translateX="-93.0" translateY="13.0">
+      <Label fx:id="cityCount" text="3" textFill="RED" translateX="-94.0" translateY="13.0">
          <font>
             <Font size="15.0" />
          </font></Label>
@@ -66,7 +69,7 @@
             <Image url="@../../../../../../../../../../../Desktop/ruinsCorner.png" />
          </image>
       </ImageView>
-      <Label fx:id="settlementCount" text="4" textFill="RED" translateX="-104.0" translateY="12.0">
+      <Label fx:id="settlementCount" text="4" textFill="RED" translateX="-102.0" translateY="12.0">
          <font>
             <Font size="15.0" />
          </font></Label>
