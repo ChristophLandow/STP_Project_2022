@@ -9,6 +9,8 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -65,6 +67,8 @@ public class LobbyScreenController implements Controller {
     App app;
 
     @Inject
+    MessageService messageService;
+    @Inject
     Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject
     Provider<EditProfileController> editProfileControllerProvider;
@@ -74,7 +78,6 @@ public class LobbyScreenController implements Controller {
     Provider<RulesScreenController> rulesScreenControllerProvider;
     @Inject
     Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
-
     @Inject
     PrefService prefService;
     @Inject
@@ -91,9 +94,9 @@ public class LobbyScreenController implements Controller {
     private LobbyGameListController lobbyGameListController;
     public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
 
-    @Inject
-    MessageService messageService;
     private Stage appStage;
+    private Stage createNewGameStage;
+    private ChangeListener<Boolean> createGameListener;
 
     @Inject
     public LobbyScreenController(App app
@@ -113,6 +116,7 @@ public class LobbyScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+
 
         // get current user from server and display name and avatar
         User currentUser = userService.getCurrentUser();
@@ -137,39 +141,18 @@ public class LobbyScreenController implements Controller {
 
     @Override
     public void init() {
+        // get app and set variables
         appStage = this.app.getStage();
+        appStage.setTitle(LOBBY_SCREEN_TITLE);
         appStage.setOnCloseRequest(event -> {
             logout();
             Platform.exit();
             System.exit(0);
         });
 
-        // when create new game pop up is openend, create new game button gets disabled
-        NewGameButton.disableProperty().bind(isCreatingGame);
-
-
-        EventHandler<InputEvent> mouseEventFilter = new EventHandler<>() {
-            @Override
-            public void handle(InputEvent event) {
-                event.consume();
-            }
-        };
-
-        ChangeListener<BooleanProperty> changeListener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends BooleanProperty> observable, BooleanProperty oldValue, BooleanProperty newValue) {
-                if (!oldValue.get() && newValue.get()){
-                    NewGameButton.disableProperty().set(true);
-                }else if (oldValue.get() && !newValue.get()){
-                    NewGameButton.disableProperty().set(false);
-                }
-
-            }
-        };
-
-
-        // set title to stage
-        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+        // add listener to handle stages
+        setupCreateGameListener();
+        isCreatingGame.addListener(createGameListener);
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
                 .subscribe();
@@ -178,9 +161,24 @@ public class LobbyScreenController implements Controller {
         this.EditProfileButton.setOnAction(this::editProfile);
     }
 
+    private void setupCreateGameListener() {
+        /* when create new game pop up is openend, create new game button gets disabled
+         when other game is joined, close create new game stage */
+        createGameListener = (observable, oldValue, newValue) -> {
+            if (newValue && !oldValue){
+                NewGameButton.disableProperty().set(true);
+            }else if (oldValue && !newValue){
+                NewGameButton.disableProperty().set(false);
+                assert createNewGameStage!=null;
+                createNewGameStage.close();
+            }
+        };
+    }
+
     @Override
     public void stop() {
         lobbyGameListController.stop();
+        isCreatingGame.removeListener(createGameListener);
     }
 
     public void editProfile(ActionEvent actionEvent) {
@@ -213,6 +211,7 @@ public class LobbyScreenController implements Controller {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
         newGameScreenLobbyController.password.set(password);
+        isCreatingGame.set(false);
         app.show(newGameScreenLobbyController);
         newGameScreenLobbyController.setPlayerColor(hexColor);
     }
@@ -221,13 +220,13 @@ public class LobbyScreenController implements Controller {
         //create pop in order to create a new game lobby
         CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
         Parent node = createNewGamePopUpController.render();
-        Stage stage = new Stage();
-        stage.setTitle("create new game pop up");
+        createNewGameStage = new Stage();
+        createNewGameStage.setTitle("create new game pop up");
         Scene scene = new Scene(node);
-        stage.setScene(scene);
-        stage.initOwner(appStage);
+        createNewGameStage.setScene(scene);
+        createNewGameStage.initOwner(appStage);
         isCreatingGame.set(true);
         createNewGamePopUpController.init();
-        stage.show();
+        createNewGameStage.show();
     }
 }

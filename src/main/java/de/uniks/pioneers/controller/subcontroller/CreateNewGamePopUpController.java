@@ -106,9 +106,7 @@ public class CreateNewGamePopUpController implements Controller {
         disposable.add(lobbyServiceProvider.get().createGame(name,false, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
-                    lobbyScreenController.isCreatingGame.set(false);
                     lobbyScreenController.showNewGameLobby(game, password, getRandomColor());
-                    stage.close();
                 })
         );
     }
