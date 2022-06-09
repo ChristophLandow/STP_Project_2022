@@ -224,6 +224,47 @@ public class IngameScreenController implements Controller {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
 
+        this.setSituationLabel(move);
+
+        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            // enable posting move
+            System.out.println("It's your turn now!");
+            switch (move.action()) {
+                case FOUNDING_ROLL -> this.enableFoundingRoll();
+                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
+                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
+                case BUILD -> this.enableEndTurn();
+            }
+        }
+    }
+
+    private void enableEndTurn() {
+        this.hourglassImageView.setOnMouseClicked(this::endTurn);
+    }
+
+    private void endTurn(MouseEvent mouseEvent) {
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+        disposable.add(ingameService.postMove(game.get()._id(), moveDto)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(move -> this.hourglassImageView.setOnMouseClicked(null))
+        );
+    }
+
+    private void enableStreetPoints(String action) {
+        for (StreetPointController controller : streetPointControllerHashMap.values()) {
+            controller.init();
+            controller.setAction(action);
+        }
+    }
+
+    private void enableBuildingPoints(String action) {
+        for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
+            controller.init();
+            controller.setAction(action);
+        }
+    }
+
+    private void setSituationLabel(ExpectedMove move) {
         // set game state label
         String playerName;
         // if this user is current player
@@ -235,33 +276,6 @@ public class IngameScreenController implements Controller {
             this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/sanduhr.png")).toString()));
         }
         this.situationLabel.setText(playerName + ":\n" + move.action());
-
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
-            // enable posting move
-            System.out.println("It's your turn now!");
-
-            // TODO: show end turn button
-
-            switch (move.action()) {
-                case FOUNDING_ROLL:
-                    this.enableFoundingRoll();
-                    break;
-                case FOUNDING_SETTLEMENT_1:
-                case FOUNDING_SETTLEMENT_2:
-                    // enable building points
-                    for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
-                        controller.init();
-                        controller.setAction(move.action());
-                    }
-                    break;
-                case FOUNDING_ROAD_1:
-                case FOUNDING_ROAD_2:
-                    for (StreetPointController controller : streetPointControllerHashMap.values()) {
-                        controller.init();
-                        controller.setAction(move.action());
-                    }
-            }
-        }
     }
 
     private void enableFoundingRoll() {
@@ -309,9 +323,6 @@ public class IngameScreenController implements Controller {
     public void toSettings(ActionEvent actionEvent) {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.init();
-    }
-
-    public void sendMessage(KeyEvent keyEvent) {
     }
 
     public void onHammerPressed(MouseEvent mouseEvent) {
