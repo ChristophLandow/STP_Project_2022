@@ -8,6 +8,7 @@ import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -91,12 +92,13 @@ public class LobbyScreenController implements Controller {
     @Inject
     Provider<LobbyGameListController> lobbyGameListControllerProvider;
 
-    private LobbyGameListController lobbyGameListController;
-    public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
 
+    private LobbyGameListController lobbyGameListController;
     private Stage appStage;
-    private Stage createNewGameStage;
+    public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
+    private Stage createNewGameStage;
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     public LobbyScreenController(App app
@@ -116,7 +118,6 @@ public class LobbyScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
-
 
         // get current user from server and display name and avatar
         User currentUser = userService.getCurrentUser();
@@ -199,8 +200,9 @@ public class LobbyScreenController implements Controller {
 
     public void logout() {
         //This function is called when the logout button is pressed or the stage is closed
-        lobbyService.logout()
-                .observeOn(FX_SCHEDULER);
+        disposable.add(lobbyService.logout()
+                .observeOn(FX_SCHEDULER)
+                .subscribe());
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
