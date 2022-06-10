@@ -24,7 +24,6 @@ public class GroupService {
         List<String> memberList = new ArrayList<>();
         memberList.add(userService.getCurrentUser()._id());
         memberList.add(otherUserId);
-        System.out.println(memberList);
         return this.groupApiService.newGroup(new CreateGroupDto(memberList, otherUserId));
     }
 

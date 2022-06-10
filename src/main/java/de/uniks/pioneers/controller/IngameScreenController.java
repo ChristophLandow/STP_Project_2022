@@ -377,7 +377,6 @@ public class IngameScreenController implements Controller {
                     -Math.sqrt(3) / 2, 0.5);
             hex.setScaleX(scale);
             hex.setScaleY(scale);
-            System.out.println(hexTile.type);
             Image image = new Image(getClass().getResource("ingame/" + hexTile.type + ".png").toString());
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
@@ -435,12 +434,10 @@ public class IngameScreenController implements Controller {
         }
 
         for (StreetPointController streetPoint : this.streetPointControllers) {
-            System.out.println(streetPoint.generateKeyString());
             // put buildingPointControllers in Hashmap to access with coordinates
             this.streetPointControllerHashMap.put(
                     streetPoint.generateKeyString(),
                     streetPoint);
-
         }
     }
 }

@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.LoginResult;
+import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.UserService;
@@ -18,6 +19,8 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.control.TextMatchers;
+
+import java.util.EventListener;
 
 import static org.mockito.Mockito.*;
 

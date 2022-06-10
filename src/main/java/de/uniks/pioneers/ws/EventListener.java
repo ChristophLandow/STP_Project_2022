@@ -7,10 +7,8 @@ import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.services.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.beans.property.SimpleStringProperty;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -32,6 +30,7 @@ public class EventListener {
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
+
         this.tokenStorage = tokenStorage;
         this.mapper = mapper;
         toUri.set(BASE_URL_WSS + WS_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getAccessToken());

@@ -101,7 +101,6 @@ public class GameService {
     public void findMe() {
         me = players.get(userService.getCurrentUser()._id());
         assert me != null;
-        System.out.println("Player id " + me.userId());
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {
