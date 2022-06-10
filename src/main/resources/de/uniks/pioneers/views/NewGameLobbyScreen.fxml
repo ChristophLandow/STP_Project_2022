@@ -105,7 +105,7 @@
             </Label>
             <ScrollPane fx:id="userScrollPane" prefHeight="200.0" prefWidth="200.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
                <content>
-                  <VBox fx:id="userBox" maxHeight="350.0" maxWidth="332.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="178.0" prefWidth="332.0" spacing="7.0">
+                  <VBox fx:id="userBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="172.0" prefWidth="332.0" spacing="7.0">
                      <padding>
                         <Insets left="7.0" top="7.0" />
                      </padding>
@@ -118,7 +118,7 @@
                <Insets left="15.0" right="15.0" />
             </padding>
             <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="371.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
-               <VBox fx:id="messageBox" maxHeight="460.0" maxWidth="392.0" prefHeight="445.0" prefWidth="354.0" spacing="5.0">
+               <VBox fx:id="messageBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="354.0" spacing="5.0">
                   <padding>
                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                   </padding>
