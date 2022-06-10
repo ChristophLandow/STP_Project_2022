@@ -10,12 +10,16 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 public class SnowAnimationControllor {
-    private final Pane fieldPane;
     private final Random rand;
+    private final Pane fieldPane;
+    private double paneWidth;
+    private double paneHeight;
 
     public SnowAnimationControllor(Pane fieldPane) {
-        this.fieldPane = fieldPane;
         this.rand = new Random();
+        this.fieldPane = fieldPane;
+        this.paneWidth = fieldPane.getWidth();
+        this.paneHeight = fieldPane.getHeight();
 
         new Thread(() -> {
             try {
@@ -26,6 +30,11 @@ public class SnowAnimationControllor {
                 throw new RuntimeException(e);
             }
         }).start();
+    }
+
+    public void refreshPaneBounding() {
+        this.paneWidth = fieldPane.getWidth();
+        this.paneHeight = fieldPane.getHeight();
     }
 
     private void initSnow() {
@@ -40,8 +49,6 @@ public class SnowAnimationControllor {
 
     public void snowFallingAnimation(ImageView snow, boolean visible) {
         double imageSize = snow.getImage().getWidth();
-        double paneWidth = fieldPane.getWidth();
-        double paneHeight = fieldPane.getHeight();
         double paneWidthMinusImageSize = fieldPane.getWidth() - imageSize;
         double randomX = rand.nextDouble(paneWidthMinusImageSize);
         int time = 2000 + rand.nextInt(2000);
