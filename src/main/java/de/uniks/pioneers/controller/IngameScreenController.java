@@ -244,14 +244,14 @@ public class IngameScreenController implements Controller {
     }
 
     private void enableEndTurn() {
-        this.hourglassImageView.setOnMouseClicked(this::endTurn);
+        this.turnPane.setOnMouseClicked(this::endTurn);
     }
 
     private void endTurn(MouseEvent mouseEvent) {
         final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> this.hourglassImageView.setOnMouseClicked(null))
+                .subscribe(move -> this.turnPane.setOnMouseClicked(null))
         );
     }
 
@@ -291,12 +291,6 @@ public class IngameScreenController implements Controller {
 
     public App getApp() {
         return this.app;
-    }
-
-
-    private void swapTurnSymbol() {
-        turnPane.getChildren().get(0).setVisible(!turnPane.getChildren().get(0).isVisible());
-        turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
     }
 
     public void setPlayerColor(String hexColor) {
@@ -339,7 +333,7 @@ public class IngameScreenController implements Controller {
 
     public void onTurnPressed(MouseEvent mouseEvent) {
         // only for testing
-        swapTurnSymbol();
+        //swapTurnSymbol();
     }
 
     @Override

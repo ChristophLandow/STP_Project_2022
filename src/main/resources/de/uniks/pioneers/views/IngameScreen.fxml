@@ -67,7 +67,7 @@
                </image>
             </ImageView>
          </children></Pane>
-      <Pane fx:id="turnPane" layoutX="671.0" layoutY="693.0" onMousePressed="#onTurnPressed" prefHeight="60.0" prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
+      <Pane fx:id="turnPane" layoutX="671.0" layoutY="693.0" prefHeight="60.0" prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
          <children>
             <ImageView fx:id="hourglassImageView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.28" scaleY="0.28" scaleZ="0.28">
                <image>
