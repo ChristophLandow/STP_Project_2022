@@ -142,16 +142,14 @@ public class LobbyScreenController implements Controller {
         return parent;
     }
 
+
+
     @Override
     public void init() {
         // get app and set variables
-
-
-
         appStage = this.app.getStage();
         appStage.setTitle(LOBBY_SCREEN_TITLE);
         appStage.setOnCloseRequest(event -> {
-
             logout();
             Platform.exit();
             System.exit(0);
@@ -206,9 +204,8 @@ public class LobbyScreenController implements Controller {
 
     public void logout() {
         //This function is called when the logout button is pressed or the stage is closed
-        disposable.add(lobbyService.logout()
-                .observeOn(FX_SCHEDULER)
-                .subscribe());
+        lobbyService.logout();
+
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();

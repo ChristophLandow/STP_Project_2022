@@ -125,7 +125,6 @@ public class NewGameScreenLobbyController implements Controller {
     Provider<GameChatController> gameChatControllerProvider;
     @Inject
     Provider<IngameScreenController> ingameScreenControllerProvider;
-    private LobbyScreenController lobbyScreenController;
 
 
     @Inject
@@ -142,7 +141,6 @@ public class NewGameScreenLobbyController implements Controller {
     @Override
     public void init() {
         //set game name label and password text label
-        lobbyScreenController = lobbyScreenControllerProvider.get();
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(password.get());
         clientUserNameLabel.setText(currentUser.name());
@@ -157,7 +155,10 @@ public class NewGameScreenLobbyController implements Controller {
                         .observeOn(FX_SCHEDULER)
                         .subscribe());
             }
+            System.out.println("kappa");
+            // for some hillarious reasons logout returns something, mybe some persistance data
             lobbyScreenControllerProvider.get().logout();
+
         });
 
         try {
@@ -216,7 +217,7 @@ public class NewGameScreenLobbyController implements Controller {
         users.remove(member.userId());
 
         if (member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())) {
-            app.show(lobbyScreenController);
+            app.show(lobbyScreenControllerProvider.get());
             Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.HOST_LEFT_GAME_ALERT);
             alert.showAndWait();
         }
@@ -288,7 +289,7 @@ public class NewGameScreenLobbyController implements Controller {
                     if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
                         this.toIngame();
                     } else if (gameEvent.event().endsWith(".deleted")) {
-                        app.show(lobbyScreenController);
+                        app.show(lobbyScreenControllerProvider.get());
                     }
                 })
         );

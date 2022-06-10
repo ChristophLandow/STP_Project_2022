@@ -20,13 +20,19 @@ public class NewGameLobbyService {
     private final GameApiService gameApiService;
     private final GameMemberApiService gameMemberApiService;
     private final MessageApiService messageApiService;
+    private final AuthApiService authApiService;
 
     @Inject
     public NewGameLobbyService(GameApiService gameApiService, GameMemberApiService gameMemberApiService,
-                               MessageApiService messageApiService) {
+                               MessageApiService messageApiService, AuthApiService authApiService) {
         this.gameApiService = gameApiService;
         this.gameMemberApiService = gameMemberApiService;
         this.messageApiService = messageApiService;
+        this.authApiService = authApiService;
+    }
+
+    public Observable<LogoutResult> logout() {
+        return authApiService.logout();
     }
 
     public Observable<List<Member>> getAll(String id){
