@@ -11,7 +11,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -303,32 +302,32 @@ public class IngameScreenController implements Controller {
         citySVG.setStrokeWidth(2.0);
     }
 
-    public void giveUp(ActionEvent actionEvent) {
+    public void giveUp() {
     }
 
-    public void toRules(ActionEvent actionEvent) {
+    public void toRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         rulesController.init();
     }
 
-    public void toSettings(ActionEvent actionEvent) {
+    public void toSettings() {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.init();
     }
 
-    public void onHammerPressed(MouseEvent mouseEvent) {
+    public void onHammerPressed() {
     }
 
-    public void onStreetPressed(MouseEvent mouseEvent) {
+    public void onStreetPressed() {
     }
 
-    public void onHousePressed(MouseEvent mouseEvent) {
+    public void onHousePressed() {
     }
 
-    public void onCityPressed(MouseEvent mouseEvent) {
+    public void onCityPressed() {
     }
 
-    public void onTradePressed(MouseEvent mouseEvent) {
+    public void onTradePressed() {
     }
 
     @Override
@@ -340,7 +339,6 @@ public class IngameScreenController implements Controller {
     }
 
     public void loadMap() {
-
         if (this.game.get().members() > 4) {
             this.gameSize = 3;
         } else {
@@ -354,7 +352,6 @@ public class IngameScreenController implements Controller {
     }
 
     private void buildBoardUI() {
-
         BoardGenerator generator = new BoardGenerator();
         List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
         List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1);
@@ -372,7 +369,7 @@ public class IngameScreenController implements Controller {
                     -Math.sqrt(3) / 2, 0.5);
             hex.setScaleX(scale);
             hex.setScaleY(scale);
-            Image image = new Image(getClass().getResource("ingame/" + hexTile.type + ".png").toString());
+            Image image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + hexTile.type + ".png")).toString());
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
@@ -380,7 +377,7 @@ public class IngameScreenController implements Controller {
 
             if (!hexTile.type.equals("desert")) {
                 String numberURL = "ingame/tile_" + hexTile.number + ".png";
-                ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
+                ImageView numberImage = new ImageView(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
                 numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
                 numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
                 numberImage.setFitHeight(30);
@@ -434,5 +431,11 @@ public class IngameScreenController implements Controller {
                     streetPoint.generateKeyString(),
                     streetPoint);
         }
+
+        loadSnowAnimation();
+    }
+
+    private void loadSnowAnimation() {
+        new SnowAnimationControllor(fieldPane);
     }
 }
