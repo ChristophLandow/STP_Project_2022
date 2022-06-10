@@ -2,7 +2,9 @@ package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.*;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.LogoutResult;
 import de.uniks.pioneers.model.Member;
+import de.uniks.pioneers.rest.AuthApiService;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
 import de.uniks.pioneers.rest.MessageApiService;
@@ -18,14 +20,18 @@ public class NewGameLobbyService {
     private final GameApiService gameApiService;
     private final GameMemberApiService gameMemberApiService;
     private final MessageApiService messageApiService;
-    private String currentMemberId;
+    private final AuthApiService authApiService;
 
     @Inject
     public NewGameLobbyService(GameApiService gameApiService, GameMemberApiService gameMemberApiService,
-                               MessageApiService messageApiService) {
+                               MessageApiService messageApiService, AuthApiService authApiService) {
         this.gameApiService = gameApiService;
         this.gameMemberApiService = gameMemberApiService;
         this.messageApiService = messageApiService;
+        this.authApiService = authApiService;
+    }
+    public Observable<LogoutResult> logout() {
+        return authApiService.logout();
     }
 
     public Observable<List<Member>> getAll(String id){

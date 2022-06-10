@@ -35,7 +35,7 @@ public class LobbyGameListController {
     private ObservableList<User> users = FXCollections.observableArrayList();
     private final Provider<GameListElementController> gameListElementControllerProvider;
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
-    private final CompositeDisposable disposable = new CompositeDisposable();
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     public LobbyGameListController(EventListener eventListener,
@@ -52,8 +52,9 @@ public class LobbyGameListController {
 
     public void setup() {
         this.users = userlistService.getUsers();
-        games = FXCollections.observableArrayList();
         listViewGames.getItems().clear();
+        games = FXCollections.observableArrayList();
+        disposable = new CompositeDisposable();
 
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
@@ -66,9 +67,8 @@ public class LobbyGameListController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(games -> {
                             Collection<Game> validGames = games.stream().filter(game -> checkDate(game)).toList();
-                            //&& game.started() && users.stream().anyMatch(user -> user._id().equals(game.owner()))).toList();
+                            //&& !game.started() && users.stream().anyMatch(user -> user._id().equals(game.owner()))).toList();
                             validGames = validGames.stream().sorted(gameComparator).toList();
-                            System.out.println("amount of games " + games.size());
                             this.games.setAll(validGames);
                         },
                         Throwable::printStackTrace));
@@ -77,7 +77,7 @@ public class LobbyGameListController {
         disposable.add(eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                    if (gameEvent.event().endsWith(".created")) {
+                    if (gameEvent.event().endsWith(".created") && !games.contains(gameEvent.data())) {
                         games.add(gameEvent.data());
                     } else if (gameEvent.event().endsWith(".deleted")) {
                         deleteGame(gameEvent.data());
@@ -93,15 +93,12 @@ public class LobbyGameListController {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String today = dtf.format(now);
-        System.out.println("today :" + today);
         LocalDateTime nowMinusOneDay = LocalDateTime.now().minusDays(1);
         String yesterday = dtf.format(nowMinusOneDay);
-        System.out.println("yesterday :" +yesterday);
         //get date from game
         String createdAt = game.createdAt();
         int end = createdAt.indexOf("T");
         String date = game.createdAt().substring(0, end);
-        System.out.println("date from game: " + date);
 
         // if game was created yesterday or today return true
         return today.equals(date) || yesterday.equals(date);

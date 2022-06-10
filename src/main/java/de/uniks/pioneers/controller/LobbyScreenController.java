@@ -17,6 +17,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -143,9 +145,13 @@ public class LobbyScreenController implements Controller {
     @Override
     public void init() {
         // get app and set variables
+
+
+
         appStage = this.app.getStage();
         appStage.setTitle(LOBBY_SCREEN_TITLE);
         appStage.setOnCloseRequest(event -> {
+
             logout();
             Platform.exit();
             System.exit(0);
