@@ -331,11 +331,6 @@ public class IngameScreenController implements Controller {
     public void onTradePressed(MouseEvent mouseEvent) {
     }
 
-    public void onTurnPressed(MouseEvent mouseEvent) {
-        // only for testing
-        //swapTurnSymbol();
-    }
-
     @Override
     public void stop() {
     }
