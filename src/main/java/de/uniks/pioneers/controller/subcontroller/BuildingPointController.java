@@ -7,7 +7,6 @@ import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,7 +16,6 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -36,7 +34,7 @@ public class BuildingPointController {
     // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
 
-    public ArrayList<StreetPointController> streets = new ArrayList<>();
+    public ArrayList<StreetPointController> adjacentStreets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private Building building;
 
@@ -65,8 +63,8 @@ public class BuildingPointController {
         return this.tile;
     }
 
-    public ArrayList<StreetPointController> getStreets() {
-        return this.streets;
+    public ArrayList<StreetPointController> getAdjacentStreets() {
+        return this.adjacentStreets;
     }
 
     public void build() {
@@ -120,10 +118,10 @@ public class BuildingPointController {
 
     private void info(MouseEvent mouseEvent) {
         boolean surrounded = false;
-        for (StreetPointController street : streets) {
-            for (BuildingPointController building : street.getBuildings()) {
+        for (StreetPointController street : adjacentStreets) {
+            for (BuildingPointController building : street.getAdjacentBuildings()) {
                 if (building != this) {
-                    if (building.getView().getFill() != RED) {
+                    if (building.building != null) {
                         surrounded = true;
                     }
                 }
