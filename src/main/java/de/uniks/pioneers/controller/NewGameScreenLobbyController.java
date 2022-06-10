@@ -202,7 +202,6 @@ public class NewGameScreenLobbyController implements Controller {
                 playerEntries.put(user._id(), playerEntryController);
                 userBox.getChildren().add(playerEntryController.getPlayerEntry());
                 if(userBox.getChildren().size() > 3) {
-                    //userBox.setMaxHeight(userBox.getMaxHeight() + 60);
                     userBox.setPrefHeight(userBox.getPrefHeight() + 60);
                 }
             }
