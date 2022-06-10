@@ -168,7 +168,7 @@ class AsOwner extends ApplicationTest {
         assertEquals(members.get(1).userId(), "2");
         assertTrue(members.get(1).ready());
 
-        assertEquals(members.size(), 2);
+        assertEquals(members.size(), 3);
 
         // assertions for current user box, colorpicker gets random color
         FxAssert.verifyThat("#gameNameLabel", LabeledMatchers.hasText("name"));
