@@ -10,11 +10,12 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 public class SnowAnimationControllor {
-    private final Random rand = new Random();
     private final Pane fieldPane;
+    private final Random rand;
 
     public SnowAnimationControllor(Pane fieldPane) {
         this.fieldPane = fieldPane;
+        this.rand = new Random();
 
         new Thread(() -> {
             try {
