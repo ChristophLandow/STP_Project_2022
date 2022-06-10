@@ -51,9 +51,4 @@ public class IngameService {
     public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
         return pioneersApiService.postMove(gameId, dto);
     }
-
-
-
-
-
 }

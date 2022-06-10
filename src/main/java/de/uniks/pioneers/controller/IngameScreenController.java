@@ -82,6 +82,8 @@ public class IngameScreenController implements Controller {
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
+
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final IngameService ingameService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
@@ -105,7 +107,7 @@ public class IngameScreenController implements Controller {
 
 
     @Inject
-    public IngameScreenController(App app,
+    public IngameScreenController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
@@ -119,6 +121,7 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
     @Override
@@ -293,6 +296,16 @@ public class IngameScreenController implements Controller {
     }
 
     public void giveUp(ActionEvent actionEvent) {
+        this.stop();
+        disposable.dispose();
+        LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            System.out.println("empty");
+            app.show(lobbyController);
+        } else {
+            lobbyController.darkMode();
+            app.show(lobbyController);
+        }
     }
 
     public void toRules(ActionEvent actionEvent) {
