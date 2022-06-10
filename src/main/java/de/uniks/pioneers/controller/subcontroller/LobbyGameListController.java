@@ -1,6 +1,5 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
@@ -19,20 +18,22 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
+@Singleton
 public class LobbyGameListController {
     private final UserlistService userlistService;
     private final EventListener eventListener;
     private final LobbyService lobbyService;
     public ListView<Node> listViewGames;
-    private final ObservableList<Game> games = FXCollections.observableArrayList();
+    private ObservableList<Game> games;
     private ObservableList<User> users = FXCollections.observableArrayList();
     private final Provider<GameListElementController> gameListElementControllerProvider;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -40,19 +41,19 @@ public class LobbyGameListController {
     public LobbyGameListController(EventListener eventListener,
                                    LobbyService lobbyService,
                                    UserlistService userlistService,
-                                   Provider<GameListElementController> gameListElementControllerProvider,
-                                   Provider<LobbyScreenController> lobbyScreenControllerProvider
+                                   Provider<GameListElementController> gameListElementControllerProvider
     ) {
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
         this.userlistService = userlistService;
         this.gameListElementControllerProvider = gameListElementControllerProvider;
-        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
-    public void init() {
+
+    public void setup() {
         this.users = userlistService.getUsers();
-        this.listViewGames = lobbyScreenControllerProvider.get().listViewGames;
+        games = FXCollections.observableArrayList();
+        listViewGames.getItems().clear();
 
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
@@ -61,44 +62,13 @@ public class LobbyGameListController {
             }
         });
 
-        Comparator<Game> gameComparator = new Comparator<>() {
-            @Override
-            //2022-06-09T23:12:49.041Z"
-            public int compare(Game o1, Game o2) {
-                /*
-                int start = o1.createdAt().indexOf("T");
-
-                String dateO1 = o1.createdAt().substring(0, start);
-                dateO1 = dateO1.replace("-","");
-                Integer dateO1ToInt = Integer.parseInt(dateO1);
-
-                String dateO2 = o2.createdAt().substring(0, start);
-                dateO2 = dateO2.replace("-","");
-                Integer date02ToInt = Integer.parseInt(dateO2);
-
-
-                int end  = o1.createdAt().indexOf(".");
-                String timeO1 = o1.createdAt().substring(start+1, end);
-                Integer gameO1 = Integer.parseInt(timeO1);
-                String time02 = o2.createdAt().substring(start+1, end);
-                Integer game02 = Integer.parseInt(time02);*/
-
-                return o1.createdAt().compareTo(o2.createdAt());
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                return false;
-            }
-        };
-
         disposable.add(lobbyService.getGames()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(games -> {
-                            Collection<Game> validGames = games.stream().filter(game ->
-                                    !game.started() && checkDate(game) && users.stream()
-                                            .anyMatch(user -> user._id().equals(game.owner()))).toList();
+                            Collection<Game> validGames = games.stream().filter(game -> checkDate(game)).toList();
+                            //&& game.started() && users.stream().anyMatch(user -> user._id().equals(game.owner()))).toList();
                             validGames = validGames.stream().sorted(gameComparator).toList();
+                            System.out.println("amount of games " + games.size());
                             this.games.setAll(validGames);
                         },
                         Throwable::printStackTrace));
@@ -123,17 +93,31 @@ public class LobbyGameListController {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String today = dtf.format(now);
+        System.out.println("today :" + today);
         LocalDateTime nowMinusOneDay = LocalDateTime.now().minusDays(1);
         String yesterday = dtf.format(nowMinusOneDay);
-
+        System.out.println("yesterday :" +yesterday);
         //get date from game
         String createdAt = game.createdAt();
         int end = createdAt.indexOf("T");
         String date = game.createdAt().substring(0, end);
+        System.out.println("date from game: " + date);
 
         // if game was created yesterday or today return true
         return today.equals(date) || yesterday.equals(date);
     }
+
+    Comparator<Game> gameComparator = new Comparator<>() {
+        @Override
+        public int compare(Game o1, Game o2) {
+            return o1.createdAt().compareTo(o2.createdAt());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return false;
+        }
+    };
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();

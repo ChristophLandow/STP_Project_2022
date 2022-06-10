@@ -134,8 +134,8 @@ public class LobbyScreenController implements Controller {
         userlistController.init();
 
         lobbyGameListController = lobbyGameListControllerProvider.get();
-        lobbyGameListController.listViewGames = this.listViewGames;
-        lobbyGameListController.init();
+        lobbyGameListController.listViewGames= this.listViewGames;
+        lobbyGameListController.setup();
 
         return parent;
     }
