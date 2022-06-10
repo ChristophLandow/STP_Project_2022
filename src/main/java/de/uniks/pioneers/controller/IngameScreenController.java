@@ -23,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -87,6 +86,7 @@ public class IngameScreenController implements Controller {
 
     private final UserService userService;
     private final EventListener eventListener;
+    private final DiceSubcontroller diceSubcontroller;
 
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
@@ -119,6 +119,7 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
+        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
     }
 
     @Override
@@ -150,6 +151,10 @@ public class IngameScreenController implements Controller {
                 .setUsers(this.users);
         gameChatController.render();
         gameChatController.init();
+
+        // set dice subcontroller
+        this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
+                .setRightDiceView(this.rightDiceImageView);
 
         // init game attributes and event listeners
         gameService.initGame();
@@ -224,62 +229,68 @@ public class IngameScreenController implements Controller {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
 
-        // set game state label
-        String playerName;
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
-            playerName = "ME";
-        } else {
-            playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
-        }
-        this.situationLabel.setText(playerName + ":\n" + move.action());
+        this.setSituationLabel(move);
 
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
-                case FOUNDING_ROLL:
-                    this.enableFoundingRoll();
-                    break;
-                case FOUNDING_SETTLEMENT_1:
-                case FOUNDING_SETTLEMENT_2:
-                    // enable building points
-                    for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
-                        controller.init();
-                        controller.setAction(move.action());
-                    }
-                    break;
-                case FOUNDING_ROAD_1:
-                case FOUNDING_ROAD_2:
-                    for (StreetPointController controller : streetPointControllerHashMap.values()) {
-                        controller.init();
-                        controller.setAction(move.action());
-                    }
+                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
+                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
+                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
+                case BUILD -> this.enableEndTurn();
             }
         }
     }
 
-    private void enableFoundingRoll() {
-        // temporary solution!
-        this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
+    private void enableEndTurn() {
+        this.turnPane.setOnMouseClicked(this::endTurn);
     }
 
-    private void foundingRoll(MouseEvent mouseEvent) {
-        disposable.add(ingameService.postMove(game.get()._id(), new CreateMoveDto(FOUNDING_ROLL, null))
+    private void endTurn(MouseEvent mouseEvent) {
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+        disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(result -> {
-                    // disable another roll
-                    this.leftDiceImageView.setOnMouseClicked(null);
-                }));
+                .subscribe(move -> this.turnPane.setOnMouseClicked(null))
+        );
+    }
+
+    private void enableStreetPoints(String action) {
+        for (StreetPointController controller : streetPointControllerHashMap.values()) {
+            controller.init();
+            controller.setAction(action);
+        }
+    }
+
+    private void enableBuildingPoints(String action) {
+        for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
+            controller.init();
+            controller.setAction(action);
+        }
+    }
+
+    private void setSituationLabel(ExpectedMove move) {
+        // set game state label
+        String playerName;
+        // if this user is current player
+        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            playerName = "ME";
+            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/next.png")).toString()));
+        } else {
+            playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
+            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/sanduhr.png")).toString()));
+        }
+        this.situationLabel.setText(playerName + ":\n" + move.action());
+    }
+
+    private void enableRoll(String action) {
+        // init dice subcontroller
+        this.diceSubcontroller.setAction(action);
+        this.diceSubcontroller.init();
     }
 
     public App getApp() {
         return this.app;
-    }
-
-
-    private void swapTurnSymbol() {
-        turnPane.getChildren().get(0).setVisible(!turnPane.getChildren().get(0).isVisible());
-        turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
     }
 
     public void setPlayerColor(String hexColor) {
@@ -305,9 +316,6 @@ public class IngameScreenController implements Controller {
         settingsController.init();
     }
 
-    public void sendMessage(KeyEvent keyEvent) {
-    }
-
     public void onHammerPressed(MouseEvent mouseEvent) {
     }
 
@@ -321,11 +329,6 @@ public class IngameScreenController implements Controller {
     }
 
     public void onTradePressed(MouseEvent mouseEvent) {
-    }
-
-    public void onTurnPressed(MouseEvent mouseEvent) {
-        // only for testing
-        swapTurnSymbol();
     }
 
     @Override

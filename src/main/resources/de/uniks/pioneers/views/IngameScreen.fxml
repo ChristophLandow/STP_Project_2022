@@ -34,7 +34,7 @@
             </padding>
          </VBox>
       </ScrollPane>
-      <TextField fx:id="sendMessageField" layoutX="4.0" layoutY="185.0" onKeyPressed="#sendMessage" prefHeight="25.0"
+      <TextField fx:id="sendMessageField" layoutX="4.0" layoutY="185.0" prefHeight="25.0"
                  prefWidth="250.0" promptText="Send a message"/>
    </Pane>
    <Pane layoutX="751.0" layoutY="332.0" prefHeight="319.0" prefWidth="258.0"
@@ -78,7 +78,7 @@
          <Image url="@../controller/ingame/trading.png"/>
       </ImageView>
    </Pane>
-   <Pane fx:id="turnPane" layoutX="671.0" layoutY="693.0" onMousePressed="#onTurnPressed" prefHeight="60.0"
+   <Pane fx:id="turnPane" layoutX="671.0" layoutY="693.0" prefHeight="60.0"
          prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
       <ImageView fx:id="hourglassImageView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0"
                  scaleX="0.28" scaleY="0.28" scaleZ="0.28">
