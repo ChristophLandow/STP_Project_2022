@@ -5,6 +5,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
@@ -63,14 +64,14 @@ public class IngamePlayerListElementController {
     public ListView<Node> nodeListView;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final GameStorage gameStorage;
+    private final GameService gameService;
     private final UserService userService;
     private final EventListener eventListener;
     private boolean online;
 
     @Inject
-    public IngamePlayerListElementController(GameStorage gameStorage, UserService userService, EventListener eventListener) {
-        this.gameStorage = gameStorage;
+    public IngamePlayerListElementController(GameService gameService, UserService userService, EventListener eventListener) {
+        this.gameService = gameService;
         this.userService = userService;
         this.eventListener = eventListener;
     }
@@ -91,12 +92,13 @@ public class IngamePlayerListElementController {
         }
 
         // set values to gui and setup listeners
-        toRender = gameStorage.players.get(playerId);
+        toRender = gameService.players.get(playerId);
         playerColor.setFill(Paint.valueOf(toRender.color()));
         disposable.add(userService.getUserById(toRender.userId())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
-                    playerAvatar.setImage(new Image(user.avatar()));
+                    if(!user.avatar().equals("")){
+                    playerAvatar.setImage(new Image(user.avatar()));}
                     playerName.setText(user.name());
                     addUserListener(user._id());
                 })
@@ -144,7 +146,7 @@ public class IngamePlayerListElementController {
 
     private void addPlayerListener() {
         // add listener for observable players list
-        gameStorage.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
+        gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             String key = c.getKey();
             if (key.equals(toRender.userId())) {
                 if (c.wasRemoved()) {

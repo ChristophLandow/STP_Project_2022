@@ -5,7 +5,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
@@ -148,15 +147,15 @@ public class HexTileController {
 
         for(int i = 0; i < 6; i++){
 
-            if(!this.corners[i].streets.contains(this.edges[i])){
+            if(!this.corners[i].adjacentStreets.contains(this.edges[i])){
 
-                this.corners[i].streets.add(this.edges[i]);
-                this.edges[i].buildings.add(this.corners[i]);
+                this.corners[i].adjacentStreets.add(this.edges[i]);
+                this.edges[i].adjacentBuildings.add(this.corners[i]);
             }
-            if(!this.corners[i].streets.contains(this.edges[((i-1)+6)%6])){
+            if(!this.corners[i].adjacentStreets.contains(this.edges[((i-1)+6)%6])){
 
-                this.corners[i].streets.add(this.edges[((i-1)+6)%6]);
-                this.edges[((i-1)+6)%6].buildings.add(this.corners[i]);
+                this.corners[i].adjacentStreets.add(this.edges[((i-1)+6)%6]);
+                this.edges[((i-1)+6)%6].adjacentBuildings.add(this.corners[i]);
             }
         }
     }
