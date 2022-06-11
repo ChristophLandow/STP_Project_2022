@@ -45,12 +45,14 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
+@Singleton
 public class NewGameScreenLobbyController implements Controller {
     @FXML
     public Pane root;
@@ -125,7 +127,8 @@ public class NewGameScreenLobbyController implements Controller {
     Provider<GameChatController> gameChatControllerProvider;
     @Inject
     Provider<IngameScreenController> ingameScreenControllerProvider;
-
+    @Inject
+    Provider<LoginScreenController> loginScreenControllerProvider;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -155,10 +158,9 @@ public class NewGameScreenLobbyController implements Controller {
                         .observeOn(FX_SCHEDULER)
                         .subscribe());
             }
-            System.out.println("kappa");
-            // for some hillarious reasons logout returns something, mybe some persistance data
-            lobbyScreenControllerProvider.get().logout();
-
+            newGameLobbyService.logout();
+            userService.editProfile(null, null, null, "offline")
+                    .subscribe();
         });
 
         try {
