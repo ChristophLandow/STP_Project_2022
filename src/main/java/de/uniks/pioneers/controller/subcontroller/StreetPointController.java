@@ -93,16 +93,15 @@ public class StreetPointController {
 
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
-        side.set(building.side());
         Rectangle road =  new Rectangle(60,7, Paint.valueOf(player.color()));
         Scene scene = view.getScene();
         Pane root = (Pane) scene.getRoot();
         root.getChildren().add(road);
         road.setLayoutX(view.getLayoutX()-14);
         road.setLayoutY(view.getLayoutY()+12);
-        if (side.get() == 3) {
+        if (building.side() == 3) {
             road.setRotate(90);
-        } else if (side.get() == 7) {
+        } else if (building.side() == 7) {
             road.setRotate(30);
         }else {
             road.setRotate(-30);
