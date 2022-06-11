@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.CreateMoveDto;
+import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -16,7 +17,6 @@ public class IngameService {
 
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
-
 
     @Inject
     public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
@@ -36,13 +36,11 @@ public class IngameService {
         return pioneersApiService.getAllBuildings(gameId);
     }
 
-
     public Observable<Map> getMap (String gameId){
 
         return pioneersApiService.getMap(gameId)
                 .doOnNext(result -> gameStorage.setMap(result.tiles()));
     }
-
 
     public Observable<State> getCurrentState(String gameId) {
         return pioneersApiService.getCurrentState(gameId);
@@ -50,6 +48,10 @@ public class IngameService {
 
     public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
         return pioneersApiService.postMove(gameId, dto);
+    }
+
+    public Observable<Player> updatePlayer(String gameId, String userId, boolean active){
+        return pioneersApiService.updatePlayer(gameId, userId, new UpdatePlayerDto(active));
     }
 
 

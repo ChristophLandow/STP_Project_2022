@@ -202,6 +202,8 @@ public class IngameScreenController implements Controller {
     }
 
     private void renderPlayer(Player player) {
+        /*System.out.println("added player "+ player.userId());
+        System.out.println("belongs to game:" + game.get()._id());*/
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
@@ -230,7 +232,15 @@ public class IngameScreenController implements Controller {
 
         this.setSituationLabel(move);
 
+        /*System.out.println(userService.getCurrentUser()._id());
+        System.out.println(gameService.me.userId());*/
+
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            disposable.add(ingameService.updatePlayer(game.get()._id(), userService.getCurrentUser()._id(),true)
+                    .observeOn(FX_SCHEDULER)
+                            .subscribe(player -> System.out.println(player.resources())));
+
+
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
@@ -418,7 +428,6 @@ public class IngameScreenController implements Controller {
             tile.link();
         }
         for (BuildingPointController buildingPoint : this.buildingControllers) {
-
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),

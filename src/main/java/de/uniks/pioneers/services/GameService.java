@@ -2,8 +2,10 @@ package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
+import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.MessageApiService;
@@ -17,7 +19,7 @@ import javafx.collections.ObservableMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
+
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -27,8 +29,9 @@ public class GameService {
     public final ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    private Player me;
+    public Player me;
     public final ObservableList<Player> currentPlayers = FXCollections.observableArrayList();
+    public final ObservableList<Move> moves = FXCollections.observableArrayList();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameApiService gameApiService;
 
@@ -59,8 +62,6 @@ public class GameService {
                         }
                         , Throwable::printStackTrace));
 
-        // init players listener
-        this.initPlayerListener();
 
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
@@ -68,7 +69,46 @@ public class GameService {
                 .subscribe(buildings::setAll,
                         Throwable::printStackTrace));
 
-        // init buildings listener
+        // init players listener
+        this.initPlayerListener();
+        this.initBuildingsListener();
+        this.initMoveListener();
+
+
+    }
+
+    private void initMoveListener() {
+        String patternToObserveMoves = String.format("games.%s.moves.*.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveMoves, Move.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(moveEvent -> {
+                    final Move move = moveEvent.data();
+                    System.out.println(move);
+                    if (moveEvent.event().endsWith(".created")) {
+                        this.moves.add(move);
+                    }
+                }));
+    }
+
+
+    private void initPlayerListener() {
+        String patternToObservePlayers = String.format("games.%s.players.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(gameEvent -> {
+                    Player player = gameEvent.data();
+                    String id = player.userId();
+                    System.out.println("player updated event");
+                    if (gameEvent.event().endsWith(".updated")) {
+                        players.replace(id, players.get(id), player);
+                    } else if (gameEvent.event().endsWith(".deleted")) {
+                        players.remove(id);
+                    }
+                })
+        );
+    }
+
+    private void initBuildingsListener() {
         String patternToObserveBuildings = String.format("games.%s.buildings.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveBuildings, Building.class)
                 .observeOn(FX_SCHEDULER)
@@ -80,27 +120,12 @@ public class GameService {
                         this.buildings.add(building);
                     }
                 }));
+
     }
 
-    private void initPlayerListener() {
-        String patternToObservePlayers = String.format("games.%s.players.*", game.get()._id());
-        disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(gameEvent -> {
-                    Player player = gameEvent.data();
-                    String id = player.userId();
-                    if (gameEvent.event().endsWith(".updated")) {
-                        players.replace(id, players.get(id), player);
-                    } else if (gameEvent.event().endsWith(".deleted")) {
-                        players.remove(id);
-                    }
-                })
-        );
-    }
 
     public void findMe() {
         me = players.get(userService.getCurrentUser()._id());
-        assert me != null;
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {
