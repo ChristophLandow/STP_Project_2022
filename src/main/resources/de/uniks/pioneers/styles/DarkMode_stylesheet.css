@@ -15,3 +15,11 @@
     -fx-background-color:  #495766;
     -fx-text-fill: rgb(255, 255, 255);
 }
+
+#upRectangle{
+    -fx-fill: #495766;
+}
+
+#downRectangle{
+    -fx-fill: #495766;
+}
