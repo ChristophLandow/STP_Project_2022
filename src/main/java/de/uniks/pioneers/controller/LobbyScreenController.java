@@ -149,12 +149,22 @@ public class LobbyScreenController implements Controller {
     }
 
     public void editProfile(ActionEvent actionEvent) {
-        this.app.show(editProfileControllerProvider.get());
+        EditProfileController editController = editProfileControllerProvider.get();
+        if(darkMode){
+            editController.setDarkMode();
+        }
+        app.show(editController);
     }
 
     private void openRules(MouseEvent mouseEvent) {
         RulesScreenController controller = rulesScreenControllerProvider.get();
-        controller.init();
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            controller.init();
+        } else {
+            controller.setDarkMode();
+            controller.init();
+        }
+
     }
 
     public void logout(ActionEvent event) {
@@ -171,14 +181,26 @@ public class LobbyScreenController implements Controller {
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
-        app.show(loginScreenControllerProvider.get());
+        LoginScreenController loginController = loginScreenControllerProvider.get();
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            app.show(loginController);
+        } else {
+            loginController.setDarkMode();
+            app.show(loginController);
+        }
     }
 
     public void showNewGameLobby(Game game, String password, String hexColor) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
         newGameScreenLobbyController.password.set(password);
-        app.show(newGameScreenLobbyController);
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            app.show(newGameScreenLobbyController);
+        } else {
+            newGameScreenLobbyController.setDakMode();
+            app.show(newGameScreenLobbyController);
+        }
+
         newGameScreenLobbyController.setPlayerColor(hexColor);
     }
 
@@ -193,8 +215,7 @@ public class LobbyScreenController implements Controller {
         stage.show();
     }
 
-    public void darkMode() {
-        System.out.println("dark");
+    public void setDarkMode() {
         darkMode = true;
     }
 }

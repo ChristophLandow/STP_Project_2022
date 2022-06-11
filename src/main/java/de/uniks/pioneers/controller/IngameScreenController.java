@@ -90,6 +90,8 @@ public class IngameScreenController implements Controller {
     private final UserService userService;
     private final EventListener eventListener;
 
+    public boolean darkMode;
+
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
     private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
@@ -142,6 +144,9 @@ public class IngameScreenController implements Controller {
     public void init() {
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         gameService.game.set(game.get());
 
         // init game chat controller
@@ -299,13 +304,11 @@ public class IngameScreenController implements Controller {
         this.stop();
         disposable.dispose();
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
-        if(app.getStage().getScene().getStylesheets().isEmpty()){
-            System.out.println("empty");
-            app.show(lobbyController);
-        } else {
-            lobbyController.darkMode();
-            app.show(lobbyController);
+        if(!app.getStage().getScene().getStylesheets().isEmpty()){
+             lobbyController.setDarkMode();
         }
+        app.show(lobbyController);
+
     }
 
     public void toRules(ActionEvent actionEvent) {

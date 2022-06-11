@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
    <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="30.0">
       <Pane prefHeight="409.0" prefWidth="600.0">
          <Text layoutX="202.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pioneers" textAlignment="CENTER" wrappingWidth="195.263671875">
@@ -33,11 +33,11 @@
                <Font size="22.0" />
             </font>
          </Button>
-         <Hyperlink fx:id="textRegister" onAction="#toSignUp" layoutX="62.0" layoutY="249.0" prefHeight="23.0" prefWidth="474.0" text="You don't have an account? Become part of a growing community now!" textAlignment="CENTER">
+         <Hyperlink fx:id="textRegister" layoutX="62.0" layoutY="249.0" onAction="#toSignUp" prefHeight="23.0" prefWidth="474.0" text="You don't have an account? Become part of a growing community now!" textAlignment="CENTER">
             <font>
                <Font size="14.0" />
             </font></Hyperlink>
-         <Hyperlink fx:id="textRules" onAction="#toRules" layoutX="203.0" layoutY="291.0" prefHeight="26.0" prefWidth="195.0" text="Wait, I don't know the Rules..." textAlignment="CENTER">
+         <Hyperlink fx:id="textRules" layoutX="203.0" layoutY="291.0" onAction="#toRules" prefHeight="26.0" prefWidth="195.0" text="Wait, I don't know the Rules..." textAlignment="CENTER">
             <font>
                <Font size="14.0" />
             </font>

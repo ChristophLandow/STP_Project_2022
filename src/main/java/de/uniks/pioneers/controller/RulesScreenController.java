@@ -17,6 +17,8 @@ import static de.uniks.pioneers.Constants.RULES_SCREEN_TITLE;
 public class RulesScreenController implements Controller {
 
     private final App app;
+
+    private boolean darkMode = false;
     Stage stage;
 
     @Inject
@@ -46,8 +48,14 @@ public class RulesScreenController implements Controller {
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(RULES_SCREEN_TITLE);
             this.stage.setX(100);
+            if(darkMode){
+                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            }
             this.stage.show();
         } else {
+            if(darkMode){
+                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            }
             // bring to front if already open
             this.stage.show();
             this.stage.toFront();
@@ -57,5 +65,9 @@ public class RulesScreenController implements Controller {
 
     @Override
     public void stop() {
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
     }
 }

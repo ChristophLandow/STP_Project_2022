@@ -96,6 +96,7 @@ public class NewGameScreenLobbyController implements Controller {
     Provider<GameChatController> gameChatControllerProvider;
     @Inject
     Provider<IngameScreenController> ingameScreenControllerProvider;
+    private boolean darkMode;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -110,6 +111,9 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public void init() {
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(password.get());
@@ -127,7 +131,7 @@ public class NewGameScreenLobbyController implements Controller {
 
 
         // when member count less than three games cant not be started
-        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 3);
+        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 0);
         startGameButton.disableProperty().bind(lessThanThree);
 
         // add mouse event for rules button
@@ -166,6 +170,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     private void openRules(MouseEvent mouseEvent) {
         RulesScreenController controller = rulesScreenControllerProvider.get();
+
         controller.init();
     }
 
@@ -394,5 +399,9 @@ public class NewGameScreenLobbyController implements Controller {
                 throw new RuntimeException(e);
             }
         }).start();
+    }
+
+    public void setDakMode() {
+        darkMode = true;
     }
 }
