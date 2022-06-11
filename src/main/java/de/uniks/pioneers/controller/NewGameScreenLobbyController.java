@@ -159,8 +159,12 @@ public class NewGameScreenLobbyController implements Controller {
                         .subscribe());
             }
             newGameLobbyService.logout();
-            userService.editProfile(null, null, null, "offline")
-                    .subscribe();
+            disposable.add(userService.editProfile(null, null, null, "offline")
+                    .subscribe(user -> {
+                        Platform.exit();
+                        System.exit(0);
+                            }));
+
         });
 
         try {
