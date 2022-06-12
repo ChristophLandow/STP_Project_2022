@@ -466,4 +466,7 @@ public class IngameScreenController implements Controller {
         darkMode = true;
     }
 
+    public void setBrightMode(){
+        darkMode = false;
+    }
 }

@@ -112,6 +112,9 @@ public class LobbyScreenController implements Controller {
         }
 
         LobbyUserlistController userlistController = userlistControllerProvider.get();
+        if(darkMode){
+            userlistController.setDarkMode();
+        }
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
         userlistController.init();
@@ -214,6 +217,10 @@ public class LobbyScreenController implements Controller {
 
     public void setDarkMode() {
         darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
     }
 
     public App getApp() {
