@@ -2,31 +2,29 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.WindowEvent;
 
 import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
@@ -34,40 +32,23 @@ import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 public class SettingsScreenController implements Controller, Initializable {
 
     @FXML public Button leaveButton;
-
     @FXML public RadioButton lightMode_RadioButton;
-
     @FXML public RadioButton darkMode_RadioButton;
-
     @FXML public ChoiceBox<String> musicChoiceBox;
-
+    @FXML public Slider volumeSlider;
     private final App app;
-
     private Stage stage;
-
     private final String[] songNameList = {"Hardbass", "Ambient"};
-
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
-
     private final Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider;
-
     private final Provider<EditProfileController> editProfileControllerProvider;
-
     private final Provider<ChatController> chatControllerProvider;
-
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-
     private final Provider<LoginScreenController> loginScreenControllerProvider;
-
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
-
     private boolean darkMode = false;
-
     private ArrayList<File> songs;
-
     private MediaPlayer mediaPlayer;
-
-
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
@@ -107,7 +88,11 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage.toFront();
         }
         app.setIcons(stage);
+        stage.setOnCloseRequest(event -> leave());
         musicChoiceBox.setTooltip((new Tooltip("Chooose your backgound music")));
+        volumeSlider.setMin(0);
+        volumeSlider.setMax(1);
+        volumeSlider.setValue(0.3);
         //list all songs
         songs = new ArrayList<>();
         File songDirectory = new File("src/main/resources/de/uniks/pioneers/music");
@@ -115,12 +100,10 @@ public class SettingsScreenController implements Controller, Initializable {
         if(songFiles != null){
             songs.addAll(Arrays.asList(songFiles));
         }
-        System.out.println(songs);
     }
 
     @Override
     public void stop() {
-
     }
 
     @Override
@@ -141,12 +124,20 @@ public class SettingsScreenController implements Controller, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         musicChoiceBox.getItems().addAll(songNameList);
         musicChoiceBox.setOnAction(this::setMusic);
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            double musicVolume = volumeSlider.getValue();
+            if (mediaPlayer != null) {
+                mediaPlayer.setVolume(musicVolume);
+            }
+        });
     }
 
     private void setMusic(ActionEvent actionEvent) {
+        //if a song is played actualy..
         if(mediaPlayer != null){
             mediaPlayer.stop();
         }
+        //find song and play it
         int index = musicChoiceBox.getSelectionModel().getSelectedIndex();
         Media media = new Media(songs.get(index).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
@@ -185,7 +176,6 @@ public class SettingsScreenController implements Controller, Initializable {
             rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
-
     }
 
     public void setDarkMode(){
@@ -193,6 +183,7 @@ public class SettingsScreenController implements Controller, Initializable {
     }
 
     public void leave(){
+        mediaPlayer.stop();
         stage.close();
     }
 
