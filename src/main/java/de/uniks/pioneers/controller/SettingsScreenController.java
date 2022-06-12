@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +23,7 @@ import java.util.ResourceBundle;
 
 import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
-
+@Singleton
 public class SettingsScreenController implements Controller, Initializable {
 
     @FXML public Button leaveButton;
@@ -51,13 +52,18 @@ public class SettingsScreenController implements Controller, Initializable {
 
     private final Provider<LoginScreenController> loginScreenControllerProvider;
 
+    private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
+    private boolean darkMode = false;
+
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
                                     Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider,
                                     Provider<EditProfileController> editProfileControllerProvider,
                                     Provider<ChatController> chatControllerProvider,
                                     Provider<LobbyScreenController> lobbyScreenControllerProvider,
-                                    Provider<LoginScreenController> loginScreenControllerProvider){
+                                    Provider<LoginScreenController> loginScreenControllerProvider,
+                                    Provider<RulesScreenController> rulesScreenControllerProvider){
         this.app = app;
         this.ingameScreenControllerProvider = ingameScreenControllerProvider;
         this.newGameLobbyControllerProvider = newGameLobbyControllerProvider;
@@ -65,6 +71,7 @@ public class SettingsScreenController implements Controller, Initializable {
         this.chatControllerProvider = chatControllerProvider;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
+        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
     }
 
     @Override
@@ -74,8 +81,14 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage = new Stage();
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(SETTINGS_SCREEN_TITLE);
+            if(darkMode){
+                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            }
             this.stage.show();
         } else {
+            if(darkMode){
+                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            }
             // bring to front if already open
             this.stage.show();
             this.stage.toFront();
@@ -121,6 +134,7 @@ public class SettingsScreenController implements Controller, Initializable {
         ChatController chatController = chatControllerProvider.get();
         EditProfileController editController = editProfileControllerProvider.get();
         LoginScreenController loginController = loginScreenControllerProvider.get();
+        RulesScreenController rulesController = rulesScreenControllerProvider.get();
         //handle the options
         if (lightMode_RadioButton.isSelected()){
             ingameController.getApp().getStage().getScene().getStylesheets().clear();
@@ -129,6 +143,7 @@ public class SettingsScreenController implements Controller, Initializable {
             chatController.getApp().getStage().getScene().getStylesheets().clear();
             editController.getApp().getStage().getScene().getStylesheets().clear();
             loginController.getApp().getStage().getScene().getStylesheets().clear();
+            rulesController.getApp().getStage().getScene().getStylesheets().clear();
             stage.getScene().getStylesheets().clear();
         }
         if(darkMode_RadioButton.isSelected()){
@@ -138,12 +153,21 @@ public class SettingsScreenController implements Controller, Initializable {
             chatController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             editController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             loginController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
 
     }
 
+    public void setDarkMode(){
+        darkMode = true;
+    }
+
     public void leave(){
         stage.close();
+    }
+
+    public App getApp() {
+        return this.app;
     }
 }

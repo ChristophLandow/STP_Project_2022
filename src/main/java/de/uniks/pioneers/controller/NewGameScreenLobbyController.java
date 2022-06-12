@@ -168,9 +168,11 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void openRules(MouseEvent mouseEvent) {
-        RulesScreenController controller = rulesScreenControllerProvider.get();
-
-        controller.init();
+        RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        if(darkMode){
+          rulesController.setDarkMode();
+        }
+        rulesController.init();
     }
 
     private void deleteUser(Member member) {
@@ -334,6 +336,9 @@ public class NewGameScreenLobbyController implements Controller {
 
     private void toIngame() {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
+        if(darkMode) {
+            ingameScreenController.setDarkmode();
+        }
         ingameScreenController.game.set(this.game.get());
         ingameScreenController.loadMap();
         ingameScreenController.setUsers(this.users.values().stream().toList());

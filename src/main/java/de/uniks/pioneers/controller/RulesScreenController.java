@@ -19,7 +19,7 @@ public class RulesScreenController implements Controller {
     private final App app;
 
     private boolean darkMode = false;
-    Stage stage;
+    private Stage stage;
 
     @Inject
     public RulesScreenController(App app) {
@@ -48,13 +48,16 @@ public class RulesScreenController implements Controller {
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(RULES_SCREEN_TITLE);
             this.stage.setX(100);
-            if(darkMode){
+            if(this.darkMode){
                 stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             }
             this.stage.show();
         } else {
-            if(darkMode){
+            if(this.darkMode){
                 stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            }
+            if(!this.darkMode){
+                stage.getScene().getStylesheets().clear();
             }
             // bring to front if already open
             this.stage.show();
@@ -69,5 +72,9 @@ public class RulesScreenController implements Controller {
 
     public void setDarkMode() {
         darkMode = true;
+    }
+
+    public App getApp(){
+        return this.app;
     }
 }

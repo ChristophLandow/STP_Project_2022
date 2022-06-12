@@ -50,6 +50,7 @@ import static de.uniks.pioneers.GameConstants.*;
 @Singleton
 public class IngameScreenController implements Controller {
     private final GameService gameService;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
@@ -103,6 +104,7 @@ public class IngameScreenController implements Controller {
     Provider<StreetPointController> streetPointControllerProvider;
     @Inject
     Provider<IngamePlayerListElementController> elementProvider;
+    private boolean darkMode = false;
 
 
     @Inject
@@ -142,6 +144,9 @@ public class IngameScreenController implements Controller {
     public void init() {
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         gameService.game.set(game.get());
 
         // init game chat controller
@@ -319,11 +324,17 @@ public class IngameScreenController implements Controller {
 
     public void toRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        if(darkMode){
+            rulesController.setDarkMode();
+        }
         rulesController.init();
     }
 
     public void toSettings() {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
+        if(darkMode){
+            settingsController.setDarkMode();
+        }
         settingsController.init();
     }
 
@@ -450,4 +461,9 @@ public class IngameScreenController implements Controller {
     private void loadSnowAnimation() {
         new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);
     }
+
+    public void setDarkmode(){
+        darkMode = true;
+    }
+
 }

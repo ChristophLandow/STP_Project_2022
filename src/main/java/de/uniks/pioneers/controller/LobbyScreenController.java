@@ -158,13 +158,10 @@ public class LobbyScreenController implements Controller {
 
     private void openRules(MouseEvent mouseEvent) {
         RulesScreenController controller = rulesScreenControllerProvider.get();
-        if(app.getStage().getScene().getStylesheets().isEmpty()){
-            controller.init();
-        } else {
+        if(darkMode){
             controller.setDarkMode();
-            controller.init();
         }
-
+        controller.init();
     }
 
     public void logout(ActionEvent event) {
