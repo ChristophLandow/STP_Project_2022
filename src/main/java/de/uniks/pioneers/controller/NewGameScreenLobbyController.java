@@ -96,6 +96,7 @@ public class NewGameScreenLobbyController implements Controller {
     Provider<GameChatController> gameChatControllerProvider;
     @Inject
     Provider<IngameScreenController> ingameScreenControllerProvider;
+    private boolean darkMode;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -110,6 +111,9 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public void init() {
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(password.get());
@@ -164,8 +168,11 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void openRules(MouseEvent mouseEvent) {
-        RulesScreenController controller = rulesScreenControllerProvider.get();
-        controller.init();
+        RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        if(darkMode){
+          rulesController.setDarkMode();
+        }
+        rulesController.init();
     }
 
     private void deleteUser(Member member) {
@@ -329,6 +336,9 @@ public class NewGameScreenLobbyController implements Controller {
 
     private void toIngame() {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
+        if(darkMode) {
+            ingameScreenController.setDarkmode();
+        }
         ingameScreenController.game.set(this.game.get());
         ingameScreenController.loadMap();
         ingameScreenController.setUsers(this.users.values().stream().toList());
@@ -396,5 +406,13 @@ public class NewGameScreenLobbyController implements Controller {
                 throw new RuntimeException(e);
             }
         }).start();
+    }
+
+    public void setDakMode() {
+        darkMode = true;
+    }
+
+    public App getApp() {
+        return this.app;
     }
 }

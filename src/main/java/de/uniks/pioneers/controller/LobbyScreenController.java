@@ -78,6 +78,8 @@ public class LobbyScreenController implements Controller {
 
     private LobbyGameListController lobbyGameListController;
 
+    private boolean darkMode = false;
+
     @Inject
     MessageService messageService;
 
@@ -130,6 +132,9 @@ public class LobbyScreenController implements Controller {
         });
 
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
                 .subscribe();
@@ -144,11 +149,18 @@ public class LobbyScreenController implements Controller {
     }
 
     public void editProfile(ActionEvent actionEvent) {
-        this.app.show(editProfileControllerProvider.get());
+        EditProfileController editController = editProfileControllerProvider.get();
+        if(darkMode){
+            editController.setDarkMode();
+        }
+        app.show(editController);
     }
 
     private void openRules(MouseEvent mouseEvent) {
         RulesScreenController controller = rulesScreenControllerProvider.get();
+        if(darkMode){
+            controller.setDarkMode();
+        }
         controller.init();
     }
 
@@ -166,14 +178,26 @@ public class LobbyScreenController implements Controller {
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
-        app.show(loginScreenControllerProvider.get());
+        LoginScreenController loginController = loginScreenControllerProvider.get();
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            app.show(loginController);
+        } else {
+            loginController.setDarkMode();
+            app.show(loginController);
+        }
     }
 
     public void showNewGameLobby(Game game, String password, String hexColor) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
         newGameScreenLobbyController.password.set(password);
-        app.show(newGameScreenLobbyController);
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            app.show(newGameScreenLobbyController);
+        } else {
+            newGameScreenLobbyController.setDakMode();
+            app.show(newGameScreenLobbyController);
+        }
+
         newGameScreenLobbyController.setPlayerColor(hexColor);
     }
 
@@ -186,5 +210,13 @@ public class LobbyScreenController implements Controller {
         Scene scene = new Scene(node);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
+    }
+
+    public App getApp() {
+        return this.app;
     }
 }

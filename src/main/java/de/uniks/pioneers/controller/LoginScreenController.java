@@ -34,6 +34,8 @@ public class LoginScreenController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final PrefService prefService;
 
+    private boolean darkMode = false;
+
     @FXML
     public TextField textFieldUserName;
     @FXML
@@ -104,6 +106,9 @@ public class LoginScreenController implements Controller {
                     .subscribe();
         }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
     }
     @Override
     public void stop(){}
@@ -150,5 +155,13 @@ public class LoginScreenController implements Controller {
 
     public void toLobby() {
         this.app.show(lobbyScreenControllerProvider.get());
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
+    }
+
+    public App getApp() {
+        return this.app;
     }
 }

@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -48,6 +50,7 @@ import static de.uniks.pioneers.GameConstants.*;
 @Singleton
 public class IngameScreenController implements Controller {
     private final GameService gameService;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
@@ -101,10 +104,11 @@ public class IngameScreenController implements Controller {
     Provider<StreetPointController> streetPointControllerProvider;
     @Inject
     Provider<IngamePlayerListElementController> elementProvider;
+    private boolean darkMode = false;
 
 
     @Inject
-    public IngameScreenController(App app,
+    public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
@@ -119,6 +123,7 @@ public class IngameScreenController implements Controller {
         this.eventListener = eventListener;
         this.gameService = gameService;
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
     @Override
@@ -139,6 +144,9 @@ public class IngameScreenController implements Controller {
     public void init() {
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         gameService.game.set(game.get());
 
         // init game chat controller
@@ -302,16 +310,31 @@ public class IngameScreenController implements Controller {
         citySVG.setStrokeWidth(2.0);
     }
 
-    public void giveUp() {
+
+    public void giveUp(ActionEvent actionEvent) {
+        this.stop();
+        disposable.dispose();
+        LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
+        if(!app.getStage().getScene().getStylesheets().isEmpty()){
+             lobbyController.setDarkMode();
+        }
+        app.show(lobbyController);
+
     }
 
     public void toRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        if(darkMode){
+            rulesController.setDarkMode();
+        }
         rulesController.init();
     }
 
     public void toSettings() {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
+        if(darkMode){
+            settingsController.setDarkMode();
+        }
         settingsController.init();
     }
 
@@ -438,4 +461,9 @@ public class IngameScreenController implements Controller {
     private void loadSnowAnimation() {
         new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);
     }
+
+    public void setDarkmode(){
+        darkMode = true;
+    }
+
 }

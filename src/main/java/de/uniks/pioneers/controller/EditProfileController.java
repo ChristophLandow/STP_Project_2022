@@ -56,6 +56,8 @@ public class EditProfileController implements Controller {
     @FXML public Button cancelButton;
 
     private final App app;
+
+    public boolean darkMode = false;
     private final UserService userService;
     private final LoginService loginService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -107,7 +109,9 @@ public class EditProfileController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
-
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         // get currentUser from Server and display name
         this.usernameLabel.setText(userService.getCurrentUser().name());
 
@@ -242,5 +246,13 @@ public class EditProfileController implements Controller {
     private void updateAvatarString(String newAvatar){
         avatarStr = newAvatar;
         resetAvatar();
+    }
+
+    public void setDarkMode(){
+        darkMode = true;
+    }
+
+    public App getApp() {
+        return this.app;
     }
 }
