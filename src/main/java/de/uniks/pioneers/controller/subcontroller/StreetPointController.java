@@ -20,21 +20,21 @@ import javafx.scene.shape.Rectangle;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-public class StreetPointController {
 
+public class StreetPointController {
     private final GameService gameService;
     private final IngameService ingameService;
-
     private final UserService userService;
+    private Pane fieldPane;
     public HexTile tile;
     private Circle view;
+    private Circle eventView;
     private final CompositeDisposable disposable = new CompositeDisposable();
     // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
     public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
     SimpleIntegerProperty side = new SimpleIntegerProperty();
     private String action;
-
     private Building building;
 
     @Inject
@@ -44,15 +44,26 @@ public class StreetPointController {
         this.userService = userService;
     }
 
-    public void post(HexTile tile, Circle view) {
+    public void post(HexTile tile, Circle view, Pane fieldPane) {
         this.tile = tile;
         this.view = view;
+        this.fieldPane = fieldPane;
+
+        this.eventView = new Circle();
+        this.eventView.setLayoutX(view.getLayoutX());
+        this.eventView.setLayoutY(view.getLayoutY());
+        this.eventView.setRadius(15);
+        this.eventView.setOpacity(0);
     }
 
     public void init() {
-        this.view.setOnMouseClicked(this::placeStreet);
-        this.view.setOnMouseEntered(this::dye);
-        this.view.setOnMouseExited(this::undye);
+        this.eventView.setOnMouseClicked(this::placeStreet);
+        this.eventView.setOnMouseEntered(this::dye);
+        this.eventView.setOnMouseExited(this::undye);
+    }
+
+    public void addEventArea() {
+        this.fieldPane.getChildren().add(eventView);
     }
 
     public void placeStreet(MouseEvent mouseEvent) {
@@ -124,7 +135,6 @@ public class StreetPointController {
     public ArrayList<BuildingPointController> getAdjacentBuildings() {
         return this.adjacentBuildings;
     }
-
 
     public void setAction(String action) {
         this.action = action;
