@@ -110,6 +110,7 @@ public class TestModule {
         when(eventListener.listen("games.000.players.*", Player.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(PublishSubject.create());
 
 
 
@@ -431,7 +432,7 @@ public class TestModule {
 
             @Override
             public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
-                return null;
+                return  Observable.just(new Player("000","000","#ff0000",1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
             }
         };
 
