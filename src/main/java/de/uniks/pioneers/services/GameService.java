@@ -1,5 +1,8 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.controller.IngameScreenController;
+import de.uniks.pioneers.controller.subcontroller.BuildingPointController;
+import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
@@ -18,10 +21,17 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.Constants.SETTLEMENT;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class GameService {
@@ -38,8 +48,14 @@ public class GameService {
     private final UserService userService;
     private final IngameService ingameService;
 
+    public ArrayList<HexTileController> tileControllers = new ArrayList<>();
+
     @Inject
     EventListener eventListener;
+
+    @Inject
+    IngameScreenController ingameScreenController;
+
 
     @Inject
     public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService) {
@@ -53,6 +69,8 @@ public class GameService {
     }
 
     public void initGame() {
+        tileControllers = ingameScreenController.getTileControllers();
+
         // REST - get list of all players from server and set current player
         disposable.add(ingameService.getAllPlayers(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -92,12 +110,45 @@ public class GameService {
         );
     }
 
-    private void handleMove(Move move){
 
+    private void handleMove(Move move){
+        switch (move.action()) {
+            case FOUNDING_ROLL, ROLL -> distributeResources(move);
+            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
+            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
+            case BUILD -> this.enableEndTurn();
+        }
 
     }
 
+    private void distributeResources(Move move) {
+        if (move.roll()!=7){
+            HexTileController hexTileController = findHexTile(move.roll());
+            List<BuildingPointController> buildingPointControllers = Arrays.stream(hexTileController.corners).toList();
+            buildingPointControllers.forEach(controller -> {
+                assert controller.getBuilding()!=null;
+                Building building = controller.getBuilding();
+                String type = hexTileController.tile.type;
+                Player owner = this.players.get(controller.getBuilding().owner());
+                if (building.type().equals(SETTLEMENT)){
 
+                }
+
+                grain, brick, ore, lumber, wool
+
+                Kohle zu Erz
+                Getreide zu Walknochen
+                Wolle zu Fell
+                Lehm zu Packeis
+                Holz zu Fisch
+
+            });
+        }
+    }
+
+    private HexTileController findHexTile(int roll) {
+        return tileControllers.stream().filter(controller -> controller.tile.number == roll).findAny().orElse(null);
+    }
 
 
     private void initPlayerListener() {

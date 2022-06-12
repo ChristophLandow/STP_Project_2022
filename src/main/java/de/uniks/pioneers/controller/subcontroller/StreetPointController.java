@@ -8,7 +8,6 @@ import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -17,8 +16,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+
 import javax.inject.Inject;
 import java.util.ArrayList;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class StreetPointController {
@@ -33,7 +34,6 @@ public class StreetPointController {
     // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
     public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
-    SimpleIntegerProperty side = new SimpleIntegerProperty();
     private String action;
     private Building building;
 

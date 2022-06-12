@@ -81,7 +81,7 @@ public class IngameScreenController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
-    private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
+    public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
     private final UserService userService;
     private final EventListener eventListener;
@@ -120,6 +120,12 @@ public class IngameScreenController implements Controller {
         this.gameService = gameService;
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
     }
+
+
+    public ArrayList<HexTileController> getTileControllers() {
+        return tileControllers;
+    }
+
 
     @Override
     public Parent render() {
@@ -225,6 +231,8 @@ public class IngameScreenController implements Controller {
 
     private void deleteBuilding(Building building) {
     }
+
+
 
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
