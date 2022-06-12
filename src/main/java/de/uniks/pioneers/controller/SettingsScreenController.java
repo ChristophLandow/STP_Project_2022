@@ -11,15 +11,22 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
@@ -38,7 +45,7 @@ public class SettingsScreenController implements Controller, Initializable {
 
     private Stage stage;
 
-    private final String[] songList = {"Hardbass", "Ambient"};
+    private final String[] songNameList = {"Hardbass", "Ambient"};
 
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
 
@@ -55,6 +62,12 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
 
     private boolean darkMode = false;
+
+    private ArrayList<File> songs;
+
+    private MediaPlayer mediaPlayer;
+
+
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
@@ -94,6 +107,15 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage.toFront();
         }
         app.setIcons(stage);
+        musicChoiceBox.setTooltip((new Tooltip("Chooose your backgound music")));
+        //list all songs
+        songs = new ArrayList<>();
+        File songDirectory = new File("src/main/resources/de/uniks/pioneers/music");
+        File[] songFiles = songDirectory.listFiles();
+        if(songFiles != null){
+            songs.addAll(Arrays.asList(songFiles));
+        }
+        System.out.println(songs);
     }
 
     @Override
@@ -117,11 +139,18 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        musicChoiceBox.getItems().addAll(songList);
+        musicChoiceBox.getItems().addAll(songNameList);
         musicChoiceBox.setOnAction(this::setMusic);
     }
 
     private void setMusic(ActionEvent actionEvent) {
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+        }
+        int index = musicChoiceBox.getSelectionModel().getSelectedIndex();
+        Media media = new Media(songs.get(index).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
     }
 
     //The Darkmode should work if the SettingsScreen is open nearby AND without it. Here we handle only the nearby

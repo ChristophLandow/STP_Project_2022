@@ -66,7 +66,7 @@ dependencies {
 
 javafx {
     version = '18'
-    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml' ]
+    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.media'  ]
 }
 
 jacoco {
