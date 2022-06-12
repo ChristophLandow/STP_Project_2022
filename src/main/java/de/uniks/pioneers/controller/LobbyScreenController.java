@@ -218,4 +218,8 @@ public class LobbyScreenController implements Controller {
     public void setDarkMode() {
         darkMode = true;
     }
+
+    public App getApp() {
+        return this.app;
+    }
 }

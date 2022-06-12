@@ -404,4 +404,8 @@ public class NewGameScreenLobbyController implements Controller {
     public void setDakMode() {
         darkMode = true;
     }
+
+    public App getApp() {
+        return this.app;
+    }
 }
