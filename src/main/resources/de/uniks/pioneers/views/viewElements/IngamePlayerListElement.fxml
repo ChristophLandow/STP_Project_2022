@@ -19,7 +19,7 @@
             <Insets left="-10.0" />
          </HBox.margin>
       </ImageView>
-      <Label fx:id="playerName" alignment="CENTER" ellipsisString="" maxHeight="40.0" maxWidth="70.0" minHeight="5.0" minWidth="40.0" prefHeight="5.0" prefWidth="40.0" text="kappa" translateX="-50.0" translateY="-15.0">
+      <Label fx:id="playerName" alignment="CENTER" ellipsisString="" maxHeight="40.0" maxWidth="70.0" minHeight="5.0" minWidth="40.0" prefHeight="5.0" prefWidth="70.0" text="kappa" translateX="-50.0" translateY="-15.0">
          <HBox.margin>
             <Insets right="-45.0" />
          </HBox.margin>

@@ -8,6 +8,7 @@ public record Player(String gameId,
                      Integer foundingRoll,
                      Resources resources,
                      RemainingBuildings remainingBuildings
-                     ) {}
+                     ) {
+}
 
 

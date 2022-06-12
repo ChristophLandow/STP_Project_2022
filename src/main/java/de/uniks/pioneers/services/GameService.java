@@ -3,15 +3,8 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.controller.subcontroller.BuildingPointController;
 import de.uniks.pioneers.controller.subcontroller.HexTileController;
-import de.uniks.pioneers.dto.CreateMessageDto;
-import de.uniks.pioneers.dto.MessageDto;
-import de.uniks.pioneers.dto.UpdatePlayerDto;
-import de.uniks.pioneers.model.Building;
-import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.Move;
-import de.uniks.pioneers.model.Player;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
-import de.uniks.pioneers.rest.MessageApiService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -21,13 +14,14 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.SETTLEMENT;
@@ -55,6 +49,7 @@ public class GameService {
 
     @Inject
     IngameScreenController ingameScreenController;
+    private Map<String, List<Building>> buildingsOfPlayers;
 
 
     @Inject
@@ -70,15 +65,21 @@ public class GameService {
 
     public void initGame() {
         tileControllers = ingameScreenController.getTileControllers();
+        buildingsOfPlayers = new HashMap<>();
 
         // REST - get list of all players from server and set current player
         disposable.add(ingameService.getAllPlayers(game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
-                            list.forEach(player -> players.put(player.userId(), player));
+                            list.forEach(player -> {
+                                players.put(player.userId(), player);
+                                buildingsOfPlayers.put(player.userId(), new ArrayList<>());
+                            });
                             findMe();
                         }
                         , Throwable::printStackTrace));
+
+
 
 
         // REST - get buildings from server
@@ -113,11 +114,19 @@ public class GameService {
 
     private void handleMove(Move move){
         switch (move.action()) {
-            case FOUNDING_ROLL, ROLL -> distributeResources(move);
-            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
+            case ROLL -> distributeResources(move);
+            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> updateRemainingBuildings(move);
             case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
             case BUILD -> this.enableEndTurn();
         }
+    }
+
+
+    private void updateRemainingBuildings(Move move) {
+        Player toUpdate = players.get(move.userId());
+        Building added = buildingsOfPlayers.get(move.userId()).stream().filter(building -> building._id().equals(move.building())).findAny().orElse(null);
+        assert added != null;
+        RemainingBuildings remainingBuildings = toUpdate.remainingBuildings().updateRemainingBuildings(added.type());
 
     }
 
@@ -130,18 +139,14 @@ public class GameService {
                 Building building = controller.getBuilding();
                 String type = hexTileController.tile.type;
                 Player owner = this.players.get(controller.getBuilding().owner());
+                Resources resources;
                 if (building.type().equals(SETTLEMENT)){
-                    owner.resources().
+                    resources = owner.resources().updateResources(type, 1);
+                }else {
+                    resources = owner.resources().updateResources(type, 2);
                 }
-
-                grain, brick, ore, lumber, wool
-
-                Erz zu Kohle
-                Getreide zu Walknochen
-                Wolle zu Fell
-                Lehm zu Packeis
-                Holz zu Fisch
-
+                Player updatedPlayer = new Player(owner.gameId(), owner.userId(),owner.color(),owner.foundingRoll(),resources,owner.remainingBuildings());
+                players.replace(owner.userId(),updatedPlayer);
             });
         }
     }
@@ -178,6 +183,7 @@ public class GameService {
                         // render new building
                         System.out.println("new Building created: " + buildingEvent.data());
                         this.buildings.add(building);
+                        buildingsOfPlayers.get(building.owner()).add(building);
                     }
                 }));
 
