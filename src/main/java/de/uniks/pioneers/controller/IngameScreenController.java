@@ -238,7 +238,7 @@ public class IngameScreenController implements Controller {
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             disposable.add(ingameService.updatePlayer(game.get()._id(), userService.getCurrentUser()._id(),true)
                     .observeOn(FX_SCHEDULER)
-                            .subscribe(player -> System.out.println(player.resources())));
+                    .subscribe(player -> System.out.println(player.resources())));
 
 
             // enable posting move

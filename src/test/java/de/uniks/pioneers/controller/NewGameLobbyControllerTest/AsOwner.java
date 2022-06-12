@@ -6,6 +6,7 @@ import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.LogoutResult;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.NewGameLobbyService;
@@ -91,7 +92,10 @@ class AsOwner extends ApplicationTest {
         patternToObserveUserJoining = String.format("users.%s.updated", userJoining._id());
         String patternToObserveGame = String.format("games.%s.*", testGame._id());
 
-        app = new App(null);
+
+        when(app.getStage()).thenReturn(stage);
+
+        //when(newGameLobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
 
         when(userService.getCurrentUser()).thenReturn(owner);
 
@@ -158,6 +162,7 @@ class AsOwner extends ApplicationTest {
         assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
 
         verify(newGameLobbyService).getAll("3");
+        //verify(newGameLobbyService).logout();
         verify(userService,times(2)).getUserById("1");
         verify(userService,times(2)).getUserById("2");
         verify(userService).getUserById("3");

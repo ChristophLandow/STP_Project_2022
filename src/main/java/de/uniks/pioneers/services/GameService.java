@@ -86,9 +86,18 @@ public class GameService {
                     System.out.println(move);
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
+                        handleMove(move);
                     }
-                }));
+                })
+        );
     }
+
+    private void handleMove(Move move){
+
+
+    }
+
+
 
 
     private void initPlayerListener() {

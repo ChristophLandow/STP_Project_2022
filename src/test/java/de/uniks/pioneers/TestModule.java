@@ -297,7 +297,7 @@ public class TestModule {
 
     @Provides
     static NewGameLobbyService newGameLobbyService(){
-        return new NewGameLobbyService(gameApiService(),gameMemberApiService(),messageApiService()){
+        return new NewGameLobbyService(gameApiService(),gameMemberApiService(),messageApiService(), authApiService()){
 
             private String currentMemberId;
 
@@ -427,6 +427,11 @@ public class TestModule {
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
                 return Observable.just(new Move("000","2022-06-09T15:11:51.795Z","000","000","founding-roll",1,""));
+            }
+
+            @Override
+            public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
+                return null;
             }
         };
 

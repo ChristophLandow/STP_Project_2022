@@ -164,7 +164,6 @@ public class NewGameScreenLobbyController implements Controller {
                         Platform.exit();
                         System.exit(0);
                             }));
-
         });
 
         try {
@@ -174,7 +173,6 @@ public class NewGameScreenLobbyController implements Controller {
         }
 
         // when member count less than three games can not be started
-
         final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 0);
         startGameButton.disableProperty().bind(lessThanThree);
 

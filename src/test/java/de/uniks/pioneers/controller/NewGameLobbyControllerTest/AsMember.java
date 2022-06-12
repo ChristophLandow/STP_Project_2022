@@ -72,18 +72,17 @@ class AsMember extends ApplicationTest {
     private String patternToObserveUserUser02;
     private String patternToObserveUserJoining;
 
-    private final Game testGame = new Game("1", "2", "3", "name", "1", 2, false);
+    private final Game testGame = new Game("1", "2", "3", "name", "1", 2,false);
     private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff");
     private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02);
     private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03);
-    private final MessageDto message01 = new MessageDto("1", "1", "1", "1", "hello there");
-    private final MessageDto message02 = new MessageDto("2", "2", "2", "2", "how are you ");
-    private final User owner = new User("1", "owner", "online", randomAvatar01);
-    private final User user02 = new User("2", "member02", "online", randomAvatar02);
+    private final MessageDto message01 = new MessageDto("1","1","1","1","hello there");
+    private final MessageDto message02 = new MessageDto("2","2","2","2","how are you ");
+    private final User owner  = new User("1", "owner", "online", randomAvatar01);
+    private final User user02  = new User("2","member02","online",randomAvatar02);
     private final User userJoining = new User("3", "userJoining", "online", randomAvatar03);
 
-    AsMember() throws IOException, URISyntaxException {
-    }
+    AsMember() throws IOException, URISyntaxException {}
 
     @Override
     public void start(Stage stage) {
@@ -93,7 +92,10 @@ class AsMember extends ApplicationTest {
         patternToObserveUserJoining = String.format("users.%s.updated", userJoining._id());
         String patternToObserveGame = String.format("games.%s.*", testGame._id());
 
-        app = new App(null);
+
+        when(app.getStage()).thenReturn(stage);
+
+        //when(newGameLobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
 
         when(userService.getCurrentUser()).thenReturn(user02);
 
@@ -132,7 +134,7 @@ class AsMember extends ApplicationTest {
     }
 
     @Test
-    void initControllerAsMember() {
+    void initControllerAsOwner() {
         List<Member> members = newGameScreenLobbyController.getMembers();
 
         assertEquals(members.get(1).createdAt(), "2");
@@ -140,6 +142,7 @@ class AsMember extends ApplicationTest {
         assertEquals(members.get(1).gameId(), "3");
         assertEquals(members.get(1).userId(), "2");
         assertTrue(members.get(1).ready());
+
         assertEquals(members.size(), 3);
 
         // assertions for current user box, colorpicker gets random color
@@ -159,6 +162,7 @@ class AsMember extends ApplicationTest {
         assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
 
         verify(newGameLobbyService).getAll("3");
+        //verify(newGameLobbyService).logout();
         verify(userService,times(2)).getUserById("1");
         verify(userService,times(2)).getUserById("2");
         verify(userService).getUserById("3");
@@ -171,7 +175,8 @@ class AsMember extends ApplicationTest {
         verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
     }
 
-    public String createRandomColor() {
+    public String createRandomColor()
+    {
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
         return String.format("#%06x", rand_num);
@@ -185,14 +190,16 @@ class AsMember extends ApplicationTest {
         String avatarStr = avatarNames.get(rand.nextInt(avatarNames.size()));
         String newAvatar;
 
-        if (Objects.requireNonNull(getClass().getResource("images/" + avatarStr)).toString().contains("!")) {
+        if(Objects.requireNonNull(getClass().getResource("images/" + avatarStr)).toString().contains("!")) {
             final Map<String, String> env = new HashMap<>();
             String[] array = Objects.requireNonNull(getClass().getResource("images/" + avatarStr)).toString().split("!");
             FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
             byte[] data = Files.readAllBytes(Objects.requireNonNull(fs.getPath(array[1])));
             newAvatar = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
             fs.close();
-        } else {
+        }
+        else
+        {
             byte[] data = Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getResource("images/" + avatarStr)).toURI()));
             newAvatar = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
         }
