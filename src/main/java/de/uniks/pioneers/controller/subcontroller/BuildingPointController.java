@@ -7,7 +7,6 @@ import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,7 +16,6 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -25,8 +23,9 @@ import static de.uniks.pioneers.GameConstants.*;
 
 
 public class BuildingPointController {
-    private final Pane fieldpane;
+    private final Pane fieldPane;
     private final Circle view;
+    private final Circle eventView;
     private final IngameService ingameService;
     private final String gameId;
     private String action;
@@ -36,25 +35,35 @@ public class BuildingPointController {
     // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
 
-    public ArrayList<StreetPointController> streets = new ArrayList<>();
+    public ArrayList<StreetPointController> adjacentStreets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private Building building;
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
-                                   Pane fieldpane) {
+                                   Pane fieldPane) {
 
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
         this.gameId = gameId;
-        this.fieldpane = fieldpane;
+        this.fieldPane = fieldPane;
+
+        this.eventView = new Circle();
+        this.eventView.setLayoutX(view.getLayoutX());
+        this.eventView.setLayoutY(view.getLayoutY());
+        this.eventView.setRadius(15);
+        this.eventView.setOpacity(0);
     }
 
     public void init() {
-        this.view.setOnMouseClicked(this::info);
-        this.view.setOnMouseEntered(this::dye);
-        this.view.setOnMouseExited(this::undye);
+        this.eventView.setOnMouseClicked(this::info);
+        this.eventView.setOnMouseEntered(this::dye);
+        this.eventView.setOnMouseExited(this::undye);
+    }
+
+    public void addEventArea() {
+        this.fieldPane.getChildren().add(eventView);
     }
 
     public Circle getView() {
@@ -65,8 +74,8 @@ public class BuildingPointController {
         return this.tile;
     }
 
-    public ArrayList<StreetPointController> getStreets() {
-        return this.streets;
+    public ArrayList<StreetPointController> getAdjacentStreets() {
+        return this.adjacentStreets;
     }
 
     public void build() {
@@ -81,9 +90,7 @@ public class BuildingPointController {
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> {
-                    this.fieldpane.getChildren().forEach(this::reset);
-                }));
+                .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
 
     }
 
@@ -104,14 +111,12 @@ public class BuildingPointController {
         // set color of building
         disposable.add(ingameService.getPlayer(building.gameId(), building.owner())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(player -> {
-                    settlementSVG.setStroke(Paint.valueOf(player.color()));
-                }));
+                .subscribe(player -> settlementSVG.setStroke(Paint.valueOf(player.color()))));
 
         // set position on game field
         settlementSVG.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH / 1.2);
         settlementSVG.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT);
-        this.fieldpane.getChildren().add(settlementSVG);
+        this.fieldPane.getChildren().add(settlementSVG);
 
         // set building of this controller
         this.building = building;
@@ -120,10 +125,10 @@ public class BuildingPointController {
 
     private void info(MouseEvent mouseEvent) {
         boolean surrounded = false;
-        for (StreetPointController street : streets) {
-            for (BuildingPointController building : street.getBuildings()) {
+        for (StreetPointController street : adjacentStreets) {
+            for (BuildingPointController building : street.getAdjacentBuildings()) {
                 if (building != this) {
-                    if (building.getView().getFill() != RED) {
+                    if (building.building != null) {
                         surrounded = true;
                     }
                 }

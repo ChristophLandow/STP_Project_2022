@@ -19,3 +19,12 @@
 #rules{
     -fx-fill: white;
 }
+
+
+#upRectangle{
+    -fx-fill: #495766;
+}
+
+#downRectangle{
+    -fx-fill: #495766;
+}

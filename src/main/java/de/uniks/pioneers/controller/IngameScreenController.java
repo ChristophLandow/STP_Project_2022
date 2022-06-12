@@ -82,15 +82,12 @@ public class IngameScreenController implements Controller {
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
-
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final IngameService ingameService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
     private final UserService userService;
     private final EventListener eventListener;
-
-    public boolean darkMode;
+    private final DiceSubcontroller diceSubcontroller;
 
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
@@ -109,7 +106,7 @@ public class IngameScreenController implements Controller {
 
 
     @Inject
-    public IngameScreenController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider,
+    public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
@@ -123,6 +120,7 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
+        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
@@ -144,9 +142,6 @@ public class IngameScreenController implements Controller {
     public void init() {
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
-        if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
-        }
         gameService.game.set(game.get());
 
         // init game chat controller
@@ -158,6 +153,10 @@ public class IngameScreenController implements Controller {
                 .setUsers(this.users);
         gameChatController.render();
         gameChatController.init();
+
+        // set dice subcontroller
+        this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
+                .setRightDiceView(this.rightDiceImageView);
 
         // init game attributes and event listeners
         gameService.initGame();
@@ -232,62 +231,68 @@ public class IngameScreenController implements Controller {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
 
-        // set game state label
-        String playerName;
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
-            playerName = "ME";
-        } else {
-            playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
-        }
-        this.situationLabel.setText(playerName + ":\n" + move.action());
+        this.setSituationLabel(move);
 
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
-                case FOUNDING_ROLL:
-                    this.enableFoundingRoll();
-                    break;
-                case FOUNDING_SETTLEMENT_1:
-                case FOUNDING_SETTLEMENT_2:
-                    // enable building points
-                    for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
-                        controller.init();
-                        controller.setAction(move.action());
-                    }
-                    break;
-                case FOUNDING_ROAD_1:
-                case FOUNDING_ROAD_2:
-                    for (StreetPointController controller : streetPointControllerHashMap.values()) {
-                        controller.init();
-                        controller.setAction(move.action());
-                    }
+                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
+                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
+                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
+                case BUILD -> this.enableEndTurn();
             }
         }
     }
 
-    private void enableFoundingRoll() {
-        // temporary solution!
-        this.leftDiceImageView.setOnMouseClicked(this::foundingRoll);
+    private void enableEndTurn() {
+        this.turnPane.setOnMouseClicked(this::endTurn);
     }
 
-    private void foundingRoll(MouseEvent mouseEvent) {
-        disposable.add(ingameService.postMove(game.get()._id(), new CreateMoveDto(FOUNDING_ROLL, null))
+    private void endTurn(MouseEvent mouseEvent) {
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+        disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(result -> {
-                    // disable another roll
-                    this.leftDiceImageView.setOnMouseClicked(null);
-                }));
+                .subscribe(move -> this.turnPane.setOnMouseClicked(null))
+        );
+    }
+
+    private void enableStreetPoints(String action) {
+        for (StreetPointController controller : streetPointControllerHashMap.values()) {
+            controller.init();
+            controller.setAction(action);
+        }
+    }
+
+    private void enableBuildingPoints(String action) {
+        for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
+            controller.init();
+            controller.setAction(action);
+        }
+    }
+
+    private void setSituationLabel(ExpectedMove move) {
+        // set game state label
+        String playerName;
+        // if this user is current player
+        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            playerName = "ME";
+            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/next.png")).toString()));
+        } else {
+            playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
+            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/sanduhr.png")).toString()));
+        }
+        this.situationLabel.setText(playerName + ":\n" + move.action());
+    }
+
+    private void enableRoll(String action) {
+        // init dice subcontroller
+        this.diceSubcontroller.setAction(action);
+        this.diceSubcontroller.init();
     }
 
     public App getApp() {
         return this.app;
-    }
-
-
-    private void swapTurnSymbol() {
-        turnPane.getChildren().get(0).setVisible(!turnPane.getChildren().get(0).isVisible());
-        turnPane.getChildren().get(1).setVisible(!turnPane.getChildren().get(1).isVisible());
     }
 
     public void setPlayerColor(String hexColor) {
@@ -300,6 +305,7 @@ public class IngameScreenController implements Controller {
         citySVG.setStrokeWidth(2.0);
     }
 
+
     public void giveUp(ActionEvent actionEvent) {
         this.stop();
         disposable.dispose();
@@ -311,37 +317,29 @@ public class IngameScreenController implements Controller {
 
     }
 
-    public void toRules(ActionEvent actionEvent) {
+    public void toRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         rulesController.init();
     }
 
-    public void toSettings(ActionEvent actionEvent) {
+    public void toSettings() {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.init();
     }
 
-    public void sendMessage(KeyEvent keyEvent) {
+    public void onHammerPressed() {
     }
 
-    public void onHammerPressed(MouseEvent mouseEvent) {
+    public void onStreetPressed() {
     }
 
-    public void onStreetPressed(MouseEvent mouseEvent) {
+    public void onHousePressed() {
     }
 
-    public void onHousePressed(MouseEvent mouseEvent) {
+    public void onCityPressed() {
     }
 
-    public void onCityPressed(MouseEvent mouseEvent) {
-    }
-
-    public void onTradePressed(MouseEvent mouseEvent) {
-    }
-
-    public void onTurnPressed(MouseEvent mouseEvent) {
-        // only for testing
-        swapTurnSymbol();
+    public void onTradePressed() {
     }
 
     @Override
@@ -353,7 +351,6 @@ public class IngameScreenController implements Controller {
     }
 
     public void loadMap() {
-
         if (this.game.get().members() > 4) {
             this.gameSize = 3;
         } else {
@@ -367,7 +364,6 @@ public class IngameScreenController implements Controller {
     }
 
     private void buildBoardUI() {
-
         BoardGenerator generator = new BoardGenerator();
         List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
         List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1);
@@ -385,7 +381,7 @@ public class IngameScreenController implements Controller {
                     -Math.sqrt(3) / 2, 0.5);
             hex.setScaleX(scale);
             hex.setScaleY(scale);
-            Image image = new Image(getClass().getResource("ingame/" + hexTile.type + ".png").toString());
+            Image image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + hexTile.type + ".png")).toString());
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
@@ -393,7 +389,7 @@ public class IngameScreenController implements Controller {
 
             if (!hexTile.type.equals("desert")) {
                 String numberURL = "ingame/tile_" + hexTile.number + ".png";
-                ImageView numberImage = new ImageView(getClass().getResource(numberURL).toString());
+                ImageView numberImage = new ImageView(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
                 numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
                 numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
                 numberImage.setFitHeight(30);
@@ -405,20 +401,20 @@ public class IngameScreenController implements Controller {
 
         for (HexTile edge : edges) {
 
-            Circle circ = new Circle(2);
+            Circle circ = new Circle(3);
             circ.setFill(RED);
 
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             StreetPointController streetPointController = streetPointControllerProvider.get();
-            streetPointController.post(edge, circ);
+            streetPointController.post(edge, circ, this.fieldPane);
             streetPointControllers.add(streetPointController);
         }
 
         for (HexTile corner : corners) {
 
-            Circle circ = new Circle(5);
+            Circle circ = new Circle(6);
             circ.setFill(RED);
 
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
@@ -447,5 +443,11 @@ public class IngameScreenController implements Controller {
                     streetPoint.generateKeyString(),
                     streetPoint);
         }
+
+        loadSnowAnimation();
+    }
+
+    private void loadSnowAnimation() {
+        new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);
     }
 }

@@ -137,10 +137,6 @@ public class NewGameScreenLobbyController implements Controller {
         // add mouse event for rules button
         this.RulesButton.setOnMouseClicked(this::openRules);
 
-        // init event listeners
-        initMemberListener();
-        initGameListener();
-
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();
@@ -153,8 +149,11 @@ public class NewGameScreenLobbyController implements Controller {
 
         disposable.add(newGameLobbyService.getAll(game.get()._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(this.members::setAll
-                        , Throwable::printStackTrace));
+                .subscribe(this.members::setAll, Throwable::printStackTrace));
+
+        // init event listeners
+        initMemberListener();
+        initGameListener();
 
         // init game chat controller
         gameChatController = gameChatControllerProvider.get()
@@ -204,9 +203,12 @@ public class NewGameScreenLobbyController implements Controller {
 
             if(!currentUser._id().equals(member.userId())) {
                 PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
-                playerEntryController.setReady(false);
+                playerEntryController.setReady(member.ready());
                 playerEntries.put(user._id(), playerEntryController);
                 userBox.getChildren().add(playerEntryController.getPlayerEntry());
+                if(userBox.getChildren().size() > 3) {
+                    userBox.setPrefHeight(userBox.getPrefHeight() + 60);
+                }
             }
         }
     }
