@@ -131,12 +131,12 @@ public class GameService {
                 String type = hexTileController.tile.type;
                 Player owner = this.players.get(controller.getBuilding().owner());
                 if (building.type().equals(SETTLEMENT)){
-
+                    owner.resources().
                 }
 
                 grain, brick, ore, lumber, wool
 
-                Kohle zu Erz
+                Erz zu Kohle
                 Getreide zu Walknochen
                 Wolle zu Fell
                 Lehm zu Packeis
