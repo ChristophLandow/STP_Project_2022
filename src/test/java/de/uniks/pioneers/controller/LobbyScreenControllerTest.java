@@ -85,6 +85,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) {
 
+        // get date from server
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String today = dtf.format(now);
