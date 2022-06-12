@@ -399,20 +399,20 @@ public class IngameScreenController implements Controller {
 
         for (HexTile edge : edges) {
 
-            Circle circ = new Circle(2);
+            Circle circ = new Circle(3);
             circ.setFill(RED);
 
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             StreetPointController streetPointController = streetPointControllerProvider.get();
-            streetPointController.post(edge, circ);
+            streetPointController.post(edge, circ, this.fieldPane);
             streetPointControllers.add(streetPointController);
         }
 
         for (HexTile corner : corners) {
 
-            Circle circ = new Circle(5);
+            Circle circ = new Circle(6);
             circ.setFill(RED);
 
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
@@ -445,6 +445,6 @@ public class IngameScreenController implements Controller {
     }
 
     private void loadSnowAnimation() {
-        new SnowAnimationControllor(fieldPane);
+        new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);
     }
 }
