@@ -89,6 +89,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
         LocalDateTime now = LocalDateTime.now();
         String today = dtf.format(now);
 
+
         //Setup lobby controller API calls
         when(prefService.recall()).thenReturn("");
 
