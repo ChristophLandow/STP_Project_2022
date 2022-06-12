@@ -23,8 +23,9 @@ import static de.uniks.pioneers.GameConstants.*;
 
 
 public class BuildingPointController {
-    private final Pane fieldpane;
+    private final Pane fieldPane;
     private final Circle view;
+    private final Circle eventView;
     private final IngameService ingameService;
     private final String gameId;
     private String action;
@@ -40,19 +41,29 @@ public class BuildingPointController {
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
-                                   Pane fieldpane) {
+                                   Pane fieldPane) {
 
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
         this.gameId = gameId;
-        this.fieldpane = fieldpane;
+        this.fieldPane = fieldPane;
+
+        this.eventView = new Circle();
+        this.eventView.setLayoutX(view.getLayoutX());
+        this.eventView.setLayoutY(view.getLayoutY());
+        this.eventView.setRadius(15);
+        this.eventView.setOpacity(0);
     }
 
     public void init() {
-        this.view.setOnMouseClicked(this::info);
-        this.view.setOnMouseEntered(this::dye);
-        this.view.setOnMouseExited(this::undye);
+        this.eventView.setOnMouseClicked(this::info);
+        this.eventView.setOnMouseEntered(this::dye);
+        this.eventView.setOnMouseExited(this::undye);
+    }
+
+    public void addEventArea() {
+        this.fieldPane.getChildren().add(eventView);
     }
 
     public Circle getView() {
@@ -79,9 +90,7 @@ public class BuildingPointController {
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> {
-                    this.fieldpane.getChildren().forEach(this::reset);
-                }));
+                .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
 
     }
 
@@ -102,14 +111,12 @@ public class BuildingPointController {
         // set color of building
         disposable.add(ingameService.getPlayer(building.gameId(), building.owner())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(player -> {
-                    settlementSVG.setStroke(Paint.valueOf(player.color()));
-                }));
+                .subscribe(player -> settlementSVG.setStroke(Paint.valueOf(player.color()))));
 
         // set position on game field
         settlementSVG.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH / 1.2);
         settlementSVG.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT);
-        this.fieldpane.getChildren().add(settlementSVG);
+        this.fieldPane.getChildren().add(settlementSVG);
 
         // set building of this controller
         this.building = building;
