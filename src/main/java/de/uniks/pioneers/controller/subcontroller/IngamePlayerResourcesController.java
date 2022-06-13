@@ -5,32 +5,21 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.UserService;
-import de.uniks.pioneers.ws.EventListener;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
 
-import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-
 public class IngamePlayerResourcesController {
-
-
     @FXML
     public HBox resourcesHBox;
     @FXML
@@ -93,7 +82,7 @@ public class IngamePlayerResourcesController {
     }
 
     private void setImages() {
-        // set values to gui elements
+        // set pngs to imageViews
         Image fischImg = new Image(Objects.requireNonNull(getClass().getResource("images/card_fish.png")).toString());
         fischResource.setImage(fischImg);
         Image packeisImg = new Image(Objects.requireNonNull(getClass().getResource("images/card_ice.png")).toString());

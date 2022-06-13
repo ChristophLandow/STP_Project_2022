@@ -42,7 +42,6 @@ public class DiceSubcontroller {
         disposable.add(ingameService.postMove(gameService.game.get()._id(), rollMove)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
-                    System.out.println("roll: " + move.roll());
                     this.showRolledNumber(move.roll());
                     this.reset();
                 }));
@@ -65,7 +64,6 @@ public class DiceSubcontroller {
             rightDice = leftDice + 1;
         }
 
-        System.out.println("left roll: " + leftDice + ", right dice: " + rightDice);
         Image leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource("../ingame/" + leftDice + ".png")).toString());
         this.leftDiceView.setImage(leftDiceImage);
 

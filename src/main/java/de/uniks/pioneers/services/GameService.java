@@ -43,15 +43,12 @@ public class GameService {
     private final UserService userService;
     private final IngameService ingameService;
 
-    public ArrayList<HexTileController> tileControllers = new ArrayList<>();
+
 
     @Inject
     EventListener eventListener;
 
-    @Inject
-    Provider<IngameScreenController> ingameScreenControllerProvider;
 
-    private Map<String, List<Building>> buildingsOfPlayers;
 
 
     @Inject
@@ -66,17 +63,12 @@ public class GameService {
     }
 
     public void initGame() {
-        IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
-        tileControllers = ingameScreenController.getTileControllers();
-        buildingsOfPlayers = new HashMap<>();
-
         // REST - get list of all players from server and set current player
         disposable.add(ingameService.getAllPlayers(game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                             list.forEach(player -> {
                                 players.put(player.userId(), player);
-                                buildingsOfPlayers.put(player.userId(), new ArrayList<>());
                             });
                             findMe();
                         }
@@ -146,13 +138,9 @@ public class GameService {
         }
     }
 
-    private HexTileController findHexTile(int roll) {
-        return tileControllers.stream().filter(controller -> controller.tile.number == roll).findAny().orElse(null);
-    }
-
 
     private void initPlayerListener() {
-        String patternToObservePlayers = String.format("games.%s.players.*,*", game.get()._id());
+        String patternToObservePlayers = String.format("games.%s.players.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
@@ -176,18 +164,11 @@ public class GameService {
                     final Building building = buildingEvent.data();
                     if (buildingEvent.event().endsWith(".created")) {
                         // render new building
-                        System.out.println("new Building created: " + buildingEvent.data());
-                        Player toUpdate = players.get(building.owner());
-                        RemainingBuildings remainingBuildings = toUpdate.remainingBuildings().updateRemainingBuildings(building.type());
-                        Player replacement = new Player(toUpdate.gameId(),toUpdate.userId(),toUpdate.color(),toUpdate.foundingRoll(),toUpdate.resources(), remainingBuildings);
-                        players.replace(toUpdate.userId(),toUpdate,replacement);
                         this.buildings.add(building);
-                        buildingsOfPlayers.get(building.owner()).add(building);
                     }
                 })
         );
     }
-
 
     public void findMe() {
         me = players.get(userService.getCurrentUser()._id());
