@@ -34,7 +34,20 @@
          <ListView fx:id="playerListView" prefHeight="320.0" prefWidth="240.0" />
       </ScrollPane>
    </Pane>
-   <HBox fx:id="resourcesHBox" layoutX="16.0" layoutY="693.0" prefHeight="60.0" prefWidth="296.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
+   <HBox fx:id="resourcesHBox" alignment="CENTER" layoutX="16.0" layoutY="693.0" prefHeight="60.0" prefWidth="296.0" spacing="10.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
+      <children>
+         <ImageView fx:id="fishResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_fish.png" />
+            </image>
+         </ImageView>
+         <Label text="Label" />
+         <ImageView fx:id="packeisResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="fellResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="kohleResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="walknochenResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="entwicklungResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+      </children></HBox>
    <Pane layoutX="399.0" layoutY="693.0" onMousePressed="#onStreetPressed" prefHeight="60.0" prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
       <Label fx:id="streetCountLabel" alignment="CENTER" layoutX="42.0" prefHeight="18.0" prefWidth="18.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" text="5" />
       <SVGPath fx:id="streetSVG" content="M 0.125 24.488281 L 0.125 48.976562 L 11.976562 48.976562 L 11.976562 0 L 0.125 0 Z M 0.125 24.488281" layoutX="24.0" layoutY="6.0" />

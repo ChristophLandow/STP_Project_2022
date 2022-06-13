@@ -150,9 +150,11 @@ public class IngamePlayerListElementController {
             String key = c.getKey();
             System.out.println("player map got updated");
             if (key.equals(toRender.userId())) {
-                if (c.wasRemoved()) {
+                if (c.wasRemoved() && !c.wasAdded()) {
+                    System.out.println("element gets removed");
                     nodeListView.getItems().remove(playerBox);
-                } else {
+                } else if (c.wasAdded() && c.wasRemoved()){
+                    System.out.println("element gets updated");
                     setDataToElement(c.getValueAdded());
                 }
             }

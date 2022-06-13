@@ -180,7 +180,7 @@ public class GameService {
                         Player toUpdate = players.get(building.owner());
                         RemainingBuildings remainingBuildings = toUpdate.remainingBuildings().updateRemainingBuildings(building.type());
                         Player replacement = new Player(toUpdate.gameId(),toUpdate.userId(),toUpdate.color(),toUpdate.foundingRoll(),toUpdate.resources(), remainingBuildings);
-                        players.replace(toUpdate.userId(),replacement);
+                        players.replace(toUpdate.userId(),toUpdate,replacement);
                         this.buildings.add(building);
                         buildingsOfPlayers.get(building.owner()).add(building);
                     }

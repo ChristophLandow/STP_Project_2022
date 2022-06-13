@@ -23,6 +23,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -73,6 +74,7 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView rightDiceImageView;
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
+    @FXML public HBox resourcesHBox;
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
@@ -101,6 +103,8 @@ public class IngameScreenController implements Controller {
     Provider<StreetPointController> streetPointControllerProvider;
     @Inject
     Provider<IngamePlayerListElementController> elementProvider;
+    @Inject
+    Provider<IngamePlayerResourcesController> resourcesControllerProvider;
 
 
     @Inject
@@ -164,6 +168,10 @@ public class IngameScreenController implements Controller {
         // init game attributes and event listeners
         gameService.initGame();
 
+        // init controller for player resources box
+        IngamePlayerResourcesController ingamePlayerResourcesController= resourcesControllerProvider.get();
+        ingamePlayerResourcesController.resourcesHBox = this.resourcesHBox;
+
         // REST - get game state from server
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -184,10 +192,11 @@ public class IngameScreenController implements Controller {
         // add change listeners
         // players change listener
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
-            if (c.wasAdded()) {
+            if (c.wasAdded() && !c.wasRemoved()){
                 System.out.println("Player was added!");
                 this.renderPlayer(c.getValueAdded());
-            } else if (c.wasRemoved()) {
+            } else if (c.wasRemoved() && !c.wasAdded()) {
+                System.out.println("Player was removed");
                 this.deletePlayer(c.getValueRemoved());
             }
         });
@@ -208,8 +217,6 @@ public class IngameScreenController implements Controller {
     }
 
     private void renderPlayer(Player player) {
-        /*System.out.println("added player "+ player.userId());
-        System.out.println("belongs to game:" + game.get()._id());*/
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
@@ -243,7 +250,6 @@ public class IngameScreenController implements Controller {
             disposable.add(ingameService.updatePlayer(game.get()._id(), userService.getCurrentUser()._id(),true)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(player -> System.out.println(player.resources())));
-
 
             // enable posting move
             System.out.println("It's your turn now!");
