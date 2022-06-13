@@ -34,22 +34,16 @@ public class GameService {
     public final ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    public Player me;
-    public final ObservableList<Player> currentPlayers = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameApiService gameApiService;
+    public Player me;
 
     private final UserService userService;
     private final IngameService ingameService;
 
-
-
     @Inject
     EventListener eventListener;
-
-
-
 
     @Inject
     public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService) {
@@ -103,38 +97,15 @@ public class GameService {
 
     private void handleMove(Move move){
         switch (move.action()) {
-            case ROLL -> distributeResources(move);
+            case ROLL -> {
+            }
             case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> {
-                //update victory points
             }
             case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> {
-                //update longest road
             }
             case BUILD -> {
-                // update longest road, check longest road
-                // update victory points, check winner
-            }
-        }
-    }
 
-    private void distributeResources(Move move) {
-        if (move.roll()!=7){
-            HexTileController hexTileController = findHexTile(move.roll());
-            List<BuildingPointController> buildingPointControllers = Arrays.stream(hexTileController.corners).toList();
-            buildingPointControllers.forEach(controller -> {
-                assert controller.getBuilding()!=null;
-                Building building = controller.getBuilding();
-                String type = hexTileController.tile.type;
-                Player owner = this.players.get(controller.getBuilding().owner());
-                Resources resources;
-                if (building.type().equals(SETTLEMENT)){
-                    resources = owner.resources().updateResources(type, 1);
-                }else {
-                    resources = owner.resources().updateResources(type, 2);
-                }
-                Player updatedPlayer = new Player(owner.gameId(), owner.userId(),owner.color(),owner.foundingRoll(),resources,owner.remainingBuildings());
-                players.replace(owner.userId(),updatedPlayer);
-            });
+            }
         }
     }
 

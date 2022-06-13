@@ -76,7 +76,6 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
 
-
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
     private List<User> users;
@@ -97,7 +96,6 @@ public class IngameScreenController implements Controller {
     private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-
 
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
@@ -126,12 +124,6 @@ public class IngameScreenController implements Controller {
         this.gameService = gameService;
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
     }
-
-
-    public ArrayList<HexTileController> getTileControllers() {
-        return tileControllers;
-    }
-
 
     @Override
     public Parent render() {
@@ -199,10 +191,8 @@ public class IngameScreenController implements Controller {
         // players change listener
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if (c.wasAdded() && !c.wasRemoved()){
-                System.out.println("Player was added!");
                 this.renderPlayer(c.getValueAdded());
             } else if (c.wasRemoved() && !c.wasAdded()) {
-                System.out.println("Player was removed");
                 this.deletePlayer(c.getValueRemoved());
             }
         });
@@ -216,8 +206,6 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
-
-
     }
 
     private void deletePlayer(Player player) {
