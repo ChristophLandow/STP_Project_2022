@@ -117,7 +117,6 @@ public class NewGameScreenLobbyController implements Controller {
     private User currentUser;
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-
     private GameChatController gameChatController;
     private ColorPickerController colorPickerController;
     private boolean clientReady = false;
@@ -158,10 +157,8 @@ public class NewGameScreenLobbyController implements Controller {
                         .observeOn(FX_SCHEDULER)
                         .subscribe());
             }
-            newGameLobbyService.logout()
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(Throwable::printStackTrace)
-                    .subscribe();
+            newGameLobbyService.logout();
+
 
             disposable.add(userService.editProfile(null, null, null, "offline")
                     .subscribe(user -> {
