@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 
@@ -48,7 +49,8 @@ public class GameService {
     EventListener eventListener;
 
     @Inject
-    IngameScreenController ingameScreenController;
+    Provider<IngameScreenController> ingameScreenControllerProvider;
+
     private Map<String, List<Building>> buildingsOfPlayers;
 
 
@@ -64,6 +66,7 @@ public class GameService {
     }
 
     public void initGame() {
+        IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         tileControllers = ingameScreenController.getTileControllers();
         buildingsOfPlayers = new HashMap<>();
 
@@ -79,9 +82,6 @@ public class GameService {
                         }
                         , Throwable::printStackTrace));
 
-
-
-
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -92,8 +92,6 @@ public class GameService {
         this.initPlayerListener();
         this.initBuildingsListener();
         this.initMoveListener();
-
-
     }
 
     private void initMoveListener() {
@@ -111,23 +109,20 @@ public class GameService {
         );
     }
 
-
     private void handleMove(Move move){
         switch (move.action()) {
             case ROLL -> distributeResources(move);
-            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> updateRemainingBuildings(move);
-            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
-            case BUILD -> this.enableEndTurn();
+            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> {
+                //update victory points
+            }
+            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> {
+                //update longest road
+            }
+            case BUILD -> {
+                // update longest road, check longest road
+                // update victory points, check winner
+            }
         }
-    }
-
-
-    private void updateRemainingBuildings(Move move) {
-        Player toUpdate = players.get(move.userId());
-        Building added = buildingsOfPlayers.get(move.userId()).stream().filter(building -> building._id().equals(move.building())).findAny().orElse(null);
-        assert added != null;
-        RemainingBuildings remainingBuildings = toUpdate.remainingBuildings().updateRemainingBuildings(added.type());
-
     }
 
     private void distributeResources(Move move) {
@@ -182,6 +177,10 @@ public class GameService {
                     if (buildingEvent.event().endsWith(".created")) {
                         // render new building
                         System.out.println("new Building created: " + buildingEvent.data());
+                        Player toUpdate = players.get(building.owner());
+                        RemainingBuildings remainingBuildings = toUpdate.remainingBuildings().updateRemainingBuildings(building.type());
+                        Player replacement = new Player(toUpdate.gameId(),toUpdate.userId(),toUpdate.color(),toUpdate.foundingRoll(),toUpdate.resources(), remainingBuildings);
+                        players.replace(toUpdate.userId(),replacement);
                         this.buildings.add(building);
                         buildingsOfPlayers.get(building.owner()).add(building);
                     }

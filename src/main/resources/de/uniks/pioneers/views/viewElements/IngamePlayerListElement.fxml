@@ -49,7 +49,7 @@
                </stops>
             </RadialGradient>
          </textFill></Label>
-      <ImageView fx:id="developmentCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="4.0" scaleY="4.0" translateX="-30.0" translateY="5.0">
+      <ImageView fx:id="developmentCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="4.0" scaleY="4.0" translateX="-30.0" translateY="4.0">
          <image>
             <Image url="@../../../../../../../../../../../Desktop/card_hammer.png" />
          </image>

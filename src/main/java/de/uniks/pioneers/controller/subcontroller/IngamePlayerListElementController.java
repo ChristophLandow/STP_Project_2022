@@ -148,6 +148,7 @@ public class IngamePlayerListElementController {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             String key = c.getKey();
+            System.out.println("player map got updated");
             if (key.equals(toRender.userId())) {
                 if (c.wasRemoved()) {
                     nodeListView.getItems().remove(playerBox);
@@ -160,14 +161,17 @@ public class IngamePlayerListElementController {
 
     private void setDataToElement(Player valueAdded) {
         Resources resources = valueAdded.resources();
-        int resourceCount;
-        try {
-            resourceCount = resources.brick() + resources.grain() + resources.ore() + resources.lumber() + resources.wool();
-        } catch (NullPointerException e) {
-            resourceCount = 0;
-        }
+        int brick = resources.brick() == null ? 0 : resources.brick();
+        int grain = resources.grain() == null ? 0 : resources.grain();
+        int ore   = resources.ore()   == null ? 0 : resources.ore();
+        int lumber = resources.lumber() == null ? 0 : resources.lumber();
+        int wool = resources.wool()   == null ? 0 : resources.wool();
+        int unknown = resources.unknown() == null ? 0 : resources.unknown();
+
+        int resourceCount = brick + grain + ore + lumber + wool;
+
         resourceCardsCount.setText(String.valueOf(resourceCount));
-        developmentCardsCount.setText(String.valueOf(resources.unknown()));
+        developmentCardsCount.setText(String.valueOf(unknown));
         cityCount.setText(String.valueOf(4 - valueAdded.remainingBuildings().city()));
         settlementCount.setText(String.valueOf(5 - valueAdded.remainingBuildings().settlement()));
     }

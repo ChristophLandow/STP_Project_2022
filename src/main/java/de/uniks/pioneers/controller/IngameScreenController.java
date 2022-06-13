@@ -239,10 +239,6 @@ public class IngameScreenController implements Controller {
         ExpectedMove move = currentState.expectedMoves().get(0);
 
         this.setSituationLabel(move);
-
-        /*System.out.println(userService.getCurrentUser()._id());
-        System.out.println(gameService.me.userId());*/
-
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             disposable.add(ingameService.updatePlayer(game.get()._id(), userService.getCurrentUser()._id(),true)
                     .observeOn(FX_SCHEDULER)
