@@ -152,7 +152,7 @@ public class GameService {
 
 
     private void initPlayerListener() {
-        String patternToObservePlayers = String.format("games.%s.players.*", game.get()._id());
+        String patternToObservePlayers = String.format("games.%s.players.*,*", game.get()._id());
         disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
@@ -184,8 +184,8 @@ public class GameService {
                         this.buildings.add(building);
                         buildingsOfPlayers.get(building.owner()).add(building);
                     }
-                }));
-
+                })
+        );
     }
 
 

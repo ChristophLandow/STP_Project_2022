@@ -255,10 +255,6 @@ public class IngameScreenController implements Controller {
 
         this.setSituationLabel(move);
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
-            disposable.add(ingameService.updatePlayer(game.get()._id(), userService.getCurrentUser()._id(),true)
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(player -> System.out.println(player.resources())));
-
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
