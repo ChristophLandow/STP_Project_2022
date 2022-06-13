@@ -8,6 +8,7 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
@@ -48,7 +49,7 @@ import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameScreenController implements Controller {
-    private final GameService gameService;
+    @FXML public Pane root;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
@@ -74,7 +75,7 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView rightDiceImageView;
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
-    @FXML public HBox resourcesHBox;
+
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
@@ -85,7 +86,9 @@ public class IngameScreenController implements Controller {
     private final IngameService ingameService;
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
+    private final GameStorage gameStorage;
     private final UserService userService;
+    private final GameService gameService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
 
@@ -95,7 +98,6 @@ public class IngameScreenController implements Controller {
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    private final GameStorage gameStorage;
 
     @Inject
     Provider<GameChatController> gameChatControllerProvider;
@@ -168,10 +170,6 @@ public class IngameScreenController implements Controller {
         // init game attributes and event listeners
         gameService.initGame();
 
-        // init controller for player resources box
-        IngamePlayerResourcesController ingamePlayerResourcesController= resourcesControllerProvider.get();
-        ingamePlayerResourcesController.resourcesHBox = this.resourcesHBox;
-
         // REST - get game state from server
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -188,6 +186,14 @@ public class IngameScreenController implements Controller {
                     }
                 })
         );
+
+        // init controller for player resources box
+        Platform.runLater(()->{
+            IngamePlayerResourcesController ingamePlayerResourcesController= resourcesControllerProvider.get();
+            ingamePlayerResourcesController.root = this.root;
+            ingamePlayerResourcesController.render();
+            ingamePlayerResourcesController.init();
+        });
 
         // add change listeners
         // players change listener
@@ -210,6 +216,8 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
+
+
     }
 
     private void deletePlayer(Player player) {

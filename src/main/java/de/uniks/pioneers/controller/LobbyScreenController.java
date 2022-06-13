@@ -36,12 +36,14 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.xml.stream.EventFilter;
 import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
@@ -134,12 +136,11 @@ public class LobbyScreenController implements Controller {
         userlistController.init();
 
         lobbyGameListController = lobbyGameListControllerProvider.get();
-        lobbyGameListController.listViewGames= this.listViewGames;
+        lobbyGameListController.listViewGames = this.listViewGames;
         lobbyGameListController.setup();
 
         return parent;
     }
-
 
 
     @Override
@@ -168,11 +169,11 @@ public class LobbyScreenController implements Controller {
         /* when create new game pop up is openend, create new game button gets disabled
          when other game is joined, close create new game stage */
         createGameListener = (observable, oldValue, newValue) -> {
-            if (newValue && !oldValue){
+            if (newValue && !oldValue) {
                 NewGameButton.disableProperty().set(true);
-            }else if (oldValue && !newValue){
+            } else if (oldValue && !newValue) {
                 NewGameButton.disableProperty().set(false);
-                assert createNewGameStage!=null;
+                assert createNewGameStage != null;
                 createNewGameStage.close();
             }
         };
@@ -202,7 +203,10 @@ public class LobbyScreenController implements Controller {
 
     public void logout() {
         //This function is called when the logout button is pressed or the stage is closed
-        lobbyService.logout();
+        lobbyService.logout()
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe();
 
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")

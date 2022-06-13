@@ -158,7 +158,11 @@ public class NewGameScreenLobbyController implements Controller {
                         .observeOn(FX_SCHEDULER)
                         .subscribe());
             }
-            newGameLobbyService.logout();
+            newGameLobbyService.logout()
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(Throwable::printStackTrace)
+                    .subscribe();
+
             disposable.add(userService.editProfile(null, null, null, "offline")
                     .subscribe(user -> {
                         Platform.exit();
