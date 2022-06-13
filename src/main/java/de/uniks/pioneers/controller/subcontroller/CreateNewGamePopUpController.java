@@ -67,6 +67,7 @@ public class CreateNewGamePopUpController implements Controller {
 
     @Override
     public void init() {
+
         IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
         IntegerBinding passwordLength = Bindings.length(passwordTextField.textProperty());
         BooleanBinding invalid = Bindings.equal(passwordLen.textProperty(), nameLen.textProperty()).not();

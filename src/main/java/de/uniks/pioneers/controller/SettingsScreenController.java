@@ -79,12 +79,12 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(SETTINGS_SCREEN_TITLE);
             if(darkMode){
-                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             }
             this.stage.show();
         } else {
             if(darkMode){
-                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             }
             // bring to front if already open
             this.stage.show();

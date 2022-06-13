@@ -49,6 +49,7 @@ public class LobbyUserlistController extends OnlineUserlistController {
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("grid");
         Label username = new Label(user.name());
+        username.getStyleClass().add("NameLabel");
         username.setOnMouseClicked(this::openChat);
 
         ImageView imgView;

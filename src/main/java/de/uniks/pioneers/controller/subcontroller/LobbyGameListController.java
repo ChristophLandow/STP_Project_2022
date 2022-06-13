@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LobbyService;
@@ -26,14 +27,18 @@ public class LobbyGameListController {
     private final Provider<GameListElementController> gameListElementControllerProvider;
     private final EventListener eventListener;
     private final LobbyService lobbyService;
+
+    private final App app;
     public ListView<Node> listViewGames;
     private ObservableList<Game> games;
     private ObservableList<User> users = FXCollections.observableArrayList();
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
     private CompositeDisposable disposable;
 
+    private boolean darkMode = false;
+
     @Inject
-    public LobbyGameListController(EventListener eventListener,
+    public LobbyGameListController(App app, EventListener eventListener,
                                    LobbyService lobbyService,
                                    UserlistService userlistService,
                                    Provider<GameListElementController> gameListElementControllerProvider
@@ -42,6 +47,7 @@ public class LobbyGameListController {
         this.lobbyService = lobbyService;
         this.userlistService = userlistService;
         this.gameListElementControllerProvider = gameListElementControllerProvider;
+        this.app = app;
     }
 
     public void init(){
@@ -82,6 +88,9 @@ public class LobbyGameListController {
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
+        if(darkMode){
+            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
@@ -129,5 +138,17 @@ public class LobbyGameListController {
     public void stop()
     {
         disposable.dispose();
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
+    }
+
+    public App getApp(){
+        return this.app;
     }
 }
