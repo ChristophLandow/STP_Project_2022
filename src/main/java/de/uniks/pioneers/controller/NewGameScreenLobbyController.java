@@ -96,7 +96,7 @@ public class NewGameScreenLobbyController implements Controller {
     Provider<GameChatController> gameChatControllerProvider;
     @Inject
     Provider<IngameScreenController> ingameScreenControllerProvider;
-    private boolean darkMode;
+    private boolean darkMode = false;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -131,7 +131,7 @@ public class NewGameScreenLobbyController implements Controller {
 
 
         // when member count less than three games cant not be started
-        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 3);
+        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 0);
         startGameButton.disableProperty().bind(lessThanThree);
 
         // add mouse event for rules button
@@ -408,7 +408,7 @@ public class NewGameScreenLobbyController implements Controller {
         }).start();
     }
 
-    public void setDakMode() {
+    public void setDarkMode() {
         darkMode = true;
     }
 

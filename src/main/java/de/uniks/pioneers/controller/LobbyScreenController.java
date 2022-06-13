@@ -200,7 +200,7 @@ public class LobbyScreenController implements Controller {
         if(app.getStage().getScene().getStylesheets().isEmpty()){
             app.show(newGameScreenLobbyController);
         } else {
-            newGameScreenLobbyController.setDakMode();
+            newGameScreenLobbyController.setDarkMode();
             app.show(newGameScreenLobbyController);
         }
 
