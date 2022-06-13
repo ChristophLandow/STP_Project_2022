@@ -135,7 +135,7 @@ public class IngamePlayerResourcesController {
         if (brick==0 && oldBrick>0){
             resourcesHBox.getChildren().remove(fischResource);
         }else if (brick>0 && oldBrick==0){
-            resourcesHBox.getChildren().add(fellResource);
+            resourcesHBox.getChildren().add(fischResource);
         }
 
         if (grain==0 && oldGrain>0){
@@ -167,9 +167,6 @@ public class IngamePlayerResourcesController {
         fellCount.setText(String.valueOf(ore));
         kohleCount.setText(String.valueOf(lumber));
         walknochenCount.setText(String.valueOf(grain));
-
-
-
     }
 }
 

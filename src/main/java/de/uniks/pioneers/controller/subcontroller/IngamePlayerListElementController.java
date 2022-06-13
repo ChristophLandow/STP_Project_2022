@@ -148,13 +148,10 @@ public class IngamePlayerListElementController {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             String key = c.getKey();
-            System.out.println("player map got updated");
             if (key.equals(toRender.userId())) {
                 if (c.wasRemoved() && !c.wasAdded()) {
-                    System.out.println("element gets removed");
                     nodeListView.getItems().remove(playerBox);
                 } else if (c.wasAdded() && c.wasRemoved()){
-                    System.out.println("element gets updated");
                     setDataToElement(c.getValueAdded());
                 }
             }

@@ -62,7 +62,6 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                             list.forEach(player -> {
-                                System.out.println(player.userId());
                                 players.put(player.userId(), player);
                             });
                             findMe();
@@ -117,7 +116,7 @@ public class GameService {
                 .subscribe(gameEvent -> {
                     Player player = gameEvent.data();
                     String id = player.userId();
-                    System.out.println("player updated event");
+                    System.out.println(player.resources());
                     if (gameEvent.event().endsWith(".updated")) {
                         players.replace(id, players.get(id), player);
                     } else if (gameEvent.event().endsWith(".deleted")) {
