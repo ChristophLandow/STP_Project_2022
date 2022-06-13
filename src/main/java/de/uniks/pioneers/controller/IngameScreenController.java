@@ -23,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -33,7 +32,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -86,27 +84,19 @@ public class IngameScreenController implements Controller {
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
-
     private final UserService userService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
-
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
     private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-
     private final GameStorage gameStorage;
-
-    @Inject
-    Provider<GameChatController> gameChatControllerProvider;
-    @Inject
-    Provider<StreetPointController> streetPointControllerProvider;
-    @Inject
-    Provider<IngamePlayerListElementController> elementProvider;
+    @Inject Provider<GameChatController> gameChatControllerProvider;
+    @Inject Provider<StreetPointController> streetPointControllerProvider;
+    @Inject Provider<IngamePlayerListElementController> elementProvider;
     private boolean darkMode = false;
-
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -329,7 +319,9 @@ public class IngameScreenController implements Controller {
         if(darkMode){
             rulesController.setDarkMode();
         }
-        rulesController.init();
+        //rulesController.init();
+
+        leaveGameController.saveLeavedGame(this.game.get()._id());
     }
 
     public void toSettings() {

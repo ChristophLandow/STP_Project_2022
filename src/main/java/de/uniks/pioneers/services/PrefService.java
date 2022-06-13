@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.rest.GameApiService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
@@ -12,14 +13,14 @@ public class PrefService{
     private final Preferences preferences;
     private final TokenStorage tokenStorage;
     private final CryptService cryptService;
-    private final GameService gameService;
+    private final GameApiService gameApiService;
 
     @Inject
-    public PrefService(Preferences preferences, TokenStorage tokenStorage, CryptService cryptService, GameService gameService){
+    public PrefService(Preferences preferences, TokenStorage tokenStorage, CryptService cryptService, GameApiService gameApiService) {
         this.preferences = preferences;
         this.tokenStorage = tokenStorage;
         this.cryptService = cryptService;
-        this.gameService = gameService;
+        this.gameApiService = gameApiService;
     }
 
     public void remember(){
@@ -48,7 +49,7 @@ public class PrefService{
 
         if(!leavedGameID.equals("")) {
             try {
-                leavedGame = gameService.getGameById(leavedGameID).blockingFirst();
+                leavedGame = gameApiService.getGame(leavedGameID).blockingFirst();
             } catch (Exception e) {
                 forgetSavedGame();
             }

@@ -253,7 +253,7 @@ public class NewGameScreenLobbyController implements Controller {
                     game.set(gameEvent.data());
                     memberCount.set(game.get().members());
                      if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
-                         this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor(), false);
+                         this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor());
                     }
                 })
         );
@@ -330,14 +330,11 @@ public class NewGameScreenLobbyController implements Controller {
         if (allUsersReady()) {
             disposable.add(newGameLobbyService.updateGame(game.get(),password.get(),true)
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(response -> this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor(), false), Throwable::printStackTrace));
+                    .subscribe(response -> this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor()), Throwable::printStackTrace));
         }
     }
 
-    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin) {
-        if(rejoin) {
-
-        }
+    public void toIngame(Game game, List<User> users, String myColor) {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         if(darkMode) {
             ingameScreenController.setDarkmode();

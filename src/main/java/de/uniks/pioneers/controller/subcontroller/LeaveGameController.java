@@ -67,6 +67,6 @@ public class LeaveGameController {
     }
 
     private void toIngameScreen(Game leavedGame, String myColor) {
-        newGameScreenLobbyController.toIngame(leavedGame, users, myColor, true);
+        newGameScreenLobbyController.toIngame(leavedGame, users, myColor);
     }
 }
