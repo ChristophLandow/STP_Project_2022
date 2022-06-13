@@ -112,11 +112,17 @@ public class LobbyScreenController implements Controller {
         }
 
         LobbyUserlistController userlistController = userlistControllerProvider.get();
+        if(darkMode){
+            userlistController.setDarkMode();
+        }
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
         userlistController.init();
 
         lobbyGameListController = lobbyGameListControllerProvider.get();
+        if(darkMode){
+            lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         lobbyGameListController.listViewGames = this.listViewGames;
         lobbyGameListController.init();
 
@@ -133,7 +139,7 @@ public class LobbyScreenController implements Controller {
 
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
@@ -204,16 +210,24 @@ public class LobbyScreenController implements Controller {
     public void newGame() {
         //create pop in order to create a new game lobby
         CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
+
         Parent node = createNewGamePopUpController.render();
         Stage stage = new Stage();
         stage.setTitle("create new game pop up");
         Scene scene = new Scene(node);
+        if(darkMode){
+            scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         stage.setScene(scene);
         stage.show();
     }
 
     public void setDarkMode() {
         darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
     }
 
     public App getApp() {

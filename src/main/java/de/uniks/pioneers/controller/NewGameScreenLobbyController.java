@@ -412,6 +412,10 @@ public class NewGameScreenLobbyController implements Controller {
         darkMode = true;
     }
 
+    public void setBrightMode(){
+        darkMode = false;
+    }
+
     public App getApp() {
         return this.app;
     }

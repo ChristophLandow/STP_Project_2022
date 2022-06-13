@@ -2,10 +2,9 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
+import de.uniks.pioneers.controller.subcontroller.OnlineUserlistController;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +23,6 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.WindowEvent;
 
 import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
 
@@ -46,6 +44,9 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
+    private final Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
+
     private boolean darkMode = false;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
@@ -57,7 +58,8 @@ public class SettingsScreenController implements Controller, Initializable {
                                     Provider<ChatController> chatControllerProvider,
                                     Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                     Provider<LoginScreenController> loginScreenControllerProvider,
-                                    Provider<RulesScreenController> rulesScreenControllerProvider){
+                                    Provider<RulesScreenController> rulesScreenControllerProvider,
+                                    Provider<LobbyUserlistController> lobbyUserlistControllerProvider){
         this.app = app;
         this.ingameScreenControllerProvider = ingameScreenControllerProvider;
         this.newGameLobbyControllerProvider = newGameLobbyControllerProvider;
@@ -66,6 +68,7 @@ public class SettingsScreenController implements Controller, Initializable {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
+        this.lobbyUserlistControllerProvider = lobbyUserlistControllerProvider;
     }
 
     @Override
@@ -76,12 +79,12 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(SETTINGS_SCREEN_TITLE);
             if(darkMode){
-                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             }
             this.stage.show();
         } else {
             if(darkMode){
-                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             }
             // bring to front if already open
             this.stage.show();
@@ -155,25 +158,44 @@ public class SettingsScreenController implements Controller, Initializable {
         EditProfileController editController = editProfileControllerProvider.get();
         LoginScreenController loginController = loginScreenControllerProvider.get();
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        LobbyUserlistController userListController = lobbyUserlistControllerProvider.get();
         //handle the options
         if (lightMode_RadioButton.isSelected()){
             ingameController.getApp().getStage().getScene().getStylesheets().clear();
+            ingameController.setBrightMode();
             newGameController.getApp().getStage().getScene().getStylesheets().clear();
+            newGameController.setBrightMode();
             lobbyController.getApp().getStage().getScene().getStylesheets().clear();
+            lobbyController.setBrightMode();
             chatController.getApp().getStage().getScene().getStylesheets().clear();
+            chatController.setBrightMode();
             editController.getApp().getStage().getScene().getStylesheets().clear();
+            editController.setBrightMode();
             loginController.getApp().getStage().getScene().getStylesheets().clear();
+            loginController.setBrightMode();
             rulesController.getApp().getStage().getScene().getStylesheets().clear();
+            rulesController.setBrightMode();
+            userListController.getApp().getStage().getScene().getStylesheets().clear();
+            userListController.setBrightMode();
             stage.getScene().getStylesheets().clear();
         }
         if(darkMode_RadioButton.isSelected()){
             ingameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            ingameController.setDarkmode();
             newGameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            newGameController.setDakMode();
             lobbyController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            lobbyController.setDarkMode();
             chatController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            chatController.setDarkMode();
             editController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            editController.setDarkMode();
             loginController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            loginController.setDarkMode();
             rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            rulesController.setDarkMode();
+            userListController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            userListController.setDarkMode();
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
     }
@@ -183,7 +205,9 @@ public class SettingsScreenController implements Controller, Initializable {
     }
 
     public void leave(){
-        mediaPlayer.stop();
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
         stage.close();
     }
 

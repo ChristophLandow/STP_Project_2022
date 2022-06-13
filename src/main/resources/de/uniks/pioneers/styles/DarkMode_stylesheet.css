@@ -7,19 +7,18 @@
 }
 
 #messageVBox{
-    -fx-background-color:  #495766;
-    -fx-text-fill: rgb(255, 255, 255);
-}
-
-#userVBox{
-    -fx-background-color:  #495766;
+    -fx-background-color:  #717988;
     -fx-text-fill: rgb(255, 255, 255);
 }
 
 #rules{
-    -fx-fill: white;
+    -fx-fill: rgb(255, 255, 255);
 }
 
+#NameLabel{
+    -fx-background-color: #717988;
+    -fx-text-fill: rgb(255, 255, 255);
+}
 
 #upRectangle{
     -fx-fill: #495766;
@@ -28,3 +27,37 @@
 #downRectangle{
     -fx-fill: #495766;
 }
+
+#gameBoxRoot {
+    -fx-background-color: #717988;
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+#popUpBox{
+    -fx-background-color:  #495766;
+}
+
+#gameNameLabel{
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+#passWordLabel{
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+.text-field {
+    -fx-background-color: #717988;
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+.grid{
+    -fx-background-color:  #717988;
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+.vBox {
+    -fx-background-color: #717988;
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+
