@@ -20,6 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_2;
 
 public class StreetPointController {
     private final GameService gameService;
@@ -71,12 +72,14 @@ public class StreetPointController {
 
         for(BuildingPointController building : this.adjacentBuildings){
             if (building.getBuilding() != null && building.getBuilding().owner().equals(this.userService.getCurrentUser()._id())) {
+                //check if own building is adjacent
                 valid = true;
                 break;
             }
             for(StreetPointController street : building.adjacentStreets){
 
-                if((street != this) && street.building != null && street.building.owner().equals(this.userService.getCurrentUser()._id())){
+                if(this.action.equals(FOUNDING_ROAD_2) && (street != this) && street.building != null && street.building.owner().equals(this.userService.getCurrentUser()._id())){
+                    //check if own road is adjacent, only valid outside of founding phase
                     valid = true;
                     break;
                 }
