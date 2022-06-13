@@ -49,32 +49,58 @@ import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameScreenController implements Controller {
-    @FXML public Pane root;
-    @FXML public Pane turnPane;
-    @FXML public SVGPath streetSVG;
-    @FXML public SVGPath houseSVG;
-    @FXML public SVGPath citySVG;
-    @FXML public Button rulesButton;
-    @FXML public Pane fieldPane;
-    @FXML public Button giveUpButton;
-    @FXML public Button settingsButton;
-    @FXML public ScrollPane chatScrollPane;
-    @FXML public VBox messageVBox;
-    @FXML public TextField sendMessageField;
-    @FXML public ScrollPane userScrollPane;
-    @FXML public Label streetCountLabel;
-    @FXML public Label houseCountLabel;
-    @FXML public Label cityCountLabel;
-    @FXML public ImageView tradeImageView;
-    @FXML public ImageView hourglassImageView;
-    @FXML public ImageView nextTurnImageView;
-    @FXML public Label timeLabel;
-    @FXML public Pane situationPane;
-    @FXML public Label situationLabel;
-    @FXML public ImageView leftDiceImageView;
-    @FXML public ImageView rightDiceImageView;
-    @FXML public ImageView hammerImageView;
-    @FXML public ListView<Node> playerListView;
+    @FXML
+    public Pane root;
+    @FXML
+    public Pane turnPane;
+    @FXML
+    public SVGPath streetSVG;
+    @FXML
+    public SVGPath houseSVG;
+    @FXML
+    public SVGPath citySVG;
+    @FXML
+    public Button rulesButton;
+    @FXML
+    public Pane fieldPane;
+    @FXML
+    public Button giveUpButton;
+    @FXML
+    public Button settingsButton;
+    @FXML
+    public ScrollPane chatScrollPane;
+    @FXML
+    public VBox messageVBox;
+    @FXML
+    public TextField sendMessageField;
+    @FXML
+    public ScrollPane userScrollPane;
+    @FXML
+    public Label streetCountLabel;
+    @FXML
+    public Label houseCountLabel;
+    @FXML
+    public Label cityCountLabel;
+    @FXML
+    public ImageView tradeImageView;
+    @FXML
+    public ImageView hourglassImageView;
+    @FXML
+    public ImageView nextTurnImageView;
+    @FXML
+    public Label timeLabel;
+    @FXML
+    public Pane situationPane;
+    @FXML
+    public Label situationLabel;
+    @FXML
+    public ImageView leftDiceImageView;
+    @FXML
+    public ImageView rightDiceImageView;
+    @FXML
+    public ImageView hammerImageView;
+    @FXML
+    public ListView<Node> playerListView;
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
@@ -159,8 +185,25 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
                 .setRightDiceView(this.rightDiceImageView);
 
+
         // init game attributes and event listeners
         gameService.initGame();
+
+        disposable.add(ingameService.getAllPlayers(game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(list -> {
+                            list.forEach(player -> {
+                                System.out.println(player.userId());
+                                gameService.players.put(player.userId(), player);
+                            });
+                            gameService.findMe();
+                            // init controller for player resources box
+                            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
+                            ingamePlayerResourcesController.root = this.root;
+                            ingamePlayerResourcesController.render();
+                            ingamePlayerResourcesController.init();
+                        }
+                        , Throwable::printStackTrace));
 
         // REST - get game state from server
         disposable.add(ingameService.getCurrentState(game.get()._id())
@@ -179,18 +222,10 @@ public class IngameScreenController implements Controller {
                 })
         );
 
-        // init controller for player resources box
-        Platform.runLater(()->{
-            IngamePlayerResourcesController ingamePlayerResourcesController= resourcesControllerProvider.get();
-            ingamePlayerResourcesController.root = this.root;
-            ingamePlayerResourcesController.render();
-            ingamePlayerResourcesController.init();
-        });
-
         // add change listeners
         // players change listener
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
-            if (c.wasAdded() && !c.wasRemoved()){
+            if (c.wasAdded() && !c.wasRemoved()) {
                 this.renderPlayer(c.getValueAdded());
             } else if (c.wasRemoved() && !c.wasAdded()) {
                 this.deletePlayer(c.getValueRemoved());
@@ -206,6 +241,15 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
+
+        // init controller for player resources box
+        Platform.runLater(() -> {
+            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
+            ingamePlayerResourcesController.root = this.root;
+            ingamePlayerResourcesController.render();
+            ingamePlayerResourcesController.init();
+        });
+
     }
 
     private void deletePlayer(Player player) {
@@ -234,7 +278,6 @@ public class IngameScreenController implements Controller {
 
     private void deleteBuilding(Building building) {
     }
-
 
 
     private void handleGameState(State currentState) {

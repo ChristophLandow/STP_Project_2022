@@ -57,17 +57,6 @@ public class GameService {
     }
 
     public void initGame() {
-        // REST - get list of all players from server and set current player
-        disposable.add(ingameService.getAllPlayers(game.get()._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(list -> {
-                            list.forEach(player -> {
-                                players.put(player.userId(), player);
-                            });
-                            findMe();
-                        }
-                        , Throwable::printStackTrace));
-
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -86,7 +75,6 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(moveEvent -> {
                     final Move move = moveEvent.data();
-                    System.out.println(move);
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
                         handleMove(move);
@@ -143,6 +131,7 @@ public class GameService {
 
     public void findMe() {
         me = players.get(userService.getCurrentUser()._id());
+        System.out.println(me.userId());
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {

@@ -46,7 +46,7 @@ public class IngamePlayerResourcesController {
     public Pane root;
 
     private final GameService gameService;
-    private String me;
+
 
     @Inject
     public IngamePlayerResourcesController(GameService gameService) {
@@ -74,10 +74,7 @@ public class IngamePlayerResourcesController {
 
     public void init() {
         // set values to gui and setup listeners
-        me = gameService.me.userId();
-        Player toRender = gameService.players.get(me);
         setImages();
-        setDataToElement(toRender);
         addPlayerListener();
     }
 
@@ -93,6 +90,8 @@ public class IngamePlayerResourcesController {
         walknochenResource.setImage(walknochenImg);
         Image kohleImg = new Image(Objects.requireNonNull(getClass().getResource("images/card_carbon.png")).toString());
         kohleResource.setImage(kohleImg);
+
+        resourcesHBox.getChildren().clear();
     }
 
 
@@ -101,15 +100,16 @@ public class IngamePlayerResourcesController {
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             String key = c.getKey();
             System.out.println("player map got updated");
-            if (key.equals(me)) {
+            if (key.equals(gameService.me.userId())) {
                 if (c.wasRemoved() && c.wasAdded()) {
-                    setDataToElement(c.getValueAdded());
+                    setDataToElement(c.getValueAdded(), c.getValueRemoved());
                 }
             }
         });
     }
 
-    private void setDataToElement(Player valueAdded) {
+    private void setDataToElement(Player valueAdded, Player valueRemoved) {
+        // records are immutable
         Resources resources = valueAdded.resources();
         int brick = resources.brick() == null ? 0 : resources.brick();
         int grain = resources.grain() == null ? 0 : resources.grain();
@@ -118,12 +118,58 @@ public class IngamePlayerResourcesController {
         int wool = resources.wool() == null ? 0 : resources.wool();
         int unknown = resources.unknown() == null ? 0 : resources.unknown();
 
+        resources = valueRemoved.resources();
+        int oldBrick = resources.brick() == null ? 0 : resources.brick();
+        int oldGrain = resources.grain() == null ? 0 : resources.grain();
+        int oldOre = resources.ore() == null ? 0 : resources.ore();
+        int oldLumber = resources.lumber() == null ? 0 : resources.lumber();
+        int oldWool = resources.wool() == null ? 0 : resources.wool();
+        int oldUnknown = resources.unknown() == null ? 0 : resources.unknown();
 
         fischCount.setText(String.valueOf(brick));
-        packeisCount.setText(String.valueOf(grain));
+        packeisCount.setText(String.valueOf(wool));
         fellCount.setText(String.valueOf(ore));
         kohleCount.setText(String.valueOf(lumber));
-        walknochenCount.setText(String.valueOf(wool));
+        walknochenCount.setText(String.valueOf(grain));
+
+        if (brick==0 && oldBrick>0){
+            resourcesHBox.getChildren().remove(fischResource);
+        }else if (brick>0 && oldBrick==0){
+            resourcesHBox.getChildren().add(fellResource);
+        }
+
+        if (grain==0 && oldGrain>0){
+            resourcesHBox.getChildren().remove(walknochenResource);
+        }else if (grain>0 && oldGrain==0){
+            resourcesHBox.getChildren().add(walknochenResource);
+        }
+
+        if (ore==0 && oldOre>0){
+            resourcesHBox.getChildren().remove(fellResource);
+        }else if (ore>0 && oldOre==0){
+            resourcesHBox.getChildren().add(fellResource);
+        }
+
+        if (lumber==0 && oldLumber>0){
+            resourcesHBox.getChildren().remove(kohleResource);
+        }else if (lumber>0 && oldLumber==0){
+            resourcesHBox.getChildren().add(kohleResource);
+        }
+
+        if (wool==0 && oldWool>0){
+            resourcesHBox.getChildren().remove(packeisResource);
+        }else if (wool>0 && oldWool==0){
+            resourcesHBox.getChildren().add(packeisResource);
+        }
+
+        fischCount.setText(String.valueOf(brick));
+        packeisCount.setText(String.valueOf(wool));
+        fellCount.setText(String.valueOf(ore));
+        kohleCount.setText(String.valueOf(lumber));
+        walknochenCount.setText(String.valueOf(grain));
+
+
+
     }
 }
 
