@@ -37,7 +37,7 @@ public class GameService {
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameApiService gameApiService;
-    public Player me;
+    public String me;
 
     private final UserService userService;
     private final IngameService ingameService;
@@ -57,6 +57,18 @@ public class GameService {
     }
 
     public void initGame() {
+        // REST - get players from server
+        disposable.add(ingameService.getAllPlayers(game.get()._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(list -> {
+                            list.forEach(player -> {
+                                System.out.println(player.userId());
+                                players.put(player.userId(), player);
+                            });
+                            findMe();
+                        }
+                        , Throwable::printStackTrace));
+
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -130,13 +142,13 @@ public class GameService {
     }
 
     public void findMe() {
-        me = players.get(userService.getCurrentUser()._id());
-        System.out.println(me.userId());
+        me = userService.getCurrentUser()._id();
+        System.out.println(me);
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {
         return buildings.stream().anyMatch(building -> building.x() == x && building.y() == y && building.z() == z
-                && building.owner().equals(me.userId())
+                && building.owner().equals(me)
                 && building.type().equals("settlement"));
     }
 

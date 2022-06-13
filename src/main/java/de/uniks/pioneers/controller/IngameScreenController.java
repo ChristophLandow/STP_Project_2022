@@ -185,25 +185,8 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
                 .setRightDiceView(this.rightDiceImageView);
 
-
         // init game attributes and event listeners
         gameService.initGame();
-
-        disposable.add(ingameService.getAllPlayers(game.get()._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(list -> {
-                            list.forEach(player -> {
-                                System.out.println(player.userId());
-                                gameService.players.put(player.userId(), player);
-                            });
-                            gameService.findMe();
-                            // init controller for player resources box
-                            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
-                            ingamePlayerResourcesController.root = this.root;
-                            ingamePlayerResourcesController.render();
-                            ingamePlayerResourcesController.init();
-                        }
-                        , Throwable::printStackTrace));
 
         // REST - get game state from server
         disposable.add(ingameService.getCurrentState(game.get()._id())
@@ -221,6 +204,14 @@ public class IngameScreenController implements Controller {
                     }
                 })
         );
+
+        Platform.runLater(() -> {
+            // init controller for player resources box
+            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
+            ingamePlayerResourcesController.root = this.root;
+            ingamePlayerResourcesController.render();
+            ingamePlayerResourcesController.init();
+        });
 
         // add change listeners
         // players change listener
@@ -241,15 +232,6 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
-
-        // init controller for player resources box
-        Platform.runLater(() -> {
-            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
-            ingamePlayerResourcesController.root = this.root;
-            ingamePlayerResourcesController.render();
-            ingamePlayerResourcesController.init();
-        });
-
     }
 
     private void deletePlayer(Player player) {
