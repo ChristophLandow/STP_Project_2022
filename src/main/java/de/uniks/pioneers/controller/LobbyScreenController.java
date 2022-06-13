@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
+import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
@@ -32,56 +33,31 @@ import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
 @Singleton
 public class LobbyScreenController implements Controller {
+    @FXML public ImageView AvatarImageView;
+    @FXML public Label UsernameLabel;
+    @FXML public ImageView RulesButton;
+    @FXML public VBox UsersVBox;
+    @FXML public ListView<Node> listViewGames;
+    @FXML public Button EditProfileButton;
+    @FXML public Button LogoutButton;
+    @FXML public Button NewGameButton;
+    @Inject Provider<LoginScreenController> loginScreenControllerProvider;
+    @Inject Provider<EditProfileController> editProfileControllerProvider;
+    @Inject Provider<LobbyUserlistController> userlistControllerProvider;
+    @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
+    @Inject PrefService prefService;
+    @Inject LeaveGameController leaveGameController;
+    @Inject LobbyService lobbyService;
+    @Inject UserService userService;
+    @Inject NewGameLobbyService newGameLobbyService;
+    @Inject Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
+    @Inject Provider<LobbyGameListController> lobbyGameListControllerProvider;
+    @Inject MessageService messageService;
 
-    @FXML
-    public ImageView AvatarImageView;
-    @FXML
-    public Label UsernameLabel;
-    @FXML
-    public ImageView RulesButton;
-    @FXML
-    public VBox UsersVBox;
-    @FXML
-    public ListView<Node> listViewGames;
-    @FXML
-    public Button EditProfileButton;
-    @FXML
-    public Button LogoutButton;
-    @FXML
-    public Button NewGameButton;
-
-    App app;
-
-    @Inject
-    Provider<LoginScreenController> loginScreenControllerProvider;
-    @Inject
-    Provider<EditProfileController> editProfileControllerProvider;
-    @Inject
-    Provider<LobbyUserlistController> userlistControllerProvider;
-    @Inject
-    Provider<RulesScreenController> rulesScreenControllerProvider;
-    @Inject
-    Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
-
-    @Inject
-    PrefService prefService;
-    @Inject
-    LobbyService lobbyService;
-    @Inject
-    UserService userService;
-    @Inject
-    NewGameLobbyService newGameLobbyService;
-    @Inject
-    Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
-    @Inject
-    Provider<LobbyGameListController> lobbyGameListControllerProvider;
-
+    private final App app;
     private LobbyGameListController lobbyGameListController;
-
     private boolean darkMode = false;
-
-    @Inject
-    MessageService messageService;
 
     @Inject
     public LobbyScreenController(App app
@@ -167,7 +143,9 @@ public class LobbyScreenController implements Controller {
         if(darkMode){
             controller.setDarkMode();
         }
-        controller.init();
+        //controller.init();
+
+        leaveGameController.loadLeavedGame();
     }
 
     public void logout(ActionEvent event) {

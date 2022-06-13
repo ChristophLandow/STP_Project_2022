@@ -253,7 +253,7 @@ public class NewGameScreenLobbyController implements Controller {
                     game.set(gameEvent.data());
                     memberCount.set(game.get().members());
                      if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
-                         this.toIngame();
+                         this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor(), false);
                     }
                 })
         );
@@ -330,20 +330,23 @@ public class NewGameScreenLobbyController implements Controller {
         if (allUsersReady()) {
             disposable.add(newGameLobbyService.updateGame(game.get(),password.get(),true)
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(response -> this.toIngame(), Throwable::printStackTrace));
+                    .subscribe(response -> this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor(), false), Throwable::printStackTrace));
         }
     }
 
-    private void toIngame() {
+    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin) {
+        if(rejoin) {
+
+        }
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         if(darkMode) {
             ingameScreenController.setDarkmode();
         }
-        ingameScreenController.game.set(this.game.get());
+        ingameScreenController.game.set(game);
         ingameScreenController.loadMap();
-        ingameScreenController.setUsers(this.users.values().stream().toList());
+        ingameScreenController.setUsers(users);
         app.show(ingameScreenController);
-        ingameScreenController.setPlayerColor(colorPickerController.getColor());
+        ingameScreenController.setPlayerColor(myColor);
     }
 
     private boolean allUsersReady() {

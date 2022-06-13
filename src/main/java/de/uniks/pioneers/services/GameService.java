@@ -5,6 +5,7 @@ import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Player;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.MessageApiService;
 import de.uniks.pioneers.ws.EventListener;
@@ -109,4 +110,7 @@ public class GameService {
                 && building.type().equals("settlement"));
     }
 
+    public Observable<Game> getGameById(String id) {
+        return this.gameApiService.getGame(id);
+    }
 }

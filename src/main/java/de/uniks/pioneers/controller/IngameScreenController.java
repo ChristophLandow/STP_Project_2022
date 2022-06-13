@@ -50,6 +50,7 @@ import static de.uniks.pioneers.GameConstants.*;
 @Singleton
 public class IngameScreenController implements Controller {
     private final GameService gameService;
+    private final LeaveGameController leaveGameController;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
@@ -113,7 +114,7 @@ public class IngameScreenController implements Controller {
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
                                   UserService userService, GameService gameService,
-                                  EventListener eventListener) {
+                                  EventListener eventListener, LeaveGameController leaveGameController) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
@@ -122,6 +123,7 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
+        this.leaveGameController = leaveGameController;
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
