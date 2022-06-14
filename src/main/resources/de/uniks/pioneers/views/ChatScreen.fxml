@@ -10,36 +10,36 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.ChatController">
-   <children>
-      <TabPane id="chatTabPane" fx:id="chatTabPane" layoutX="20.0" layoutY="20.0" prefHeight="300.0" prefWidth="380.0" tabClosingPolicy="ALL_TABS">
-         <tabs>
-            <Tab id="allTab" closable="true" text="Chat One">
-               <content>
-                  <ScrollPane prefHeight="579.0">
-                     <content>
-                        <VBox />
-                     </content>
-                  </ScrollPane>
-               </content>
-            </Tab>
-         </tabs>
-      </TabPane>
-      <TextField fx:id="messageTextField" layoutX="20.0" layoutY="340.0" maxHeight="1.7976931348623157E308" prefHeight="40.0" prefWidth="380.0" promptText="Say something...">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </TextField>
-      <Button id="sendButton" fx:id="sendButton" defaultButton="true" layoutX="420.0" layoutY="340.0" mnemonicParsing="false" onAction="#send" prefHeight="40.0" prefWidth="160.0" text="Send">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Button>
-      <Button id="sendButton" fx:id="leaveButton" defaultButton="true" layoutX="420.0" layoutY="20.0" mnemonicParsing="false" onAction="#leave" prefHeight="40.0" prefWidth="160.0" text="Leave">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Button>
-      <ListView fx:id="userListView" layoutX="420.0" layoutY="80.0" prefHeight="240.0" prefWidth="160.0" />
-   </children>
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.pioneers.controller.ChatController">
+   <TabPane id="chatTabPane" fx:id="chatTabPane" layoutX="20.0" layoutY="20.0" prefHeight="300.0" prefWidth="380.0"
+            tabClosingPolicy="ALL_TABS">
+      <tabs>
+         <Tab id="allTab" closable="true" text="Chat One">
+            <ScrollPane prefHeight="579.0">
+               <VBox/>
+            </ScrollPane>
+         </Tab>
+      </tabs>
+   </TabPane>
+   <TextField fx:id="messageTextField" layoutX="20.0" layoutY="340.0" maxHeight="1.7976931348623157E308"
+              prefHeight="40.0" prefWidth="380.0" promptText="Say something...">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </TextField>
+   <Button id="sendButton" fx:id="sendButton" defaultButton="true" layoutX="420.0" layoutY="340.0"
+           mnemonicParsing="false" onAction="#send" prefHeight="40.0" prefWidth="160.0" text="Send">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Button>
+   <Button id="sendButton" fx:id="leaveButton" defaultButton="true" layoutX="420.0" layoutY="20.0"
+           mnemonicParsing="false" onAction="#leave" prefHeight="40.0" prefWidth="160.0" text="Leave">
+      <font>
+         <Font size="18.0"/>
+      </font>
+   </Button>
+   <ListView fx:id="userListView" layoutX="420.0" layoutY="80.0" prefHeight="240.0" prefWidth="160.0"/>
 </Pane>

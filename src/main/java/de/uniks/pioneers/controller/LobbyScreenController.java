@@ -10,18 +10,9 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -32,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -40,8 +30,6 @@ import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.xml.stream.EventFilter;
-import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -94,13 +82,15 @@ public class LobbyScreenController implements Controller {
     @Inject
     Provider<LobbyGameListController> lobbyGameListControllerProvider;
 
-
     private LobbyGameListController lobbyGameListController;
     private Stage appStage;
     public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
     private final CompositeDisposable disposable = new CompositeDisposable();
+
+    private boolean darkMode = false;
+
 
     @Inject
     public LobbyScreenController(App app
@@ -131,17 +121,22 @@ public class LobbyScreenController implements Controller {
         }
 
         LobbyUserlistController userlistController = userlistControllerProvider.get();
+        if(darkMode){
+            userlistController.setDarkMode();
+        }
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
         userlistController.init();
 
         lobbyGameListController = lobbyGameListControllerProvider.get();
+        if(darkMode){
+            lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         lobbyGameListController.listViewGames = this.listViewGames;
         lobbyGameListController.setup();
 
         return parent;
     }
-
 
     @Override
     public void init() {
@@ -157,6 +152,10 @@ public class LobbyScreenController implements Controller {
         // add listener to handle stages
         setupCreateGameListener();
         isCreatingGame.addListener(createGameListener);
+        app.getStage().setTitle(LOBBY_SCREEN_TITLE);
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
                 .subscribe();
@@ -186,11 +185,18 @@ public class LobbyScreenController implements Controller {
     }
 
     public void editProfile(ActionEvent actionEvent) {
-        this.app.show(editProfileControllerProvider.get());
+        EditProfileController editController = editProfileControllerProvider.get();
+        if(darkMode){
+            editController.setDarkMode();
+        }
+        app.show(editController);
     }
 
     private void openRules(MouseEvent mouseEvent) {
         RulesScreenController controller = rulesScreenControllerProvider.get();
+        if(darkMode){
+            controller.setDarkMode();
+        }
         controller.init();
     }
 
@@ -204,14 +210,19 @@ public class LobbyScreenController implements Controller {
     public void logout() {
         //This function is called when the logout button is pressed or the stage is closed
         lobbyService.logout()
-                .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe();
+                .observeOn(FX_SCHEDULER);
+
 
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
-        app.show(loginScreenControllerProvider.get());
+        LoginScreenController loginController = loginScreenControllerProvider.get();
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            app.show(loginController);
+        } else {
+            loginController.setDarkMode();
+            app.show(loginController);
+        }
     }
 
     public void showNewGameLobby(Game game, String password, String hexColor) {
@@ -220,6 +231,13 @@ public class LobbyScreenController implements Controller {
         newGameScreenLobbyController.password.set(password);
         isCreatingGame.set(false);
         app.show(newGameScreenLobbyController);
+        if(app.getStage().getScene().getStylesheets().isEmpty()){
+            app.show(newGameScreenLobbyController);
+        } else {
+            newGameScreenLobbyController.setDakMode();
+            app.show(newGameScreenLobbyController);
+        }
+
         newGameScreenLobbyController.setPlayerColor(hexColor);
     }
 
@@ -230,10 +248,25 @@ public class LobbyScreenController implements Controller {
         createNewGameStage = new Stage();
         createNewGameStage.setTitle("create new game pop up");
         Scene scene = new Scene(node);
+        if(darkMode){
+            scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         createNewGameStage.setScene(scene);
         createNewGameStage.initOwner(appStage);
         isCreatingGame.set(true);
         createNewGamePopUpController.init();
         createNewGameStage.show();
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
+    }
+
+    public App getApp() {
+        return this.app;
     }
 }

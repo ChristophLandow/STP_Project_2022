@@ -12,27 +12,23 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.paint.Paint;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -49,58 +45,32 @@ import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameScreenController implements Controller {
-    @FXML
-    public Pane root;
-    @FXML
-    public Pane turnPane;
-    @FXML
-    public SVGPath streetSVG;
-    @FXML
-    public SVGPath houseSVG;
-    @FXML
-    public SVGPath citySVG;
-    @FXML
-    public Button rulesButton;
-    @FXML
-    public Pane fieldPane;
-    @FXML
-    public Button giveUpButton;
-    @FXML
-    public Button settingsButton;
-    @FXML
-    public ScrollPane chatScrollPane;
-    @FXML
-    public VBox messageVBox;
-    @FXML
-    public TextField sendMessageField;
-    @FXML
-    public ScrollPane userScrollPane;
-    @FXML
-    public Label streetCountLabel;
-    @FXML
-    public Label houseCountLabel;
-    @FXML
-    public Label cityCountLabel;
-    @FXML
-    public ImageView tradeImageView;
-    @FXML
-    public ImageView hourglassImageView;
-    @FXML
-    public ImageView nextTurnImageView;
-    @FXML
-    public Label timeLabel;
-    @FXML
-    public Pane situationPane;
-    @FXML
-    public Label situationLabel;
-    @FXML
-    public ImageView leftDiceImageView;
-    @FXML
-    public ImageView rightDiceImageView;
-    @FXML
-    public ImageView hammerImageView;
-    @FXML
-    public ListView<Node> playerListView;
+    @FXML public Pane root;
+    @FXML public Pane turnPane;
+    @FXML public SVGPath streetSVG;
+    @FXML public SVGPath houseSVG;
+    @FXML public SVGPath citySVG;
+    @FXML public Button rulesButton;
+    @FXML public Pane fieldPane;
+    @FXML public Button giveUpButton;
+    @FXML public Button settingsButton;
+    @FXML public ScrollPane chatScrollPane;
+    @FXML public VBox messageVBox;
+    @FXML public TextField sendMessageField;
+    @FXML public ScrollPane userScrollPane;
+    @FXML public Label streetCountLabel;
+    @FXML public Label houseCountLabel;
+    @FXML public Label cityCountLabel;
+    @FXML public ImageView tradeImageView;
+    @FXML public ImageView hourglassImageView;
+    @FXML public ImageView nextTurnImageView;
+    @FXML public Label timeLabel;
+    @FXML public Pane situationPane;
+    @FXML public Label situationLabel;
+    @FXML public ImageView leftDiceImageView;
+    @FXML public ImageView rightDiceImageView;
+    @FXML public ImageView hammerImageView;
+    @FXML public ListView<Node> playerListView;
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
@@ -108,6 +78,7 @@ public class IngameScreenController implements Controller {
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final IngameService ingameService;
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
@@ -131,10 +102,12 @@ public class IngameScreenController implements Controller {
     Provider<IngamePlayerListElementController> elementProvider;
     @Inject
     Provider<IngamePlayerResourcesController> resourcesControllerProvider;
+    
+    private boolean darkMode = false;
 
 
     @Inject
-    public IngameScreenController(App app,
+    public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
@@ -149,6 +122,7 @@ public class IngameScreenController implements Controller {
         this.eventListener = eventListener;
         this.gameService = gameService;
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
+        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
     @Override
@@ -169,6 +143,9 @@ public class IngameScreenController implements Controller {
     public void init() {
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
         gameService.game.set(game.get());
 
         // init game chat controller
@@ -261,7 +238,6 @@ public class IngameScreenController implements Controller {
     private void deleteBuilding(Building building) {
     }
 
-
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
@@ -339,16 +315,31 @@ public class IngameScreenController implements Controller {
         citySVG.setStrokeWidth(2.0);
     }
 
-    public void giveUp() {
+
+    public void giveUp(ActionEvent actionEvent) {
+        this.stop();
+        disposable.dispose();
+        LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
+        if(!app.getStage().getScene().getStylesheets().isEmpty()){
+             lobbyController.setDarkMode();
+        }
+        app.show(lobbyController);
+
     }
 
     public void toRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        if(darkMode){
+            rulesController.setDarkMode();
+        }
         rulesController.init();
     }
 
     public void toSettings() {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
+        if(darkMode){
+            settingsController.setDarkMode();
+        }
         settingsController.init();
     }
 
@@ -473,5 +464,13 @@ public class IngameScreenController implements Controller {
 
     private void loadSnowAnimation() {
         new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);
+    }
+
+    public void setDarkmode(){
+        darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
     }
 }

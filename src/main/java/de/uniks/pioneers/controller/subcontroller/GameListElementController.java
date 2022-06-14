@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
@@ -39,6 +40,8 @@ public class GameListElementController implements Controller {
     @FXML
     public Label memberCount;
 
+    private final App app;
+
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<GameListDropDownController> gameListDropDownControllerProvider;
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
@@ -47,7 +50,7 @@ public class GameListElementController implements Controller {
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
 
     @Inject
-    public GameListElementController(Provider<LobbyScreenController> lobbyScreenControllerProvider,
+    public GameListElementController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                      Provider<LobbyService> lobbyServiceProvider,
                                      Provider<GameListDropDownController> gameListDropDownControllerProvider,
                                      Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider,
@@ -56,6 +59,7 @@ public class GameListElementController implements Controller {
         this.gameListDropDownControllerProvider = gameListDropDownControllerProvider;
         this.newGameLobbyServiceProvider = newGameLobbyServiceProvider;
         this.game.addListener((game, oldVal, newVal) -> setDataToGameListElement());
+        this.app = app;
     }
 
     @Override
@@ -161,5 +165,7 @@ public class GameListElementController implements Controller {
         title.setTooltip(null);
     }
 
-
+    public App getApp(){
+        return this.app;
+    }
 }

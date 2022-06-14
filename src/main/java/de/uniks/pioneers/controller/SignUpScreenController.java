@@ -69,6 +69,8 @@ public class SignUpScreenController implements Controller{
     public Text avatarStatusText;
 
     private final App app;
+
+    private boolean darkMode = false;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final UserService userService;
 
@@ -87,6 +89,9 @@ public class SignUpScreenController implements Controller{
 
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
+        if(darkMode){
+            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+        }
 
         // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
@@ -230,5 +235,9 @@ public class SignUpScreenController implements Controller{
 
     public void leave() {
         this.app.show(loginScreenControllerProvider.get());
+    }
+
+    public void setDarkMode(){
+        darkMode = true;
     }
 }

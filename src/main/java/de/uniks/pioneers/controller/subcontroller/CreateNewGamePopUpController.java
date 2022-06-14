@@ -122,5 +122,4 @@ public class CreateNewGamePopUpController implements Controller {
         int rand_num = obj.nextInt(0xffffff + 1);
         return String.format("#%06x", rand_num);
     }
-
 }
