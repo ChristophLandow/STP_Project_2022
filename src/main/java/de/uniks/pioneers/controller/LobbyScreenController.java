@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
@@ -119,6 +118,10 @@ public class LobbyScreenController implements Controller {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Rejoin Game");
             alert.setHeaderText("Would you like to rejoin your last game?");
+            Button okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.setText("Yes");
+            Button cancelButton = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancelButton.setText("No");
             Optional<ButtonType> option = alert.showAndWait();
             if(option.get() == ButtonType.OK) {
                 leaveGameController.loadLeavedGame(leavedGame);
