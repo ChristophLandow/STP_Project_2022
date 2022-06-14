@@ -67,8 +67,6 @@ public class GameListElementController implements Controller {
     }
 
     public void setDataToGameListElement() {
-        // might be better with reg ex, i gona update this
-
         // set game createdAt to creationTime label
         String createdAt = game.get().createdAt();
         int start = createdAt.indexOf("T");
@@ -78,7 +76,7 @@ public class GameListElementController implements Controller {
         // set game title to title label
         title.setText(game.get().name());
         // set game member count to memberCount label
-        String actualMemberCount = String.format("%d/4", game.get().members());
+        String actualMemberCount = String.format("%d", game.get().members());
         memberCount.setText(actualMemberCount);
     }
 

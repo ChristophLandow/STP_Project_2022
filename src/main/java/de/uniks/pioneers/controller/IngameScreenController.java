@@ -92,7 +92,7 @@ public class IngameScreenController implements Controller {
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameStorage gameStorage;
-    @Inject Provider<GameChatController> gameChatControllerProvider;
+    @Inject GameChatController gameChatController;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
     private String myColor;
@@ -151,12 +151,13 @@ public class IngameScreenController implements Controller {
         gameService.game.set(game.get());
 
         // init game chat controller
-        GameChatController gameChatController = gameChatControllerProvider.get()
+        gameChatController
                 .setChatScrollPane(this.chatScrollPane)
                 .setMessageText(this.sendMessageField)
                 .setMessageBox(this.messageVBox)
                 .setGame(this.game.get())
-                .setUsers(this.users);
+                .setUsers(this.users)
+                .setIngameScreenController(this);
         gameChatController.render();
         gameChatController.init();
 
@@ -306,15 +307,14 @@ public class IngameScreenController implements Controller {
         citySVG.setStrokeWidth(2.0);
     }
 
-
     public void leave() {
-        leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(!app.getStage().getScene().getStylesheets().isEmpty()){
              lobbyController.setDarkMode();
         }
 
         if(game.get().owner().equals(userService.getCurrentUser()._id())) {
+            gameChatController.sendMessage("Host left the Game!", game.get());
             disposable.add(gameService.deleteGame(game.get()._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(res -> {
@@ -325,6 +325,7 @@ public class IngameScreenController implements Controller {
                         }
                     }, Throwable::printStackTrace));
         } else {
+            leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
             this.stop();
             disposable.dispose();
             if(!onClose) {
@@ -366,6 +367,7 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void stop() {
+        gameChatController.stop();
     }
 
     public void setUsers(List<User> users) {
