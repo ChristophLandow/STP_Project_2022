@@ -1,44 +1,39 @@
 package de.uniks.pioneers;
 
 import de.uniks.pioneers.controller.Controller;
-import de.uniks.pioneers.services.BoardGenerator;
+import de.uniks.pioneers.services.InternetConnectionService;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.LOGIN_SCREEN_TITLE;
 
-
 public class App extends Application {
     private Stage stage;
     private Controller controller;
 
-    public App(){
-
+    public App() {
         MainComponent mainComponent = DaggerMainComponent.builder().mainApp(this).build();
         this.controller = mainComponent.loginController();
     }
-    public App(Controller controller){
-
+    public App(Controller controller) {
         this.controller = controller;
     }
     @Override
-    public void start(Stage primaryStage){
-
+    public void start(Stage primaryStage) {
         this.stage = primaryStage;
-        if(this.controller != null){
-
+        if(this.controller != null) {
             stage.setTitle(LOGIN_SCREEN_TITLE);
             setIcons(stage);
             show(this.controller);
         }
         stage.show();
+
+        new InternetConnectionService();
     }
 
     @Override
