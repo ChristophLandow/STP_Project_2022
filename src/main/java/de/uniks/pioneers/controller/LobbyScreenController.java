@@ -230,7 +230,6 @@ public class LobbyScreenController implements Controller {
         newGameScreenLobbyController.game.set(game);
         newGameScreenLobbyController.password.set(password);
         isCreatingGame.set(false);
-        app.show(newGameScreenLobbyController);
         if(app.getStage().getScene().getStylesheets().isEmpty()){
             app.show(newGameScreenLobbyController);
         } else {

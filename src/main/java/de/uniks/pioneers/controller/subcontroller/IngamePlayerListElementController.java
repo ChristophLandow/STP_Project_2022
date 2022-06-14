@@ -6,7 +6,6 @@ import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -25,7 +24,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
@@ -143,7 +141,6 @@ public class IngamePlayerListElementController {
         );
     }
 
-
     private void addPlayerListener() {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
@@ -168,6 +165,18 @@ public class IngamePlayerListElementController {
         int unknown = resources.unknown() == null ? 0 : resources.unknown();
 
         int resourceCount = brick + grain + ore + lumber + wool;
+
+        if (valueAdded.remainingBuildings().city()==0){
+            cityCount.setTextFill(Color.RED);
+        }
+
+        if (valueAdded.remainingBuildings().settlement()==0){
+            settlementCount.setTextFill(Color.RED);
+        }
+
+        if (resourceCount>=7){
+            resourceCardsCount.setTextFill(Color.RED);
+        }
 
         resourceCardsCount.setText(String.valueOf(resourceCount));
         developmentCardsCount.setText(String.valueOf(unknown));

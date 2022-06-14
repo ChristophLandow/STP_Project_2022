@@ -132,40 +132,69 @@ public class IngamePlayerResourcesController {
         kohleCount.setText(String.valueOf(lumber));
         walknochenCount.setText(String.valueOf(grain));
 
-        if (brick==0 && oldBrick>0){
+        if (lumber==0 && oldLumber>0){
             resourcesHBox.getChildren().remove(fischResource);
-        }else if (brick>0 && oldBrick==0){
+            resourcesHBox.getChildren().remove(fischCount);
+        }else if (lumber>0 && oldLumber==0){
             resourcesHBox.getChildren().add(fischResource);
+            resourcesHBox.getChildren().add(fischCount);
+            fischCount.setLayoutX(fellResource.getLayoutX());
+            fischCount.setLayoutY(fellResource.getLayoutY());
         }
 
         if (grain==0 && oldGrain>0){
             resourcesHBox.getChildren().remove(walknochenResource);
+            resourcesHBox.getChildren().remove(walknochenCount);
         }else if (grain>0 && oldGrain==0){
             resourcesHBox.getChildren().add(walknochenResource);
-        }
-
-        if (ore==0 && oldOre>0){
-            resourcesHBox.getChildren().remove(fellResource);
-        }else if (ore>0 && oldOre==0){
-            resourcesHBox.getChildren().add(fellResource);
-        }
-
-        if (lumber==0 && oldLumber>0){
-            resourcesHBox.getChildren().remove(kohleResource);
-        }else if (lumber>0 && oldLumber==0){
-            resourcesHBox.getChildren().add(kohleResource);
+            resourcesHBox.getChildren().add(walknochenCount);
+            walknochenCount.setLayoutX(walknochenResource.getLayoutX());
+            walknochenCount.setLayoutY(walknochenResource.getLayoutY());
         }
 
         if (wool==0 && oldWool>0){
-            resourcesHBox.getChildren().remove(packeisResource);
+            resourcesHBox.getChildren().remove(fellResource);
+            resourcesHBox.getChildren().remove(fellCount);
         }else if (wool>0 && oldWool==0){
-            resourcesHBox.getChildren().add(packeisResource);
+            resourcesHBox.getChildren().add(fellResource);
+            resourcesHBox.getChildren().add(fellCount);
+            fellCount.setLayoutX(fellResource.getLayoutX());
+            fellCount.setLayoutY(fellResource.getLayoutY());
         }
 
-        fischCount.setText(String.valueOf(brick));
-        packeisCount.setText(String.valueOf(wool));
-        fellCount.setText(String.valueOf(ore));
-        kohleCount.setText(String.valueOf(lumber));
+        if (brick==0 && oldBrick>0){
+            resourcesHBox.getChildren().remove(kohleResource);
+            resourcesHBox.getChildren().remove(kohleCount);
+        }else if (brick>0 && oldBrick==0){
+            resourcesHBox.getChildren().add(kohleResource);
+            resourcesHBox.getChildren().add(kohleCount);
+            kohleCount.setLayoutX(kohleResource.getLayoutX());
+            kohleCount.setLayoutY(kohleResource.getLayoutY());
+        }
+
+        if (ore==0 && oldOre>0){
+            resourcesHBox.getChildren().remove(packeisResource);
+            resourcesHBox.getChildren().remove(packeisCount);
+        }else if (ore>0 && oldOre==0){
+            resourcesHBox.getChildren().add(packeisResource);
+            resourcesHBox.getChildren().add(packeisCount);
+            packeisCount.setLayoutX(packeisCount.getLayoutX());
+            packeisCount.setLayoutY(packeisCount.getLayoutY());
+        }
+
+          /*
+        Erz zu Kohle
+        Getreide zu Walknochen
+        Wolle zu Fell
+        Lehm zu Packeis
+        Holz zu Fisch
+
+         */
+
+        fischCount.setText(String.valueOf(lumber));
+        packeisCount.setText(String.valueOf(ore));
+        fellCount.setText(String.valueOf(wool));
+        kohleCount.setText(String.valueOf(brick));
         walknochenCount.setText(String.valueOf(grain));
     }
 }

@@ -55,23 +55,23 @@
          </image>
       </ImageView>
       <Label fx:id="developmentCardsCount" text="2" textFill="WHITE" translateX="-65.0" translateY="-12.0" />
-      <ImageView fx:id="city" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.7" translateX="-60.0">
+      <ImageView fx:id="city" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.7" translateX="-60.0" translateY="-3.0">
          <image>
             <Image url="@../../../../../../../../../../../Desktop/steine_3.png" />
          </image>
       </ImageView>
-      <Label fx:id="cityCount" text="3" textFill="RED" translateX="-94.0" translateY="13.0">
+      <Label fx:id="cityCount" text="3" translateX="-94.0" translateY="13.0">
          <font>
-            <Font size="15.0" />
+            <Font size="13.0" />
          </font></Label>
-      <ImageView fx:id="settlement" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="-80.0">
+      <ImageView fx:id="settlement" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="-80.0" translateY="-2.0">
          <image>
             <Image url="@../../../../../../../../../../../Desktop/ruinsCorner.png" />
          </image>
       </ImageView>
-      <Label fx:id="settlementCount" text="4" textFill="RED" translateX="-102.0" translateY="12.0">
+      <Label fx:id="settlementCount" text="4" translateX="-102.0" translateY="12.0">
          <font>
-            <Font size="15.0" />
+            <Font size="13.0" />
          </font></Label>
    </children>
    <padding>
