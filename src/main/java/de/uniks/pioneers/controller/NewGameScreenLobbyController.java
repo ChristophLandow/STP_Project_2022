@@ -93,7 +93,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<GameChatController> gameChatControllerProvider;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
-    private boolean darkMode;
+    private boolean darkMode = false;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -405,7 +405,7 @@ public class NewGameScreenLobbyController implements Controller {
         }).start();
     }
 
-    public void setDakMode() {
+    public void setDarkMode() {
         darkMode = true;
     }
 

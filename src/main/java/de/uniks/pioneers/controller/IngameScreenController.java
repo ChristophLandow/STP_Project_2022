@@ -312,6 +312,8 @@ public class IngameScreenController implements Controller {
         if(!app.getStage().getScene().getStylesheets().isEmpty()){
              lobbyController.setDarkMode();
         }
+        SettingsScreenController settingsController = settingsScreenControllerProvider.get();
+        settingsController.stop();
 
         if(game.get().owner().equals(userService.getCurrentUser()._id())) {
             gameChatController.sendMessage("Host left the Game!", game.get());

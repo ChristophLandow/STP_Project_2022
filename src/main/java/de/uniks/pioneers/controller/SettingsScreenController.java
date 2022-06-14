@@ -3,7 +3,6 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
-import de.uniks.pioneers.controller.subcontroller.OnlineUserlistController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -107,6 +106,9 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @Override
     public void stop() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
     }
 
     @Override
@@ -183,7 +185,7 @@ public class SettingsScreenController implements Controller, Initializable {
             ingameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             ingameController.setDarkmode();
             newGameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
-            newGameController.setDakMode();
+            newGameController.setDarkMode();
             lobbyController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
             lobbyController.setDarkMode();
             chatController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
@@ -210,7 +212,6 @@ public class SettingsScreenController implements Controller, Initializable {
         }
         stage.close();
     }
-
     public App getApp() {
         return this.app;
     }
