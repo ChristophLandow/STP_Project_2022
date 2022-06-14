@@ -25,12 +25,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
 
@@ -76,6 +78,10 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView rightDiceImageView;
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
+    @FXML public HBox resourcesHBox;
+    @FXML public Rectangle downRectangle;
+    @FXML public Rectangle upRectangle;
+    @FXML public Pane root;
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
@@ -160,6 +166,7 @@ public class IngameScreenController implements Controller {
         gameChatController.init();
 
         // set dice subcontroller
+        this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
                 .setRightDiceView(this.rightDiceImageView);
 
@@ -293,7 +300,7 @@ public class IngameScreenController implements Controller {
     private void enableRoll(String action) {
         // init dice subcontroller
         this.diceSubcontroller.setAction(action);
-        this.diceSubcontroller.init();
+        this.diceSubcontroller.activate();
     }
 
     public App getApp() {

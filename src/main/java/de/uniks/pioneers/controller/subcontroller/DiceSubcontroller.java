@@ -1,11 +1,13 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.dto.CreateMoveDto;
+import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.collections.ListChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -16,6 +18,8 @@ import javax.inject.Inject;
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.FOUNDING_ROLL;
+import static de.uniks.pioneers.GameConstants.ROLL;
 
 public class DiceSubcontroller {
     private ImageView leftDiceView;
@@ -33,6 +37,21 @@ public class DiceSubcontroller {
     }
     
     public void init() {
+        // moves change listener
+        gameService.moves.addListener((ListChangeListener<? super Move>) c -> {
+            c.next();
+            if (c.wasAdded()) {
+                c.getAddedSubList().forEach(move -> {
+                    if (move.action().equals(FOUNDING_ROLL) || move.action().equals(ROLL)) {
+                        System.out.println("got new roll move!");
+                        showRolledNumber(move.action(), move.roll());
+                    }
+                });
+            }
+        });
+    }
+
+    public void activate() {
         this.leftDiceView.setOnMouseClicked(this::roll);
         this.rightDiceView.setOnMouseClicked(this::roll);
     }
@@ -43,7 +62,6 @@ public class DiceSubcontroller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
                     System.out.println("roll: " + move.roll());
-                    this.showRolledNumber(move.roll());
                     this.reset();
                 }));
     }
@@ -53,27 +71,31 @@ public class DiceSubcontroller {
         this.rightDiceView.setOnMouseClicked(null);
     }
 
-    private void showRolledNumber(int roll) {
-        animateDices();
-
+    private void showRolledNumber(String action, int roll) {
         int leftDice, rightDice;
-        if ((roll % 2) == 0) {
-            leftDice = roll / 2;
-            rightDice = leftDice;
+
+        Image leftDiceImage, rightDiceImage;
+        // case distinction for founding roll
+        if (action.equals(FOUNDING_ROLL)) {
+            leftDice = roll;
+            this.rightDiceView.setImage(null);
         } else {
-            leftDice = roll / 2;
-            rightDice = leftDice + 1;
+            if ((roll % 2) == 0) {
+                leftDice = roll / 2;
+                rightDice = leftDice;
+            } else {
+                leftDice = roll / 2;
+                rightDice = leftDice + 1;
+            }
+            rightDiceImage = new Image(Objects.requireNonNull(getClass().getResource("../ingame/" + rightDice + ".png")).toString());
+            this.rightDiceView.setImage(rightDiceImage);
         }
-
-        System.out.println("left roll: " + leftDice + ", right dice: " + rightDice);
-        Image leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource("../ingame/" + leftDice + ".png")).toString());
+        animateDice();
+        leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource("../ingame/" + leftDice + ".png")).toString());
         this.leftDiceView.setImage(leftDiceImage);
-
-        Image rightDiceImage = new Image(Objects.requireNonNull(getClass().getResource("../ingame/" + rightDice + ".png")).toString());
-        this.rightDiceView.setImage(rightDiceImage);
     }
 
-    private void animateDices() {
+    private void animateDice() {
         // animate dice rolling
         RotateTransition rotateLeftDice = new RotateTransition();
         rotateLeftDice.setNode(this.leftDiceView);
@@ -101,8 +123,7 @@ public class DiceSubcontroller {
         return this;
     }
 
-    public DiceSubcontroller setRightDiceView(ImageView rightDiceView) {
+    public void setRightDiceView(ImageView rightDiceView) {
         this.rightDiceView = rightDiceView;
-        return this;
     }
 }

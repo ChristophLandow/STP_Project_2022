@@ -4,6 +4,7 @@ import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.MessageApiService;
@@ -26,6 +27,7 @@ public class GameService {
 
     public final ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
+    public final ObservableList<Move> moves = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private Player me;
     public final ObservableList<Player> currentPlayers = FXCollections.observableArrayList();
@@ -78,6 +80,16 @@ public class GameService {
                         // render new building
                         System.out.println("new Building created: " + buildingEvent.data());
                         this.buildings.add(building);
+                    }
+                }));
+
+        // init moves listener
+        String patternToObserveMoves = String.format("games.%s.moves.*.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveMoves, Move.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(moveEvent -> {
+                    if (moveEvent.event().endsWith(".created")) {
+                        this.moves.add(moveEvent.data());
                     }
                 }));
     }
