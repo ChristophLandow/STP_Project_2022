@@ -17,7 +17,6 @@ public class IngameService {
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
 
-
     @Inject
     public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
         this.pioneersApiService = pioneersApiService;

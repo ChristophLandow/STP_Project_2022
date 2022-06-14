@@ -93,6 +93,7 @@ public class IngameScreenController implements Controller {
     private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
     private final UserService userService;
+    private final TimerService timerService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
 
@@ -119,7 +120,7 @@ public class IngameScreenController implements Controller {
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
                                   UserService userService, GameService gameService,
-                                  EventListener eventListener) {
+                                  TimerService timerService, EventListener eventListener) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
@@ -128,7 +129,8 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
-        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
+        this.timerService = timerService;
+        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 

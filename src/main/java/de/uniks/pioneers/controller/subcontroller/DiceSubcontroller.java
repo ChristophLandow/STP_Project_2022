@@ -4,6 +4,7 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.TimerService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -28,12 +29,15 @@ public class DiceSubcontroller {
     
     private final IngameService ingameService;
     private final GameService gameService;
+    private final TimerService timerService;
     private final CompositeDisposable disposable = new CompositeDisposable();
     
     @Inject
-    public DiceSubcontroller(IngameService ingameService, GameService gameService) {
+    public DiceSubcontroller(IngameService ingameService, GameService gameService,
+                             TimerService timerService) {
         this.ingameService = ingameService;
         this.gameService = gameService;
+        this.timerService = timerService;
     }
     
     public void init() {
@@ -54,6 +58,7 @@ public class DiceSubcontroller {
     public void activate() {
         this.leftDiceView.setOnMouseClicked(this::roll);
         this.rightDiceView.setOnMouseClicked(this::roll);
+        this.timerService.setRollTimer(this.action);
     }
 
     private void roll(MouseEvent mouseEvent) {
@@ -61,7 +66,7 @@ public class DiceSubcontroller {
         disposable.add(ingameService.postMove(gameService.game.get()._id(), rollMove)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
-                    System.out.println("roll: " + move.roll());
+                    timerService.reset();
                     this.reset();
                 }));
     }
