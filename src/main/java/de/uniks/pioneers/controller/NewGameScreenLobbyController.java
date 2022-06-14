@@ -128,7 +128,8 @@ public class NewGameScreenLobbyController implements Controller {
     Provider<IngameScreenController> ingameScreenControllerProvider;
     @Inject
     Provider<LoginScreenController> loginScreenControllerProvider;
-    private boolean darkMode;
+
+    private boolean darkMode= false;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -464,15 +465,15 @@ public class NewGameScreenLobbyController implements Controller {
         }).start();
     }
 
-    public void setDakMode() {
-        darkMode = true;
-    }
-
     public void setBrightMode(){
         darkMode = false;
     }
 
     public App getApp() {
         return this.app;
+    }
+
+    public void setDarkMode() {
+        darkMode=true;
     }
 }

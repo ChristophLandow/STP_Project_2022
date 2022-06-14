@@ -186,7 +186,6 @@ public class IngamePlayerResourcesController {
         Wolle zu Fell
         Lehm zu Packeis
         Holz zu Fisch
-
          */
 
         fischCount.setText(String.valueOf(lumber));
