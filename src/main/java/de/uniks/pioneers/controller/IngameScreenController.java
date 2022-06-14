@@ -323,6 +323,8 @@ public class IngameScreenController implements Controller {
         if(!app.getStage().getScene().getStylesheets().isEmpty()){
              lobbyController.setDarkMode();
         }
+        SettingsScreenController settingsController = settingsScreenControllerProvider.get();
+        settingsController.stop();
         app.show(lobbyController);
 
     }
