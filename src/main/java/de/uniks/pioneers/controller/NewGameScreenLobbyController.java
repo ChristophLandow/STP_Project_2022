@@ -347,11 +347,14 @@ public class NewGameScreenLobbyController implements Controller {
             }
         }
 
+        System.out.println("on ready button clicked");
         if (difference) {
             clientReady = !clientReady;
             disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor())
                     .observeOn(FX_SCHEDULER)
+                            .doOnError(Throwable::printStackTrace)
                     .subscribe(result -> {
+                        System.out.println("set ready worked");
                         if (clientReady) {
                             clientReadyLabel.setText("Ready");
                             clientReadyBox.setBackground(Background.fill(Color.GREEN));
@@ -378,10 +381,15 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void startGame() {
         // check if all users are ready
+        System.out.println("button gets pushed");
         if (allUsersReady()) {
             disposable.add(newGameLobbyService.updateGame(game.get(), password.get(), true)
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(response -> this.toIngame(), Throwable::printStackTrace));
+                    .doOnError(Throwable::printStackTrace)
+                    .subscribe(response -> {
+                        System.out.println("trying to start game");
+                        this.toIngame();
+                    }, Throwable::printStackTrace));
         }
     }
 
@@ -393,6 +401,7 @@ public class NewGameScreenLobbyController implements Controller {
         ingameScreenController.game.set(this.game.get());
         ingameScreenController.loadMap();
         ingameScreenController.setUsers(this.users.values().stream().toList());
+        System.out.println("starting game");
         app.show(ingameScreenController);
         ingameScreenController.setPlayerColor(colorPickerController.getColor());
     }

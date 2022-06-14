@@ -445,6 +445,7 @@ public class IngameScreenController implements Controller {
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
+
         for (BuildingPointController buildingPoint : this.buildingControllers) {
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
