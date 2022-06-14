@@ -5,6 +5,7 @@ import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.TimerService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -27,6 +28,7 @@ public class BuildingPointController {
     private final Circle view;
     private final Circle eventView;
     private final IngameService ingameService;
+    private final TimerService timerService;
     private final String gameId;
     private String action;
     public HexTile tile;
@@ -40,12 +42,13 @@ public class BuildingPointController {
     private Building building;
 
     public BuildingPointController(HexTile tile, Circle view,
-                                   IngameService ingameService, String gameId,
-                                   Pane fieldPane) {
+                                   IngameService ingameService, TimerService timerService,
+                                   String gameId, Pane fieldPane) {
 
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
+        this.timerService = timerService;
         this.gameId = gameId;
         this.fieldPane = fieldPane;
 
@@ -57,6 +60,9 @@ public class BuildingPointController {
     }
 
     public void init() {
+        if (this.action.equals(BUILD)) {
+            this.timerService.setBuildTimer();
+        }
         this.eventView.setOnMouseClicked(this::info);
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
@@ -90,7 +96,12 @@ public class BuildingPointController {
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
+                .subscribe(move -> {
+                    if (move.action().equals(BUILD)) {
+                        timerService.reset();
+                    }
+                    this.fieldPane.getChildren().forEach(this::reset);
+                }));
 
     }
 

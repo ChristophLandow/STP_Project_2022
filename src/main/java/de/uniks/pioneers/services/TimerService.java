@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.BUILD;
 
 @Singleton
 public class TimerService {
@@ -36,7 +37,10 @@ public class TimerService {
                 CreateMoveDto moveDto = new CreateMoveDto(action, null);
                 disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
                         .observeOn(FX_SCHEDULER)
-                        .subscribe(move -> reset())
+                        .subscribe(move -> {
+                            this.cancel();
+                            reset();
+                        })
                 );
             }
         };
@@ -49,6 +53,22 @@ public class TimerService {
     }
 
     public void setBuildTimer() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+                disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(move -> {
+                            System.out.println("Time is up! BUILD skipped.");
+                            this.cancel();
+                            reset();
+                        })
+                );
+            }
+        };
+
+        this.timer.schedule(task, 120 * 1000);
     }
 
     public Timer getTimer() {
