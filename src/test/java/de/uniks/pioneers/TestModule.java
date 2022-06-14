@@ -107,7 +107,7 @@ public class TestModule {
         when(eventListener.listen("users.003.updated", User.class)).thenReturn(PublishSubject.create());
 
         when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
-        when(eventListener.listen("games.000.players.*", Player.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(PublishSubject.create());

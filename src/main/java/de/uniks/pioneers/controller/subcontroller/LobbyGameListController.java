@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static java.util.stream.Collectors.toList;
 
 @Singleton
 public class LobbyGameListController {
@@ -72,8 +73,12 @@ public class LobbyGameListController {
         disposable.add(lobbyService.getGames()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(games -> {
-                            Collection<Game> validGames = games.stream().filter(game -> checkDate(game)).toList();
-                            //&& !game.started() && users.stream().anyMatch(user -> user._id().equals(game.owner()))).toList();
+                            /*
+                             add game to list when game was not started, the date is today
+                             or yesterdays date and the owner is online
+                             */
+                            Collection<Game> validGames = games.stream().filter(game -> !game.started() && checkDate(game)
+                            && users.stream().anyMatch(user -> user._id().equals(game.owner()))).toList();
                             validGames = validGames.stream().sorted(gameComparator).toList();
                             this.games.setAll(validGames);
                         },
@@ -124,9 +129,6 @@ public class LobbyGameListController {
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
-        if(darkMode){
-            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
-        }
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
@@ -149,8 +151,12 @@ public class LobbyGameListController {
         //rerender
         GameListElementController gameListElementController = gameListElementControllers.stream()
                 .filter(conroller -> conroller.game.get()._id().equals(game._id())).findAny().orElse(null);
-        assert gameListElementController != null;
-        gameListElementController.game.set(game);
+
+        try {
+            gameListElementController.game.set(game);
+        } catch (NullPointerException ignored) {
+
+        }
     }
 
     public User returnUserById(String id) {
@@ -165,11 +171,11 @@ public class LobbyGameListController {
         darkMode = true;
     }
 
-    public void setBrightMode(){
+    public void setBrightMode() {
         darkMode = false;
     }
 
-    public App getApp(){
+    public App getApp() {
         return this.app;
     }
 }

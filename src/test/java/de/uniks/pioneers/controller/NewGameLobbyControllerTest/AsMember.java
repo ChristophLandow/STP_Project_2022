@@ -134,7 +134,7 @@ class AsMember extends ApplicationTest {
     }
 
     @Test
-    void initControllerAsOwner() {
+    void initControllerAsOMember() {
         List<Member> members = newGameScreenLobbyController.getMembers();
 
         assertEquals(members.get(1).createdAt(), "2");
@@ -155,7 +155,7 @@ class AsMember extends ApplicationTest {
 
         //assert create game button is disabled
         Button startGameButton = lookup("#startGameButton").query();
-        assertThat(startGameButton.disableProperty().get()).isEqualTo(true);
+        assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
 
         // post member to game, server broadcasting event to clients -> eventlistenter.listen(game -> memberCounter+1)
         newGameScreenLobbyController.memberCount.set(3);

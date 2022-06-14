@@ -153,13 +153,15 @@ class AsOwner extends ApplicationTest {
         //assertion for member box, have to add some assertions
         assertThat(newGameScreenLobbyController.userBox.getChildren().size()).isEqualTo(2);
 
+
         //assert create game button is disabled
         Button startGameButton = lookup("#startGameButton").query();
-        assertThat(startGameButton.disableProperty().get()).isEqualTo(true);
+        assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
 
         // post member to game, server broadcasting event to clients -> eventlistenter.listen(game -> memberCounter+1)
         newGameScreenLobbyController.memberCount.set(3);
         assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
+
 
         verify(newGameLobbyService).getAll("3");
         //verify(newGameLobbyService).logout();

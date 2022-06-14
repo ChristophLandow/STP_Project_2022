@@ -28,6 +28,7 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 public class GameListElementController implements Controller {

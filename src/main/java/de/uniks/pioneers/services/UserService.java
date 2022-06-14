@@ -32,7 +32,6 @@ public class UserService {
                 .doOnNext(this::setCurrentUser);
     }
 
-
     public User getCurrentUser() {
         return currentUser;
     }

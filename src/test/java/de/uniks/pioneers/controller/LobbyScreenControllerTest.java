@@ -109,7 +109,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
         when(userlistControllerProvider.get()).thenReturn(userlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
-        when(gameListElementControllerProvider.get()).thenReturn(gameListElementController);
+        //when(gameListElementControllerProvider.get()).thenReturn(gameListElementController);
         when(loginScreenControllerProvider.get()).thenReturn(loginScreenController);
 
         //Start controller
