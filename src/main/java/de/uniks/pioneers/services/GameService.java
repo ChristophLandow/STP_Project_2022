@@ -1,13 +1,9 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.CreateMessageDto;
-import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
-import de.uniks.pioneers.rest.MessageApiService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -15,29 +11,23 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 @Singleton
 public class GameService {
-
-    public final ObservableMap<String, Player> players = FXCollections.observableHashMap();
+    public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private Player me;
     public final ObservableList<Player> currentPlayers = FXCollections.observableArrayList();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameApiService gameApiService;
-
     private final UserService userService;
     private final IngameService ingameService;
-
-    @Inject
-    EventListener eventListener;
+    @Inject EventListener eventListener;
 
     @Inject
     public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService) {
@@ -110,7 +100,7 @@ public class GameService {
                 && building.type().equals("settlement"));
     }
 
-    public Observable<Game> getGameById(String id) {
-        return this.gameApiService.getGame(id);
+    public void resetPlayers() {
+        players = FXCollections.observableHashMap();
     }
 }

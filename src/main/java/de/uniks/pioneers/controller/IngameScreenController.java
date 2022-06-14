@@ -8,10 +8,10 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -34,7 +34,6 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.paint.Paint;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,18 +44,18 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
-@Singleton
 public class IngameScreenController implements Controller {
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @FXML public Pane root;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
     @FXML public SVGPath citySVG;
     @FXML public Button rulesButton;
     @FXML public Pane fieldPane;
-    @FXML public Button giveUpButton;
+    @FXML public Button leaveButton;
     @FXML public Button settingsButton;
     @FXML public ScrollPane chatScrollPane;
     @FXML public VBox messageVBox;
@@ -96,7 +95,9 @@ public class IngameScreenController implements Controller {
     @Inject Provider<GameChatController> gameChatControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
+    private String myColor;
     private boolean darkMode = false;
+    private boolean onClose = false;
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -134,6 +135,14 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void init() {
+        this.app.getStage().setOnCloseRequest(event -> {
+            onClose = true;
+            leave();
+            userService.editProfile(null, null, null, "offline").subscribe();
+            Platform.exit();
+            System.exit(0);
+        });
+
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         if(darkMode){
@@ -181,8 +190,6 @@ public class IngameScreenController implements Controller {
             if (c.wasAdded()) {
                 System.out.println("Player was added!");
                 this.renderPlayer(c.getValueAdded());
-            } else if (c.wasRemoved()) {
-                this.deletePlayer(c.getValueRemoved());
             }
         });
 
@@ -197,11 +204,7 @@ public class IngameScreenController implements Controller {
         });
     }
 
-    private void deletePlayer(Player player) {
-        // TODO: remove player from list
-    }
-
-    private void renderPlayer(Player player) {
+    public void renderPlayer(Player player) {
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
@@ -293,6 +296,7 @@ public class IngameScreenController implements Controller {
     }
 
     public void setPlayerColor(String hexColor) {
+        this.myColor = hexColor;
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Color.WHITE);
         houseSVG.setStroke(Paint.valueOf(hexColor));
@@ -303,15 +307,30 @@ public class IngameScreenController implements Controller {
     }
 
 
-    public void giveUp(ActionEvent actionEvent) {
-        this.stop();
-        disposable.dispose();
+    public void leave() {
+        leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(!app.getStage().getScene().getStylesheets().isEmpty()){
              lobbyController.setDarkMode();
         }
-        app.show(lobbyController);
 
+        if(game.get().owner().equals(userService.getCurrentUser()._id())) {
+            disposable.add(gameService.deleteGame(game.get()._id())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        this.stop();
+                        disposable.dispose();
+                        if(!onClose) {
+                            app.show(lobbyController);
+                        }
+                    }, Throwable::printStackTrace));
+        } else {
+            this.stop();
+            disposable.dispose();
+            if(!onClose) {
+                app.show(lobbyController);
+            }
+        }
     }
 
     public void toRules() {
@@ -319,9 +338,7 @@ public class IngameScreenController implements Controller {
         if(darkMode){
             rulesController.setDarkMode();
         }
-        //rulesController.init();
-
-        leaveGameController.saveLeavedGame(this.game.get()._id());
+        rulesController.init();
     }
 
     public void toSettings() {

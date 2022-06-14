@@ -1,12 +1,10 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -25,7 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
@@ -33,35 +30,20 @@ import java.util.Objects;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class IngamePlayerListElementController {
-
-    @FXML
-    public HBox playerBox;
-    @FXML
-    public Circle playerColor;
-    @FXML
-    public ImageView playerAvatar;
-    @FXML
-    public Label resourceCardsCount;
-    @FXML
-    public ImageView resourceCards;
-    @FXML
-    public Label developmentCardsCount;
-    @FXML
-    public ImageView developmentCards;
-    @FXML
-    public Label settlementCount;
-    @FXML
-    public ImageView settlement;
-    @FXML
-    public Label cityCount;
-    @FXML
-    public ImageView city;
-    @FXML
-    public Label playerName;
-    @FXML
-    private Player toRender;
-    @FXML
-    public ListView<Node> nodeListView;
+    @FXML public HBox playerBox;
+    @FXML public Circle playerColor;
+    @FXML public ImageView playerAvatar;
+    @FXML public Label resourceCardsCount;
+    @FXML public ImageView resourceCards;
+    @FXML public Label developmentCardsCount;
+    @FXML public ImageView developmentCards;
+    @FXML public Label settlementCount;
+    @FXML public ImageView settlement;
+    @FXML public Label cityCount;
+    @FXML public ImageView city;
+    @FXML public Label playerName;
+    @FXML private Player toRender;
+    @FXML public ListView<Node> nodeListView;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameService gameService;
@@ -142,7 +124,6 @@ public class IngamePlayerListElementController {
                 })
         );
     }
-
 
     private void addPlayerListener() {
         // add listener for observable players list

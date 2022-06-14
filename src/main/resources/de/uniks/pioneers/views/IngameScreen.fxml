@@ -16,7 +16,7 @@
 
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
    <Pane fx:id="fieldPane" layoutX="16.0" layoutY="15.0" prefHeight="637.0" prefWidth="715.0" style="-fx-background-color:#2AD5E7; -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
-   <Button fx:id="giveUpButton" layoutX="751.0" layoutY="14.0" mnemonicParsing="false" onAction="#giveUp" prefHeight="30.0" prefWidth="258.0" text="Give Up" />
+   <Button fx:id="leaveButton" layoutX="751.0" layoutY="14.0" mnemonicParsing="false" onAction="#leave" prefHeight="30.0" prefWidth="258.0" text="Leave" />
    <Button fx:id="rulesButton" layoutX="751.0" layoutY="58.0" mnemonicParsing="false" onAction="#toRules" prefHeight="30.0" prefWidth="120.0" text="Rules" />
    <Button fx:id="settingsButton" layoutX="889.0" layoutY="58.0" mnemonicParsing="false" onAction="#toSettings" prefHeight="30.0" prefWidth="120.0" text="Settings" />
    <Pane layoutX="751.0" layoutY="103.0" prefHeight="214.0" prefWidth="258.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">

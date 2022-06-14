@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
@@ -16,9 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +27,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Optional;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
@@ -113,6 +114,17 @@ public class LobbyScreenController implements Controller {
             System.exit(0);
         });
 
+        Game leavedGame = prefService.getSavedGame();
+        if(leavedGame != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Rejoin Game");
+            alert.setHeaderText("Would you like to rejoin your last game?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if(option.get() == ButtonType.OK) {
+                leaveGameController.loadLeavedGame(leavedGame);
+            }
+        }
+
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         if(darkMode){
             app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
@@ -143,9 +155,7 @@ public class LobbyScreenController implements Controller {
         if(darkMode){
             controller.setDarkMode();
         }
-        //controller.init();
-
-        leaveGameController.loadLeavedGame();
+        controller.init();
     }
 
     public void logout(ActionEvent event) {
