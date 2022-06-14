@@ -133,7 +133,6 @@ public class GameService {
 
     public void findMe() {
         me = userService.getCurrentUser()._id();
-        System.out.println(me);
     }
 
     public boolean checkRoadSpot(int x, int y, int z) {

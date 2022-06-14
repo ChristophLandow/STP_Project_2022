@@ -94,12 +94,10 @@ public class IngamePlayerResourcesController {
         resourcesHBox.getChildren().clear();
     }
 
-
     private void addPlayerListener() {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             String key = c.getKey();
-            System.out.println("player map got updated");
             if (key.equals(gameService.me)) {
                 if (c.wasRemoved() && c.wasAdded()) {
                     setDataToElement(c.getValueAdded(), c.getValueRemoved());
