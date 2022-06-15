@@ -340,7 +340,7 @@ public class TestModule {
     @Singleton
     static PrefService prefService() {
 
-        return new PrefService(null, null,null){
+        return new PrefService(null, null,null, null){
 
             @Override
             public String recall(){

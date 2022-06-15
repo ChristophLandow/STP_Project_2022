@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
+import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
@@ -18,79 +19,53 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Optional;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
 @Singleton
 public class LobbyScreenController implements Controller {
+    @FXML public ImageView AvatarImageView;
+    @FXML public Label UsernameLabel;
+    @FXML public ImageView RulesButton;
+    @FXML public VBox UsersVBox;
+    @FXML public ListView<Node> listViewGames;
+    @FXML public Button EditProfileButton;
+    @FXML public Button LogoutButton;
+    @FXML public Button NewGameButton;
 
-    @FXML
-    public ImageView AvatarImageView;
-    @FXML
-    public Label UsernameLabel;
-    @FXML
-    public ImageView RulesButton;
-    @FXML
-    public VBox UsersVBox;
-    @FXML
-    public ListView<Node> listViewGames;
-    @FXML
-    public Button EditProfileButton;
-    @FXML
-    public Button LogoutButton;
-    @FXML
-    public Button NewGameButton;
+    @Inject MessageService messageService;
+    @Inject Provider<LoginScreenController> loginScreenControllerProvider;
+    @Inject Provider<EditProfileController> editProfileControllerProvider;
+    @Inject Provider<LobbyUserlistController> userlistControllerProvider;
+    @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
+    @Inject PrefService prefService;
+    @Inject LeaveGameController leaveGameController;
+    @Inject LobbyService lobbyService;
+    @Inject UserService userService;
+    @Inject NewGameLobbyService newGameLobbyService;
+    @Inject Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
+    @Inject Provider<LobbyGameListController> lobbyGameListControllerProvider;
 
-    App app;
-
-    @Inject
-    MessageService messageService;
-    @Inject
-    Provider<LoginScreenController> loginScreenControllerProvider;
-    @Inject
-    Provider<EditProfileController> editProfileControllerProvider;
-    @Inject
-    Provider<LobbyUserlistController> userlistControllerProvider;
-    @Inject
-    Provider<RulesScreenController> rulesScreenControllerProvider;
-    @Inject
-    Provider<NewGameScreenLobbyController> newGameScreenLobbyControllerProvider;
-    @Inject
-    PrefService prefService;
-    @Inject
-    LobbyService lobbyService;
-    @Inject
-    UserService userService;
-    @Inject
-    NewGameLobbyService newGameLobbyService;
-    @Inject
-    Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
-    @Inject
-    Provider<LobbyGameListController> lobbyGameListControllerProvider;
-
+    private final App app;
     private LobbyGameListController lobbyGameListController;
     private Stage appStage;
     public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     private boolean darkMode = false;
-
 
     @Inject
     public LobbyScreenController(App app
@@ -152,6 +127,22 @@ public class LobbyScreenController implements Controller {
         // add listener to handle stages
         setupCreateGameListener();
         isCreatingGame.addListener(createGameListener);
+
+        Game leavedGame = prefService.getSavedGame();
+        if(leavedGame != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Rejoin Game");
+            alert.setHeaderText("Would you like to rejoin your last game?");
+            Button okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.setText("Yes");
+            Button cancelButton = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancelButton.setText("No");
+            Optional<ButtonType> option = alert.showAndWait();
+            if(option.get() == ButtonType.OK) {
+                leaveGameController.loadLeavedGame(leavedGame);
+            }
+        }
+
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         if(darkMode){
             app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");

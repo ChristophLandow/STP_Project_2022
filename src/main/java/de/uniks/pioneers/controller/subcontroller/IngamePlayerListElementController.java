@@ -1,6 +1,5 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
@@ -31,35 +30,20 @@ import java.util.Objects;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class IngamePlayerListElementController {
-
-    @FXML
-    public HBox playerBox;
-    @FXML
-    public Circle playerColor;
-    @FXML
-    public ImageView playerAvatar;
-    @FXML
-    public Label resourceCardsCount;
-    @FXML
-    public ImageView resourceCards;
-    @FXML
-    public Label developmentCardsCount;
-    @FXML
-    public ImageView developmentCards;
-    @FXML
-    public Label settlementCount;
-    @FXML
-    public ImageView settlement;
-    @FXML
-    public Label cityCount;
-    @FXML
-    public ImageView city;
-    @FXML
-    public Label playerName;
-    @FXML
-    private Player toRender;
-    @FXML
-    public ListView<Node> nodeListView;
+    @FXML public HBox playerBox;
+    @FXML public Circle playerColor;
+    @FXML public ImageView playerAvatar;
+    @FXML public Label resourceCardsCount;
+    @FXML public ImageView resourceCards;
+    @FXML public Label developmentCardsCount;
+    @FXML public ImageView developmentCards;
+    @FXML public Label settlementCount;
+    @FXML public ImageView settlement;
+    @FXML public Label cityCount;
+    @FXML public ImageView city;
+    @FXML public Label playerName;
+    @FXML private Player toRender;
+    @FXML public ListView<Node> nodeListView;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameService gameService;

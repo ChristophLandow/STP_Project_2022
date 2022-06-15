@@ -12,7 +12,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -29,10 +28,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +40,6 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
-@Singleton
 public class IngameScreenController implements Controller {
     @FXML public Pane root;
     @FXML public Pane turnPane;
@@ -52,7 +48,7 @@ public class IngameScreenController implements Controller {
     @FXML public SVGPath citySVG;
     @FXML public Button rulesButton;
     @FXML public Pane fieldPane;
-    @FXML public Button giveUpButton;
+    @FXML public Button leaveButton;
     @FXML public Button settingsButton;
     @FXML public ScrollPane chatScrollPane;
     @FXML public VBox messageVBox;
@@ -72,39 +68,33 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
 
+    @Inject GameChatController gameChatController;
+    @Inject Provider<StreetPointController> streetPointControllerProvider;
+    @Inject Provider<IngamePlayerListElementController> elementProvider;
+    @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
+
+    private final GameService gameService;
+    private final LeaveGameController leaveGameController;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
     private List<User> users;
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final IngameService ingameService;
-    public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
-
-    private final GameStorage gameStorage;
+    public final ArrayList<HexTileController> tileControllers = new ArrayList<>();private final GameStorage gameStorage;
     private final UserService userService;
-    private final GameService gameService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
-
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
     private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-
-    @Inject
-    Provider<GameChatController> gameChatControllerProvider;
-    @Inject
-    Provider<StreetPointController> streetPointControllerProvider;
-    @Inject
-    Provider<IngamePlayerListElementController> elementProvider;
-    @Inject
-    Provider<IngamePlayerResourcesController> resourcesControllerProvider;
-    
+    private String myColor;
     private boolean darkMode = false;
-
+    private boolean onClose = false;
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -112,7 +102,7 @@ public class IngameScreenController implements Controller {
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
                                   UserService userService, GameService gameService,
-                                  EventListener eventListener) {
+                                  EventListener eventListener, LeaveGameController leaveGameController) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
@@ -121,6 +111,7 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
+        this.leaveGameController = leaveGameController;
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
@@ -141,6 +132,14 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void init() {
+        this.app.getStage().setOnCloseRequest(event -> {
+            onClose = true;
+            leave();
+            userService.editProfile(null, null, null, "offline").subscribe();
+            Platform.exit();
+            System.exit(0);
+        });
+
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         if(darkMode){
@@ -149,12 +148,13 @@ public class IngameScreenController implements Controller {
         gameService.game.set(game.get());
 
         // init game chat controller
-        GameChatController gameChatController = gameChatControllerProvider.get()
+        gameChatController
                 .setChatScrollPane(this.chatScrollPane)
                 .setMessageText(this.sendMessageField)
                 .setMessageBox(this.messageVBox)
                 .setGame(this.game.get())
-                .setUsers(this.users);
+                .setUsers(this.users)
+                .setIngameScreenController(this);
         gameChatController.render();
         gameChatController.init();
 
@@ -187,8 +187,10 @@ public class IngameScreenController implements Controller {
             IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
             ingamePlayerResourcesController.root = this.root;
             ingamePlayerResourcesController.render();
-            ingamePlayerResourcesController.init();
+            ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
         });
+
+        gameService.loadPlayers(game.get());
 
         // add change listeners
         // players change listener
@@ -215,7 +217,7 @@ public class IngameScreenController implements Controller {
         // TODO: remove player from list
     }
 
-    private void renderPlayer(Player player) {
+    public void renderPlayer(Player player) {
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
@@ -306,6 +308,7 @@ public class IngameScreenController implements Controller {
     }
 
     public void setPlayerColor(String hexColor) {
+        this.myColor = hexColor;
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Color.WHITE);
         houseSVG.setStroke(Paint.valueOf(hexColor));
@@ -315,18 +318,33 @@ public class IngameScreenController implements Controller {
         citySVG.setStrokeWidth(2.0);
     }
 
-
-    public void giveUp(ActionEvent actionEvent) {
-        this.stop();
-        disposable.dispose();
+    public void leave() {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(!app.getStage().getScene().getStylesheets().isEmpty()){
              lobbyController.setDarkMode();
         }
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.stop();
-        app.show(lobbyController);
 
+        if(game.get().owner().equals(userService.getCurrentUser()._id())) {
+            gameChatController.sendMessage("Host left the Game!", game.get());
+            disposable.add(gameService.deleteGame(game.get()._id())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        this.stop();
+                        disposable.dispose();
+                        if(!onClose) {
+                            app.show(lobbyController);
+                        }
+                    }, Throwable::printStackTrace));
+        } else {
+            leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
+            this.stop();
+            disposable.dispose();
+            if(!onClose) {
+                app.show(lobbyController);
+            }
+        }
     }
 
     public void toRules() {
@@ -362,6 +380,7 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void stop() {
+        gameChatController.stop();
     }
 
     public void setUsers(List<User> users) {

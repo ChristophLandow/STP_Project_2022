@@ -42,66 +42,43 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 
-@Singleton
 public class NewGameScreenLobbyController implements Controller {
-    @FXML
-    public Pane root;
-    @FXML
-    public VBox vBoxRoot;
-    @FXML
-    public HBox topLevel;
-    @FXML
-    public VBox leftBox;
-    @FXML
-    public Label gameNameLabel;
-    @FXML
-    public Label passwordLabel;
-    @FXML
-    public VBox userBox;
-    @FXML
-    public VBox rightBox;
-    @FXML
-    public VBox messageBox;
-    @FXML
-    public ScrollPane chatScrollPane;
-    @FXML
-    public HBox messageHbox;
-    @FXML
-    public TextField messageText;
-    @FXML
-    public Button sendButton;
-    @FXML
-    public HBox buttonBox;
-    @FXML
-    public Button readyButton;
-    @FXML
-    public Button startGameButton;
-    @FXML
-    public Button leaveButton;
-    @FXML
-    public ImageView RulesButton;
-    @FXML
-    public HBox clientReadyBox;
-    @FXML
-    public Label clientReadyLabel;
-    @FXML
-    public ColorPicker colorPicker;
-    @FXML
-    public SVGPath houseSVG;
-    @FXML
-    public ImageView clientAvatar;
-    @FXML
-    public Label clientUserNameLabel;
+    @FXML public Pane root;
+    @FXML public VBox vBoxRoot;
+    @FXML public HBox topLevel;
+    @FXML public VBox leftBox;
+    @FXML public Label gameNameLabel;
+    @FXML public Label passwordLabel;
+    @FXML public VBox userBox;
+    @FXML public VBox rightBox;
+    @FXML public VBox messageBox;
+    @FXML public ScrollPane chatScrollPane;
+    @FXML public HBox messageHbox;
+    @FXML public TextField messageText;
+    @FXML public Button sendButton;
+    @FXML public HBox buttonBox;
+    @FXML public Button readyButton;
+    @FXML public Button startGameButton;
+    @FXML public Button leaveButton;
+    @FXML public ImageView RulesButton;
+    @FXML public HBox clientReadyBox;
+    @FXML public Label clientReadyLabel;
+    @FXML public ColorPicker colorPicker;
+    @FXML public SVGPath houseSVG;
+    @FXML public ImageView clientAvatar;
+    @FXML public Label clientUserNameLabel;
+
+    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @Inject Provider<GameChatController> gameChatControllerProvider;
+    @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
+    @Inject Provider<LoginScreenController> loginScreenControllerProvider;
 
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
@@ -120,15 +97,6 @@ public class NewGameScreenLobbyController implements Controller {
     private GameChatController gameChatController;
     private ColorPickerController colorPickerController;
     private boolean clientReady = false;
-    @Inject
-    Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    @Inject
-    Provider<GameChatController> gameChatControllerProvider;
-    @Inject
-    Provider<IngameScreenController> ingameScreenControllerProvider;
-    @Inject
-    Provider<LoginScreenController> loginScreenControllerProvider;
-
     private boolean darkMode= false;
 
     @Inject
@@ -302,7 +270,7 @@ public class NewGameScreenLobbyController implements Controller {
                     game.set(gameEvent.data());
                     memberCount.set(game.get().members());
                     if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
-                        this.toIngame();
+                        this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor());
                     } else if (gameEvent.event().endsWith(".deleted")) {
                         app.show(lobbyScreenControllerProvider.get());
                     }
@@ -384,22 +352,20 @@ public class NewGameScreenLobbyController implements Controller {
             disposable.add(newGameLobbyService.updateGame(game.get(), password.get(), true)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
-                    .subscribe(response -> {
-                        this.toIngame();
-                    }, Throwable::printStackTrace));
+                    .subscribe(response -> this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor()), Throwable::printStackTrace));
         }
     }
 
-    private void toIngame() {
+    public void toIngame(Game game, List<User> users, String myColor) {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         if(darkMode) {
             ingameScreenController.setDarkmode();
         }
-        ingameScreenController.game.set(this.game.get());
+        ingameScreenController.game.set(game);
         ingameScreenController.loadMap();
-        ingameScreenController.setUsers(this.users.values().stream().toList());
+        ingameScreenController.setUsers(users);
         app.show(ingameScreenController);
-        ingameScreenController.setPlayerColor(colorPickerController.getColor());
+        ingameScreenController.setPlayerColor(myColor);
     }
 
     private boolean allUsersReady() {

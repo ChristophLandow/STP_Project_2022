@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -21,20 +20,16 @@ import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class GameService {
-
-    public final ObservableMap<String, Player> players = FXCollections.observableHashMap();
+    public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameApiService gameApiService;
     public String me;
-
     private final UserService userService;
     private final IngameService ingameService;
-
-    @Inject
-    EventListener eventListener;
+    @Inject EventListener eventListener;
 
     @Inject
     public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService) {
@@ -48,17 +43,6 @@ public class GameService {
     }
 
     public void initGame() {
-        // REST - get players from server
-        disposable.add(ingameService.getAllPlayers(game.get()._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(list -> {
-                            list.forEach(player -> {
-                                players.put(player.userId(), player);
-                            });
-                            findMe();
-                        }
-                        , Throwable::printStackTrace));
-
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -141,4 +125,14 @@ public class GameService {
                 && building.type().equals("settlement"));
     }
 
+    public void loadPlayers(Game game) {
+        // REST - get players from server
+        players = FXCollections.observableHashMap();
+        disposable.add(ingameService.getAllPlayers(game._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(list -> {
+                    list.forEach(player -> players.put(player.userId(), player));
+                    findMe();
+                    }, Throwable::printStackTrace));
+    }
 }
