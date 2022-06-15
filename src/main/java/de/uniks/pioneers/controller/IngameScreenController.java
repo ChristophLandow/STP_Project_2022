@@ -261,16 +261,17 @@ public class IngameScreenController implements Controller {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
 
-        this.setSituationLabel(move);
+        String actionString = "";
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
-                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
-                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
-                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
+                case FOUNDING_ROLL, ROLL -> { this.enableRoll(move.action()); actionString = ROLL_DICE; }
+                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> { this.enableBuildingPoints(move.action()); actionString = PLACE_SETTLEMENT; }
+                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> { this.enableStreetPoints(move.action()); actionString = PLACE_ROAD; }
                 case BUILD -> {
                     // set builder timer, in progress...
+                    actionString = BUILD;
                     this.timerService.setBuildTimer(new Timer(), this.timeLabel);
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
@@ -278,6 +279,7 @@ public class IngameScreenController implements Controller {
                 }
             }
         }
+        this.setSituationLabel(move.players().get(0), actionString);
     }
     private void enableEndTurn() {
         this.turnPane.setOnMouseClicked(this::endTurn);
@@ -304,18 +306,18 @@ public class IngameScreenController implements Controller {
         }
     }
 
-    private void setSituationLabel(ExpectedMove move) {
+    private void setSituationLabel(String playerId, String actionString) {
         // set game state label
         String playerName;
-        // if this user is current player
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+
+        if (playerId.equals(userService.getCurrentUser()._id())) {
             playerName = "ME";
             this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/next.png")).toString()));
         } else {
-            playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
+            playerName = userService.getUserById(playerId).blockingFirst().name();
             this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/sanduhr.png")).toString()));
         }
-        this.situationLabel.setText(playerName + ":\n" + move.action());
+        this.situationLabel.setText(playerName + ":\n" + actionString);
     }
 
     private void enableRoll(String action) {
