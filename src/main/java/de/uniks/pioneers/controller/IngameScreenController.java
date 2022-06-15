@@ -168,6 +168,9 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
+        // set timeLabel of timer
+        this.timerService.setTimeLabel(this.timeLabel);
+
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
@@ -268,7 +271,7 @@ public class IngameScreenController implements Controller {
                 case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
                 case BUILD -> {
                     // set builder timer, in progress...
-                    this.timerService.setBuildTimer(new Timer());
+                    this.timerService.setBuildTimer(new Timer(), this.timeLabel);
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
