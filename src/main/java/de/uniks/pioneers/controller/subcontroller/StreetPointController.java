@@ -78,7 +78,7 @@ public class StreetPointController {
             }
             for(StreetPointController street : building.adjacentStreets){
 
-                if(this.action.equals(FOUNDING_ROAD_2) && (street != this) && street.building != null && street.building.owner().equals(this.userService.getCurrentUser()._id())){
+                if(!this.action.equals(FOUNDING_ROAD_2) && (street != this) && street.building != null && street.building.owner().equals(this.userService.getCurrentUser()._id())){
                     //check if own road is adjacent, only valid outside of founding phase
                     valid = true;
                     break;

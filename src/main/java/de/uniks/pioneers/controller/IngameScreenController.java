@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -73,6 +74,9 @@ public class IngameScreenController implements Controller {
     @FXML public HBox resourcesHBox;
     @FXML public Rectangle downRectangle;
     @FXML public Rectangle upRectangle;
+    @FXML public Pane roadFrame;
+    @FXML public Pane settlementFrame;
+    @FXML public Pane cityFrame;
 
     @Inject GameChatController gameChatController;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
@@ -214,8 +218,12 @@ public class IngameScreenController implements Controller {
 
         // buildings change listener
         gameService.buildings.addListener((ListChangeListener<? super Building>) c -> {
+            System.out.println(gameService.buildings);
             c.next();
-            if (c.wasAdded()) {
+            System.out.println(c.wasAdded());
+            System.out.println(c.wasUpdated());
+            System.out.println(c.wasReplaced());
+            if (c.wasAdded() || c.wasReplaced()) {
                 c.getAddedSubList().forEach(this::renderBuilding);
             } else if (c.wasRemoved()) {
                 c.getRemoved().forEach(this::deleteBuilding);
@@ -236,7 +244,7 @@ public class IngameScreenController implements Controller {
     private void renderBuilding(Building building) {
         System.out.println("building type: " + building.type());
         String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
-        if (Objects.equals(building.type(), "settlement") || Objects.equals(building.type(), "city")) {
+        if (Objects.equals(building.type(), SETTLEMENT) || Objects.equals(building.type(), CITY)) {
             // find corresponding buildingPointController
             BuildingPointController controller = buildingPointControllerHashMap.get(coords);
             controller.placeBuilding(building);
@@ -247,8 +255,7 @@ public class IngameScreenController implements Controller {
         }
     }
 
-    private void deleteBuilding(Building building) {
-    }
+    private void deleteBuilding(Building building) {}
 
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
@@ -262,11 +269,14 @@ public class IngameScreenController implements Controller {
                 case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
                 case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
                 case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
-                case BUILD -> this.enableEndTurn();
+                case BUILD -> {
+                    this.enableEndTurn();
+                    this.enableBuildingPoints(move.action());
+                    this.enableStreetPoints(move.action());
+                }
             }
         }
     }
-
     private void enableEndTurn() {
         this.turnPane.setOnMouseClicked(this::endTurn);
     }
@@ -285,7 +295,6 @@ public class IngameScreenController implements Controller {
             controller.init();
         }
     }
-
     private void enableBuildingPoints(String action) {
         for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
             controller.setAction(action);
@@ -398,12 +407,8 @@ public class IngameScreenController implements Controller {
     }
 
     public void loadMap() {
-        if (this.game.get().members() > 4) {
-            this.gameSize = 3;
-        } else {
-            this.gameSize = 2;
-        }
 
+        this.gameSize = 2;
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnComplete(this::buildBoardUI)
@@ -467,8 +472,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, timerService, game.get()._id(), this.fieldPane));
-
+            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, timerService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService));
         }
         for (HexTileController tile : tileControllers) {
 
@@ -476,28 +480,22 @@ public class IngameScreenController implements Controller {
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
-
         for (BuildingPointController buildingPoint : this.buildingControllers) {
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),
                     buildingPoint);
         }
-
         for (StreetPointController streetPoint : this.streetPointControllers) {
             // put buildingPointControllers in Hashmap to access with coordinates
             this.streetPointControllerHashMap.put(
                     streetPoint.generateKeyString(),
                     streetPoint);
         }
-
         loadSnowAnimation();
     }
 
-    private void loadSnowAnimation() {
-        new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);
-    }
-
+    private void loadSnowAnimation() {new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);}
     public void setDarkmode(){
         darkMode = true;
     }
@@ -505,4 +503,19 @@ public class IngameScreenController implements Controller {
     public void setBrightMode(){
         darkMode = false;
     }
+    public void selectStreet() {
+        this.gameStorage.selectedBuilding = ROAD;
+        this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
+        this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+    public void selectSettlement() {
+        this.gameStorage.selectedBuilding = SETTLEMENT;
+        this.settlementFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
+        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+    public void selectCity() {
+        this.gameStorage.selectedBuilding = CITY;
+        this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
+        this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
 }
