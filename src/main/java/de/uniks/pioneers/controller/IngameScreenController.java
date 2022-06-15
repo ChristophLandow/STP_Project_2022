@@ -8,37 +8,31 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.paint.Paint;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,17 +43,15 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
-@Singleton
 public class IngameScreenController implements Controller {
-    private final GameService gameService;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @FXML public Pane root;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
     @FXML public SVGPath citySVG;
     @FXML public Button rulesButton;
     @FXML public Pane fieldPane;
-    @FXML public Button giveUpButton;
+    @FXML public Button leaveButton;
     @FXML public Button settingsButton;
     @FXML public ScrollPane chatScrollPane;
     @FXML public VBox messageVBox;
@@ -81,8 +73,15 @@ public class IngameScreenController implements Controller {
     @FXML public HBox resourcesHBox;
     @FXML public Rectangle downRectangle;
     @FXML public Rectangle upRectangle;
-    @FXML public Pane root;
 
+    @Inject GameChatController gameChatController;
+    @Inject Provider<StreetPointController> streetPointControllerProvider;
+    @Inject Provider<IngamePlayerListElementController> elementProvider;
+    @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
+
+    private final GameService gameService;
+    private final LeaveGameController leaveGameController;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
     private List<User> users;
@@ -90,29 +89,19 @@ public class IngameScreenController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
-    private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
-
+    public final ArrayList<HexTileController> tileControllers = new ArrayList<>();private final GameStorage gameStorage;
     private final UserService userService;
     private final TimerService timerService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
-
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
     private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-
-    private final GameStorage gameStorage;
-
-    @Inject
-    Provider<GameChatController> gameChatControllerProvider;
-    @Inject
-    Provider<StreetPointController> streetPointControllerProvider;
-    @Inject
-    Provider<IngamePlayerListElementController> elementProvider;
+    private String myColor;
     private boolean darkMode = false;
-
+    private boolean onClose = false;
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -120,7 +109,8 @@ public class IngameScreenController implements Controller {
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
                                   UserService userService, GameService gameService,
-                                  TimerService timerService, EventListener eventListener) {
+                                  EventListener eventListener, LeaveGameController leaveGameController,
+                                  TimerService timerService) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
@@ -131,6 +121,7 @@ public class IngameScreenController implements Controller {
         this.gameService = gameService;
         this.timerService = timerService;
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
+        this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
@@ -150,6 +141,14 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void init() {
+        this.app.getStage().setOnCloseRequest(event -> {
+            onClose = true;
+            leave();
+            userService.editProfile(null, null, null, "offline").subscribe();
+            Platform.exit();
+            System.exit(0);
+        });
+
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         if(darkMode){
@@ -158,12 +157,13 @@ public class IngameScreenController implements Controller {
         gameService.game.set(game.get());
 
         // init game chat controller
-        GameChatController gameChatController = gameChatControllerProvider.get()
+        gameChatController
                 .setChatScrollPane(this.chatScrollPane)
                 .setMessageText(this.sendMessageField)
                 .setMessageBox(this.messageVBox)
                 .setGame(this.game.get())
-                .setUsers(this.users);
+                .setUsers(this.users)
+                .setIngameScreenController(this);
         gameChatController.render();
         gameChatController.init();
 
@@ -192,13 +192,22 @@ public class IngameScreenController implements Controller {
                 })
         );
 
+        Platform.runLater(() -> {
+            // init controller for player resources box
+            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
+            ingamePlayerResourcesController.root = this.root;
+            ingamePlayerResourcesController.render();
+            ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
+        });
+
+        gameService.loadPlayers(game.get());
+
         // add change listeners
         // players change listener
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
-            if (c.wasAdded()) {
-                System.out.println("Player was added!");
+            if (c.wasAdded() && !c.wasRemoved()) {
                 this.renderPlayer(c.getValueAdded());
-            } else if (c.wasRemoved()) {
+            } else if (c.wasRemoved() && !c.wasAdded()) {
                 this.deletePlayer(c.getValueRemoved());
             }
         });
@@ -218,7 +227,7 @@ public class IngameScreenController implements Controller {
         // TODO: remove player from list
     }
 
-    private void renderPlayer(Player player) {
+    public void renderPlayer(Player player) {
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
@@ -246,7 +255,6 @@ public class IngameScreenController implements Controller {
         ExpectedMove move = currentState.expectedMoves().get(0);
 
         this.setSituationLabel(move);
-
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
@@ -310,6 +318,7 @@ public class IngameScreenController implements Controller {
     }
 
     public void setPlayerColor(String hexColor) {
+        this.myColor = hexColor;
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Color.WHITE);
         houseSVG.setStroke(Paint.valueOf(hexColor));
@@ -319,18 +328,33 @@ public class IngameScreenController implements Controller {
         citySVG.setStrokeWidth(2.0);
     }
 
-
-    public void giveUp(ActionEvent actionEvent) {
-        this.stop();
-        disposable.dispose();
+    public void leave() {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(!app.getStage().getScene().getStylesheets().isEmpty()){
              lobbyController.setDarkMode();
         }
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.stop();
-        app.show(lobbyController);
 
+        if(game.get().owner().equals(userService.getCurrentUser()._id())) {
+            gameChatController.sendMessage("Host left the Game!", game.get());
+            disposable.add(gameService.deleteGame(game.get()._id())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        this.stop();
+                        disposable.dispose();
+                        if(!onClose) {
+                            app.show(lobbyController);
+                        }
+                    }, Throwable::printStackTrace));
+        } else {
+            leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
+            this.stop();
+            disposable.dispose();
+            if(!onClose) {
+                app.show(lobbyController);
+            }
+        }
     }
 
     public void toRules() {
@@ -366,6 +390,7 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void stop() {
+        gameChatController.stop();
     }
 
     public void setUsers(List<User> users) {
@@ -451,8 +476,8 @@ public class IngameScreenController implements Controller {
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
-        for (BuildingPointController buildingPoint : this.buildingControllers) {
 
+        for (BuildingPointController buildingPoint : this.buildingControllers) {
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),

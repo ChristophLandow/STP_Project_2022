@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Constants;
+import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
@@ -13,10 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,9 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-
 import javax.inject.Inject;
-
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -41,12 +37,12 @@ public class GameChatController {
     private final ObservableList<MessageDto> messages = FXCollections.observableArrayList();
     private final UserService userService;
     private final NewGameLobbyService newGameLobbyService;
-
+    private IngameScreenController ingameScreenController;
     private Game game;
     private List<User> users;
 
     @Inject
-    public GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService){
+    public GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService) {
         this.newGameLobbyService = newGameLobbyService;
         this.eventListener = eventListener;
         this.userService = userService;
@@ -60,7 +56,6 @@ public class GameChatController {
         } else {
             messageText.setOnKeyPressed(this::sendMessageViaEnter);
         }
-
 
         this.messages.addListener((ListChangeListener<? super MessageDto>) c->{
             c.next();
@@ -86,7 +81,6 @@ public class GameChatController {
         disposable.add(newGameLobbyService.getMessages(game._id()).observeOn(FX_SCHEDULER)
                 .subscribe(this.messages::setAll));
 
-        System.out.println("games." + game._id() + ".messages.*.*");
         disposable.add(eventListener.listen("games." + game._id() + ".messages.*.*", MessageDto.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(messageEvent -> {
@@ -111,6 +105,16 @@ public class GameChatController {
 
         if(user == null){
             user = userService.getUserById(message.sender()).blockingFirst();
+        }
+
+        if(user._id().equals(game.owner()) && message.body().equals("Host left the Game!")) {
+            if(!userService.getCurrentUser()._id().equals(game.owner())) {
+                ingameScreenController.leave();
+                System.out.println(userService.getCurrentUser()._id() + "  " + game.owner());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.HOST_LEFT_GAME_ALERT);
+                alert.showAndWait();
+            }
+            return;
         }
 
         Image userImage;
@@ -150,6 +154,15 @@ public class GameChatController {
         }
     }
 
+    public void sendMessage(String message, Game game) {
+        if(!message.isEmpty()) {
+            disposable.add(newGameLobbyService.sendMessage(game._id(), new CreateMessageDto(message))
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(Throwable::printStackTrace)
+                    .subscribe());
+        }
+    }
+
     public GameChatController setChatScrollPane(ScrollPane chatScrollPane) {
         this.chatScrollPane = chatScrollPane;
         return this;
@@ -177,6 +190,11 @@ public class GameChatController {
 
     public GameChatController setUsers(List<User> users) {
         this.users = users;
+        return this;
+    }
+
+    public GameChatController setIngameScreenController (IngameScreenController ingameScreenController) {
+        this.ingameScreenController = ingameScreenController;
         return this;
     }
 }

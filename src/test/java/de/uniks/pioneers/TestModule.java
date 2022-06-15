@@ -107,9 +107,10 @@ public class TestModule {
         when(eventListener.listen("users.003.updated", User.class)).thenReturn(PublishSubject.create());
 
         when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
-        when(eventListener.listen("games.000.players.*", Player.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(PublishSubject.create());
 
 
 
@@ -297,7 +298,7 @@ public class TestModule {
 
     @Provides
     static NewGameLobbyService newGameLobbyService(){
-        return new NewGameLobbyService(gameApiService(),gameMemberApiService(),messageApiService()){
+        return new NewGameLobbyService(gameApiService(),gameMemberApiService(),messageApiService(), authApiService()){
 
             private String currentMemberId;
 
@@ -339,7 +340,7 @@ public class TestModule {
     @Singleton
     static PrefService prefService() {
 
-        return new PrefService(null, null,null){
+        return new PrefService(null, null,null, null){
 
             @Override
             public String recall(){
@@ -427,6 +428,11 @@ public class TestModule {
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
                 return Observable.just(new Move("000","2022-06-09T15:11:51.795Z","000","000","founding-roll",1,""));
+            }
+
+            @Override
+            public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
+                return  Observable.just(new Player("000","000","#ff0000",1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
             }
         };
 

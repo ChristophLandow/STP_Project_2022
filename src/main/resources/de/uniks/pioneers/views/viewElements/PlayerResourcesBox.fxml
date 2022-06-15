@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox fx:id="resourcesHBox" alignment="CENTER" prefHeight="60.0" prefWidth="296.0" spacing="5.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
+   <children>
+      <ImageView fx:id="fischResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_fish.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="fischCount" ellipsisString="" text="4" textFill="WHITE" translateX="-13.0" translateY="-16.0" />
+      <ImageView fx:id="packeisResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_ice.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="packeisCount" ellipsisString="" text="4" textFill="WHITE" translateX="-13.0" translateY="-16.0" />
+      <ImageView fx:id="fellResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_polarbear.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="fellCount" ellipsisString="" text="4" textFill="WHITE" translateX="-13.0" translateY="-16.0" />
+      <ImageView fx:id="kohleResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_carbon.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="kohleCount" ellipsisString="" text="4" textFill="WHITE" translateX="-13.0" translateY="-16.0" />
+      <ImageView fx:id="walknochenResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_whale.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="walknochenCount" ellipsisString="" text="4" textFill="WHITE" translateX="-13.0" translateY="-16.0" />
+   </children>
+</HBox>

@@ -26,4 +26,9 @@ public class GameConstants {
 
     public static final Color GREEN = Color.GREEN;
 
+    public static final String INGAME_SCREEN_TITLE = "Pioneers ";
+    public static final String SETTLEMENT = "settlement";
+    public static final String CITY = "city";
+    public static final String ROAD = "road";
+
 }
