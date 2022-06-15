@@ -67,6 +67,9 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView rightDiceImageView;
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
+    @FXML public Pane roadFrame;
+    @FXML public Pane settlementFrame;
+    @FXML public Pane cityFrame;
 
     @Inject GameChatController gameChatController;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
@@ -252,11 +255,15 @@ public class IngameScreenController implements Controller {
                 case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
                 case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
                 case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
-                case BUILD -> this.enableEndTurn();
+                case BUILD -> {
+                    this.enableEndTurn();
+                    this.enableBuildingPoints(move.action());
+                    this.enableStreetPoints(move.action());
+                }
+
             }
         }
     }
-
     private void enableEndTurn() {
         this.turnPane.setOnMouseClicked(this::endTurn);
     }
@@ -268,14 +275,12 @@ public class IngameScreenController implements Controller {
                 .subscribe(move -> this.turnPane.setOnMouseClicked(null))
         );
     }
-
     private void enableStreetPoints(String action) {
         for (StreetPointController controller : streetPointControllerHashMap.values()) {
             controller.init();
             controller.setAction(action);
         }
     }
-
     private void enableBuildingPoints(String action) {
         for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
             controller.init();
@@ -457,7 +462,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane));
+            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService));
 
         }
         for (HexTileController tile : tileControllers) {
@@ -495,4 +500,10 @@ public class IngameScreenController implements Controller {
     public void setBrightMode(){
         darkMode = false;
     }
+
+    public void selectStreet(MouseEvent mouseEvent) {this.gameStorage.selectedBuilding = ROAD;}
+
+    public void selectSettlement(MouseEvent mouseEvent) {this.gameStorage.selectedBuilding = SETTLEMENT;}
+
+    public void selectCity(MouseEvent mouseEvent) {this.gameStorage.selectedBuilding = CITY;}
 }

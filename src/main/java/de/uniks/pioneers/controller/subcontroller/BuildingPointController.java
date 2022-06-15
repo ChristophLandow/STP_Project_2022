@@ -4,7 +4,9 @@ import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
+import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +17,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -27,6 +30,10 @@ public class BuildingPointController {
     private final Circle view;
     private final Circle eventView;
     private final IngameService ingameService;
+
+    private final UserService userService;
+
+    private final GameStorage gameStorage;
     private final String gameId;
     private String action;
     public HexTile tile;
@@ -41,11 +48,14 @@ public class BuildingPointController {
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
-                                   Pane fieldPane) {
+                                   Pane fieldPane, GameStorage gameStorage,
+                                   UserService userService) {
 
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
+        this.userService = userService;
+        this.gameStorage = gameStorage;
         this.gameId = gameId;
         this.fieldPane = fieldPane;
 
@@ -80,11 +90,12 @@ public class BuildingPointController {
 
     public void build() {
         // post build move
+        System.out.println("Action: " + this.action);
         String buildingType;
         if (this.action.contains("settlement")) {
             buildingType = "settlement";
         } else {
-            buildingType = "city";
+            buildingType = gameStorage.selectedBuilding;
         }
 
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
@@ -124,17 +135,26 @@ public class BuildingPointController {
     }
 
     private void info(MouseEvent mouseEvent) {
-        boolean surrounded = false;
-        for (StreetPointController street : adjacentStreets) {
-            for (BuildingPointController building : street.getAdjacentBuildings()) {
-                if (building != this) {
-                    if (building.building != null) {
-                        surrounded = true;
+        boolean invalid = false;
+        if(gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
+            for (StreetPointController street : adjacentStreets) {
+                for (BuildingPointController building : street.getAdjacentBuildings()) {
+                    if (building != this) {
+                        if (building.building != null) {
+                            invalid = true;
+                        }
                     }
                 }
             }
         }
-        if (surrounded) {
+        if(gameStorage.selectedBuilding.equals(CITY)) {
+            if(this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())){
+
+                invalid = true;
+            }
+
+        }
+        if (invalid) {
             System.out.println("You can't build here!");
         } else {
             build();
