@@ -107,7 +107,7 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(buildingEvent -> {
                     final Building building = buildingEvent.data();
-                    if (buildingEvent.event().endsWith(".created")) {
+                    if (buildingEvent.event().endsWith(".created") || buildingEvent.event().endsWith(".updated")) {
                         // render new building
                         this.buildings.add(building);
                     }
