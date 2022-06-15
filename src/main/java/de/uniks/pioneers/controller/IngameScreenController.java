@@ -208,8 +208,12 @@ public class IngameScreenController implements Controller {
 
         // buildings change listener
         gameService.buildings.addListener((ListChangeListener<? super Building>) c -> {
+            System.out.println(gameService.buildings);
             c.next();
-            if (c.wasAdded()) {
+            System.out.println(c.wasAdded());
+            System.out.println(c.wasUpdated());
+            System.out.println(c.wasReplaced());
+            if (c.wasAdded() || c.wasReplaced()) {
                 c.getAddedSubList().forEach(this::renderBuilding);
             } else if (c.wasRemoved()) {
                 c.getRemoved().forEach(this::deleteBuilding);
@@ -230,7 +234,7 @@ public class IngameScreenController implements Controller {
     private void renderBuilding(Building building) {
         System.out.println("building type: " + building.type());
         String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
-        if (Objects.equals(building.type(), "settlement") || Objects.equals(building.type(), "city")) {
+        if (Objects.equals(building.type(), SETTLEMENT) || Objects.equals(building.type(), CITY)) {
             // find corresponding buildingPointController
             BuildingPointController controller = buildingPointControllerHashMap.get(coords);
             controller.placeBuilding(building);
@@ -241,8 +245,7 @@ public class IngameScreenController implements Controller {
         }
     }
 
-    private void deleteBuilding(Building building) {
-    }
+    private void deleteBuilding(Building building) {}
 
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
@@ -261,7 +264,6 @@ public class IngameScreenController implements Controller {
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
-
             }
         }
     }
@@ -394,12 +396,8 @@ public class IngameScreenController implements Controller {
     }
 
     public void loadMap() {
-        if (this.game.get().members() > 4) {
-            this.gameSize = 3;
-        } else {
-            this.gameSize = 2;
-        }
 
+        this.gameSize = 2;
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnComplete(this::buildBoardUI)
