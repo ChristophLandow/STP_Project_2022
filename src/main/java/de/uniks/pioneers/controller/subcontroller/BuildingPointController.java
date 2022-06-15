@@ -20,6 +20,7 @@ import javafx.scene.shape.StrokeType;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -72,10 +73,6 @@ public class BuildingPointController {
     }
 
     public void init() {
-        if (this.action.equals(BUILD)) {
-            // TODO: set builder timer, in progress...
-            // this.timerService.setBuildTimer();
-        }
         this.eventView.setOnMouseClicked(this::info);
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);

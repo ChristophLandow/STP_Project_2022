@@ -35,10 +35,7 @@ import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
@@ -270,6 +267,8 @@ public class IngameScreenController implements Controller {
                 case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
                 case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
                 case BUILD -> {
+                    // set builder timer, in progress...
+                    this.timerService.setBuildTimer(new Timer());
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());

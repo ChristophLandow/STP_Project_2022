@@ -14,7 +14,7 @@ import static de.uniks.pioneers.GameConstants.BUILD;
 @Singleton
 public class TimerService {
     private boolean timeUp;
-    private final Timer timer = new Timer();
+    private Timer timer;
 
     private final IngameService ingameService;
     private final GameService gameService;
@@ -30,7 +30,8 @@ public class TimerService {
         return timeUp;
     }
 
-    public void setRollTimer(String action) {
+    public void setRollTimer(String action, Timer timer) {
+        this.timer = timer;
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -39,20 +40,17 @@ public class TimerService {
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {
                             this.cancel();
-                            reset();
+                            timer.cancel();
                         })
                 );
             }
         };
 
-        this.timer.schedule(task, 10 * 1000);
+        timer.schedule(task, 10 * 1000);
     }
 
-    public void reset() {
-        this.timer.cancel();
-    }
-
-    public void setBuildTimer() {
+    public void setBuildTimer(Timer timer) {
+        this.timer = timer;
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -62,16 +60,18 @@ public class TimerService {
                         .subscribe(move -> {
                             System.out.println("Time is up! BUILD skipped.");
                             this.cancel();
-                            reset();
+                            timer.cancel();
                         })
                 );
             }
         };
 
-        this.timer.schedule(task, 120 * 1000);
+        timer.schedule(task, 120 * 1000);
     }
 
-    public Timer getTimer() {
-        return timer;
+    public void reset() {
+        if (this.timer != null) {
+            this.timer.cancel();
+        }
     }
 }

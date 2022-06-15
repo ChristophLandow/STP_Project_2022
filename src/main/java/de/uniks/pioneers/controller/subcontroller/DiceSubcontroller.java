@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 
 import java.util.Objects;
+import java.util.Timer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.FOUNDING_ROLL;
@@ -58,7 +59,7 @@ public class DiceSubcontroller {
     public void activate() {
         this.leftDiceView.setOnMouseClicked(this::roll);
         this.rightDiceView.setOnMouseClicked(this::roll);
-        this.timerService.setRollTimer(this.action);
+        this.timerService.setRollTimer(this.action, new Timer());
     }
 
     private void roll(MouseEvent mouseEvent) {
