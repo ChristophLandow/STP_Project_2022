@@ -96,7 +96,6 @@ public class GameListDropDownController implements Controller {
         stage.show();
     }
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
 
     public void discardGame(MouseEvent mouseEvent) {
         LobbyService lobbyService = lobbyServiceProvider.get();

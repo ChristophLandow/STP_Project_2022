@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -22,10 +23,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 public class GameListElementController implements Controller {
@@ -91,7 +94,7 @@ public class GameListElementController implements Controller {
         String createdAt = game.get().createdAt();
         int start = createdAt.indexOf("T");
         int end = createdAt.indexOf(".");
-        String time = game.get().createdAt().substring(start + 1, end) + " :";
+        String time = game.get().createdAt().substring(start+1, end) + " :";
         creationTime.setText(time);
         // set game title to title label
         title.setText(game.get().name());

@@ -8,7 +8,6 @@ import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -17,8 +16,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+
 import javax.inject.Inject;
 import java.util.ArrayList;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_2;
 
@@ -34,7 +35,6 @@ public class StreetPointController {
     // coordinates to be uploaded to the server as: x, y, z, side
     public int[] uploadCoords = new int[4];
     public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
-    SimpleIntegerProperty side = new SimpleIntegerProperty();
     private String action;
     private Building building;
 
@@ -107,16 +107,15 @@ public class StreetPointController {
 
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
-        side.set(building.side());
         Rectangle road =  new Rectangle(60,7, Paint.valueOf(player.color()));
         Scene scene = view.getScene();
         Pane root = (Pane) scene.getRoot();
         root.getChildren().add(road);
         road.setLayoutX(view.getLayoutX()-14);
         road.setLayoutY(view.getLayoutY()+12);
-        if (side.get() == 3) {
+        if (building.side() == 3) {
             road.setRotate(90);
-        } else if (side.get() == 7) {
+        } else if (building.side() == 7) {
             road.setRotate(30);
         }else {
             road.setRotate(-30);

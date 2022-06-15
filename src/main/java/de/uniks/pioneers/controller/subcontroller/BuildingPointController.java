@@ -37,7 +37,7 @@ public class BuildingPointController {
 
     public ArrayList<StreetPointController> adjacentStreets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private Building building;
+    private Building building = null;
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
