@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -440,7 +441,6 @@ public class IngameScreenController implements Controller {
             }
             this.tileControllers.add(new HexTileController(hexTile, hex));
         }
-
         for (HexTile edge : edges) {
 
             Circle circ = new Circle(3);
@@ -463,7 +463,6 @@ public class IngameScreenController implements Controller {
             circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService));
-
         }
         for (HexTileController tile : tileControllers) {
 
@@ -471,39 +470,41 @@ public class IngameScreenController implements Controller {
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
-
         for (BuildingPointController buildingPoint : this.buildingControllers) {
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),
                     buildingPoint);
         }
-
         for (StreetPointController streetPoint : this.streetPointControllers) {
             // put buildingPointControllers in Hashmap to access with coordinates
             this.streetPointControllerHashMap.put(
                     streetPoint.generateKeyString(),
                     streetPoint);
         }
-
         loadSnowAnimation();
     }
 
-    private void loadSnowAnimation() {
-        new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);
-    }
-
+    private void loadSnowAnimation() {new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);}
     public void setDarkmode(){
         darkMode = true;
     }
-
     public void setBrightMode(){
         darkMode = false;
     }
-
-    public void selectStreet(MouseEvent mouseEvent) {this.gameStorage.selectedBuilding = ROAD;}
-
-    public void selectSettlement(MouseEvent mouseEvent) {this.gameStorage.selectedBuilding = SETTLEMENT;}
-
-    public void selectCity(MouseEvent mouseEvent) {this.gameStorage.selectedBuilding = CITY;}
+    public void selectStreet() {
+        this.gameStorage.selectedBuilding = ROAD;
+        this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
+        this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+    public void selectSettlement() {
+        this.gameStorage.selectedBuilding = SETTLEMENT;
+        this.settlementFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
+        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+    public void selectCity() {
+        this.gameStorage.selectedBuilding = CITY;
+        this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
+        this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
 }
