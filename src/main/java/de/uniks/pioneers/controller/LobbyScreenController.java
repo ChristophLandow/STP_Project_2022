@@ -9,7 +9,10 @@ import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,6 +44,7 @@ public class LobbyScreenController implements Controller {
     @FXML public Button EditProfileButton;
     @FXML public Button LogoutButton;
     @FXML public Button NewGameButton;
+    @InjectMessageService messageService;
     @Inject Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject Provider<EditProfileController> editProfileControllerProvider;
     @Inject Provider<LobbyUserlistController> userlistControllerProvider;
@@ -57,6 +61,11 @@ public class LobbyScreenController implements Controller {
 
     private final App app;
     private LobbyGameListController lobbyGameListController;
+    private Stage appStage;
+    public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
+    private ChangeListener<Boolean> createGameListener;
+    private Stage createNewGameStage;
+    private final CompositeDisposable disposable = new CompositeDisposable();
     private boolean darkMode = false;
 
     @Inject
@@ -100,18 +109,25 @@ public class LobbyScreenController implements Controller {
             lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
         lobbyGameListController.listViewGames = this.listViewGames;
-        lobbyGameListController.init();
+        lobbyGameListController.setup();
 
         return parent;
     }
 
     @Override
     public void init() {
-        this.app.getStage().setOnCloseRequest(event -> {
+        // get app and set variables
+        appStage = this.app.getStage();
+        appStage.setTitle(LOBBY_SCREEN_TITLE);
+        appStage.setOnCloseRequest(event -> {
             logout();
             Platform.exit();
             System.exit(0);
         });
+
+        // add listener to handle stages
+        setupCreateGameListener();
+        isCreatingGame.addListener(createGameListener);
 
         Game leavedGame = prefService.getSavedGame();
         if(leavedGame != null) {
@@ -140,9 +156,24 @@ public class LobbyScreenController implements Controller {
         this.EditProfileButton.setOnAction(this::editProfile);
     }
 
+    private void setupCreateGameListener() {
+        /* when create new game pop up is openend, create new game button gets disabled
+         when other game is joined, close create new game stage */
+        createGameListener = (observable, oldValue, newValue) -> {
+            if (newValue && !oldValue) {
+                NewGameButton.disableProperty().set(true);
+            } else if (oldValue && !newValue) {
+                NewGameButton.disableProperty().set(false);
+                assert createNewGameStage != null;
+                createNewGameStage.close();
+            }
+        };
+    }
+
     @Override
     public void stop() {
         lobbyGameListController.stop();
+        isCreatingGame.removeListener(createGameListener);
     }
 
     public void editProfile(ActionEvent actionEvent) {
@@ -172,6 +203,8 @@ public class LobbyScreenController implements Controller {
         //This function is called when the logout button is pressed or the stage is closed
         lobbyService.logout()
                 .observeOn(FX_SCHEDULER);
+
+
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
@@ -188,6 +221,7 @@ public class LobbyScreenController implements Controller {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
         newGameScreenLobbyController.game.set(game);
         newGameScreenLobbyController.password.set(password);
+        isCreatingGame.set(false);
         if(app.getStage().getScene().getStylesheets().isEmpty()){
             app.show(newGameScreenLobbyController);
         } else {
@@ -201,16 +235,18 @@ public class LobbyScreenController implements Controller {
     public void newGame() {
         //create pop in order to create a new game lobby
         CreateNewGamePopUpController createNewGamePopUpController = createNewGamePopUpControllerProvider.get();
-
         Parent node = createNewGamePopUpController.render();
-        Stage stage = new Stage();
-        stage.setTitle("create new game pop up");
+        createNewGameStage = new Stage();
+        createNewGameStage.setTitle("create new game pop up");
         Scene scene = new Scene(node);
         if(darkMode){
             scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
         }
-        stage.setScene(scene);
-        stage.show();
+        createNewGameStage.setScene(scene);
+        createNewGameStage.initOwner(appStage);
+        isCreatingGame.set(true);
+        createNewGamePopUpController.init();
+        createNewGameStage.show();
     }
 
     public void setDarkMode() {

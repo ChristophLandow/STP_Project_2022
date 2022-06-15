@@ -13,18 +13,23 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static java.util.stream.Collectors.toList;
 
 @Singleton
 public class LobbyGameListController {
     private final UserlistService userlistService;
-    private final Provider<GameListElementController> gameListElementControllerProvider;
     private final EventListener eventListener;
     private final LobbyService lobbyService;
 
@@ -32,8 +37,9 @@ public class LobbyGameListController {
     public ListView<Node> listViewGames;
     private ObservableList<Game> games;
     private ObservableList<User> users = FXCollections.observableArrayList();
+    private final Provider<GameListElementController> gameListElementControllerProvider;
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
-    private CompositeDisposable disposable;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private boolean darkMode = false;
 
@@ -50,8 +56,9 @@ public class LobbyGameListController {
         this.app = app;
     }
 
-    public void init(){
-        // after leaving a game this methods get called again, thats why the item list gets cleared
+
+    public void setup() {
+        this.users = userlistService.getUsers();
         listViewGames.getItems().clear();
         games = FXCollections.observableArrayList();
         disposable = new CompositeDisposable();
@@ -59,23 +66,30 @@ public class LobbyGameListController {
         games.addListener((ListChangeListener<? super Game>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getAddedSubList().stream().forEach(this::renderGame);
+                c.getAddedSubList().forEach(this::renderGame);
             }
         });
 
         disposable.add(lobbyService.getGames()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(this.games::setAll,
+                .subscribe(games -> {
+                            /*
+                             add game to list when game was not started, the date is today
+                             or yesterdays date and the owner is online
+                             */
+                            Collection<Game> validGames = games.stream().filter(game -> !game.started() && checkDate(game)
+                            && users.stream().anyMatch(user -> user._id().equals(game.owner()))).toList();
+                            validGames = validGames.stream().sorted(gameComparator).toList();
+                            this.games.setAll(validGames);
+                        },
                         Throwable::printStackTrace));
+
 
         disposable.add(eventListener.listen("games.*.*", Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                    if (gameEvent.event().endsWith(".created")) {
-                        if(!games.contains(gameEvent.data()))
-                        {
-                            games.add(gameEvent.data());
-                        }
+                    if (gameEvent.event().endsWith(".created") && !games.contains(gameEvent.data())) {
+                        games.add(gameEvent.data());
                     } else if (gameEvent.event().endsWith(".deleted")) {
                         deleteGame(gameEvent.data());
                     } else {
@@ -83,14 +97,38 @@ public class LobbyGameListController {
                     }
                 }));
 
-        this.users=userlistService.getUsers();
     }
+
+    private boolean checkDate(Game game) {
+        // get date from server
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        String today = dtf.format(now);
+        LocalDateTime nowMinusOneDay = LocalDateTime.now().minusDays(1);
+        String yesterday = dtf.format(nowMinusOneDay);
+        //get date from game
+        String createdAt = game.createdAt();
+        int end = createdAt.indexOf("T");
+        String date = game.createdAt().substring(0, end);
+
+        // if game was created yesterday or today return true
+        return today.equals(date) || yesterday.equals(date);
+    }
+
+    Comparator<Game> gameComparator = new Comparator<>() {
+        @Override
+        public int compare(Game o1, Game o2) {
+            return o1.createdAt().compareTo(o2.createdAt());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return false;
+        }
+    };
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
-        if(darkMode){
-            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
-        }
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
@@ -101,42 +139,31 @@ public class LobbyGameListController {
         listViewGames.getItems().add(0, node);
     }
 
-    public ObservableList<Game> getGames() {
-        return games;
-    }
 
     public void deleteGame(Game data) {
         //find node belonging to game and then remove it from ListView
-        try {
-            List<Node> removales = (List<Node>) listViewGames.getItems().stream().toList();
-            removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
-            listViewGames.getItems().removeAll(removales);
-        } catch (Exception e) {
-            System.err.println("Could not find game in game list");
-        }
+        List<Node> removales = (List<Node>) listViewGames.getItems().stream().toList();
+        removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
+        listViewGames.getItems().removeAll(removales);
     }
 
     private void updateGame(Game game) {
         //rerender
+        GameListElementController gameListElementController = gameListElementControllers.stream()
+                .filter(conroller -> conroller.game.get()._id().equals(game._id())).findAny().orElse(null);
+
         try {
-            GameListElementController gameListElementController = gameListElementControllers.stream()
-                    .filter(conroller -> conroller.game.get()._id().equals(game._id())).findAny().get();
             gameListElementController.game.set(game);
-        } catch (Exception e) {
-            System.err.println("Could not find controller in controller list");
+        } catch (NullPointerException ignored) {
+
         }
     }
 
     public User returnUserById(String id) {
-        try {
-            return users.stream().filter(user -> user._id().equals(id)).findAny().get();
-        } catch (Exception e) {
-            return null;
-        }
+        return users.stream().filter(user -> user._id().equals(id)).findAny().orElse(null);
     }
 
-    public void stop()
-    {
+    public void stop() {
         disposable.dispose();
     }
 
@@ -144,11 +171,11 @@ public class LobbyGameListController {
         darkMode = true;
     }
 
-    public void setBrightMode(){
+    public void setBrightMode() {
         darkMode = false;
     }
 
-    public App getApp(){
+    public App getApp() {
         return this.app;
     }
 }

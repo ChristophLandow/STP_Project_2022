@@ -18,20 +18,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.paint.Paint;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -81,9 +77,11 @@ public class IngameScreenController implements Controller {
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final IngameService ingameService;
-    private final ArrayList<HexTileController> tileControllers = new ArrayList<>();
+    public final ArrayList<HexTileController> tileControllers = new ArrayList<>();private final GameStorage gameStorage;
     private final UserService userService;
+    private final GameService gameService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
@@ -185,12 +183,21 @@ public class IngameScreenController implements Controller {
                 })
         );
 
+        Platform.runLater(() -> {
+            // init controller for player resources box
+            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
+            ingamePlayerResourcesController.root = this.root;
+            ingamePlayerResourcesController.render();
+            ingamePlayerResourcesController.init();
+        });
+
         // add change listeners
         // players change listener
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
-            if (c.wasAdded()) {
-                System.out.println("Player was added!");
+            if (c.wasAdded() && !c.wasRemoved()) {
                 this.renderPlayer(c.getValueAdded());
+            } else if (c.wasRemoved() && !c.wasAdded()) {
+                this.deletePlayer(c.getValueRemoved());
             }
         });
 
@@ -203,6 +210,10 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
+    }
+
+    private void deletePlayer(Player player) {
+        // TODO: remove player from list
     }
 
     public void renderPlayer(Player player) {
@@ -233,7 +244,6 @@ public class IngameScreenController implements Controller {
         ExpectedMove move = currentState.expectedMoves().get(0);
 
         this.setSituationLabel(move);
-
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
@@ -455,8 +465,8 @@ public class IngameScreenController implements Controller {
             tile.findCorners(this.buildingControllers);
             tile.link();
         }
-        for (BuildingPointController buildingPoint : this.buildingControllers) {
 
+        for (BuildingPointController buildingPoint : this.buildingControllers) {
             // put buildingPointControllers in Hashmap to access with coordinates
             this.buildingPointControllerHashMap.put(
                     buildingPoint.generateKeyString(),

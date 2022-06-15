@@ -81,7 +81,6 @@ public class GameChatController {
         disposable.add(newGameLobbyService.getMessages(game._id()).observeOn(FX_SCHEDULER)
                 .subscribe(this.messages::setAll));
 
-        System.out.println("games." + game._id() + ".messages.*.*");
         disposable.add(eventListener.listen("games." + game._id() + ".messages.*.*", MessageDto.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(messageEvent -> {

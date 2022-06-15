@@ -16,7 +16,6 @@ public interface AuthApiService {
     @POST("auth/refresh")
     Observable<LoginResult> refresh(@Body RefreshDto dto);
 
-
     // synchronous login to check old password in editScreen
     @POST("auth/login")
     Call<LoginResult> checkPassword(@Body LoginDto dto);
