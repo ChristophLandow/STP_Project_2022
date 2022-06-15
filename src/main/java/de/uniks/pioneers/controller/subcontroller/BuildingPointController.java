@@ -61,7 +61,8 @@ public class BuildingPointController {
 
     public void init() {
         if (this.action.equals(BUILD)) {
-            this.timerService.setBuildTimer();
+            // TODO: set builder timer, in progress...
+            // this.timerService.setBuildTimer();
         }
         this.eventView.setOnMouseClicked(this::info);
         this.eventView.setOnMouseEntered(this::dye);
