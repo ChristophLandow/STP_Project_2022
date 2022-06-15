@@ -146,7 +146,7 @@ public class NewGameScreenLobbyController implements Controller {
         }
 
         // when member count less than three games can not be started
-        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 0);
+        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 3);
         startGameButton.disableProperty().bind(lessThanThree);
 
         // add mouse event for rules button
