@@ -41,9 +41,6 @@ import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-    private final GameService gameService;
-    private final LeaveGameController leaveGameController;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @FXML public Pane root;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
@@ -71,17 +68,23 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
 
+    @Inject GameChatController gameChatController;
+    @Inject Provider<StreetPointController> streetPointControllerProvider;
+    @Inject Provider<IngamePlayerListElementController> elementProvider;
+    @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
+
+    private final GameService gameService;
+    private final LeaveGameController leaveGameController;
+    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private int gameSize;
     private List<User> users;
     private final App app;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final IngameService ingameService;
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();private final GameStorage gameStorage;
     private final UserService userService;
-    private final GameService gameService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
@@ -89,10 +92,6 @@ public class IngameScreenController implements Controller {
     private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final GameStorage gameStorage;
-    @Inject GameChatController gameChatController;
-    @Inject Provider<StreetPointController> streetPointControllerProvider;
-    @Inject Provider<IngamePlayerListElementController> elementProvider;
     private String myColor;
     private boolean darkMode = false;
     private boolean onClose = false;
@@ -188,8 +187,10 @@ public class IngameScreenController implements Controller {
             IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
             ingamePlayerResourcesController.root = this.root;
             ingamePlayerResourcesController.render();
-            ingamePlayerResourcesController.init();
+            ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
         });
+
+        gameService.loadPlayers(game.get());
 
         // add change listeners
         // players change listener

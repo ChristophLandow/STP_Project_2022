@@ -43,17 +43,6 @@ public class GameService {
     }
 
     public void initGame() {
-        // REST - get players from server
-        disposable.add(ingameService.getAllPlayers(game.get()._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(list -> {
-                            list.forEach(player -> {
-                                players.put(player.userId(), player);
-                            });
-                            findMe();
-                        }
-                        , Throwable::printStackTrace));
-
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)
@@ -136,7 +125,14 @@ public class GameService {
                 && building.type().equals("settlement"));
     }
 
-    public void resetPlayers() {
+    public void loadPlayers(Game game) {
+        // REST - get players from server
         players = FXCollections.observableHashMap();
+        disposable.add(ingameService.getAllPlayers(game._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(list -> {
+                    list.forEach(player -> players.put(player.userId(), player));
+                    findMe();
+                    }, Throwable::printStackTrace));
     }
 }

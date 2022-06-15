@@ -44,7 +44,8 @@ public class LobbyScreenController implements Controller {
     @FXML public Button EditProfileButton;
     @FXML public Button LogoutButton;
     @FXML public Button NewGameButton;
-    @InjectMessageService messageService;
+
+    @Inject MessageService messageService;
     @Inject Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject Provider<EditProfileController> editProfileControllerProvider;
     @Inject Provider<LobbyUserlistController> userlistControllerProvider;
@@ -57,7 +58,6 @@ public class LobbyScreenController implements Controller {
     @Inject NewGameLobbyService newGameLobbyService;
     @Inject Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
     @Inject Provider<LobbyGameListController> lobbyGameListControllerProvider;
-    @Inject MessageService messageService;
 
     private final App app;
     private LobbyGameListController lobbyGameListController;
@@ -65,7 +65,6 @@ public class LobbyScreenController implements Controller {
     public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
-    private final CompositeDisposable disposable = new CompositeDisposable();
     private boolean darkMode = false;
 
     @Inject

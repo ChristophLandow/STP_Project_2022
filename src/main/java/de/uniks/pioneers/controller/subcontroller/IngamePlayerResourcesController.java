@@ -1,6 +1,5 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
@@ -14,39 +13,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
 
 public class IngamePlayerResourcesController {
-    @FXML
-    public HBox resourcesHBox;
-    @FXML
-    public ImageView fischResource;
-    @FXML
-    public Label fischCount;
-    @FXML
-    public ImageView packeisResource;
-    @FXML
-    public Label packeisCount;
-    @FXML
-    public ImageView fellResource;
-    @FXML
-    public Label fellCount;
-    @FXML
-    public ImageView kohleResource;
-    @FXML
-    public Label kohleCount;
-    @FXML
-    public ImageView walknochenResource;
-    @FXML
-    public Label walknochenCount;
-    @FXML
-    public Pane root;
+    @FXML public HBox resourcesHBox;
+    @FXML public ImageView fischResource;
+    @FXML public Label fischCount;
+    @FXML public ImageView packeisResource;
+    @FXML public Label packeisCount;
+    @FXML public ImageView fellResource;
+    @FXML public Label fellCount;
+    @FXML public ImageView kohleResource;
+    @FXML public Label kohleCount;
+    @FXML public ImageView walknochenResource;
+    @FXML public Label walknochenCount;
+    @FXML public Pane root;
 
     private final GameService gameService;
-
 
     @Inject
     public IngamePlayerResourcesController(GameService gameService) {
@@ -72,9 +57,12 @@ public class IngamePlayerResourcesController {
         }
     }
 
-    public void init() {
+    public void init(Player me) {
         // set values to gui and setup listeners
         setImages();
+        if(me != null) {
+            initDataToElement(me);
+        }
         addPlayerListener();
     }
 
@@ -100,13 +88,73 @@ public class IngamePlayerResourcesController {
             String key = c.getKey();
             if (key.equals(gameService.me)) {
                 if (c.wasRemoved() && c.wasAdded()) {
+                    System.out.println("added removed");
                     setDataToElement(c.getValueAdded(), c.getValueRemoved());
                 }
             }
         });
     }
 
+    public void initDataToElement(Player me) {
+        Resources resources = me.resources();
+
+        int brick = resources.brick() == null ? 0 : resources.brick();
+        int grain = resources.grain() == null ? 0 : resources.grain();
+        int ore = resources.ore() == null ? 0 : resources.ore();
+        int lumber = resources.lumber() == null ? 0 : resources.lumber();
+        int wool = resources.wool() == null ? 0 : resources.wool();
+        int unknown = resources.unknown() == null ? 0 : resources.unknown();
+
+        fischCount.setText(String.valueOf(brick));
+        packeisCount.setText(String.valueOf(wool));
+        fellCount.setText(String.valueOf(ore));
+        kohleCount.setText(String.valueOf(lumber));
+        walknochenCount.setText(String.valueOf(grain));
+
+        if (lumber > 0) {
+            resourcesHBox.getChildren().add(fischResource);
+            resourcesHBox.getChildren().add(fischCount);
+            fischCount.setLayoutX(fellResource.getLayoutX());
+            fischCount.setLayoutY(fellResource.getLayoutY());
+        }
+
+        if (grain > 0) {
+            resourcesHBox.getChildren().add(walknochenResource);
+            resourcesHBox.getChildren().add(walknochenCount);
+            walknochenCount.setLayoutX(walknochenResource.getLayoutX());
+            walknochenCount.setLayoutY(walknochenResource.getLayoutY());
+        }
+
+        if (wool > 0) {
+            resourcesHBox.getChildren().add(fellResource);
+            resourcesHBox.getChildren().add(fellCount);
+            fellCount.setLayoutX(fellResource.getLayoutX());
+            fellCount.setLayoutY(fellResource.getLayoutY());
+        }
+
+        if (brick > 0) {
+            resourcesHBox.getChildren().add(kohleResource);
+            resourcesHBox.getChildren().add(kohleCount);
+            kohleCount.setLayoutX(kohleResource.getLayoutX());
+            kohleCount.setLayoutY(kohleResource.getLayoutY());
+        }
+
+        if (ore > 0) {
+            resourcesHBox.getChildren().add(packeisResource);
+            resourcesHBox.getChildren().add(packeisCount);
+            packeisCount.setLayoutX(packeisCount.getLayoutX());
+            packeisCount.setLayoutY(packeisCount.getLayoutY());
+        }
+
+        fischCount.setText(String.valueOf(lumber));
+        packeisCount.setText(String.valueOf(ore));
+        fellCount.setText(String.valueOf(wool));
+        kohleCount.setText(String.valueOf(brick));
+        walknochenCount.setText(String.valueOf(grain));
+    }
+
     private void setDataToElement(Player valueAdded, Player valueRemoved) {
+        System.out.println("setdata");
         // records are immutable
         Resources resources = valueAdded.resources();
         int brick = resources.brick() == null ? 0 : resources.brick();
