@@ -9,6 +9,7 @@ import java.util.TimerTask;
 public class InternetConnectionService {
     private boolean connected;
     private final Alert alert;
+    private String command;
 
     public InternetConnectionService() {
         this.connected = true;
@@ -16,6 +17,12 @@ public class InternetConnectionService {
         this.alert.getButtonTypes().clear();
         this.alert.getDialogPane().setMinHeight(100);
         this.checkConnection();
+
+        if(System.getProperty("os.name").startsWith("Windows")) {
+            command = "ping -n 1 www.google.com";
+        } else {
+            command = "ping -c 1 www.google.com";
+        }
     }
 
     public void checkConnection() {
@@ -24,7 +31,7 @@ public class InternetConnectionService {
             @Override
             public void run() {
                 try {
-                    Process p1 = java.lang.Runtime.getRuntime().exec("ping -n 1 www.google.com");
+                    Process p1 = java.lang.Runtime.getRuntime().exec(command);
                     int returnVal = p1.waitFor();
                     p1.destroy();
 
