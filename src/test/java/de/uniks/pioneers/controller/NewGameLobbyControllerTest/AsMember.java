@@ -180,6 +180,7 @@ class AsMember extends ApplicationTest {
         verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
 
         Platform.runLater(() -> assertThat(newGameScreenLobbyController.onSetReadyButton()).isEqualTo(false));
+        Platform.runLater(() -> assertThat(newGameScreenLobbyController.allUsersReady()).isEqualTo(false));
     }
 
     public String createRandomColor()

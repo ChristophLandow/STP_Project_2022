@@ -370,7 +370,7 @@ public class NewGameScreenLobbyController implements Controller {
         ingameScreenController.setPlayerColor(myColor);
     }
 
-    private boolean allUsersReady() {
+    public boolean allUsersReady() {
         boolean playersReady = true;
 
         for (PlayerEntryController entry : playerEntries.values()) {
