@@ -130,7 +130,7 @@ public class LobbyGameListController {
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
         if(darkMode){
-            gameListElementController.setDarkMode();
+            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css");
         }
         Parent node = gameListElementController.render();
         node.setId(game._id());

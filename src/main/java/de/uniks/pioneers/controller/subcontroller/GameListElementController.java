@@ -65,9 +65,6 @@ public class GameListElementController implements Controller {
 
     @Override
     public void init() {
-        if(darkMode){
-            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css");
-        }
     }
 
     @Override
