@@ -7,3 +7,7 @@
     -fx-background-color: #424242;
     -fx-text-fill: rgb(255, 255, 255);
 }
+
+.label{
+    -fx-text-fill: rgb(255, 255, 255);;
+}
