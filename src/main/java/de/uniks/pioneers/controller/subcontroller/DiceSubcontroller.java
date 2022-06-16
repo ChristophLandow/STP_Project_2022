@@ -93,11 +93,11 @@ public class DiceSubcontroller {
                 leftDice = roll / 2;
                 rightDice = leftDice + 1;
             }
-            rightDiceImage = new Image(Objects.requireNonNull(getClass().getResource("../ingame/" + rightDice + ".png")).toString());
+            rightDiceImage = new Image(Objects.requireNonNull(getClass().getResource(rightDice + ".png")).toString());
             this.rightDiceView.setImage(rightDiceImage);
         }
         animateDice();
-        leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource("../ingame/" + leftDice + ".png")).toString());
+        leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource(leftDice + ".png")).toString());
         this.leftDiceView.setImage(leftDiceImage);
     }
 
