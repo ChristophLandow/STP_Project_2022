@@ -79,6 +79,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject Provider<GameChatController> gameChatControllerProvider;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
     @Inject Provider<LoginScreenController> loginScreenControllerProvider;
+    @Inject ColorPickerController colorPickerController;
 
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
@@ -95,7 +96,6 @@ public class NewGameScreenLobbyController implements Controller {
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private GameChatController gameChatController;
-    private ColorPickerController colorPickerController;
     private boolean clientReady = false;
     private boolean darkMode= false;
 
@@ -119,7 +119,7 @@ public class NewGameScreenLobbyController implements Controller {
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(password.get());
         clientUserNameLabel.setText(currentUser.name());
-        colorPickerController = new ColorPickerController(colorPicker, houseSVG);
+        colorPickerController.init(colorPicker, houseSVG);
         this.reactivateReadyButton();
 
         // enable deleting game on close request
@@ -305,7 +305,7 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void onSetReadyButton() {
+    public boolean onSetReadyButton() {
         // set member "ready" true in API
         boolean difference = true;
 
@@ -337,6 +337,8 @@ public class NewGameScreenLobbyController implements Controller {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Selected color is too similar to another player's color!");
             alert.showAndWait();
         }
+
+        return difference;
     }
 
     private void setReadyColor(String memberId, boolean ready, String hexColor) {

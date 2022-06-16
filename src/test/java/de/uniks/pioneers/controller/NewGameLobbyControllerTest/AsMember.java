@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.NewGameLobbyControllerTest;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
+import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
@@ -12,6 +13,7 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -48,6 +50,9 @@ class AsMember extends ApplicationTest {
 
     @Mock
     EventListener eventListener;
+
+    @Mock
+    ColorPickerController colorPickerController;
 
     @Spy
     App app = new App(null);
@@ -173,6 +178,8 @@ class AsMember extends ApplicationTest {
         verify(gameChatControllerProvider).get();
         verify(newGameLobbyService).getMessages(testGame._id());
         verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
+
+        Platform.runLater(() -> assertThat(newGameScreenLobbyController.onSetReadyButton()).isEqualTo(false));
     }
 
     public String createRandomColor()

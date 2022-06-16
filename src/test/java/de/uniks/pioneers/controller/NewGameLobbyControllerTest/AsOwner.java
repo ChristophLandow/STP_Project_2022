@@ -2,17 +2,18 @@ package de.uniks.pioneers.controller.NewGameLobbyControllerTest;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
+import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.LogoutResult;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,9 @@ class AsOwner extends ApplicationTest {
 
     @Mock
     EventListener eventListener;
+
+    @Mock
+    ColorPickerController colorPickerController;
 
     @Spy
     App app = new App(null);
@@ -92,34 +96,25 @@ class AsOwner extends ApplicationTest {
         patternToObserveUserJoining = String.format("users.%s.updated", userJoining._id());
         String patternToObserveGame = String.format("games.%s.*", testGame._id());
 
-
         when(app.getStage()).thenReturn(stage);
 
         //when(newGameLobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
 
         when(userService.getCurrentUser()).thenReturn(owner);
 
-        when(eventListener.listen(patternToObserveUserOwner, User.class))
-                .thenReturn(Observable.just(new Event<>("users.1.updated", owner)));
-        when(eventListener.listen(patternToObserveUserUser02, User.class))
-                .thenReturn(Observable.just(new Event<>("users.2.updated", user02)));
-        when(eventListener.listen(patternToObserveUserJoining, User.class))
-                .thenReturn(Observable.just(new Event<>("users.3.updated", userJoining)));
+        when(eventListener.listen(patternToObserveUserOwner, User.class)).thenReturn(Observable.just(new Event<>("users.1.updated", owner)));
+        when(eventListener.listen(patternToObserveUserUser02, User.class)).thenReturn(Observable.just(new Event<>("users.2.updated", user02)));
+        when(eventListener.listen(patternToObserveUserJoining, User.class)).thenReturn(Observable.just(new Event<>("users.3.updated", userJoining)));
 
         when(newGameLobbyService.getAll("3")).thenReturn(Observable.just(List.of(member01, member02)));
 
-        when(userService.getUserById("1"))
-                .thenReturn(Observable.just(owner));
-        when(userService.getUserById("2"))
-                .thenReturn(Observable.just(user02));
-        when(userService.getUserById("3")).thenReturn(Observable.just(userJoining))
-                .thenReturn(Observable.just(userJoining));
+        when(userService.getUserById("1")).thenReturn(Observable.just(owner));
+        when(userService.getUserById("2")).thenReturn(Observable.just(user02));
+        when(userService.getUserById("3")).thenReturn(Observable.just(userJoining)).thenReturn(Observable.just(userJoining));
 
-        when(eventListener.listen(patternToObserveGameMembers, Member.class))
-                .thenReturn(Observable.just(new Event<>("games.3.member.3.created", nowMember)));
+        when(eventListener.listen(patternToObserveGameMembers, Member.class)).thenReturn(Observable.just(new Event<>("games.3.member.3.created", nowMember)));
 
-        when(eventListener.listen(patternToObserveGame, Game.class))
-                .thenReturn(Observable.just(new Event<>("games.3.updated", testGame)));
+        when(eventListener.listen(patternToObserveGame, Game.class)).thenReturn(Observable.just(new Event<>("games.3.updated", testGame)));
 
         when(gameChatControllerProvider.get()).thenReturn(gameChatController);
         when(newGameLobbyService.getMessages(testGame._id())).thenReturn(Observable.just(List.of(message01, message02)));
@@ -153,7 +148,6 @@ class AsOwner extends ApplicationTest {
         //assertion for member box, have to add some assertions
         assertThat(newGameScreenLobbyController.userBox.getChildren().size()).isEqualTo(2);
 
-
         //assert create game button is disabled
         Button startGameButton = lookup("#startGameButton").query();
         assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
@@ -161,7 +155,6 @@ class AsOwner extends ApplicationTest {
         // post member to game, server broadcasting event to clients -> eventlistenter.listen(game -> memberCounter+1)
         newGameScreenLobbyController.memberCount.set(3);
         assertThat(startGameButton.disableProperty().get()).isEqualTo(false);
-
 
         verify(newGameLobbyService).getAll("3");
         //verify(newGameLobbyService).logout();
@@ -175,6 +168,8 @@ class AsOwner extends ApplicationTest {
         verify(gameChatControllerProvider).get();
         verify(newGameLobbyService).getMessages(testGame._id());
         verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
+
+        Platform.runLater(() -> assertThat(newGameScreenLobbyController.onSetReadyButton()).isEqualTo(false));
     }
 
     public String createRandomColor()
