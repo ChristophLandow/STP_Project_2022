@@ -107,7 +107,7 @@ public class LoginScreenController implements Controller {
         }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_LoginScreen.css");
         }
     }
     @Override
@@ -144,17 +144,27 @@ public class LoginScreenController implements Controller {
         SignUpScreenController signUpScreenController = this.signUpScreenControllerProvider.get();
         signUpScreenController.userName.set(textFieldUserName.getText());
         signUpScreenController.password.set(passwordField.getText());
+        if(darkMode){
+            signUpScreenController.setDarkMode();
+        }
         this.app.show(signUpScreenController);
     }
 
     public void toRules() {
 
-        RulesScreenController controller = rulesScreenControllerProvider.get();
-        controller.init();
+        RulesScreenController ruleController = rulesScreenControllerProvider.get();
+        if(darkMode){
+            ruleController.setDarkMode();
+        }
+        ruleController.init();
     }
 
     public void toLobby() {
-        this.app.show(lobbyScreenControllerProvider.get());
+        LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
+        if(darkMode){
+            lobbyController.setDarkMode();
+        }
+        this.app.show(lobbyController);
     }
 
     public void setDarkMode() {

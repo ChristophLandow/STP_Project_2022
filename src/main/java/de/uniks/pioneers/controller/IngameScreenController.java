@@ -153,7 +153,7 @@ public class IngameScreenController implements Controller {
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
         }
         gameService.game.set(game.get());
 
@@ -348,7 +348,7 @@ public class IngameScreenController implements Controller {
 
     public void leave() {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
-        if(!app.getStage().getScene().getStylesheets().isEmpty()){
+        if(darkMode){
              lobbyController.setDarkMode();
         }
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();

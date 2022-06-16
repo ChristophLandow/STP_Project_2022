@@ -90,7 +90,7 @@ public class SignUpScreenController implements Controller{
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
         if(darkMode){
-            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css");
         }
 
         // Spinner Code
@@ -230,11 +230,18 @@ public class SignUpScreenController implements Controller{
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
         loginController.userName.set(textFieldUserName.getText());
+        if(darkMode){
+            loginController.setDarkMode();
+        }
         this.app.show(loginController);
     }
 
     public void leave() {
-        this.app.show(loginScreenControllerProvider.get());
+        LoginScreenController loginController = loginScreenControllerProvider.get();
+        if(darkMode){
+            loginController.setDarkMode();
+        }
+        this.app.show(loginController);
     }
 
     public void setDarkMode(){
