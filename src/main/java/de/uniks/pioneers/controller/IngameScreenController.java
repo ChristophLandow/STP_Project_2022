@@ -190,7 +190,6 @@ public class IngameScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".updated")) {
-                        System.out.println("new game state: " + gameEvent.data());
                         this.handleGameState(gameEvent.data());
                     }
                 })
@@ -260,26 +259,22 @@ public class IngameScreenController implements Controller {
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
-
-        String actionString = "";
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
-            System.out.println("It's your turn now!");
             switch (move.action()) {
-                case FOUNDING_ROLL, ROLL -> { this.enableRoll(move.action()); actionString = ROLL_DICE; }
-                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> { this.enableBuildingPoints(move.action()); actionString = PLACE_SETTLEMENT; }
-                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> { this.enableStreetPoints(move.action()); actionString = PLACE_ROAD; }
+                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
+                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
+                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
                 case BUILD -> {
                     // set builder timer, in progress...
-                    actionString = BUILD;
-                    this.timerService.setBuildTimer(new Timer(), this.timeLabel);
+                    this.timerService.setBuildTimer(new Timer());
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
             }
         }
-        this.setSituationLabel(move.players().get(0), actionString);
+        this.setSituationLabel(move.players().get(0), move.action());
     }
     private void enableEndTurn() {
         this.turnPane.setOnMouseClicked(this::endTurn);
@@ -289,7 +284,10 @@ public class IngameScreenController implements Controller {
         final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> this.turnPane.setOnMouseClicked(null))
+                .subscribe(move -> {
+                    this.turnPane.setOnMouseClicked(null);
+                    this.timerService.reset();
+                })
         );
     }
 
@@ -306,9 +304,16 @@ public class IngameScreenController implements Controller {
         }
     }
 
-    private void setSituationLabel(String playerId, String actionString) {
+    private void setSituationLabel(String playerId, String action) {
         // set game state label
         String playerName;
+        String actionString = "";
+        switch (action) {
+            case ROLL, FOUNDING_ROLL -> actionString = "roll the dice";
+            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> actionString = "place road";
+            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
+            case BUILD -> actionString = BUILD;
+        }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {
             playerName = "ME";
@@ -476,7 +481,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService, timerService));
+            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService));
         }
         for (HexTileController tile : tileControllers) {
 
