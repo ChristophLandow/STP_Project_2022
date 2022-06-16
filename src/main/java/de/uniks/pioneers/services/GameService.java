@@ -22,8 +22,8 @@ import static de.uniks.pioneers.GameConstants.*;
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
-    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameApiService gameApiService;
     public String me;
@@ -65,8 +65,7 @@ public class GameService {
                         this.moves.add(move);
                         handleMove(move);
                     }
-                })
-        );
+                }));
     }
 
     private void handleMove(Move move){
@@ -107,7 +106,7 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(buildingEvent -> {
                     final Building building = buildingEvent.data();
-                    if (buildingEvent.event().endsWith(".created")) {
+                    if (buildingEvent.event().endsWith(".created") || buildingEvent.event().endsWith(".updated")) {
                         // render new building
                         this.buildings.add(building);
                     }

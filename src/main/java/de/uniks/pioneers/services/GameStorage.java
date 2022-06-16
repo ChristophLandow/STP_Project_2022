@@ -6,6 +6,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
+import static de.uniks.pioneers.GameConstants.SETTLEMENT;
+
 @Singleton
 public class GameStorage {
 
@@ -18,9 +20,7 @@ public class GameStorage {
     public GameStorage() {
     }
 
-//    public void setCurrentPlayers(List<String> playerIdS) {
-//        currentPlayers = players.values().stream().filter(player -> playerIdS.contains(player.userId())).toList();
-//    }
+    public String selectedBuilding = "";
 
     public List<Tile> getMap() {
         return map;

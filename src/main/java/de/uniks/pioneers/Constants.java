@@ -56,7 +56,6 @@ public class Constants {
 
     //ingame
     public static final String INGAME_SCREEN_TITLE = "Pioneers ";
-    public static final String SETTLEMENT = "settlement";
 
     //settings
     public static final String SETTINGS_SCREEN_TITLE = "Settings";
