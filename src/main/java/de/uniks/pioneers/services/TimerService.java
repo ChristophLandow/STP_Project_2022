@@ -55,7 +55,7 @@ public class TimerService {
         timer.schedule(task, 10 * 1000);
     }
 
-    public void setBuildTimer(Timer timer, Label timeLabel) {
+    public void setBuildTimer(Timer timer) {
         this.timer = timer;
         TimerTask task = new TimerTask() {
             @Override
@@ -64,7 +64,6 @@ public class TimerService {
                 disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {
-                            System.out.println("Time is up! BUILD skipped.");
                             this.cancel();
                             timer.cancel();
                             countdownTimer.cancel();
@@ -93,6 +92,7 @@ public class TimerService {
         if (this.timer != null) {
             this.timer.cancel();
         }
+        this.timeLabel.setText("");
         if (this.countdownTimer != null) {
             this.countdownTimer.cancel();
         }

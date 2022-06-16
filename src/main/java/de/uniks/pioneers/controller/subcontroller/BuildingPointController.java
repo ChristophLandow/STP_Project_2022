@@ -32,7 +32,6 @@ public class BuildingPointController {
     private final Circle view;
     private final Circle eventView;
     private final IngameService ingameService;
-    private final TimerService timerService;
 
     private final UserService userService;
 
@@ -54,12 +53,11 @@ public class BuildingPointController {
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
-                                   UserService userService, TimerService timerService) {
+                                   UserService userService) {
 
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
-        this.timerService = timerService;
         this.userService = userService;
         this.gameStorage = gameStorage;
         this.gameId = gameId;
@@ -106,12 +104,7 @@ public class BuildingPointController {
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> {
-                    if (move.action().equals(BUILD)) {
-                        timerService.reset();
-                    }
-                    this.fieldPane.getChildren().forEach(this::reset);
-                }));
+                .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
 
     }
     private void reset(Node node) {
