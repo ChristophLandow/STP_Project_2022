@@ -3,13 +3,12 @@ package de.uniks.pioneers.services;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class InternetConnectionService {
     private boolean connected;
-    private Alert alert;
+    private final Alert alert;
 
     public InternetConnectionService() {
         this.connected = true;
@@ -25,21 +24,20 @@ public class InternetConnectionService {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
-                    int timeout = 2000;
-                    InetAddress[] addresses = InetAddress.getAllByName("www.google.com");
-                    for(InetAddress address : addresses) {
-                        if(address.isReachable(timeout)) {
-                            if(!connected) {
-                                connected = true;
-                                Platform.runLater(this::restoredConnection);
-                            }
-                        } else {
-                            if(connected) {
-                                connected = false;
-                                Platform.runLater(this::lostConnection);
-                                Platform.runLater(this::showAlert);
-                            }
+                    Process p1 = java.lang.Runtime.getRuntime().exec("ping -n 1 www.google.com");
+                    int returnVal = p1.waitFor();
+                    p1.destroy();
+
+                    if(returnVal == 0) {
+                        if(!connected) {
+                            connected = true;
+                            Platform.runLater(this::restoredConnection);
+                        }
+                    } else {
+                        if(connected) {
+                            connected = false;
+                            Platform.runLater(this::lostConnection);
+                            Platform.runLater(this::showAlert);
                         }
                     }
                 } catch(Exception e) {

@@ -88,14 +88,14 @@ public class IngamePlayerResourcesController {
             String key = c.getKey();
             if (key.equals(gameService.me)) {
                 if (c.wasRemoved() && c.wasAdded()) {
-                    System.out.println("added removed");
-                    setDataToElement(c.getValueAdded(), c.getValueRemoved());
+                    initDataToElement(c.getMap().get(gameService.me));
                 }
             }
         });
     }
 
     public void initDataToElement(Player me) {
+        resourcesHBox.getChildren().clear();
         Resources resources = me.resources();
 
         int brick = resources.brick() == null ? 0 : resources.brick();
