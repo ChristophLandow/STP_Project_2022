@@ -6,6 +6,7 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.TimerService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
@@ -19,6 +20,7 @@ import javafx.scene.shape.StrokeType;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -30,6 +32,7 @@ public class BuildingPointController {
     private final Circle view;
     private final Circle eventView;
     private final IngameService ingameService;
+    private final TimerService timerService;
 
     private final UserService userService;
 
@@ -51,11 +54,12 @@ public class BuildingPointController {
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
-                                   UserService userService) {
+                                   UserService userService, TimerService timerService) {
 
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
+        this.timerService = timerService;
         this.userService = userService;
         this.gameStorage = gameStorage;
         this.gameId = gameId;
@@ -102,7 +106,13 @@ public class BuildingPointController {
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
+                .subscribe(move -> {
+                    if (move.action().equals(BUILD)) {
+                        timerService.reset();
+                    }
+                    this.fieldPane.getChildren().forEach(this::reset);
+                }));
+
     }
     private void reset(Node node) {
         node.setOnMouseClicked(null);

@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -28,14 +29,13 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
@@ -68,6 +68,9 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView rightDiceImageView;
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
+    @FXML public HBox resourcesHBox;
+    @FXML public Rectangle downRectangle;
+    @FXML public Rectangle upRectangle;
     @FXML public Pane roadFrame;
     @FXML public Pane settlementFrame;
     @FXML public Pane cityFrame;
@@ -89,6 +92,7 @@ public class IngameScreenController implements Controller {
     private final IngameService ingameService;
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();private final GameStorage gameStorage;
     private final UserService userService;
+    private final TimerService timerService;
     private final EventListener eventListener;
     private final DiceSubcontroller diceSubcontroller;
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
@@ -106,7 +110,8 @@ public class IngameScreenController implements Controller {
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
                                   UserService userService, GameService gameService,
-                                  EventListener eventListener, LeaveGameController leaveGameController) {
+                                  EventListener eventListener, LeaveGameController leaveGameController,
+                                  TimerService timerService) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
@@ -115,8 +120,9 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
+        this.timerService = timerService;
+        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
         this.leaveGameController = leaveGameController;
-        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService);
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
     }
 
@@ -162,7 +168,11 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
+        // set timeLabel of timer
+        this.timerService.setTimeLabel(this.timeLabel);
+
         // set dice subcontroller
+        this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
                 .setRightDiceView(this.rightDiceImageView);
 
@@ -251,21 +261,25 @@ public class IngameScreenController implements Controller {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
 
-        this.setSituationLabel(move);
+        String actionString = "";
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             System.out.println("It's your turn now!");
             switch (move.action()) {
-                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
-                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
-                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
+                case FOUNDING_ROLL, ROLL -> { this.enableRoll(move.action()); actionString = ROLL_DICE; }
+                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> { this.enableBuildingPoints(move.action()); actionString = PLACE_SETTLEMENT; }
+                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> { this.enableStreetPoints(move.action()); actionString = PLACE_ROAD; }
                 case BUILD -> {
+                    // set builder timer, in progress...
+                    actionString = BUILD;
+                    this.timerService.setBuildTimer(new Timer(), this.timeLabel);
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
             }
         }
+        this.setSituationLabel(move.players().get(0), actionString);
     }
     private void enableEndTurn() {
         this.turnPane.setOnMouseClicked(this::endTurn);
@@ -278,37 +292,38 @@ public class IngameScreenController implements Controller {
                 .subscribe(move -> this.turnPane.setOnMouseClicked(null))
         );
     }
+
     private void enableStreetPoints(String action) {
         for (StreetPointController controller : streetPointControllerHashMap.values()) {
-            controller.init();
             controller.setAction(action);
+            controller.init();
         }
     }
     private void enableBuildingPoints(String action) {
         for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
-            controller.init();
             controller.setAction(action);
+            controller.init();
         }
     }
 
-    private void setSituationLabel(ExpectedMove move) {
+    private void setSituationLabel(String playerId, String actionString) {
         // set game state label
         String playerName;
-        // if this user is current player
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+
+        if (playerId.equals(userService.getCurrentUser()._id())) {
             playerName = "ME";
             this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/next.png")).toString()));
         } else {
-            playerName = userService.getUserById(move.players().get(0)).blockingFirst().name();
+            playerName = userService.getUserById(playerId).blockingFirst().name();
             this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/sanduhr.png")).toString()));
         }
-        this.situationLabel.setText(playerName + ":\n" + move.action());
+        this.situationLabel.setText(playerName + ":\n" + actionString);
     }
 
     private void enableRoll(String action) {
         // init dice subcontroller
         this.diceSubcontroller.setAction(action);
-        this.diceSubcontroller.init();
+        this.diceSubcontroller.activate();
     }
 
     public App getApp() {
@@ -439,6 +454,7 @@ public class IngameScreenController implements Controller {
             }
             this.tileControllers.add(new HexTileController(hexTile, hex));
         }
+
         for (HexTile edge : edges) {
 
             Circle circ = new Circle(3);
@@ -460,7 +476,7 @@ public class IngameScreenController implements Controller {
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService));
+            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService, timerService));
         }
         for (HexTileController tile : tileControllers) {
 
@@ -487,6 +503,7 @@ public class IngameScreenController implements Controller {
     public void setDarkmode(){
         darkMode = true;
     }
+
     public void setBrightMode(){
         darkMode = false;
     }
