@@ -1,5 +1,5 @@
 #popUpBox{
-	-fx-background-color:  #495766;
+	-fx-background-color:  #424242;
 }
 
 .text-field {
@@ -8,6 +8,6 @@
 }
 
 .label{
-	fx-background-color: #495766;
+	fx-background-color: #424242;
 	-fx-text-fill: rgb(255, 255, 255);
 }

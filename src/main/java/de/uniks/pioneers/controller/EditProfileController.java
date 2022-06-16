@@ -110,7 +110,7 @@ public class EditProfileController implements Controller {
     public void init() {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
         }
         // get currentUser from Server and display name
         this.usernameLabel.setText(userService.getCurrentUser().name());
@@ -215,7 +215,11 @@ public class EditProfileController implements Controller {
     }
 
     public void toLobby() {
-        this.app.show(lobbyScreenControllerProvider.get());
+        LobbyScreenController lobbyController =  lobbyScreenControllerProvider.get();
+        if(darkMode){
+            lobbyController.setDarkMode();
+        }
+        this.app.show(lobbyController);
     }
 
     private void resetAvatar() {

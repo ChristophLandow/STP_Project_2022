@@ -1,5 +1,5 @@
 #root{
-    -fx-background-color:  #495766;
+    -fx-background-color:  #424242;
 }
 
 #messageVBox{
@@ -8,11 +8,11 @@
 }
 
 #upRectangle{
-    -fx-fill: #495766;
+    -fx-fill: #424242;
 }
 
 #downRectangle{
-    -fx-fill: #495766;
+    -fx-fill: #424242;
 }
 
 
