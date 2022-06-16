@@ -71,6 +71,6 @@ public class InternetConnectionService {
             }
         };
 
-        timer.schedule(myTask, 2000, 2000);
+        timer.schedule(myTask, 0, 5000);
     }
 }
