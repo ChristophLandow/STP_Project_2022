@@ -9,16 +9,20 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.PopupWindow;
 import javafx.stage.Window;
+import javax.inject.Inject;
 
 public class ColorPickerController {
-    private final ColorPicker colorPicker;
-    private final SVGPath houseSVG;
+    private ColorPicker colorPicker;
+    private SVGPath houseSVG;
     private String hexColor;
     private String[] pickerColors;
     private int colorIndex = 0;
 
-    public ColorPickerController(ColorPicker colorPicker, SVGPath houseSVG)
-    {
+    @Inject
+    public ColorPickerController() {
+    }
+
+    public void init(ColorPicker colorPicker, SVGPath houseSVG) {
         this.colorPicker = colorPicker;
         this.houseSVG = houseSVG;
         this.houseSVG.setStroke(Paint.valueOf(colorPicker.getValue().toString()));
