@@ -5,6 +5,7 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -27,6 +28,8 @@ public class StreetPointController {
     private final GameService gameService;
     private final IngameService ingameService;
     private final UserService userService;
+
+    private final GameStorage gameStorage;
     private Pane fieldPane;
     public HexTile tile;
     private Circle view;
@@ -39,10 +42,11 @@ public class StreetPointController {
     private Building building;
 
     @Inject
-    public StreetPointController(GameService gameService, IngameService ingameService, UserService userService) {
+    public StreetPointController(GameService gameService, IngameService ingameService, UserService userService, GameStorage gameStorage) {
         this.gameService = gameService;
         this.ingameService = ingameService;
         this.userService = userService;
+        this.gameStorage = gameStorage;
     }
 
     public void post(HexTile tile, Circle view, Pane fieldPane) {
@@ -68,6 +72,8 @@ public class StreetPointController {
     }
 
     public void placeStreet(MouseEvent mouseEvent) {
+
+        if(gameStorage.roadsRemaining < 1){return;}
         boolean valid = false;
 
         for(BuildingPointController building : this.adjacentBuildings){
@@ -87,6 +93,7 @@ public class StreetPointController {
         }
 
         if (valid) {
+            gameStorage.roadsRemaining -= 1;
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
             disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
                     .observeOn(FX_SCHEDULER)

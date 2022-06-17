@@ -106,9 +106,13 @@ public class BuildingPointController {
         // create new svg
         SVGPath buildingSVG = new SVGPath();
         if(building.type().equals(SETTLEMENT)){
-            buildingSVG.setContent(GameConstants.SETTLEMENT_SVG);}
+            buildingSVG.setContent(GameConstants.SETTLEMENT_SVG);
+            buildingSVG.setLayoutX(view.getLayoutX() - HOUSE_WIDTH / 1.2);
+            buildingSVG.setLayoutY(view.getLayoutY() - HOUSE_HEIGHT);}
         else{
-            buildingSVG.setContent(CITY_SVG);}
+            buildingSVG.setContent(CITY_SVG);
+            buildingSVG.setLayoutX(view.getLayoutX() - CITY_WIDTH);
+            buildingSVG.setLayoutY(view.getLayoutY() - CITY_HEIGHT);}
         buildingSVG.setFill(Color.WHITE);
         buildingSVG.setStrokeWidth(1.5);
         buildingSVG.setStrokeType(StrokeType.OUTSIDE);
@@ -119,8 +123,6 @@ public class BuildingPointController {
                 .subscribe(player -> buildingSVG.setStroke(Paint.valueOf(player.color()))));
 
         // set position on game field
-        buildingSVG.setLayoutX(view.getLayoutX() - GameConstants.HOUSE_WIDTH / 1.2);
-        buildingSVG.setLayoutY(view.getLayoutY() - GameConstants.HOUSE_HEIGHT);
         this.fieldPane.getChildren().remove(this.displayedBuilding);
         this.fieldPane.getChildren().add(buildingSVG);
 
@@ -135,7 +137,7 @@ public class BuildingPointController {
 
     private void info(MouseEvent mouseEvent) {
         boolean invalid = false;
-        if(gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
+        if(gameStorage.settlementsRemaining > 0 && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
             for (StreetPointController street : adjacentStreets) {
                 for (BuildingPointController building : street.getAdjacentBuildings()) {
                     if (building != this) {
@@ -146,7 +148,7 @@ public class BuildingPointController {
                 }
             }
         }
-        if(gameStorage.selectedBuilding.equals(CITY)) {
+        if(gameStorage.citiesRemaining > 0 && gameStorage.selectedBuilding.equals(CITY)) {
             if(this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())){
 
                 invalid = true;
@@ -154,6 +156,9 @@ public class BuildingPointController {
 
         }
         if(!invalid) {
+
+            if(gameStorage.selectedBuilding.equals(SETTLEMENT)){gameStorage.settlementsRemaining -= 1;}
+            if(gameStorage.selectedBuilding.equals(CITY)){gameStorage.citiesRemaining -= 1;}
             build();
         }
     }
