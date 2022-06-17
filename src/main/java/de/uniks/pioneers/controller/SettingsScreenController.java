@@ -163,23 +163,23 @@ public class SettingsScreenController implements Controller, Initializable {
         LobbyUserlistController userListController = lobbyUserlistControllerProvider.get();
         //handle the options
         if (lightMode_RadioButton.isSelected()){
-            ingameController.getApp().getStage().getScene().getStylesheets().clear();
+            ingameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
             ingameController.setBrightMode();
-            newGameController.getApp().getStage().getScene().getStylesheets().clear();
+            newGameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/NewGameScreen.css");
             newGameController.setBrightMode();
-            lobbyController.getApp().getStage().getScene().getStylesheets().clear();
+            lobbyController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/LobbyScreen.css");
             lobbyController.setBrightMode();
-            chatController.getApp().getStage().getScene().getStylesheets().clear();
+            chatController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/ChatScreen.css");
             chatController.setBrightMode();
-            editController.getApp().getStage().getScene().getStylesheets().clear();
+            editController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/EditProfileScreen.css");
             editController.setBrightMode();
-            loginController.getApp().getStage().getScene().getStylesheets().clear();
+            loginController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/LoginScreen.css");
             loginController.setBrightMode();
-            rulesController.getApp().getStage().getScene().getStylesheets().clear();
+            rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/RulesScreen.css");
             rulesController.setBrightMode();
-            userListController.getApp().getStage().getScene().getStylesheets().clear();
+            userListController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/UserListView.css");
             userListController.setBrightMode();
-            stage.getScene().getStylesheets().clear();
+            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/SettingsScreen.css");
         }
         if(darkMode_RadioButton.isSelected()){
             ingameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
