@@ -20,35 +20,33 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
-
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
+
+
+    @FXML public Pane fieldPane;
+
     @FXML public Pane root;
     @FXML public Pane turnPane;
     @FXML public SVGPath streetSVG;
     @FXML public SVGPath houseSVG;
     @FXML public SVGPath citySVG;
     @FXML public Button rulesButton;
-    @FXML public Pane fieldPane;
+
     @FXML public Button leaveButton;
     @FXML public Button settingsButton;
     @FXML public ScrollPane chatScrollPane;
@@ -68,7 +66,6 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView rightDiceImageView;
     @FXML public ImageView hammerImageView;
     @FXML public ListView<Node> playerListView;
-    @FXML public HBox resourcesHBox;
     @FXML public Rectangle downRectangle;
     @FXML public Rectangle upRectangle;
     @FXML public Pane roadFrame;
@@ -76,29 +73,28 @@ public class IngameScreenController implements Controller {
     @FXML public Pane cityFrame;
 
     @Inject GameChatController gameChatController;
-    @Inject Provider<StreetPointController> streetPointControllerProvider;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
+
+    @Inject Provider<StreetPointController> streetPointControllerProvider;
 
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    private int gameSize;
+    private final int gameSize;
     private List<User> users;
     private final App app;
+    private final GameStorage gameStorage;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
     private final IngameService ingameService;
-    public final ArrayList<HexTileController> tileControllers = new ArrayList<>();private final GameStorage gameStorage;
     private final UserService userService;
     private final TimerService timerService;
     private final EventListener eventListener;
+    private final BoardController boardController;
     private final DiceSubcontroller diceSubcontroller;
-    private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
-    private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
-    private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
-    private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
     private boolean darkMode = false;
@@ -124,6 +120,8 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.gameSize = 2;
+        this.boardController = new BoardController(ingameService, userService, timerService, game, gameSize, this.gameStorage);
     }
 
     @Override
@@ -137,6 +135,8 @@ public class IngameScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+        this.boardController.fieldPane = this.fieldPane;
+        this.boardController.streetPointControllerProvider = this.streetPointControllerProvider;
         return view;
     }
 
@@ -230,6 +230,7 @@ public class IngameScreenController implements Controller {
             }
         });
     }
+    private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
 
     private void deletePlayer(Player player) {
         // TODO: remove player from list
@@ -239,20 +240,6 @@ public class IngameScreenController implements Controller {
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
-    }
-
-    private void renderBuilding(Building building) {
-        System.out.println("building type: " + building.type());
-        String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
-        if (Objects.equals(building.type(), SETTLEMENT) || Objects.equals(building.type(), CITY)) {
-            // find corresponding buildingPointController
-            BuildingPointController controller = buildingPointControllerHashMap.get(coords);
-            controller.placeBuilding(building);
-        } else {
-            // find corresponding streetPointController
-            StreetPointController controller = streetPointControllerHashMap.get(coords);
-            controller.renderRoad(building);
-        }
     }
 
     private void deleteBuilding(Building building) {}
@@ -281,6 +268,11 @@ public class IngameScreenController implements Controller {
         }
         this.setSituationLabel(move.players().get(0), actionString);
     }
+
+    private void enableStreetPoints(String action) {this.boardController.enableStreetPoints(action);}
+
+    private void enableBuildingPoints(String action) {this.boardController.enableBuildingPoints(action);}
+
     private void enableEndTurn() {
         this.turnPane.setOnMouseClicked(this::endTurn);
     }
@@ -292,20 +284,6 @@ public class IngameScreenController implements Controller {
                 .subscribe(move -> this.turnPane.setOnMouseClicked(null))
         );
     }
-
-    private void enableStreetPoints(String action) {
-        for (StreetPointController controller : streetPointControllerHashMap.values()) {
-            controller.setAction(action);
-            controller.init();
-        }
-    }
-    private void enableBuildingPoints(String action) {
-        for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
-            controller.setAction(action);
-            controller.init();
-        }
-    }
-
     private void setSituationLabel(String playerId, String actionString) {
         // set game state label
         String playerName;
@@ -402,107 +380,17 @@ public class IngameScreenController implements Controller {
     }
 
     @Override
-    public void stop() {
-        gameChatController.stop();
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
+    public void stop() {gameChatController.stop();}
+    public void setUsers(List<User> users) {this.users = users;}
     public void loadMap() {
 
-        this.gameSize = 2;
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnComplete(this::buildBoardUI)
                 .subscribe();
     }
-
-    private void buildBoardUI() {
-        BoardGenerator generator = new BoardGenerator();
-        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
-        List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1);
-        List<HexTile> corners = generator.generateCorners(2 * this.gameSize + 1);
-
-        for (HexTile hexTile : tiles) {
-
-            Polygon hex = new Polygon();
-            hex.getPoints().addAll(
-                    0.0, 1.0,
-                    Math.sqrt(3) / 2, 0.5,
-                    Math.sqrt(3) / 2, -0.5,
-                    0.0, -1.0,
-                    -Math.sqrt(3) / 2, -0.5,
-                    -Math.sqrt(3) / 2, 0.5);
-            hex.setScaleX(scale);
-            hex.setScaleY(scale);
-            Image image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + hexTile.type + ".png")).toString());
-            hex.setFill(new ImagePattern(image));
-            hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
-            hex.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
-            this.fieldPane.getChildren().add(hex);
-
-            if (!hexTile.type.equals("desert")) {
-                String numberURL = "ingame/tile_" + hexTile.number + ".png";
-                ImageView numberImage = new ImageView(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
-                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
-                numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
-                numberImage.setFitHeight(30);
-                numberImage.setFitWidth(30);
-                this.fieldPane.getChildren().add(numberImage);
-            }
-            this.tileControllers.add(new HexTileController(hexTile, hex));
-        }
-
-        for (HexTile edge : edges) {
-
-            Circle circ = new Circle(3);
-            circ.setFill(RED);
-
-            circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
-            this.fieldPane.getChildren().add(circ);
-            StreetPointController streetPointController = streetPointControllerProvider.get();
-            streetPointController.post(edge, circ, this.fieldPane);
-            streetPointControllers.add(streetPointController);
-        }
-
-        for (HexTile corner : corners) {
-
-            Circle circ = new Circle(6);
-            circ.setFill(RED);
-
-            circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
-            circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
-            this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService, timerService));
-        }
-        for (HexTileController tile : tileControllers) {
-
-            tile.findEdges(this.streetPointControllers);
-            tile.findCorners(this.buildingControllers);
-            tile.link();
-        }
-        for (BuildingPointController buildingPoint : this.buildingControllers) {
-            // put buildingPointControllers in Hashmap to access with coordinates
-            this.buildingPointControllerHashMap.put(
-                    buildingPoint.generateKeyString(),
-                    buildingPoint);
-        }
-        for (StreetPointController streetPoint : this.streetPointControllers) {
-            // put buildingPointControllers in Hashmap to access with coordinates
-            this.streetPointControllerHashMap.put(
-                    streetPoint.generateKeyString(),
-                    streetPoint);
-        }
-        loadSnowAnimation();
-    }
-
-    private void loadSnowAnimation() {new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);}
-    public void setDarkmode(){
-        darkMode = true;
-    }
+    private void buildBoardUI(){this.boardController.buildBoardUI();}
+    public void setDarkmode(){darkMode = true;}
 
     public void setBrightMode(){
         darkMode = false;
