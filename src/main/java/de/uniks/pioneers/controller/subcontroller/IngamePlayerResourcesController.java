@@ -13,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
@@ -64,6 +66,9 @@ public class IngamePlayerResourcesController {
             initDataToElement(me);
         }
         addPlayerListener();
+
+        this.fellCount.setTextFill(Color.BLACK);
+        this.kohleCount.setTextFill(Color.BLACK);
     }
 
     private void setImages() {
