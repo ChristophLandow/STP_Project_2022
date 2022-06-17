@@ -17,14 +17,12 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class LobbyUserlistController extends OnlineUserlistController {
     public VBox usersVBox;
     private final App app;
-
     private boolean darkMode = false;
     private final Provider<ChatController> chatControllerProvider;
 

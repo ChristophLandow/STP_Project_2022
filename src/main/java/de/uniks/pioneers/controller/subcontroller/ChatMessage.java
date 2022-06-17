@@ -19,7 +19,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.DELETE_MESSAGE_TEXT;

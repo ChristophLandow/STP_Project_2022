@@ -22,5 +22,4 @@ public interface GameApiService {
 
     @DELETE("games/{id}")
     Observable<Game> delete(@Path("id") String id);
-
 }

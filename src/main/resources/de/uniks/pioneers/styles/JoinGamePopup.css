@@ -1,0 +1,13 @@
+#popUpBox{
+	-fx-background-color:  #F5F5F5;
+}
+
+.text-field {
+	-fx-background-color: #ffffff;
+	-fx-text-fill: black;
+}
+
+.label{
+	fx-background-color: #F5F5F5;
+	-fx-text-fill: black;
+}

@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.shape.SVGPath?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
    <Pane fx:id="fieldPane" layoutX="18.0" layoutY="15.0" prefHeight="637.0" prefWidth="715.0" style="-fx-background-color:#2AD5E7; -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
    <Button fx:id="leaveButton" layoutX="751.0" layoutY="14.0" mnemonicParsing="false" onAction="#leave" prefHeight="30.0" prefWidth="258.0" text="Leave" />
    <Button fx:id="rulesButton" layoutX="751.0" layoutY="58.0" mnemonicParsing="false" onAction="#toRules" prefHeight="30.0" prefWidth="120.0" text="Rules" />
@@ -58,12 +58,12 @@
          <Image url="@../controller/ingame/next.png" />
       </ImageView>
    </Pane>
-   <Label fx:id="timeLabel" alignment="CENTER" layoutX="671.0" layoutY="671.0" prefHeight="19.0" prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" text="00:42" />
+   <Label fx:id="timeLabel" alignment="CENTER" layoutX="671.0" layoutY="671.0" prefHeight="19.0" prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
    <Label alignment="CENTER" layoutX="751.0" layoutY="671.0" prefHeight="19.0" prefWidth="140.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" text="Current Playing Situation" />
    <Pane fx:id="situationPane" layoutX="751.0" layoutY="693.0" prefHeight="60.0" prefWidth="258.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
-      <Label fx:id="situationLabel" layoutX="5.0" layoutY="20.0" text="Kristian: rolls the dice" />
+      <Label fx:id="situationLabel" layoutX="6.0" layoutY="6.0" prefHeight="49.0" prefWidth="130.0" text="Kristian: rolls the dice" />
       <ImageView fx:id="leftDiceImageView" fitHeight="200.0" fitWidth="200.0" layoutX="74.0" layoutY="-70.0" scaleX="0.25" scaleY="0.25" scaleZ="0.25">
-         <Image url="@../controller/ingame/1.png" />
+         <Image url="@../controller/subcontroller/1.png" />
       </ImageView>
       <ImageView fx:id="rightDiceImageView" fitHeight="200.0" fitWidth="200.0" layoutX="128.0" layoutY="-70.0" scaleX="0.25" scaleY="0.25" scaleZ="0.25" />
    </Pane>

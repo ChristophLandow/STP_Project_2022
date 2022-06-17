@@ -90,7 +90,6 @@ public class GameService {
                 .subscribe(gameEvent -> {
                     Player player = gameEvent.data();
                     String id = player.userId();
-                    System.out.println(player.resources());
                     if (gameEvent.event().endsWith(".updated")) {
                         players.replace(id, players.get(id), player);
                     } else if (gameEvent.event().endsWith(".deleted")) {

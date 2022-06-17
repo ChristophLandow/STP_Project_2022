@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -25,14 +24,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static java.util.stream.Collectors.toList;
 
 @Singleton
 public class LobbyGameListController {
     private final UserlistService userlistService;
     private final EventListener eventListener;
     private final LobbyService lobbyService;
-
     private final App app;
     public ListView<Node> listViewGames;
     private ObservableList<Game> games;
@@ -40,22 +37,19 @@ public class LobbyGameListController {
     private final Provider<GameListElementController> gameListElementControllerProvider;
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-
     private boolean darkMode = false;
 
     @Inject
     public LobbyGameListController(App app, EventListener eventListener,
                                    LobbyService lobbyService,
                                    UserlistService userlistService,
-                                   Provider<GameListElementController> gameListElementControllerProvider
-    ) {
+                                   Provider<GameListElementController> gameListElementControllerProvider) {
         this.eventListener = eventListener;
         this.lobbyService = lobbyService;
         this.userlistService = userlistService;
         this.gameListElementControllerProvider = gameListElementControllerProvider;
         this.app = app;
     }
-
 
     public void setup() {
         this.users = userlistService.getUsers();
@@ -129,6 +123,11 @@ public class LobbyGameListController {
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
+        if(darkMode){
+            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
+        } else {
+            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
+        }
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());

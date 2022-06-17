@@ -3,20 +3,16 @@ package de.uniks.pioneers.services;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-
 import static de.uniks.pioneers.Constants.encryptKeySeed;
 
 public class CryptService {
-
     @Inject
     public CryptService(){}
 
-    public String encrypt(String str){
-
+    public String encrypt(String str) {
         try {
 
             SecretKey secretKey = new SecretKeySpec(encryptKeySeed, "AES");
@@ -34,10 +30,8 @@ public class CryptService {
         return null;
     }
 
-    public String decrypt(String str){
-
+    public String decrypt(String str) {
         try {
-
             byte[] encrypted = Base64.getDecoder().decode(str);
 
             SecretKey secretKey = new SecretKeySpec(encryptKeySeed, "AES");

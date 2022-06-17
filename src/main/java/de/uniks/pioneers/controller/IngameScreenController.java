@@ -153,7 +153,9 @@ public class IngameScreenController implements Controller {
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
         gameService.game.set(game.get());
 
@@ -190,7 +192,6 @@ public class IngameScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".updated")) {
-                        System.out.println("new game state: " + gameEvent.data());
                         this.handleGameState(gameEvent.data());
                     }
                 })
@@ -218,11 +219,7 @@ public class IngameScreenController implements Controller {
 
         // buildings change listener
         gameService.buildings.addListener((ListChangeListener<? super Building>) c -> {
-            System.out.println(gameService.buildings);
             c.next();
-            System.out.println(c.wasAdded());
-            System.out.println(c.wasUpdated());
-            System.out.println(c.wasReplaced());
             if (c.wasAdded() || c.wasReplaced()) {
                 c.getAddedSubList().forEach(this::renderBuilding);
             } else if (c.wasRemoved()) {
@@ -247,26 +244,22 @@ public class IngameScreenController implements Controller {
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
-
-        String actionString = "";
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
-            System.out.println("It's your turn now!");
             switch (move.action()) {
-                case FOUNDING_ROLL, ROLL -> { this.enableRoll(move.action()); actionString = ROLL_DICE; }
-                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> { this.enableBuildingPoints(move.action()); actionString = PLACE_SETTLEMENT; }
-                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> { this.enableStreetPoints(move.action()); actionString = PLACE_ROAD; }
+                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
+                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
+                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
                 case BUILD -> {
                     // set builder timer, in progress...
-                    actionString = BUILD;
-                    this.timerService.setBuildTimer(new Timer(), this.timeLabel);
+                    this.timerService.setBuildTimer(new Timer());
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
             }
         }
-        this.setSituationLabel(move.players().get(0), actionString);
+        this.setSituationLabel(move.players().get(0), move.action());
     }
 
     private void enableStreetPoints(String action) {this.boardController.enableStreetPoints(action);}
@@ -281,12 +274,22 @@ public class IngameScreenController implements Controller {
         final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(move -> this.turnPane.setOnMouseClicked(null))
+                .subscribe(move -> {
+                    this.turnPane.setOnMouseClicked(null);
+                    this.timerService.reset();
+                })
         );
     }
     private void setSituationLabel(String playerId, String actionString) {
         // set game state label
         String playerName;
+        String actionString = "";
+        switch (action) {
+            case ROLL, FOUNDING_ROLL -> actionString = "roll the dice";
+            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> actionString = "place road";
+            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
+            case BUILD -> actionString = BUILD;
+        }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {
             playerName = "ME";
@@ -321,8 +324,10 @@ public class IngameScreenController implements Controller {
 
     public void leave() {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
-        if(!app.getStage().getScene().getStylesheets().isEmpty()){
-             lobbyController.setDarkMode();
+        if(darkMode){
+            lobbyController.setDarkMode();
+        } else {
+            lobbyController.setBrightMode();
         }
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.stop();
@@ -352,6 +357,8 @@ public class IngameScreenController implements Controller {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         if(darkMode){
             rulesController.setDarkMode();
+        } else {
+            rulesController.setBrightMode();
         }
         rulesController.init();
     }
@@ -360,6 +367,8 @@ public class IngameScreenController implements Controller {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         if(darkMode){
             settingsController.setDarkMode();
+        } else{
+            settingsController.setBrightMode();
         }
         settingsController.init();
     }

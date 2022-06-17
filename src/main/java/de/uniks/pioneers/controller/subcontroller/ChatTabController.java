@@ -140,7 +140,6 @@ public class ChatTabController {
         if (!groupId.get().isEmpty()) {
             disposable.add(messageService.getChatMessages(groupId.get()).observeOn(FX_SCHEDULER)
                     .subscribe(this.messages::setAll));
-            System.out.println("groups." + groupId.get() + ".messages.*.*");
             disposable.add(eventListener.listen("groups." + groupId.get() + ".messages.*.*", MessageDto.class)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(messageEvent -> {

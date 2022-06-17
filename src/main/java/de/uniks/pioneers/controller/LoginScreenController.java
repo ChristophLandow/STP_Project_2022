@@ -17,13 +17,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import static de.uniks.pioneers.Constants.*;
 
 public class LoginScreenController implements Controller {
+    @FXML public TextField textFieldUserName;
+    @FXML public PasswordField passwordField;
+    @FXML public Button buttonLogin;
+    @FXML public Text userNameStatusText;
+    @FXML public Text passwordStatusText;
+    @FXML public CheckBox checkRememberMe;
+    @FXML public Hyperlink textRegister;
+    @FXML public Hyperlink textRules;
 
     public final SimpleStringProperty userName = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
@@ -33,25 +40,7 @@ public class LoginScreenController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final PrefService prefService;
-
     private boolean darkMode = false;
-
-    @FXML
-    public TextField textFieldUserName;
-    @FXML
-    public PasswordField passwordField;
-    @FXML
-    public Button buttonLogin;
-    @FXML
-    public Text userNameStatusText;
-    @FXML
-    public Text passwordStatusText;
-    @FXML
-    public CheckBox checkRememberMe;
-    @FXML
-    public Hyperlink textRegister;
-    @FXML
-    public Hyperlink textRules;
 
     @Inject
     public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService) {
@@ -65,7 +54,6 @@ public class LoginScreenController implements Controller {
 
     @Override
     public Parent render() {
-
         Parent parent;
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LoginScreen.fxml"));
         loader.setControllerFactory(c -> this);
@@ -85,17 +73,18 @@ public class LoginScreenController implements Controller {
             buttonLogin.disableProperty().bind(invalid);
 
             return parent;
-
         } catch (Exception e) {
             System.err.println("Error loading Login Screen.");
             return null;
         }
     }
-    private void resetStatus(MouseEvent mouseEvent) {this.passwordStatusText.setText("");}
+
+    private void resetStatus(MouseEvent mouseEvent) {
+        this.passwordStatusText.setText("");
+    }
 
     @Override
     public void init() {
-
         //attempt to retrieve refresh token fpr RememberMe login
         if(!this.prefService.recall().equals("")){
 
@@ -107,13 +96,17 @@ public class LoginScreenController implements Controller {
         }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_LoginScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/LoginScreen.css");
         }
     }
-    @Override
-    public void stop(){}
-    public void login() {
 
+    @Override
+    public void stop() {
+
+    }
+    public void login() {
         this.loginService.login(this.textFieldUserName.getText(), this.passwordField.getText())
                 .observeOn(FX_SCHEDULER)
                 .doOnError(e -> this.passwordStatusText.setText("Incorrect user name or password"))
@@ -131,30 +124,42 @@ public class LoginScreenController implements Controller {
     }
 
     private void loginComplete() {
-
-        if(this.checkRememberMe.isSelected()){
-
+        if(this.checkRememberMe.isSelected()) {
             this.prefService.remember();
         }
         toLobby();
 
     }
     public void toSignUp() {
-
         SignUpScreenController signUpScreenController = this.signUpScreenControllerProvider.get();
         signUpScreenController.userName.set(textFieldUserName.getText());
         signUpScreenController.password.set(passwordField.getText());
+        if(darkMode){
+            signUpScreenController.setDarkMode();
+        } else {
+            signUpScreenController.setBrightMode();
+        }
         this.app.show(signUpScreenController);
     }
 
     public void toRules() {
-
-        RulesScreenController controller = rulesScreenControllerProvider.get();
-        controller.init();
+        RulesScreenController ruleController = rulesScreenControllerProvider.get();
+        if(darkMode){
+            ruleController.setDarkMode();
+        } else{
+            ruleController.setBrightMode();
+        }
+        ruleController.init();
     }
 
     public void toLobby() {
-        this.app.show(lobbyScreenControllerProvider.get());
+        LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
+        if(darkMode){
+            lobbyController.setDarkMode();
+        } else {
+            lobbyController.setBrightMode();
+        }
+        this.app.show(lobbyController);
     }
 
     public void setDarkMode() {

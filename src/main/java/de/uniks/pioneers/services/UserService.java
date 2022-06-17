@@ -5,14 +5,9 @@ import de.uniks.pioneers.dto.UpdateUserDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
-
-import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 @Singleton
 public class UserService {

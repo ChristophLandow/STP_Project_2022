@@ -20,9 +20,11 @@ public class App extends Application {
         MainComponent mainComponent = DaggerMainComponent.builder().mainApp(this).build();
         this.controller = mainComponent.loginController();
     }
+
     public App(Controller controller) {
         this.controller = controller;
     }
+
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
@@ -73,7 +75,6 @@ public class App extends Application {
             } catch (Exception ignored) {}
         }
     }
-
 }
 
 

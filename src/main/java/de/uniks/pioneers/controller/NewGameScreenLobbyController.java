@@ -79,6 +79,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject Provider<GameChatController> gameChatControllerProvider;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
     @Inject Provider<LoginScreenController> loginScreenControllerProvider;
+    @Inject ColorPickerController colorPickerController;
 
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
@@ -95,7 +96,6 @@ public class NewGameScreenLobbyController implements Controller {
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private GameChatController gameChatController;
-    private ColorPickerController colorPickerController;
     private boolean clientReady = false;
     private boolean darkMode= false;
 
@@ -113,13 +113,13 @@ public class NewGameScreenLobbyController implements Controller {
     @Override
     public void init() {
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css");
         }
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(password.get());
         clientUserNameLabel.setText(currentUser.name());
-        colorPickerController = new ColorPickerController(colorPicker, houseSVG);
+        colorPickerController.init(colorPicker, houseSVG);
         this.reactivateReadyButton();
 
         // enable deleting game on close request
@@ -186,6 +186,8 @@ public class NewGameScreenLobbyController implements Controller {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         if(darkMode){
           rulesController.setDarkMode();
+        } else {
+            rulesController.setBrightMode();
         }
         rulesController.init();
     }
@@ -305,7 +307,7 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void onSetReadyButton() {
+    public boolean onSetReadyButton() {
         // set member "ready" true in API
         boolean difference = true;
 
@@ -337,6 +339,8 @@ public class NewGameScreenLobbyController implements Controller {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Selected color is too similar to another player's color!");
             alert.showAndWait();
         }
+
+        return difference;
     }
 
     private void setReadyColor(String memberId, boolean ready, String hexColor) {
@@ -360,6 +364,8 @@ public class NewGameScreenLobbyController implements Controller {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         if(darkMode) {
             ingameScreenController.setDarkmode();
+        } else {
+            ingameScreenController.setBrightMode();
         }
         ingameScreenController.game.set(game);
         ingameScreenController.loadMap();
@@ -368,7 +374,7 @@ public class NewGameScreenLobbyController implements Controller {
         ingameScreenController.setPlayerColor(myColor);
     }
 
-    private boolean allUsersReady() {
+    public boolean allUsersReady() {
         boolean playersReady = true;
 
         for (PlayerEntryController entry : playerEntries.values()) {
@@ -440,6 +446,6 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     public void setDarkMode() {
-        darkMode=true;
+        darkMode = true;
     }
 }
