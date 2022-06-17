@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -15,9 +14,7 @@ import static de.uniks.pioneers.Constants.RULES_SCREEN_TITLE;
 
 @Singleton
 public class RulesScreenController implements Controller {
-
     private final App app;
-
     private boolean darkMode = false;
     private Stage stage;
 
@@ -75,11 +72,11 @@ public class RulesScreenController implements Controller {
         darkMode = true;
     }
 
-    public void setBrightMode(){
+    public void setBrightMode() {
         darkMode = false;
     }
 
-    public App getApp(){
+    public App getApp() {
         return this.app;
     }
 }

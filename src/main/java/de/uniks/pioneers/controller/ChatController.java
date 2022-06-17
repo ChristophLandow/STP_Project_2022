@@ -24,7 +24,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -36,20 +35,18 @@ import static de.uniks.pioneers.Constants.CHAT_SCREEN_TITLE;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class ChatController implements Controller {
-    private final App app;
-    private final MessageService messageService;
-    private final UserService userService;
-    private final GroupService groupService;
-    private final EventListener eventListener;
-
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     @FXML public Button sendButton;
     @FXML public Button leaveButton;
     @FXML public ListView<Label> userListView;
     @FXML public TextField messageTextField;
     @FXML public TabPane chatTabPane;
 
+    private final App app;
+    private final MessageService messageService;
+    private final UserService userService;
+    private final GroupService groupService;
+    private final EventListener eventListener;
+    private final CompositeDisposable disposable = new CompositeDisposable();
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<ChatUserlistController> userlistControllerProvider;
     private final ObservableList<ChatTabController> chatTabControllers = FXCollections.observableArrayList(new ArrayList<>());
@@ -148,7 +145,7 @@ public class ChatController implements Controller {
         disposable.dispose();
     }
 
-    public void addTab(User user){
+    public void addTab(User user) {
         ChatTabController newChatController = new ChatTabController(this, this.messageService, this.userService, this.groupService, this.chatTabPane, user, this.eventListener);
         newChatController.render();
         newChatController.init();
@@ -156,7 +153,7 @@ public class ChatController implements Controller {
         this.chatTabControllers.add(newChatController);
     }
 
-    public void removeTab(Event event){
+    public void removeTab(Event event) {
         Tab closedTab = (Tab) event.getSource();
         this.messageService.getchatUserList().removeIf(u->u.name().equals(closedTab.getText()));
 
@@ -169,7 +166,7 @@ public class ChatController implements Controller {
         this.chatTabControllers.removeIf(c->c.chattingWith.name().equals(closedTab.getText()));
     }
 
-    public void sendButtonBinding(){
+    public void sendButtonBinding() {
         //Bind the button with the opened tab and his controller
         Tab openTab = this.chatTabPane.getSelectionModel().getSelectedItem();
 
@@ -231,9 +228,11 @@ public class ChatController implements Controller {
         });
     }
 
-    public void setCurrentGroupId(String groupId) { this.currentGroupId = groupId; }
+    public void setCurrentGroupId(String groupId) {
+        this.currentGroupId = groupId;
+    }
 
-    public void resetOpenChatCounter(){
+    public void resetOpenChatCounter() {
         this.messageService.decreaseChatCounter(Constants.MAX_LOADING_CHATS);
     }
 
@@ -241,13 +240,11 @@ public class ChatController implements Controller {
         return this.app;
     }
 
-    public void setDarkMode(){
+    public void setDarkMode() {
         darkMode = true;
     }
 
-    public void setBrightMode(){
+    public void setBrightMode() {
         darkMode = false;
     }
-
-
 }

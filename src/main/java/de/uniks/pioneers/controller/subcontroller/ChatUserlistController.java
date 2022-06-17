@@ -22,38 +22,38 @@ public class ChatUserlistController extends OnlineUserlistController {
     public ChatController chatController;
 
     @Inject
-    public ChatUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener){
+    public ChatUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener) {
         super(userService, messageService, userlistService, eventListener);
     }
 
     @Override
-    public void render(){
+    public void render() {
         this.userListView.setOnMouseClicked(this::openChat);
 
         super.render();
     }
 
     @Override
-    public void renderUser(User user){
+    public void renderUser(User user) {
         Label newUser = new Label(user.name());
         newUser.setOnMouseClicked(this::openChat);
         this.userListView.getItems().add(newUser);
     }
 
     @Override
-    public void removeUser(User user){
+    public void removeUser(User user) {
         this.userListView.getItems().removeIf(userlable->userlable.getText().equals(user.name()));
     }
 
     @Override
-    public void updateUser(User user){
+    public void updateUser(User user) {
         Label updatedUser = new Label(user.name());
         updatedUser.setOnMouseClicked(this::openChat);
         this.userListView.getItems().replaceAll(userlabel->userlabel.getText().equals(user.name()) ? updatedUser : userlabel );
     }
 
     @Override
-    public void openChat(MouseEvent event){
+    public void openChat(MouseEvent event) {
         // Open chat of the user in the ListView who was clicked
         Label userLabel = userListView.getSelectionModel().getSelectedItem();
         User findUser = new User("","","","");

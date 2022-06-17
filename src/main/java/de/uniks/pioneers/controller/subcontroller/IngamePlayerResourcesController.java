@@ -148,7 +148,6 @@ public class IngamePlayerResourcesController {
     }
 
     private void setDataToElement(Player valueAdded, Player valueRemoved) {
-        System.out.println("setdata");
         // records are immutable
         Resources resources = valueAdded.resources();
         int brick = resources.brick() == null ? 0 : resources.brick();

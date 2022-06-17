@@ -6,15 +6,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
-import static de.uniks.pioneers.GameConstants.SETTLEMENT;
-
 @Singleton
 public class GameStorage {
-
+    @Inject EventListener eventListener;
     private List<Tile> map;
-
-    @Inject
-    EventListener eventListener;
 
     @Inject
     public GameStorage() {
@@ -29,5 +24,4 @@ public class GameStorage {
     public void setMap(List<Tile> map) {
         this.map = map;
     }
-
 }

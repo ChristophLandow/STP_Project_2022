@@ -219,11 +219,7 @@ public class IngameScreenController implements Controller {
 
         // buildings change listener
         gameService.buildings.addListener((ListChangeListener<? super Building>) c -> {
-            System.out.println(gameService.buildings);
             c.next();
-            System.out.println(c.wasAdded());
-            System.out.println(c.wasUpdated());
-            System.out.println(c.wasReplaced());
             if (c.wasAdded() || c.wasReplaced()) {
                 c.getAddedSubList().forEach(this::renderBuilding);
             } else if (c.wasRemoved()) {
@@ -243,7 +239,6 @@ public class IngameScreenController implements Controller {
     }
 
     private void renderBuilding(Building building) {
-        System.out.println("building type: " + building.type());
         String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
         if (Objects.equals(building.type(), SETTLEMENT) || Objects.equals(building.type(), CITY)) {
             // find corresponding buildingPointController

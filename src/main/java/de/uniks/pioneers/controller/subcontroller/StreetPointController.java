@@ -87,8 +87,6 @@ public class StreetPointController {
         }
 
         if (valid) {
-            System.out.println("building street at: " + " " + uploadCoords[0] + " " + uploadCoords[1] + " " + uploadCoords[2] + " " + uploadCoords[3]);
-
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
             disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
                     .observeOn(FX_SCHEDULER)

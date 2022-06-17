@@ -48,7 +48,6 @@ public class DiceSubcontroller {
             if (c.wasAdded()) {
                 c.getAddedSubList().forEach(move -> {
                     if (move.action().equals(FOUNDING_ROLL) || move.action().equals(ROLL)) {
-                        System.out.println("got new roll move!");
                         showRolledNumber(move.action(), move.roll());
                     }
                 });

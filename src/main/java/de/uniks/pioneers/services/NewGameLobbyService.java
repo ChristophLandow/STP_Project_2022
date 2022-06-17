@@ -9,7 +9,6 @@ import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
@@ -39,11 +38,11 @@ public class NewGameLobbyService {
         return gameMemberApiService.getAll(id);
     }
 
-    public Observable<Member> postMember(String id, boolean ready, String color, String password){
+    public Observable<Member> postMember(String id, boolean ready, String color, String password) {
         return gameMemberApiService.createMember(id, new CreateMemberDto(ready, color, password));
     }
 
-    public Observable<Member> deleteMember(String id, String userId){
+    public Observable<Member> deleteMember(String id, String userId) {
         return gameMemberApiService.deleteMember(id,userId);
     }
 
@@ -51,7 +50,7 @@ public class NewGameLobbyService {
         return messageApiService.sendMessage("games", id, dto);
     }
 
-    public Observable<List<MessageDto>> getMessages(String id){
+    public Observable<List<MessageDto>> getMessages(String id) {
         return messageApiService.getChatMessages("games", id);
     }
 

@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class TokenStorage {
-
     private String accessToken;
     private String refreshToken;
 

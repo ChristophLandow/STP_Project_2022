@@ -1,11 +1,9 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -18,7 +16,7 @@ public class UserlistService {
     protected final UserService userService;
 
     private User currentUser = new User("","","","");
-    private ObservableList<User> users = FXCollections.observableArrayList();
+    private final ObservableList<User> users = FXCollections.observableArrayList();
 
     @Inject
     public UserlistService(EventListener eventListener, UserService userService) {
@@ -58,7 +56,7 @@ public class UserlistService {
                 });
     }
 
-    public boolean validUser(User user){
+    public boolean validUser(User user) {
         if(user.name() == null || user._id() == null || user.status() == null) {
             return false;
         }
@@ -73,5 +71,4 @@ public class UserlistService {
     public User getCurrentUser() {
         return currentUser;
     }
-
 }
