@@ -16,7 +16,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#about-the-project">About The Project</a>So
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
@@ -110,11 +110,25 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
     - [X] Automatic display of new message
 - [X] Game-Management
     - [X] Create game
-- [ ] Game view
-    - [ ] Show list of participants
-    - [ ] Join with password
-    - [ ] Ready / not ready
-    - [ ] Leave
+- [X] Game Lobby view
+    - [X] Show list of participants
+    - [X] Join with password
+    - [X] Ready / not ready
+    - [X] Leave
+    - [X] Select and show Color
+    - [X] Start game
+- [X] Ingame view
+  - [X] Game chat 
+  - [X] Load map
+  - [X] Founding-roll
+  - [X] Founding-settlement phase
+  - [X] Roll
+  - [X] End turn
+  - [ ] Buy and build pieces
+  - [ ] Member list
+  - [X] Settings
+  - [ ] Dark mode
+  - [X] Music
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -124,8 +138,8 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
 ## Changelog
 
 - Version 1.0
-    - ....
-    - ...
+    - 1.1 Bug fixes (Game and user list in the lobby)
+- Version 2.0
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

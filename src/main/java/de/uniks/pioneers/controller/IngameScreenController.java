@@ -154,6 +154,8 @@ public class IngameScreenController implements Controller {
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         if(darkMode){
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
         gameService.game.set(game.get());
 
@@ -217,11 +219,7 @@ public class IngameScreenController implements Controller {
 
         // buildings change listener
         gameService.buildings.addListener((ListChangeListener<? super Building>) c -> {
-            System.out.println(gameService.buildings);
             c.next();
-            System.out.println(c.wasAdded());
-            System.out.println(c.wasUpdated());
-            System.out.println(c.wasReplaced());
             if (c.wasAdded() || c.wasReplaced()) {
                 c.getAddedSubList().forEach(this::renderBuilding);
             } else if (c.wasRemoved()) {
@@ -241,7 +239,6 @@ public class IngameScreenController implements Controller {
     }
 
     private void renderBuilding(Building building) {
-        System.out.println("building type: " + building.type());
         String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
         if (Objects.equals(building.type(), SETTLEMENT) || Objects.equals(building.type(), CITY)) {
             // find corresponding buildingPointController
@@ -349,7 +346,9 @@ public class IngameScreenController implements Controller {
     public void leave() {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(darkMode){
-             lobbyController.setDarkMode();
+            lobbyController.setDarkMode();
+        } else {
+            lobbyController.setBrightMode();
         }
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.stop();
@@ -379,6 +378,8 @@ public class IngameScreenController implements Controller {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         if(darkMode){
             rulesController.setDarkMode();
+        } else {
+            rulesController.setBrightMode();
         }
         rulesController.init();
     }
@@ -387,6 +388,8 @@ public class IngameScreenController implements Controller {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         if(darkMode){
             settingsController.setDarkMode();
+        } else{
+            settingsController.setBrightMode();
         }
         settingsController.init();
     }

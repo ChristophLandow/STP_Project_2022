@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -15,9 +14,7 @@ import static de.uniks.pioneers.Constants.RULES_SCREEN_TITLE;
 
 @Singleton
 public class RulesScreenController implements Controller {
-
     private final App app;
-
     private boolean darkMode = false;
     private Stage stage;
 
@@ -50,14 +47,15 @@ public class RulesScreenController implements Controller {
             this.stage.setX(100);
             if(this.darkMode){
                 stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
+            } else {
+                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/RulesScreen.css");
             }
             this.stage.show();
         } else {
             if(this.darkMode){
                 stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
-            }
-            if(!this.darkMode){
-                stage.getScene().getStylesheets().clear();
+            } else {
+                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/RulesScreen.css");
             }
             // bring to front if already open
             this.stage.show();
@@ -74,11 +72,11 @@ public class RulesScreenController implements Controller {
         darkMode = true;
     }
 
-    public void setBrightMode(){
+    public void setBrightMode() {
         darkMode = false;
     }
 
-    public App getApp(){
+    public App getApp() {
         return this.app;
     }
 }

@@ -9,7 +9,6 @@ import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -68,8 +67,7 @@ public class LobbyScreenController implements Controller {
     private boolean darkMode = false;
 
     @Inject
-    public LobbyScreenController(App app
-    ) {
+    public LobbyScreenController(App app) {
         this.app = app;
     }
 
@@ -99,6 +97,9 @@ public class LobbyScreenController implements Controller {
         if(darkMode){
             userlistController.setDarkMode();
             userlistController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_UserListView.css");
+        } else {
+            userlistController.setBrightMode();
+            userlistController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/UserListView.css");
         }
         userlistController.usersVBox = this.UsersVBox;
         userlistController.render();
@@ -106,7 +107,11 @@ public class LobbyScreenController implements Controller {
 
         lobbyGameListController = lobbyGameListControllerProvider.get();
         if(darkMode){
+            lobbyGameListController.setDarkMode();
             lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
+        } else{
+            lobbyGameListController.setBrightMode();
+            lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
         }
         lobbyGameListController.listViewGames = this.listViewGames;
         lobbyGameListController.setup();
@@ -147,6 +152,8 @@ public class LobbyScreenController implements Controller {
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         if(darkMode){
             app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyScreen.css");
         }
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
@@ -180,6 +187,8 @@ public class LobbyScreenController implements Controller {
         EditProfileController editController = editProfileControllerProvider.get();
         if(darkMode){
             editController.setDarkMode();
+        } else{
+            editController.setBrightMode();
         }
         app.show(editController);
     }
@@ -188,6 +197,8 @@ public class LobbyScreenController implements Controller {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         if(darkMode){
             rulesController.setDarkMode();
+        } else {
+            rulesController.setBrightMode();
         }
         rulesController.init();
     }
@@ -211,6 +222,8 @@ public class LobbyScreenController implements Controller {
         LoginScreenController loginController = loginScreenControllerProvider.get();
         if(darkMode){
             loginController.setDarkMode();
+        } else {
+            loginController.setBrightMode();
         }
         app.show(loginController);
     }
@@ -222,6 +235,8 @@ public class LobbyScreenController implements Controller {
         isCreatingGame.set(false);
         if(darkMode){
             newGameScreenLobbyController.setDarkMode();
+        } else {
+            newGameScreenLobbyController.setBrightMode();
         }
         app.show(newGameScreenLobbyController);
         newGameScreenLobbyController.setPlayerColor(hexColor);
@@ -234,10 +249,12 @@ public class LobbyScreenController implements Controller {
         createNewGameStage = new Stage();
         createNewGameStage.setTitle("create new game pop up");
         Scene scene = new Scene(node);
-        if(darkMode){
-            scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
-        }
         createNewGameStage.setScene(scene);
+        if(darkMode){
+            createNewGameStage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
+        } else {
+            createNewGameStage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/NewGamePopup.css");
+        }
         createNewGameStage.initOwner(appStage);
         isCreatingGame.set(true);
         createNewGamePopUpController.init();
@@ -248,7 +265,7 @@ public class LobbyScreenController implements Controller {
         darkMode = true;
     }
 
-    public void setBrightMode(){
+    public void setBrightMode() {
         darkMode = false;
     }
 

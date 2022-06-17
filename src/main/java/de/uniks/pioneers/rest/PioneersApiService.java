@@ -1,13 +1,11 @@
 package de.uniks.pioneers.rest;
 
 import de.uniks.pioneers.dto.CreateMoveDto;
-import de.uniks.pioneers.dto.MoveDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
 import java.util.List;
-
 import static de.uniks.pioneers.Constants.API_V2_PIONEERS_PREFIX;
 
 public interface PioneersApiService {
@@ -34,5 +32,4 @@ public interface PioneersApiService {
 
     @PATCH("/api/v3/games/{gameId}/players/{userId}")
     Observable<Player> updatePlayer (@Path("gameId") String gameId, @Path("userId") String userId, @Body UpdatePlayerDto dto);
-
 }

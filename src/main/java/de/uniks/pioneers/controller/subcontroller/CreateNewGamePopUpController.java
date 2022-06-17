@@ -5,13 +5,9 @@ import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.services.LobbyService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,11 +19,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
-
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.io.IOException;
 import java.util.Random;
 
@@ -51,6 +44,8 @@ public class CreateNewGamePopUpController implements Controller {
     final CompositeDisposable disposable = new CompositeDisposable();
     private Stage stage;
     private LobbyScreenController lobbyScreenController;
+
+    private boolean darkMode = false;
 
     @Inject
     public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<LobbyService> lobbyServiceProvider) {
@@ -97,7 +92,6 @@ public class CreateNewGamePopUpController implements Controller {
 
     @Override
     public void stop() {
-
     }
 
     public void createGame() {
@@ -116,10 +110,17 @@ public class CreateNewGamePopUpController implements Controller {
         stage.close();
     }
 
-    public String getRandomColor()
-    {
+    public String getRandomColor() {
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
         return String.format("#%06x", rand_num);
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
     }
 }

@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
-
     private Map<Integer, Pair<Image,String>> images = new LinkedHashMap<>();
     protected ImageView avatarImageView;
     public Consumer<String> changeAvatar;
@@ -19,7 +18,6 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
     }
 
     public void init(ImageView avatarImageView) {
-
         String elephantURL = "images/elephant.png";
         Image image = new Image(getClass().getResource(elephantURL).toString());
         images.put(1,new Pair<>(image,elephantURL));
@@ -71,6 +69,7 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
     }
+
     @Override
     public void decrement(int steps) {
         if (getValue() <= 1) {
@@ -83,6 +82,7 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
         avatarImageView.setImage(pair.getKey());
         changeAvatar.accept(pair.getValue());
     }
+
     @Override
     public void increment(int steps) {
         if (getValue() == 10) {

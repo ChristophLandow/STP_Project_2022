@@ -21,7 +21,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.File;
@@ -56,7 +55,6 @@ public class EditProfileController implements Controller {
     @FXML public Button cancelButton;
 
     private final App app;
-
     public boolean darkMode = false;
     private final UserService userService;
     private final LoginService loginService;
@@ -111,6 +109,8 @@ public class EditProfileController implements Controller {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
         if(darkMode){
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/EditProfileScreen.css");
         }
         // get currentUser from Server and display name
         this.usernameLabel.setText(userService.getCurrentUser().name());
@@ -218,6 +218,8 @@ public class EditProfileController implements Controller {
         LobbyScreenController lobbyController =  lobbyScreenControllerProvider.get();
         if(darkMode){
             lobbyController.setDarkMode();
+        } else {
+            lobbyController.setBrightMode();
         }
         this.app.show(lobbyController);
     }

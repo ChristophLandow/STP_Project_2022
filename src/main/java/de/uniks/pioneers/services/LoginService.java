@@ -32,7 +32,7 @@ public class LoginService {
                 });
     }
 
-    public Observable<LoginResult> refresh(){
+    public Observable<LoginResult> refresh() {
 
         String token = this.prefService.recall();
         if(token.equals("")){

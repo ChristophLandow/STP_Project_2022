@@ -32,10 +32,14 @@ public class InternetConnectionService {
             public void run() {
                 try {
                     Process p1 = java.lang.Runtime.getRuntime().exec(command);
-                    int returnVal = p1.waitFor();
+                    int returnVal1 = p1.waitFor();
                     p1.destroy();
 
-                    if(returnVal == 0) {
+                    Process p2 = java.lang.Runtime.getRuntime().exec(command);
+                    int returnVal2 = p2.waitFor();
+                    p2.destroy();
+
+                    if(returnVal1 == 0 || returnVal2 == 0) {
                         if(!connected) {
                             connected = true;
                             Platform.runLater(this::restoredConnection);
@@ -71,6 +75,6 @@ public class InternetConnectionService {
             }
         };
 
-        timer.schedule(myTask, 0, 5000);
+        timer.schedule(myTask, 0, 10000);
     }
 }

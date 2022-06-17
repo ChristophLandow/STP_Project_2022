@@ -12,11 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.util.Random;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-
 
 public class JoinGamePopUpController{
     @FXML public TextField passwordInputField;
@@ -60,8 +58,7 @@ public class JoinGamePopUpController{
         disposable.dispose();
     }
 
-    public String getRandomColor()
-    {
+    public String getRandomColor() {
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
         return String.format("#%06x", rand_num);
