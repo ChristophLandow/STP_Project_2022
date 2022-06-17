@@ -35,7 +35,7 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML public Slider volumeSlider;
     private final App app;
     private Stage stage;
-    private final String[] songNameList = {"Hardbass", "Ambient"};
+    private final String[] songNameList = {"no music", "Hardbass", "Ambient"};
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
     private final Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
@@ -91,7 +91,7 @@ public class SettingsScreenController implements Controller, Initializable {
         }
         app.setIcons(stage);
         stage.setOnCloseRequest(event -> leave());
-        musicChoiceBox.setTooltip((new Tooltip("Chooose your backgound music")));
+        musicChoiceBox.setTooltip((new Tooltip("Choose your background music")));
         volumeSlider.setMin(0);
         volumeSlider.setMax(1);
         volumeSlider.setValue(0.3);
@@ -139,14 +139,19 @@ public class SettingsScreenController implements Controller, Initializable {
 
     private void setMusic(ActionEvent actionEvent) {
         //if a song is played actualy..
-        if(mediaPlayer != null){
+        if(mediaPlayer != null) {
             mediaPlayer.stop();
         }
         //find song and play it
         int index = musicChoiceBox.getSelectionModel().getSelectedIndex();
-        Media media = new Media(songs.get(index).toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
+        if (index == 0) {
+            mediaPlayer.stop();
+        } else {
+            Media media = new Media(songs.get(index-1).toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
+        }
+
     }
 
     //The Darkmode should work if the SettingsScreen is open nearby AND without it. Here we handle only the nearby
