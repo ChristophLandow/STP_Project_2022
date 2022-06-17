@@ -14,7 +14,6 @@ public class Constants {
     public static final String RULES_SCREEN_TITLE = "Pioneers - Rules";
     public static final String NOOP = "noop";
     public static final String REMEMBER_ME = "RememberMe";
-
     public static final String HOST_LEFT_GAME_ALERT = "The game is not active anymore, because the host left.";
 
     // network
@@ -29,10 +28,8 @@ public class Constants {
 
     public static final String API_V2_PIONEERS_PREFIX =  "/api/v2/games/{gameId}";
 
-
     public static final String LOGIN_URL = BASE_URL + API_PREFIX + "/auth/login";
     public static final String SIGN_UP_URL = BASE_URL + API_PREFIX + "/users";
-
 
     public static final String JSON_NAME = "name";
     public static final String JSON_PASSWORD = "password";
@@ -59,5 +56,4 @@ public class Constants {
 
     //settings
     public static final String SETTINGS_SCREEN_TITLE = "Settings";
-
 }

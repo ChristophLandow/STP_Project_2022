@@ -19,7 +19,6 @@ import static de.uniks.pioneers.Constants.*;
 
 @Module
 public class MainModule {
-
     @Provides
     @Singleton
     ObjectMapper mapper(){
@@ -45,8 +44,12 @@ public class MainModule {
             return chain.proceed(newRequest);
         }).build();
     }
+
     @Provides
-    Preferences prefs(){ return Preferences.userNodeForPackage(Main.class); }
+    Preferences prefs() {
+        return Preferences.userNodeForPackage(Main.class);
+    }
+
     @Provides
     @Singleton
     Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
@@ -57,32 +60,46 @@ public class MainModule {
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createAsync())
                 .build();
     }
-    @Provides
-    @Singleton
-    UserApiService userApiService(Retrofit retrofit){ return retrofit.create(UserApiService.class); }
 
     @Provides
     @Singleton
-    AuthApiService authApiService(Retrofit retrofit){ return retrofit.create(AuthApiService.class); }
+    UserApiService userApiService(Retrofit retrofit) {
+        return retrofit.create(UserApiService.class);
+    }
 
     @Provides
     @Singleton
-    GameApiService gameApiService(Retrofit retrofit) { return retrofit.create(GameApiService.class); }
+    AuthApiService authApiService(Retrofit retrofit) {
+        return retrofit.create(AuthApiService.class);
+    }
 
     @Provides
     @Singleton
-    MessageApiService messageApiService(Retrofit retrofit) { return retrofit.create(MessageApiService.class); }
+    GameApiService gameApiService(Retrofit retrofit) {
+        return retrofit.create(GameApiService.class);
+    }
 
     @Provides
     @Singleton
-    GroupApiService groupApiService(Retrofit retrofit) { return retrofit.create(GroupApiService.class); }
+    MessageApiService messageApiService(Retrofit retrofit) {
+        return retrofit.create(MessageApiService.class);
+    }
 
     @Provides
     @Singleton
-    GameMemberApiService gameMemberApiService(Retrofit retrofit) { return  retrofit.create(GameMemberApiService.class);}
+    GroupApiService groupApiService(Retrofit retrofit) {
+        return retrofit.create(GroupApiService.class);
+    }
 
     @Provides
     @Singleton
-    PioneersApiService pioneersApiService(Retrofit retrofit) { return  retrofit.create(PioneersApiService.class);}
+    GameMemberApiService gameMemberApiService(Retrofit retrofit) {
+        return retrofit.create(GameMemberApiService.class);
+    }
 
+    @Provides
+    @Singleton
+    PioneersApiService pioneersApiService(Retrofit retrofit) {
+        return  retrofit.create(PioneersApiService.class);
+    }
 }

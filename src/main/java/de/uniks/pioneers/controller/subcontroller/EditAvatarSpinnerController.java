@@ -5,10 +5,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.image.Image;
 import java.util.function.Consumer;
 
-import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-
 public class EditAvatarSpinnerController extends AvatarSpinnerController {
-
     private UserService userService;
     private final CompositeDisposable disposable = new CompositeDisposable();
 

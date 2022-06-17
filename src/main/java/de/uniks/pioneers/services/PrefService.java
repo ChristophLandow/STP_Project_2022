@@ -9,7 +9,7 @@ import java.util.prefs.Preferences;
 import static de.uniks.pioneers.Constants.REMEMBER_ME;
 
 @Singleton
-public class PrefService{
+public class PrefService {
     private final Preferences preferences;
     private final TokenStorage tokenStorage;
     private final CryptService cryptService;
@@ -23,15 +23,15 @@ public class PrefService{
         this.gameApiService = gameApiService;
     }
 
-    public void remember(){
+    public void remember() {
         String encryptedToken = this.cryptService.encrypt(tokenStorage.getRefreshToken());
         preferences.put(REMEMBER_ME, encryptedToken);
     }
-    public void forget(){
+    public void forget() {
         preferences.put(REMEMBER_ME, "");
     }
 
-    public String recall(){
+    public String recall() {
         String encryptedToken = preferences.get(REMEMBER_ME, "");
         if(encryptedToken.equals("")){
             return "";

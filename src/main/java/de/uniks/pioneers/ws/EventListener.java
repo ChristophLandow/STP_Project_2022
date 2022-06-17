@@ -20,23 +20,19 @@ import static de.uniks.pioneers.Constants.*;
 
 @Singleton
 public class EventListener {
-
     private final TokenStorage tokenStorage;
     private final ObjectMapper mapper;
     public ClientEndpoint endpoint;
-
     SimpleStringProperty toUri = new SimpleStringProperty();
-
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
-
         this.tokenStorage = tokenStorage;
         this.mapper = mapper;
         toUri.set(BASE_URL_WSS + WS_PREFIX + EVENTS_AUTH_TOKEN + tokenStorage.getAccessToken());
     }
 
-    public EventListener(){
+    public EventListener() {
         this.tokenStorage=null;
         this.mapper=null;
         this.toUri.set("http://localhost/path");
@@ -78,7 +74,7 @@ public class EventListener {
         };
         endpoint.addMessageHandler(handler);
         emitter.setCancellable(()-> removeEventHandler(pattern,handler));
-    });
+        });
     }
 
     private void removeEventHandler(String pattern, Consumer<String> handler) {

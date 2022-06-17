@@ -9,7 +9,6 @@ import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -68,8 +67,7 @@ public class LobbyScreenController implements Controller {
     private boolean darkMode = false;
 
     @Inject
-    public LobbyScreenController(App app
-    ) {
+    public LobbyScreenController(App app) {
         this.app = app;
     }
 
@@ -248,7 +246,7 @@ public class LobbyScreenController implements Controller {
         darkMode = true;
     }
 
-    public void setBrightMode(){
+    public void setBrightMode() {
         darkMode = false;
     }
 

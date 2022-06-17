@@ -39,41 +39,25 @@ import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.*;
 
-public class SignUpScreenController implements Controller{
+public class SignUpScreenController implements Controller {
+    @FXML public TextField textFieldUserName;
+    @FXML public TextField passwordField;
+    @FXML public TextField passwordFieldConfirmation;
+    @FXML public Spinner<Integer> avatarSelector;
+    @FXML public Button buttonUploadAvatar;
+    @FXML public ImageView imageViewAvatar;
+    @FXML public Button buttonRegister;
+    @FXML public Button leaveButton;
+    @FXML public Text userNameStatusText;
+    @FXML public Text passwordStatusText;
+    @FXML public Text avatarStatusText;
 
     public final SimpleStringProperty userName = new SimpleStringProperty();
-
     public final SimpleStringProperty password = new SimpleStringProperty();
-
-    @FXML
-    public TextField textFieldUserName;
-    @FXML
-    public TextField passwordField;
-    @FXML
-    public TextField passwordFieldConfirmation;
-    @FXML
-    public Spinner<Integer> avatarSelector;
-    @FXML
-    public Button buttonUploadAvatar;
-    @FXML
-    public ImageView imageViewAvatar;
-    @FXML
-    public Button buttonRegister;
-    @FXML
-    public Button leaveButton;
-    @FXML
-    public Text userNameStatusText;
-    @FXML
-    public Text passwordStatusText;
-    @FXML
-    public Text avatarStatusText;
-
     private final App app;
-
     private boolean darkMode = false;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final UserService userService;
-
     private String avatar;
     private String customAvatar = "";
 
@@ -86,7 +70,6 @@ public class SignUpScreenController implements Controller{
 
     @Override
     public void init() {
-
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
         if(darkMode){
@@ -101,7 +84,6 @@ public class SignUpScreenController implements Controller{
 
     @Override
     public Parent render() {
-
         Parent parent;
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/SignUpScreen.fxml"));
         loader.setControllerFactory(c -> this);
@@ -141,13 +123,11 @@ public class SignUpScreenController implements Controller{
     public void stop() {
     }
 
-    private void updateAvatarString(String newAvatar){
-
+    private void updateAvatarString(String newAvatar) {
         avatar = newAvatar;
         resetAvatar();
     }
     public void uploadAvatar() throws IOException {
-
         resetAvatar();
 
         FileChooser fileChooser = new FileChooser();
@@ -169,7 +149,6 @@ public class SignUpScreenController implements Controller{
     }
 
     private void resetStatus(MouseEvent mouseEvent) {
-
         this.userNameStatusText.setText("");
     }
     private void resetAvatar() {
@@ -183,10 +162,10 @@ public class SignUpScreenController implements Controller{
         String avatarB64 = customAvatar;
         //load default avatar if no custom one was selected
         if(customAvatar.equals("")){
-            if(getClass().getResource("subcontroller/" + avatar).toString().contains("!"))
+            if(Objects.requireNonNull(getClass().getResource("subcontroller/" + avatar)).toString().contains("!"))
             {
                 final Map<String, String> env = new HashMap<>();
-                String[] array = getClass().getResource("subcontroller/" + avatar).toString().split("!");
+                String[] array = Objects.requireNonNull(getClass().getResource("subcontroller/" + avatar)).toString().split("!");
                 FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
                 byte[] data = Files.readAllBytes(Objects.requireNonNull(fs.getPath(array[1])));
                 avatarB64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);
@@ -216,6 +195,7 @@ public class SignUpScreenController implements Controller{
                     public void onComplete() {}
                 });
     }
+
     private void registrationComplete(){
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -226,6 +206,7 @@ public class SignUpScreenController implements Controller{
         alert.showAndWait();
         toLogin();
     }
+
     public void toLogin() {
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();

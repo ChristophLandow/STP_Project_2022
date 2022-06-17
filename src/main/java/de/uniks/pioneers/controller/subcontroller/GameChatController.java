@@ -110,7 +110,6 @@ public class GameChatController {
         if(user._id().equals(game.owner()) && message.body().equals("Host left the Game!")) {
             if(!userService.getCurrentUser()._id().equals(game.owner())) {
                 ingameScreenController.leave();
-                System.out.println(userService.getCurrentUser()._id() + "  " + game.owner());
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.HOST_LEFT_GAME_ALERT);
                 alert.showAndWait();
             }

@@ -33,6 +33,7 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML public RadioButton darkMode_RadioButton;
     @FXML public ChoiceBox<String> musicChoiceBox;
     @FXML public Slider volumeSlider;
+
     private final App app;
     private Stage stage;
     private final String[] songNameList = {"Hardbass", "Ambient"};
@@ -43,9 +44,7 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
-
     private final Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
-
     private boolean darkMode = false;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
@@ -58,7 +57,7 @@ public class SettingsScreenController implements Controller, Initializable {
                                     Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                     Provider<LoginScreenController> loginScreenControllerProvider,
                                     Provider<RulesScreenController> rulesScreenControllerProvider,
-                                    Provider<LobbyUserlistController> lobbyUserlistControllerProvider){
+                                    Provider<LobbyUserlistController> lobbyUserlistControllerProvider) {
         this.app = app;
         this.ingameScreenControllerProvider = ingameScreenControllerProvider;
         this.newGameLobbyControllerProvider = newGameLobbyControllerProvider;
@@ -77,12 +76,12 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage = new Stage();
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(SETTINGS_SCREEN_TITLE);
-            if(darkMode){
+            if(darkMode) {
                 this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
             }
             this.stage.show();
         } else {
-            if(darkMode){
+            if(darkMode) {
                 this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
             }
             // bring to front if already open
@@ -106,7 +105,7 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @Override
     public void stop() {
-        if (mediaPlayer != null) {
+        if(mediaPlayer != null) {
             mediaPlayer.stop();
         }
     }
@@ -131,7 +130,7 @@ public class SettingsScreenController implements Controller, Initializable {
         musicChoiceBox.setOnAction(this::setMusic);
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double musicVolume = volumeSlider.getValue();
-            if (mediaPlayer != null) {
+            if(mediaPlayer != null) {
                 mediaPlayer.setVolume(musicVolume);
             }
         });
@@ -151,7 +150,7 @@ public class SettingsScreenController implements Controller, Initializable {
 
     //The Darkmode should work if the SettingsScreen is open nearby AND without it. Here we handle only the nearby
     // part. Without the SettingsScreen it works via the setDarkMode Method.
-    public void setApperenceMode(){
+    public void setApperenceMode() {
         //get all the controllers
         IngameScreenController ingameController = ingameScreenControllerProvider.get();
         NewGameScreenLobbyController newGameController = newGameLobbyControllerProvider.get();
@@ -206,7 +205,7 @@ public class SettingsScreenController implements Controller, Initializable {
         darkMode = true;
     }
 
-    public void leave(){
+    public void leave() {
         if(mediaPlayer != null) {
             mediaPlayer.stop();
         }

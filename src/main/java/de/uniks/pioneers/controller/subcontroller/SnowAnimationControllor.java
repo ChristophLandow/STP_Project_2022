@@ -31,7 +31,7 @@ public class SnowAnimationControllor {
         new Thread(() -> {
             try {
                 Platform.runLater(this::initSnow);
-                Thread.sleep(2000);
+                Thread.sleep(3000);
                 Platform.runLater(this::initSnow);
                 Platform.runLater(this::initEventAreas);
             } catch (InterruptedException e) {
@@ -59,7 +59,7 @@ public class SnowAnimationControllor {
         double imageSize = snow.getImage().getWidth();
         double paneWidthMinusImageSize = fieldPane.getWidth() - imageSize;
         double randomX = rand.nextDouble(paneWidthMinusImageSize);
-        int time = 2000 + rand.nextInt(2000);
+        int time = 3000 + rand.nextInt(3000);
         snow.setVisible(visible);
 
         TranslateTransition tt = new TranslateTransition(Duration.millis(time), snow);

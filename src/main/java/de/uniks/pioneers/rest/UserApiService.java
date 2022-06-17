@@ -4,15 +4,12 @@ import de.uniks.pioneers.dto.CreateUserDto;
 import de.uniks.pioneers.dto.UpdateUserDto;
 import de.uniks.pioneers.model.User;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.collections.ObservableList;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Body;
 import retrofit2.http.Path;
-
-import javax.inject.Inject;
 import java.util.List;
 
 public interface UserApiService {
