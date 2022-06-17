@@ -3,6 +3,7 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,7 +15,7 @@ import static de.uniks.pioneers.GameConstants.BUILD;
 
 @Singleton
 public class TimerService {
-    private boolean timeUp;
+    private boolean timeUp = false;
     private Timer timer;
     private Label timeLabel;
     private Timer countdownTimer;
@@ -55,6 +56,7 @@ public class TimerService {
     }
 
     public void setBuildTimer(Timer timer) {
+        this.timeUp = false;
         this.timer = timer;
         TimerTask task = new TimerTask() {
             @Override
@@ -63,9 +65,14 @@ public class TimerService {
                 disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {
+                            timeUp = true;
                             this.cancel();
                             timer.cancel();
                             countdownTimer.cancel();
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setContentText("Attention, your time has expired! \n" +
+                                    "Your turn was automatically ended.");
+                            alert.show();
                         })
                 );
             }
