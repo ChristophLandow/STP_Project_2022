@@ -17,6 +17,10 @@ public class GameStorage {
 
     public String selectedBuilding = "";
 
+    public int roadsRemaining = 15;
+    public int settlementsRemaining = 5;
+    public int citiesRemaining = 4;
+
     public List<Tile> getMap() {
         return map;
     }
