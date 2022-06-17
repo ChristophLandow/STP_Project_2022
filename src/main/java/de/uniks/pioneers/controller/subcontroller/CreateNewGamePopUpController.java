@@ -52,6 +52,8 @@ public class CreateNewGamePopUpController implements Controller {
     private Stage stage;
     private LobbyScreenController lobbyScreenController;
 
+    private boolean darkMode = false;
+
     @Inject
     public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<LobbyService> lobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
@@ -73,6 +75,11 @@ public class CreateNewGamePopUpController implements Controller {
 
     @Override
     public void init() {
+        if(darkMode){
+            stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
+        } else {
+            stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/NewGamePopup.css");
+        }
         // get singleton from dagger
         lobbyScreenController = lobbyScreenControllerProvider.get();
         // create binding for name/password input
@@ -121,5 +128,13 @@ public class CreateNewGamePopUpController implements Controller {
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
         return String.format("#%06x", rand_num);
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
     }
 }

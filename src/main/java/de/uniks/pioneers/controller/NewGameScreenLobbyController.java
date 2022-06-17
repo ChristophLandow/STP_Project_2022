@@ -186,6 +186,8 @@ public class NewGameScreenLobbyController implements Controller {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         if(darkMode){
           rulesController.setDarkMode();
+        } else {
+            rulesController.setBrightMode();
         }
         rulesController.init();
     }
@@ -362,6 +364,8 @@ public class NewGameScreenLobbyController implements Controller {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         if(darkMode) {
             ingameScreenController.setDarkmode();
+        } else {
+            ingameScreenController.setBrightMode();
         }
         ingameScreenController.game.set(game);
         ingameScreenController.loadMap();
@@ -442,6 +446,6 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     public void setDarkMode() {
-        darkMode=true;
+        darkMode = true;
     }
 }

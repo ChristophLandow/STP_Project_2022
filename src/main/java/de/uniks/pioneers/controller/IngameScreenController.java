@@ -154,6 +154,8 @@ public class IngameScreenController implements Controller {
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
         if(darkMode){
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
         gameService.game.set(game.get());
 
@@ -350,6 +352,8 @@ public class IngameScreenController implements Controller {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(darkMode){
              lobbyController.setDarkMode();
+        } else {
+            lobbyController.setBrightMode();
         }
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         settingsController.stop();
@@ -379,6 +383,8 @@ public class IngameScreenController implements Controller {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         if(darkMode){
             rulesController.setDarkMode();
+        } else {
+            rulesController.setBrightMode();
         }
         rulesController.init();
     }
@@ -387,6 +393,8 @@ public class IngameScreenController implements Controller {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
         if(darkMode){
             settingsController.setDarkMode();
+        } else{
+            settingsController.setBrightMode();
         }
         settingsController.init();
     }

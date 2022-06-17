@@ -130,7 +130,9 @@ public class LobbyGameListController {
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
         if(darkMode){
-            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css");
+            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
+        } else {
+            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
         }
         Parent node = gameListElementController.render();
         node.setId(game._id());

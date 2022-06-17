@@ -148,6 +148,8 @@ public class LoginScreenController implements Controller {
         signUpScreenController.password.set(passwordField.getText());
         if(darkMode){
             signUpScreenController.setDarkMode();
+        } else {
+            signUpScreenController.setBrightMode();
         }
         this.app.show(signUpScreenController);
     }
@@ -157,6 +159,8 @@ public class LoginScreenController implements Controller {
         RulesScreenController ruleController = rulesScreenControllerProvider.get();
         if(darkMode){
             ruleController.setDarkMode();
+        } else{
+            ruleController.setBrightMode();
         }
         ruleController.init();
     }
@@ -165,6 +169,8 @@ public class LoginScreenController implements Controller {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(darkMode){
             lobbyController.setDarkMode();
+        } else {
+            lobbyController.setBrightMode();
         }
         this.app.show(lobbyController);
     }

@@ -215,4 +215,7 @@ public class SettingsScreenController implements Controller, Initializable {
     public App getApp() {
         return this.app;
     }
+    public void setBrightMode(){
+        darkMode = false;
+    }
 }
