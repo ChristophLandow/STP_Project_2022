@@ -351,7 +351,7 @@ public class IngameScreenController implements Controller {
     public void leave() {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         if(darkMode){
-             lobbyController.setDarkMode();
+            lobbyController.setDarkMode();
         } else {
             lobbyController.setBrightMode();
         }
