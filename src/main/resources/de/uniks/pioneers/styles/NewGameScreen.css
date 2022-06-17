@@ -1,0 +1,19 @@
+#root{
+    -fx-background-color:  #F5F5F5;
+}
+
+#gameNameLabel{
+    -fx-text-fill: black;
+}
+
+#passWordLabel{
+    -fx-text-fill: black;
+}
+
+.text-field {
+    -fx-background-color: #F5F5F5;
+    -fx-text-fill: black;
+}
+
+
+

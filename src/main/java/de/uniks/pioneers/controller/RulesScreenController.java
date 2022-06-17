@@ -49,12 +49,12 @@ public class RulesScreenController implements Controller {
             this.stage.setTitle(RULES_SCREEN_TITLE);
             this.stage.setX(100);
             if(this.darkMode){
-                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
             }
             this.stage.show();
         } else {
             if(this.darkMode){
-                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_stylesheet.css");
+                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
             }
             if(!this.darkMode){
                 stage.getScene().getStylesheets().clear();

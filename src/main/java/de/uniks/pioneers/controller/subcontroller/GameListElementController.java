@@ -39,6 +39,7 @@ public class GameListElementController implements Controller {
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
     public SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    private boolean darkMode = false;
 
     @Inject
     public GameListElementController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
@@ -110,6 +111,14 @@ public class GameListElementController implements Controller {
                 }
             }
         }
+    }
+
+    public void setDarkMode() {
+        darkMode = true;
+    }
+
+    public void setBrightMode() {
+        darkMode = false;
     }
 
     public App getApp(){
