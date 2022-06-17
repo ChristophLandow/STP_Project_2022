@@ -155,7 +155,7 @@ public class LobbyScreenController implements Controller {
         if(darkMode){
             app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
         } else {
-            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
+            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyScreen.css");
         }
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")
@@ -253,9 +253,9 @@ public class LobbyScreenController implements Controller {
         Scene scene = new Scene(node);
         createNewGameStage.setScene(scene);
         if(darkMode){
-            createNewGamePopUpController.setDarkMode();
+            createNewGameStage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
         } else {
-            createNewGamePopUpController.setBrightMode();
+            createNewGameStage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/NewGamePopup.css");
         }
         createNewGameStage.initOwner(appStage);
         isCreatingGame.set(true);

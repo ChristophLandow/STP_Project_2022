@@ -75,11 +75,6 @@ public class CreateNewGamePopUpController implements Controller {
 
     @Override
     public void init() {
-        if(darkMode){
-            stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
-        } else {
-            stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/NewGamePopup.css");
-        }
         // get singleton from dagger
         lobbyScreenController = lobbyScreenControllerProvider.get();
         // create binding for name/password input
