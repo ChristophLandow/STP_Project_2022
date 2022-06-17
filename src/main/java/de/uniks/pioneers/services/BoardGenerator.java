@@ -20,7 +20,7 @@ public class BoardGenerator {
 
         for(Tile tile : tiles) {
 
-            HexTile newHexTile = new HexTile(tile.x(), tile.y(), tile.z(), scale, true);
+            HexTile newHexTile = new HexTile(tile.x(), tile.z(), tile.y(), scale, true);
             newHexTile.setGameInfo(tile.type(), tile.numberToken());
             board.add(newHexTile);
         }

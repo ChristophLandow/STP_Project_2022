@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="gameBoxRoot" maxHeight="30.0" maxWidth="280.0" minHeight="30.0" minWidth="280.0" onMouseClicked="#showDropDown" onMouseEntered="#showGameInfo" onMouseExited="#dontShowGameInfo" prefHeight="30.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.GameListElementController">
+<HBox fx:id="gameBoxRoot" maxHeight="30.0" maxWidth="280.0" minHeight="30.0" minWidth="280.0" onMouseClicked="#doubleClicked" prefHeight="30.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.GameListElementController">
    <children>
       <Label fx:id="creationTime" maxHeight="30.0" maxWidth="80.0" minHeight="30.0" minWidth="80.0" prefHeight="30.0" prefWidth="80.0" text="14:32:45 :">
          <font>

@@ -4,9 +4,14 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.services.LobbyService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,10 +19,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 
 import javax.inject.Inject;
@@ -43,7 +48,9 @@ public class CreateNewGamePopUpController implements Controller {
     @FXML public Label passwordLen;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<LobbyService> lobbyServiceProvider;
-    private String randomColor;
+    final CompositeDisposable disposable = new CompositeDisposable();
+    private Stage stage;
+    private LobbyScreenController lobbyScreenController;
 
     @Inject
     public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<LobbyService> lobbyServiceProvider) {
@@ -61,17 +68,17 @@ public class CreateNewGamePopUpController implements Controller {
         } catch (IOException e) {
             node = null;
         }
-        init();
         return node;
     }
 
     @Override
     public void init() {
+        // get singleton from dagger
+        lobbyScreenController = lobbyScreenControllerProvider.get();
+        // create binding for name/password input
         IntegerBinding gameNameLength = Bindings.length(gameNameTextField.textProperty());
         IntegerBinding passwordLength = Bindings.length(passwordTextField.textProperty());
         BooleanBinding invalid = Bindings.equal(passwordLen.textProperty(), nameLen.textProperty()).not();
-        this.randomColor = getRandomColor();
-
         createGameButton.disableProperty().bind(invalid);
 
         passwordLen.textProperty().bind(Bindings
@@ -81,6 +88,11 @@ public class CreateNewGamePopUpController implements Controller {
         nameLen.textProperty().bind(Bindings
                 .when(gameNameLength.greaterThan(3)).then("")
                 .otherwise("game name must be at least three characters long"));
+
+        // create stage and set window on close request
+        stage = (Stage) popUpBox.getScene().getWindow();
+        Window window = stage;
+        window.setOnCloseRequest(event -> lobbyScreenController.isCreatingGame.set(false));
     }
 
     @Override
@@ -91,18 +103,16 @@ public class CreateNewGamePopUpController implements Controller {
     public void createGame() {
         String name = gameNameTextField.getText();
         String password = passwordTextField.getText();
-        lobbyServiceProvider.get().createGame(name,false, password)
+        disposable.add(lobbyServiceProvider.get().createGame(name,false, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(game -> {
-                    LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
-                    lobbyScreenController.showNewGameLobby(game, password, randomColor);
-                    Stage stage = (Stage) popUpBox.getScene().getWindow();
-                    stage.close();
-                });
+                    lobbyScreenController.showNewGameLobby(game, password, getRandomColor());
+                })
+        );
     }
 
     public void closePopUp() {
-        Stage stage = (Stage) popUpBox.getScene().getWindow();
+        lobbyScreenController.isCreatingGame.set(false);
         stage.close();
     }
 
@@ -110,7 +120,6 @@ public class CreateNewGamePopUpController implements Controller {
     {
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
-        String colorCode = String.format("#%06x", rand_num);
-        return colorCode;
+        return String.format("#%06x", rand_num);
     }
 }

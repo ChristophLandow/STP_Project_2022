@@ -1,0 +1,19 @@
+#root{
+    -fx-background-color:  #F5F5F5;
+}
+
+#messageVBox{
+    -fx-background-color:  #F5F5F5;
+    -fx-text-fill:black;
+}
+
+#upRectangle{
+    -fx-fill: #F5F5F5;
+}
+
+#downRectangle{
+    -fx-fill: #F5F5F5;
+}
+
+
+

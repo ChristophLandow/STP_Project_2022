@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.dto.Event;
@@ -23,7 +24,10 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -42,6 +46,9 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @InjectMocks
     LoginScreenController loginScreenController;
 
+    @InjectMocks
+    GameListElementController gameListElementController;
+
     @Mock(name = "userlistControllerProvider")
     Provider<LobbyUserlistController> userlistControllerProvider;
 
@@ -50,6 +57,9 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
     @Mock(name = "loginScreenControllerProvider")
     Provider<LoginScreenController> loginScreenControllerProvider;
+
+    @Mock(name = "gameListElementControllerProvider")
+    Provider<GameListElementController> gameListElementControllerProvider;
 
     @Mock
     EventListener eventListener;
@@ -74,22 +84,32 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
+
+        // get date from server
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        String today = dtf.format(now);
+
+
         //Setup lobby controller API calls
         when(prefService.recall()).thenReturn("");
+
+        Game testGame = new Game(today+"T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false);
 
         when(userService.editProfile(null,null,null,"online")).thenReturn(Observable.just(new User("","","","")));
         when(userService.editProfile(null,null,null,"offline")).thenReturn(Observable.just(new User("","","","")));
         when(userService.getCurrentUser()).thenReturn(new User("","","",null));
 
-        when(eventListener.listen("games.*.*", Game.class)).thenReturn(Observable.just(new Event<>("", new Game("","","","","",0,false))));
+        when(lobbyService.getGames()).thenReturn(Observable.just(List.of(testGame)));
+        when(eventListener.listen("games.*.*", Game.class)).thenReturn(Observable.just(new Event<Game>("games.001.updated",testGame)));
 
-        when(lobbyService.getGames()).thenReturn(Observable.just(new ArrayList<>()));
         when(userlistService.getUsers()).thenReturn(FXCollections.observableArrayList());
         when(lobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
         when(messageService.getchatUserList()).thenReturn(FXCollections.observableArrayList());
 
         when(userlistControllerProvider.get()).thenReturn(userlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
+        //when(gameListElementControllerProvider.get()).thenReturn(gameListElementController);
         when(loginScreenControllerProvider.get()).thenReturn(loginScreenController);
 
         //Start controller

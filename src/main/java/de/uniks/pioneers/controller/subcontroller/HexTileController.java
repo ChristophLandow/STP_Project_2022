@@ -5,7 +5,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
@@ -47,38 +46,43 @@ public class HexTileController {
 
                 if(abs(buildingPoint.tile.x - cornerCoords[i][0]) < 1 && abs(buildingPoint.tile.y - cornerCoords[i][1]) < 1 ){
 
-                    switch(i){
-
-                        case 0: buildingPoint.uploadCoords[0] = tile.q;
-                                buildingPoint.uploadCoords[1] = tile.r;
-                                buildingPoint.uploadCoords[2] = tile.s;
-                                buildingPoint.uploadCoords[3] = 0;
-                                break;
-                        case 1: buildingPoint.uploadCoords[0] = tile.q+1;
-                                buildingPoint.uploadCoords[1] = tile.r-1;
-                                buildingPoint.uploadCoords[2] = tile.s;
-                                buildingPoint.uploadCoords[3] = 6;
-                                break;
-                        case 2: buildingPoint.uploadCoords[0] = tile.q;
-                                buildingPoint.uploadCoords[1] = tile.r+1;
-                                buildingPoint.uploadCoords[2] = tile.s-1;
-                                buildingPoint.uploadCoords[3] = 0;
-                                break;
-                        case 3: buildingPoint.uploadCoords[0] = tile.q;
-                                buildingPoint.uploadCoords[1] = tile.r;
-                                buildingPoint.uploadCoords[2] = tile.s;
-                                buildingPoint.uploadCoords[3] = 6;
-                                break;
-                        case 4: buildingPoint.uploadCoords[0] = tile.q-1;
-                                buildingPoint.uploadCoords[1] = tile.r+1;
-                                buildingPoint.uploadCoords[2] = tile.s;
-                                buildingPoint.uploadCoords[3] = 0;
-                                break;
-                        case 5: buildingPoint.uploadCoords[0] = tile.q;
-                                buildingPoint.uploadCoords[1] = tile.r-1;
-                                buildingPoint.uploadCoords[2] = tile.s+1;
-                                buildingPoint.uploadCoords[3] = 6;
-                                break;
+                    switch (i) {
+                        case 0 -> {
+                            buildingPoint.uploadCoords[0] = tile.q;
+                            buildingPoint.uploadCoords[2] = tile.r;
+                            buildingPoint.uploadCoords[1] = tile.s;
+                            buildingPoint.uploadCoords[3] = 0;
+                        }
+                        case 1 -> {
+                            buildingPoint.uploadCoords[0] = tile.q + 1;
+                            buildingPoint.uploadCoords[2] = tile.r - 1;
+                            buildingPoint.uploadCoords[1] = tile.s;
+                            buildingPoint.uploadCoords[3] = 6;
+                        }
+                        case 2 -> {
+                            buildingPoint.uploadCoords[0] = tile.q;
+                            buildingPoint.uploadCoords[2] = tile.r + 1;
+                            buildingPoint.uploadCoords[1] = tile.s - 1;
+                            buildingPoint.uploadCoords[3] = 0;
+                        }
+                        case 3 -> {
+                            buildingPoint.uploadCoords[0] = tile.q;
+                            buildingPoint.uploadCoords[2] = tile.r;
+                            buildingPoint.uploadCoords[1] = tile.s;
+                            buildingPoint.uploadCoords[3] = 6;
+                        }
+                        case 4 -> {
+                            buildingPoint.uploadCoords[0] = tile.q - 1;
+                            buildingPoint.uploadCoords[2] = tile.r + 1;
+                            buildingPoint.uploadCoords[1] = tile.s;
+                            buildingPoint.uploadCoords[3] = 0;
+                        }
+                        case 5 -> {
+                            buildingPoint.uploadCoords[0] = tile.q;
+                            buildingPoint.uploadCoords[2] = tile.r - 1;
+                            buildingPoint.uploadCoords[1] = tile.s + 1;
+                            buildingPoint.uploadCoords[3] = 6;
+                        }
                     }
 
                     this.corners[i] = buildingPoint;
@@ -103,38 +107,43 @@ public class HexTileController {
 
                 if(abs(streetPoint.tile.x - edgeCoords[i][0]) < 1 && abs(streetPoint.tile.y - edgeCoords[i][1]) < 1 ){
 
-                    switch(i){
-
-                        case 0: streetPoint.uploadCoords[0] = tile.q+1;
-                                streetPoint.uploadCoords[1] = tile.r-1;
-                                streetPoint.uploadCoords[2] = tile.s;
-                                streetPoint.uploadCoords[3] = 7;
-                            break;
-                        case 1: streetPoint.uploadCoords[0] = tile.q;
-                                streetPoint.uploadCoords[1] = tile.r;
-                                streetPoint.uploadCoords[2] = tile.s;
-                                streetPoint.uploadCoords[3] = 3;
-                            break;
-                        case 2: streetPoint.uploadCoords[0] = tile.q;
-                                streetPoint.uploadCoords[1] = tile.r+1;
-                                streetPoint.uploadCoords[2] = tile.s-1;
-                                streetPoint.uploadCoords[3] = 11;
-                            break;
-                        case 3: streetPoint.uploadCoords[0] = tile.q;
-                                streetPoint.uploadCoords[1] = tile.r;
-                                streetPoint.uploadCoords[2] = tile.s;
-                                streetPoint.uploadCoords[3] = 7;
-                            break;
-                        case 4: streetPoint.uploadCoords[0] = tile.q-1;
-                                streetPoint.uploadCoords[1] = tile.r;
-                                streetPoint.uploadCoords[2] = tile.s+1;
-                                streetPoint.uploadCoords[3] = 3;
-                            break;
-                        case 5: streetPoint.uploadCoords[0] = tile.q;
-                                streetPoint.uploadCoords[1] = tile.r;
-                                streetPoint.uploadCoords[2] = tile.s;
-                                streetPoint.uploadCoords[3] = 11;
-                            break;
+                    switch (i) {
+                        case 0 -> {
+                            streetPoint.uploadCoords[0] = tile.q + 1;
+                            streetPoint.uploadCoords[2] = tile.r - 1;
+                            streetPoint.uploadCoords[1] = tile.s;
+                            streetPoint.uploadCoords[3] = 7;
+                        }
+                        case 1 -> {
+                            streetPoint.uploadCoords[0] = tile.q;
+                            streetPoint.uploadCoords[2] = tile.r;
+                            streetPoint.uploadCoords[1] = tile.s;
+                            streetPoint.uploadCoords[3] = 3;
+                        }
+                        case 2 -> {
+                            streetPoint.uploadCoords[0] = tile.q;
+                            streetPoint.uploadCoords[2] = tile.r + 1;
+                            streetPoint.uploadCoords[1] = tile.s - 1;
+                            streetPoint.uploadCoords[3] = 11;
+                        }
+                        case 3 -> {
+                            streetPoint.uploadCoords[0] = tile.q;
+                            streetPoint.uploadCoords[2] = tile.r;
+                            streetPoint.uploadCoords[1] = tile.s;
+                            streetPoint.uploadCoords[3] = 7;
+                        }
+                        case 4 -> {
+                            streetPoint.uploadCoords[0] = tile.q - 1;
+                            streetPoint.uploadCoords[2] = tile.r;
+                            streetPoint.uploadCoords[1] = tile.s + 1;
+                            streetPoint.uploadCoords[3] = 3;
+                        }
+                        case 5 -> {
+                            streetPoint.uploadCoords[0] = tile.q;
+                            streetPoint.uploadCoords[2] = tile.r;
+                            streetPoint.uploadCoords[1] = tile.s;
+                            streetPoint.uploadCoords[3] = 11;
+                        }
                     }
 
                     this.edges[i] = streetPoint;
@@ -148,15 +157,15 @@ public class HexTileController {
 
         for(int i = 0; i < 6; i++){
 
-            if(!this.corners[i].streets.contains(this.edges[i])){
+            if(!this.corners[i].adjacentStreets.contains(this.edges[i])){
 
-                this.corners[i].streets.add(this.edges[i]);
-                this.edges[i].buildings.add(this.corners[i]);
+                this.corners[i].adjacentStreets.add(this.edges[i]);
+                this.edges[i].adjacentBuildings.add(this.corners[i]);
             }
-            if(!this.corners[i].streets.contains(this.edges[((i-1)+6)%6])){
+            if(!this.corners[i].adjacentStreets.contains(this.edges[((i-1)+6)%6])){
 
-                this.corners[i].streets.add(this.edges[((i-1)+6)%6]);
-                this.edges[((i-1)+6)%6].buildings.add(this.corners[i]);
+                this.corners[i].adjacentStreets.add(this.edges[((i-1)+6)%6]);
+                this.edges[((i-1)+6)%6].adjacentBuildings.add(this.corners[i]);
             }
         }
     }

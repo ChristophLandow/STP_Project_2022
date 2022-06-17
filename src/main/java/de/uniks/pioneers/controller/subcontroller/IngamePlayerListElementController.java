@@ -1,12 +1,10 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -25,7 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
@@ -33,35 +30,20 @@ import java.util.Objects;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class IngamePlayerListElementController {
-
-    @FXML
-    public HBox playerBox;
-    @FXML
-    public Circle playerColor;
-    @FXML
-    public ImageView playerAvatar;
-    @FXML
-    public Label resourceCardsCount;
-    @FXML
-    public ImageView resourceCards;
-    @FXML
-    public Label developmentCardsCount;
-    @FXML
-    public ImageView developmentCards;
-    @FXML
-    public Label settlementCount;
-    @FXML
-    public ImageView settlement;
-    @FXML
-    public Label cityCount;
-    @FXML
-    public ImageView city;
-    @FXML
-    public Label playerName;
-    @FXML
-    private Player toRender;
-    @FXML
-    public ListView<Node> nodeListView;
+    @FXML public HBox playerBox;
+    @FXML public Circle playerColor;
+    @FXML public ImageView playerAvatar;
+    @FXML public Label resourceCardsCount;
+    @FXML public ImageView resourceCards;
+    @FXML public Label developmentCardsCount;
+    @FXML public ImageView developmentCards;
+    @FXML public Label settlementCount;
+    @FXML public ImageView settlement;
+    @FXML public Label cityCount;
+    @FXML public ImageView city;
+    @FXML public Label playerName;
+    @FXML private Player toRender;
+    @FXML public ListView<Node> nodeListView;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameService gameService;
@@ -97,7 +79,8 @@ public class IngamePlayerListElementController {
         disposable.add(userService.getUserById(toRender.userId())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
-                    playerAvatar.setImage(new Image(user.avatar()));
+                    if(!user.avatar().equals("")){
+                    playerAvatar.setImage(new Image(user.avatar()));}
                     playerName.setText(user.name());
                     addUserListener(user._id());
                 })
@@ -142,15 +125,14 @@ public class IngamePlayerListElementController {
         );
     }
 
-
     private void addPlayerListener() {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             String key = c.getKey();
             if (key.equals(toRender.userId())) {
-                if (c.wasRemoved()) {
+                if (c.wasRemoved() && !c.wasAdded()) {
                     nodeListView.getItems().remove(playerBox);
-                } else {
+                } else if (c.wasAdded() && c.wasRemoved()){
                     setDataToElement(c.getValueAdded());
                 }
             }
@@ -159,14 +141,29 @@ public class IngamePlayerListElementController {
 
     private void setDataToElement(Player valueAdded) {
         Resources resources = valueAdded.resources();
-        int resourceCount;
-        try {
-            resourceCount = resources.brick() + resources.grain() + resources.ore() + resources.lumber() + resources.wool();
-        } catch (NullPointerException e) {
-            resourceCount = 0;
+        int brick = resources.brick() == null ? 0 : resources.brick();
+        int grain = resources.grain() == null ? 0 : resources.grain();
+        int ore   = resources.ore()   == null ? 0 : resources.ore();
+        int lumber = resources.lumber() == null ? 0 : resources.lumber();
+        int wool = resources.wool()   == null ? 0 : resources.wool();
+        int unknown = resources.unknown() == null ? 0 : resources.unknown();
+
+        int resourceCount = brick + grain + ore + lumber + wool;
+
+        if (valueAdded.remainingBuildings().city()==0){
+            cityCount.setTextFill(Color.RED);
         }
+
+        if (valueAdded.remainingBuildings().settlement()==0){
+            settlementCount.setTextFill(Color.RED);
+        }
+
+        if (resourceCount>=7){
+            resourceCardsCount.setTextFill(Color.RED);
+        }
+
         resourceCardsCount.setText(String.valueOf(resourceCount));
-        developmentCardsCount.setText(String.valueOf(resources.unknown()));
+        developmentCardsCount.setText(String.valueOf(unknown));
         cityCount.setText(String.valueOf(4 - valueAdded.remainingBuildings().city()));
         settlementCount.setText(String.valueOf(5 - valueAdded.remainingBuildings().settlement()));
     }

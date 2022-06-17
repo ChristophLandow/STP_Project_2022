@@ -14,6 +14,7 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -40,10 +41,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class NewGameScreenLobbyController implements Controller {
@@ -72,6 +75,12 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public ImageView clientAvatar;
     @FXML public Label clientUserNameLabel;
 
+    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @Inject Provider<GameChatController> gameChatControllerProvider;
+    @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
+    @Inject Provider<LoginScreenController> loginScreenControllerProvider;
+    @Inject ColorPickerController colorPickerController;
+
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
@@ -86,16 +95,9 @@ public class NewGameScreenLobbyController implements Controller {
     private User currentUser;
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-
     private GameChatController gameChatController;
-    private ColorPickerController colorPickerController;
     private boolean clientReady = false;
-    @Inject
-    Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    @Inject
-    Provider<GameChatController> gameChatControllerProvider;
-    @Inject
-    Provider<IngameScreenController> ingameScreenControllerProvider;
+    private boolean darkMode= false;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -110,12 +112,32 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public void init() {
+        if(darkMode){
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css");
+        }
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(password.get());
         clientUserNameLabel.setText(currentUser.name());
-        colorPickerController = new ColorPickerController(colorPicker, houseSVG);
+        colorPickerController.init(colorPicker, houseSVG);
         this.reactivateReadyButton();
+
+        // enable deleting game on close request
+        Stage stage = this.app.getStage();
+        stage.setOnCloseRequest(event -> {
+            if (game.get().owner().equals(currentUser._id())) {
+                disposable.add(gameService.deleteGame(game.get()._id())
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe());
+            }
+
+            newGameLobbyService.logout();
+            disposable.add(userService.editProfile(null, null, null, "offline")
+                    .subscribe(user -> {
+                        Platform.exit();
+                        System.exit(0);
+                            }));
+        });
 
         try {
             clientAvatar.setImage(new Image(userService.getCurrentUser().avatar()));
@@ -123,19 +145,12 @@ public class NewGameScreenLobbyController implements Controller {
             clientAvatar.setImage(new Image(Constants.DEFAULT_AVATAR));
         }
 
-        // set on close request ...
-
-
-        // when member count less than three games cant not be started
-        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 3);
+        // when member count less than three games can not be started
+        final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 0);
         startGameButton.disableProperty().bind(lessThanThree);
 
         // add mouse event for rules button
         this.RulesButton.setOnMouseClicked(this::openRules);
-
-        // init event listeners
-        initMemberListener();
-        initGameListener();
 
         // add listener for member observable
         members.addListener((ListChangeListener<? super Member>) c -> {
@@ -149,8 +164,11 @@ public class NewGameScreenLobbyController implements Controller {
 
         disposable.add(newGameLobbyService.getAll(game.get()._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(this.members::setAll
-                        , Throwable::printStackTrace));
+                .subscribe(this.members::setAll, Throwable::printStackTrace));
+
+        // init event listeners
+        initMemberListener();
+        initGameListener();
 
         // init game chat controller
         gameChatController = gameChatControllerProvider.get()
@@ -165,17 +183,20 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void openRules(MouseEvent mouseEvent) {
-        RulesScreenController controller = rulesScreenControllerProvider.get();
-        controller.init();
+        RulesScreenController rulesController = rulesScreenControllerProvider.get();
+        if(darkMode){
+          rulesController.setDarkMode();
+        }
+        rulesController.init();
     }
 
     private void deleteUser(Member member) {
-        Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().get();
+        Node removal = userBox.getChildren().stream().filter(node -> node.getId().equals(member.userId())).findAny().orElse(null);
         userBox.getChildren().remove(removal);
         playerEntries.remove(member.userId());
         users.remove(member.userId());
 
-        if(member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())){
+        if (member.userId().equals(game.get().owner()) && !userService.getCurrentUser()._id().equals(game.get().owner())) {
             app.show(lobbyScreenControllerProvider.get());
             Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.HOST_LEFT_GAME_ALERT);
             alert.showAndWait();
@@ -183,7 +204,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     private void renderUser(Member member) {
-        if(!users.containsKey(member.userId())) {
+        if (!users.containsKey(member.userId())) {
             User user = userService.getUserById(member.userId()).blockingFirst();
             // when we make the application multi stage, we need a userlistener or if a user dies
             initUserListener(user);
@@ -197,23 +218,28 @@ public class NewGameScreenLobbyController implements Controller {
                 userImage = new Image(Constants.DEFAULT_AVATAR);
             }
 
-            if(!currentUser._id().equals(member.userId())) {
+            if (!currentUser._id().equals(member.userId())) {
                 PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
-                playerEntryController.setReady(false);
+                playerEntryController.setReady(member.ready());
                 playerEntries.put(user._id(), playerEntryController);
                 userBox.getChildren().add(playerEntryController.getPlayerEntry());
+                if(userBox.getChildren().size() > 3) {
+                    userBox.setPrefHeight(userBox.getPrefHeight() + 60);
+                }
             }
         }
     }
+
     private void initUserListener(User user) {
         String patternToObserveGameUsers = String.format("users.%s.updated", user._id());
         disposable.add(eventListener.listen(patternToObserveGameUsers, User.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(userEvent -> {
                     User userFromEvent = userEvent.data();
-                    if (userFromEvent.status().equals("offline")) {
-                        Member toRemove = members.stream().filter(member -> member.userId().equals(userFromEvent._id())).findAny().get();
-                        deleteUser(toRemove);
+                    if (userFromEvent.status().equals("offline") && game.get().owner().equals(currentUser._id())) {
+                        disposable.add(newGameLobbyService.deleteMember(game.get()._id(), userFromEvent._id())
+                                .observeOn(FX_SCHEDULER)
+                                .subscribe((this::deleteUser), Throwable::printStackTrace));
                     }
                 })
         );
@@ -225,9 +251,9 @@ public class NewGameScreenLobbyController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(memberEvent -> {
                     final Member member = memberEvent.data();
-                    if(memberEvent.event().endsWith(".created")) {
+                    if (memberEvent.event().endsWith(".created")) {
                         members.add(member);
-                    } else if(memberEvent.event().endsWith(".updated")) {
+                    } else if (memberEvent.event().endsWith(".updated")) {
                         members.replaceAll(m -> m.userId().equals(member.userId()) ? member : m);
                         setReadyColor(member.userId(), member.ready(), member.color());
                     } else if (memberEvent.event().endsWith(".deleted")) {
@@ -236,15 +262,17 @@ public class NewGameScreenLobbyController implements Controller {
                 }));
     }
 
-    private void initGameListener(){
-        String patternToObserveGame= String.format("games.%s.*", game.get()._id());
+    private void initGameListener() {
+        String patternToObserveGame = String.format("games.%s.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveGame, Game.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     game.set(gameEvent.data());
                     memberCount.set(game.get().members());
-                     if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
-                         this.toIngame();
+                    if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
+                        this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor());
+                    } else if (gameEvent.event().endsWith(".deleted")) {
+                        app.show(lobbyScreenControllerProvider.get());
                     }
                 })
         );
@@ -277,23 +305,24 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void onSetReadyButton() {
+    public boolean onSetReadyButton() {
         // set member "ready" true in API
         boolean difference = true;
 
-        for(PlayerEntryController entry : playerEntries.values()) {
-            if(entry.getReady() && !colorPickerController.checkColorDifference(entry.getPlayerColor())) {
+        for (PlayerEntryController entry : playerEntries.values()) {
+            if (entry.getReady() && !colorPickerController.checkColorDifference(entry.getPlayerColor())) {
                 difference = false;
                 break;
             }
         }
 
-        if(difference) {
+        if (difference) {
             clientReady = !clientReady;
             disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor())
                     .observeOn(FX_SCHEDULER)
+                            .doOnError(Throwable::printStackTrace)
                     .subscribe(result -> {
-                        if(clientReady) {
+                        if (clientReady) {
                             clientReadyLabel.setText("Ready");
                             clientReadyBox.setBackground(Background.fill(Color.GREEN));
                             colorPickerController.setDisable(true);
@@ -301,16 +330,19 @@ public class NewGameScreenLobbyController implements Controller {
                             clientReadyLabel.setText("Not Ready");
                             clientReadyBox.setBackground(Background.fill(Color.RED));
                             colorPickerController.setDisable(false);
-                        }}, Throwable::printStackTrace));
+                        }
+                    }, Throwable::printStackTrace));
             this.reactivateReadyButton();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Selected color is too similar to another player's color!");
             alert.showAndWait();
         }
+
+        return difference;
     }
 
     private void setReadyColor(String memberId, boolean ready, String hexColor) {
-        if(playerEntries.containsKey(memberId)) {
+        if (playerEntries.containsKey(memberId)) {
             playerEntries.get(memberId).setReady(ready);
             playerEntries.get(memberId).setColor(hexColor);
         }
@@ -319,25 +351,29 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
-            disposable.add(newGameLobbyService.updateGame(game.get(),password.get(),true)
+            disposable.add(newGameLobbyService.updateGame(game.get(), password.get(), true)
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(response -> this.toIngame(), Throwable::printStackTrace));
+                    .doOnError(Throwable::printStackTrace)
+                    .subscribe(response -> this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor()), Throwable::printStackTrace));
         }
     }
 
-    private void toIngame() {
+    public void toIngame(Game game, List<User> users, String myColor) {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
-        ingameScreenController.game.set(this.game.get());
+        if(darkMode) {
+            ingameScreenController.setDarkmode();
+        }
+        ingameScreenController.game.set(game);
         ingameScreenController.loadMap();
-        ingameScreenController.setUsers(this.users.values().stream().toList());
+        ingameScreenController.setUsers(users);
         app.show(ingameScreenController);
-        ingameScreenController.setPlayerColor(colorPickerController.getColor());
+        ingameScreenController.setPlayerColor(myColor);
     }
 
-    private boolean allUsersReady() {
+    public boolean allUsersReady() {
         boolean playersReady = true;
 
-        for(PlayerEntryController entry : playerEntries.values()) {
+        for (PlayerEntryController entry : playerEntries.values()) {
             if (!entry.getReady()) {
                 playersReady = false;
                 break;
@@ -345,7 +381,7 @@ public class NewGameScreenLobbyController implements Controller {
         }
 
         // check if there is a checkmark
-        if(clientReady && playersReady) {
+        if (clientReady && playersReady) {
             return true;
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Not all players are ready yet!");
@@ -373,10 +409,11 @@ public class NewGameScreenLobbyController implements Controller {
     public void setPlayerColor(String hexColor) {
         colorPickerController.setColor(hexColor);
 
-        if(game.get().owner().equals(currentUser._id())) {
+        if (game.get().owner().equals(currentUser._id())) {
             disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor())
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(result -> {}, Throwable::printStackTrace));
+                    .subscribe(result -> {
+                    }, Throwable::printStackTrace));
         }
     }
 
@@ -394,5 +431,17 @@ public class NewGameScreenLobbyController implements Controller {
                 throw new RuntimeException(e);
             }
         }).start();
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
+    }
+
+    public App getApp() {
+        return this.app;
+    }
+
+    public void setDarkMode() {
+        darkMode=true;
     }
 }
