@@ -280,7 +280,7 @@ public class IngameScreenController implements Controller {
                 })
         );
     }
-    private void setSituationLabel(String playerId, String actionString) {
+    private void setSituationLabel(String playerId, String action) {
         // set game state label
         String playerName;
         String actionString = "";
