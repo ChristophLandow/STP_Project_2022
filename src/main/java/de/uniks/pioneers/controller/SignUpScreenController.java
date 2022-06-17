@@ -74,8 +74,9 @@ public class SignUpScreenController implements Controller {
         stage.setTitle(SIGNUP_SCREEN_TITLE);
         if(darkMode){
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css");
+        } else {
+            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/SignUpScreen.css");
         }
-
         // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);
@@ -213,6 +214,8 @@ public class SignUpScreenController implements Controller {
         loginController.userName.set(textFieldUserName.getText());
         if(darkMode){
             loginController.setDarkMode();
+        } else{
+            loginController.setBrightMode();
         }
         this.app.show(loginController);
     }
@@ -221,11 +224,17 @@ public class SignUpScreenController implements Controller {
         LoginScreenController loginController = loginScreenControllerProvider.get();
         if(darkMode){
             loginController.setDarkMode();
+        } else {
+            loginController.setBrightMode();
         }
         this.app.show(loginController);
     }
 
     public void setDarkMode(){
         darkMode = true;
+    }
+
+    public void setBrightMode(){
+        darkMode = false;
     }
 }

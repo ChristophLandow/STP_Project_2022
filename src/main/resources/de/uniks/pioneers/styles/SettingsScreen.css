@@ -1,3 +1,11 @@
 #anchorPane{
 	-fx-background-color:  #F5F5F5;
 }
+
+.label{
+	-fx-text-fill: rgb(0, 0, 0);
+}
+
+.radio-button{
+	-fx-text-fill: rgb(0, 0, 0);
+}

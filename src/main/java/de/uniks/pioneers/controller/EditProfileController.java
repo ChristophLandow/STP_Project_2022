@@ -109,6 +109,8 @@ public class EditProfileController implements Controller {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
         if(darkMode){
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/EditProfileScreen.css");
         }
         // get currentUser from Server and display name
         this.usernameLabel.setText(userService.getCurrentUser().name());
@@ -216,6 +218,8 @@ public class EditProfileController implements Controller {
         LobbyScreenController lobbyController =  lobbyScreenControllerProvider.get();
         if(darkMode){
             lobbyController.setDarkMode();
+        } else {
+            lobbyController.setBrightMode();
         }
         this.app.show(lobbyController);
     }
