@@ -135,7 +135,7 @@ public class BoardController {
     private void loadSnowAnimation() {new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);}
 
     public void renderBuilding(Building building) {
-        System.out.println("building type: " + building.type());
+
         String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
         if (Objects.equals(building.type(), SETTLEMENT) || Objects.equals(building.type(), CITY)) {
             // find corresponding buildingPointController
