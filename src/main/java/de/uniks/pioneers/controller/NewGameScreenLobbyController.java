@@ -114,6 +114,8 @@ public class NewGameScreenLobbyController implements Controller {
     public void init() {
         if(darkMode){
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css");
+        } else {
+            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/NewGameScreen.css");
         }
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
