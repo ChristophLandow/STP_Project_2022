@@ -44,8 +44,7 @@ public class TimerService {
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {
                             this.cancel();
-                            timer.cancel();
-                            countdownTimer.cancel();
+                            reset();
                         })
                 );
             }
@@ -67,8 +66,7 @@ public class TimerService {
                         .subscribe(move -> {
                             timeUp = true;
                             this.cancel();
-                            timer.cancel();
-                            countdownTimer.cancel();
+                            reset();
                             Alert alert = new Alert(Alert.AlertType.WARNING);
                             alert.setContentText("Attention, your time has expired! \n" +
                                     "Your turn was automatically ended.");
