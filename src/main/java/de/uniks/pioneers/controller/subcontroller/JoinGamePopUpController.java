@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.NewGameLobbyService;
@@ -25,18 +26,34 @@ public class JoinGamePopUpController{
 
     private NewGameLobbyService newGameLobbyService;
     private Game game;
+
+    private App app;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private LobbyScreenController lobbyScreenController;
     private String randomColor;
 
-    public void init(NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game) {
+    private boolean darkMode;
+
+    public void init(boolean darkMode, App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game) {
         this.newGameLobbyService = newGameLobbyService;
         this.game = game;
         this.lobbyScreenController = lobbyScreenController;
         this.randomColor = this.getRandomColor();
+        this.app = app;
+        this.darkMode = darkMode;
         wrongPasswordLabel.visibleProperty().set(false);
         BooleanBinding invalid = Bindings.equal(passwordInputField.textProperty(), "");
         joinButton.disableProperty().bind(invalid);
+        if(darkMode){
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/JoinGamePopup.css")));
+            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css");
+            System.out.println(darkMode);
+        } else {
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css")));
+            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/JoinGamePopup.css");
+            System.out.println(darkMode);
+        }
+
     }
 
     public void joinGame() {
@@ -62,5 +79,9 @@ public class JoinGamePopUpController{
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
         return String.format("#%06x", rand_num);
+    }
+
+    public App getApp(){
+        return this.app;
     }
 }

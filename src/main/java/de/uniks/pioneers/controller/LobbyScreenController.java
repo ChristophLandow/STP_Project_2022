@@ -64,7 +64,7 @@ public class LobbyScreenController implements Controller {
     public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
-    private boolean darkMode = false;
+    public boolean darkMode = false;
 
     @Inject
     public LobbyScreenController(App app) {
@@ -108,13 +108,16 @@ public class LobbyScreenController implements Controller {
         userlistController.init();
 
         lobbyGameListController = lobbyGameListControllerProvider.get();
+        System.out.println("Lobby : " + this.darkMode);
         if(darkMode){
             lobbyGameListController.setDarkMode();
+            System.out.println("LobbyGame List:" + lobbyGameListController.darkMode);
             lobbyGameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LobbyGameList.css")));
             lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
         } else{
             lobbyGameListController.setBrightMode();
-            lobbyGameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css")));
+            System.out.println("LobbyGame List:" + lobbyGameListController.darkMode);
+            lobbyGameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css")));
             lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
         }
         lobbyGameListController.listViewGames = this.listViewGames;

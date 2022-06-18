@@ -35,7 +35,7 @@ public class GameListElementController implements Controller {
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
     public SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    private boolean darkMode = false;
+    private boolean darkMode;
 
     @Inject
     public GameListElementController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
@@ -94,7 +94,7 @@ public class GameListElementController implements Controller {
                     try {
                         node = loader.load();
                         JoinGamePopUpController joinGamePopUpController = loader.getController();
-                        joinGamePopUpController.init(newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
+                        joinGamePopUpController.init(this.darkMode, this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
