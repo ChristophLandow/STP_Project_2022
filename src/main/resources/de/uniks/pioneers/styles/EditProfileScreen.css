@@ -2,12 +2,41 @@
     -fx-background-color:  #F5F5F5;
 }
 
+#currentUsernameText {
+    -fx-fill: BLACK;
+}
+
+#ChangeAvatarText{
+    -fx-fill: BLACK;
+}
+
+#usernameLabel{
+    -fx-fill: BLACK;
+}
+
+#usernameStatusText {
+    -fx-fill: RED;
+
+}
+
+#newPasswordStatusText {
+    -fx-fill: RED;
+}
+
+#oldPasswordStatusText {
+    -fx-fill: RED;
+}
+
+#avatarStatusText {
+    -fx-fill: RED;
+}
+
 .text-field {
     -fx-background-color: #ffffff;
-    -fx-text-fill: black;
+    -fx-text-fill: BLACK;
 }
 
 .button {
     -fx-background-color: #156EAD;
-    -fx-text-fill: white;
+    -fx-text-fill: WHITE;
 }

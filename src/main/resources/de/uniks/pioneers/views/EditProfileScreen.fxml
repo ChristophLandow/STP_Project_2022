@@ -15,7 +15,7 @@
       <PasswordField fx:id="newPasswordInput" layoutX="36.0" layoutY="226.0" promptText="new password" />
       <PasswordField fx:id="repeatNewPasswordInput" layoutX="36.0" layoutY="269.0" promptText="repeat new password" />
       <Spinner fx:id="chooseAvatarSpinner" layoutX="431.0" layoutY="179.0" prefHeight="25.0" prefWidth="62.0" />
-      <Text layoutX="36.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="current username:" />
+      <Text fx:id="currentUsernameText" layoutX="36.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="current username:" />
       <Text layoutX="36.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to edit your password?" />
       <Button fx:id="saveLeaveButton" layoutX="419.0" layoutY="333.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" text="Save &amp; Leave" />
       <ImageView fx:id="avatarImage" fitHeight="100.0" fitWidth="100.0" layoutX="417.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" />
@@ -26,6 +26,6 @@
       <Text fx:id="oldPasswordStatusText" fill="RED" layoutX="36.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
       <Text fx:id="avatarStatusText" fill="RED" layoutX="462.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="86.3134765625" />
       <Button fx:id="cancelButton" layoutX="88.0" layoutY="335.0" mnemonicParsing="false" onAction="#toLobby" text="Cancel" />
-      <Text layoutX="410.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Change your avatar:" />
+      <Text fx:id="ChangeAvatarText" layoutX="410.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Change your avatar:" />
    </children>
 </Pane>

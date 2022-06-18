@@ -2,6 +2,35 @@
     -fx-background-color:  #424242;
 }
 
+#currentUsernameText {
+    -fx-fill: WHITE;
+}
+
+#ChangeAvatarText{
+    -fx-fill: WHITE;
+}
+
+#usernameLabel{
+    -fx-fill: WHITE;
+}
+
+#usernameStatusText {
+    -fx-fill: RED;
+
+}
+
+#newPasswordStatusText {
+    -fx-fill: RED;
+}
+
+#oldPasswordStatusText {
+    -fx-fill: RED;
+}
+
+#avatarStatusText {
+    -fx-fill: RED;
+}
+
 .text-field {
     -fx-background-color: #717988;
     -fx-text-fill: rgb(255, 255, 255);
