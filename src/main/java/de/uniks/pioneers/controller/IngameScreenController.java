@@ -29,12 +29,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
-
+@Singleton
 public class IngameScreenController implements Controller {
 
     @FXML public Pane fieldPane, root, turnPane;
