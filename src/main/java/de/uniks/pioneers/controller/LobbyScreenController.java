@@ -151,9 +151,9 @@ public class LobbyScreenController implements Controller {
 
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
+            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
         } else {
-            app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyScreen.css");
+            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyScreen.css");
         }
         // set user online after login (entering lobby)
         userService.editProfile(null, null, null, "online")

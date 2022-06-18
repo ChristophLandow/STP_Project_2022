@@ -7,6 +7,42 @@
     -fx-text-fill: rgb(255, 255, 255);
 }
 
+#sendMessageField{
+    -fx-background-color:  #717988;
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+#roadFrame {
+    -fx-background-color:  #424242;
+}
+
+#settlementFrame {
+    -fx-background-color:  #424242;
+}
+
+#cityFrame {
+    -fx-background-color:  #424242;
+}
+
+#turnPane {
+    -fx-background-color:  #424242;
+}
+
+#timeLabel {
+    -fx-background-color:  #424242;
+    -fx-fill: WHITE;
+}
+
+#currentSituationLabel{
+    -fx-background-color:  #424242;
+    -fx-fill: WHITE;
+}
+
+#situationLabel {
+    -fx-background-color:  #424242;
+    -fx-fill: WHITE;
+}
+
 #upRectangle{
     -fx-fill: #424242;
 }
