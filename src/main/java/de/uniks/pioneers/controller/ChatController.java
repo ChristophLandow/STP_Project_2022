@@ -53,7 +53,7 @@ public class ChatController implements Controller {
     private final ListChangeListener<ChatTabController> listChangeListener = c -> sendButtonBinding();
     private String currentGroupId;
     private final Timer timer = new Timer();
-    private boolean darkMode = false;
+    private boolean darkMode;
 
     @Inject
     public ChatController(App app, MessageService messageService, UserService userService,
@@ -109,7 +109,7 @@ public class ChatController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
-        if(darkMode){
+        if(this.darkMode){
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/ChatScreen.css")));
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_ChatScreen.css");
         } else {

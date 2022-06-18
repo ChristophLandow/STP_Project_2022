@@ -23,7 +23,7 @@ import javax.inject.Provider;
 public class LobbyUserlistController extends OnlineUserlistController {
     public VBox usersVBox;
     private final App app;
-    private boolean darkMode = false;
+    public boolean darkMode;
     private final Provider<ChatController> chatControllerProvider;
 
     @Inject
@@ -122,8 +122,11 @@ public class LobbyUserlistController extends OnlineUserlistController {
             this.messageService.getchatUserList().remove(0);
         }
         ChatController chatController = chatControllerProvider.get();
-        if(darkMode){
+        System.out.println(this.darkMode);
+        if(this.darkMode){
             chatController.setDarkMode();
+        } else {
+            chatController.setBrightMode();
         }
         app.show(chatController);
     }

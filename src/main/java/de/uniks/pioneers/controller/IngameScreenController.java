@@ -74,7 +74,7 @@ public class IngameScreenController implements Controller {
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
-    private boolean darkMode = false;
+    public boolean darkMode;
     private boolean onClose = false;
 
     @Inject
@@ -303,13 +303,13 @@ public class IngameScreenController implements Controller {
     }
 
     public void leave() {
-        LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
-        if(darkMode){
-            lobbyController.setDarkMode();
+        LobbyScreenController newLobbyController = lobbyScreenControllerProvider.get();
+        System.out.println("Ingame : " + this.darkMode);
+        if(this.darkMode){
+            newLobbyController.setDarkMode();
         } else {
-            lobbyController.setBrightMode();
+            newLobbyController.setBrightMode();
         }
-
         if(game.get().owner().equals(userService.getCurrentUser()._id())) {
             gameChatController.sendMessage("Host left the Game!", game.get());
             disposable.add(gameService.deleteGame(game.get()._id())
@@ -318,7 +318,7 @@ public class IngameScreenController implements Controller {
                         this.stop();
                         disposable.dispose();
                         if(!onClose) {
-                            app.show(lobbyController);
+                            app.show(newLobbyController);
                         }
                     }, Throwable::printStackTrace));
         } else {
@@ -327,7 +327,7 @@ public class IngameScreenController implements Controller {
             timerService.reset();
             disposable.dispose();
             if(!onClose) {
-                app.show(lobbyController);
+                app.show(newLobbyController);
             }
         }
     }
@@ -367,7 +367,9 @@ public class IngameScreenController implements Controller {
                 .subscribe();
     }
     private void buildBoardUI(){this.boardController.buildBoardUI();}
-    public void setDarkmode(){darkMode = true;}
+    public void setDarkmode(){
+        darkMode = true;
+    }
     public void setBrightMode(){
         darkMode = false;
     }

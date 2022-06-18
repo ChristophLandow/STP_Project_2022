@@ -124,10 +124,8 @@ public class LobbyGameListController {
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
         if(darkMode){
-            System.out.println("GameListElement : "+ darkMode);
             gameListElementController.setDarkMode();
         } else {
-            System.out.println("GameListElement : "+ darkMode);
             gameListElementController.setBrightMode();
         }
         Parent node = gameListElementController.render();
