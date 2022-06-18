@@ -35,7 +35,7 @@ import java.util.*;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
-@Singleton
+
 public class IngameScreenController implements Controller {
 
     @FXML public Pane fieldPane, root, turnPane;

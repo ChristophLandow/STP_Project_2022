@@ -2,6 +2,10 @@
     -fx-background-color:  #424242;
 }
 
+#checkRememberMe {
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
 .text-field {
     -fx-background-color: #717988;
     -fx-text-fill: rgb(255, 255, 255);

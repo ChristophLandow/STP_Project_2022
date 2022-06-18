@@ -56,4 +56,9 @@ public class Constants {
 
     //settings
     public static final String SETTINGS_SCREEN_TITLE = "Settings";
+
+    //DarkMode
+    public static final String DARKMODE_TRUE = "TRUE";
+
+    public static final String DARKMODE_FALSE = "FALSE";
 }
