@@ -37,45 +37,23 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
 
-
-    @FXML public Pane fieldPane;
-
-    @FXML public Pane root;
-    @FXML public Pane turnPane;
-    @FXML public SVGPath streetSVG;
-    @FXML public SVGPath houseSVG;
-    @FXML public SVGPath citySVG;
-    @FXML public Button rulesButton;
-
-    @FXML public Button leaveButton;
-    @FXML public Button settingsButton;
-    @FXML public ScrollPane chatScrollPane;
+    @FXML public Pane fieldPane, root, turnPane;
+    @FXML public Pane roadFrame, settlementFrame, cityFrame, situationPane;
+    @FXML public ScrollPane chatScrollPane, userScrollPane;
+    @FXML public SVGPath streetSVG, houseSVG, citySVG;
+    @FXML public Button rulesButton, leaveButton, settingsButton;
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
-    @FXML public ScrollPane userScrollPane;
-    @FXML public Label streetCountLabel;
-    @FXML public Label houseCountLabel;
-    @FXML public Label cityCountLabel;
-    @FXML public ImageView tradeImageView;
-    @FXML public ImageView hourglassImageView;
-    @FXML public ImageView nextTurnImageView;
-    @FXML public Label timeLabel;
-    @FXML public Pane situationPane;
-    @FXML public Label situationLabel;
-    @FXML public ImageView leftDiceImageView;
-    @FXML public ImageView rightDiceImageView;
-    @FXML public ImageView hammerImageView;
+    @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel;
+    @FXML public Label timeLabel, situationLabel;
+    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView;
+    @FXML public ImageView leftDiceImageView, rightDiceImageView, hammerImageView;
     @FXML public ListView<Node> playerListView;
-    @FXML public Rectangle downRectangle;
-    @FXML public Rectangle upRectangle;
-    @FXML public Pane roadFrame;
-    @FXML public Pane settlementFrame;
-    @FXML public Pane cityFrame;
+    @FXML public Rectangle downRectangle, upRectangle;
 
     @Inject GameChatController gameChatController;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
-
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
     private final GameService gameService;
@@ -83,7 +61,6 @@ public class IngameScreenController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
 
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    private final int gameSize;
     private List<User> users;
     private final App app;
     private final GameStorage gameStorage;
@@ -120,7 +97,7 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        this.gameSize = 2;
+        int gameSize = 2;
         this.boardController = new BoardController(ingameService, userService, timerService, game, gameSize, this.gameStorage);
     }
 
@@ -262,9 +239,9 @@ public class IngameScreenController implements Controller {
         this.setSituationLabel(move.players().get(0), move.action());
     }
 
-    private void enableStreetPoints(String action) {this.boardController.enableStreetPoints(action);}
+    private void enableStreetPoints(String action) { this.boardController.enableStreetPoints(action); }
 
-    private void enableBuildingPoints(String action) {this.boardController.enableBuildingPoints(action);}
+    private void enableBuildingPoints(String action) { this.boardController.enableBuildingPoints(action); }
 
     private void enableEndTurn() {
         this.turnPane.setOnMouseClicked(this::endTurn);
@@ -329,8 +306,6 @@ public class IngameScreenController implements Controller {
         } else {
             lobbyController.setBrightMode();
         }
-        SettingsScreenController settingsController = settingsScreenControllerProvider.get();
-        settingsController.stop();
 
         if(game.get().owner().equals(userService.getCurrentUser()._id())) {
             gameChatController.sendMessage("Host left the Game!", game.get());
@@ -346,6 +321,7 @@ public class IngameScreenController implements Controller {
         } else {
             leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
             this.stop();
+            timerService.reset();
             disposable.dispose();
             if(!onClose) {
                 app.show(lobbyController);
@@ -373,26 +349,15 @@ public class IngameScreenController implements Controller {
         settingsController.init();
     }
 
-    public void onHammerPressed() {
-    }
-
-    public void onStreetPressed() {
-    }
-
-    public void onHousePressed() {
-    }
-
-    public void onCityPressed() {
-    }
-
-    public void onTradePressed() {
-    }
-
     @Override
-    public void stop() {gameChatController.stop();}
+    public void stop() {
+        gameChatController.stop();
+        settingsScreenControllerProvider.get().stop();
+        timerService.reset();
+    }
+
     public void setUsers(List<User> users) {this.users = users;}
     public void loadMap() {
-
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnComplete(this::buildBoardUI)
