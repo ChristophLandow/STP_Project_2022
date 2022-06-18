@@ -96,9 +96,11 @@ public class LobbyScreenController implements Controller {
         LobbyUserlistController userlistController = userlistControllerProvider.get();
         if(darkMode){
             userlistController.setDarkMode();
+            userlistController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/UserListView.css")));
             userlistController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_UserListView.css");
         } else {
             userlistController.setBrightMode();
+            userlistController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_UserListView.css")));
             userlistController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/UserListView.css");
         }
         userlistController.usersVBox = this.UsersVBox;
@@ -108,9 +110,11 @@ public class LobbyScreenController implements Controller {
         lobbyGameListController = lobbyGameListControllerProvider.get();
         if(darkMode){
             lobbyGameListController.setDarkMode();
+            lobbyGameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LobbyGameList.css")));
             lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
         } else{
             lobbyGameListController.setBrightMode();
+            lobbyGameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css")));
             lobbyGameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
         }
         lobbyGameListController.listViewGames = this.listViewGames;
@@ -151,8 +155,10 @@ public class LobbyScreenController implements Controller {
 
         app.getStage().setTitle(LOBBY_SCREEN_TITLE);
         if(darkMode){
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LobbyScreen.css")));
             this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
         } else {
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css")));
             this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyScreen.css");
         }
         // set user online after login (entering lobby)

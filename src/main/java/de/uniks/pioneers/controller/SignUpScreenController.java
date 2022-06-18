@@ -73,8 +73,10 @@ public class SignUpScreenController implements Controller {
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
         if(darkMode){
+            stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/SignUpScreen.css")));
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css");
         } else {
+            stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css")));
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/SignUpScreen.css");
         }
         // Spinner Code

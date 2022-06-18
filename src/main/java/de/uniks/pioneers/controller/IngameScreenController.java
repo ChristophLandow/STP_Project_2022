@@ -97,7 +97,7 @@ public class IngameScreenController implements Controller {
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
-    public boolean darkMode = false;
+    private boolean darkMode = false;
     private boolean onClose = false;
 
     @Inject
@@ -223,9 +223,11 @@ public class IngameScreenController implements Controller {
         });
 
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
         } else {
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
     }
     private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}

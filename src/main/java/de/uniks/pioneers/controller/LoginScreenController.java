@@ -96,8 +96,10 @@ public class LoginScreenController implements Controller {
         }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
         if(darkMode){
+            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LoginScreen.css")));
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_LoginScreen.css");
         } else {
+            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkModeLoginScreen.css")));
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/LoginScreen.css");
         }
     }

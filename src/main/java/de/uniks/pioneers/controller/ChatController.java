@@ -110,9 +110,11 @@ public class ChatController implements Controller {
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
         if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_ChatScreen.css");
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/ChatScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_ChatScreen.css");
         } else {
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/ChatScreen.css");
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_ChatScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/ChatScreen.css");
         }
         this.sendButton.setDefaultButton(true);
         Node textFieldNode = this.messageTextField;
