@@ -354,6 +354,10 @@ public class TestModule {
             public boolean getDarkModeState(){
                 return true;
             }
+
+            @Override
+            public void saveDarkModeState(String string){
+            }
         };}
 
     @Provides
