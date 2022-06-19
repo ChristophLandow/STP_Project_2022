@@ -7,6 +7,11 @@
 	-fx-text-fill: RED;
 }
 
+#joinGameLabel{
+	-fx-background-color:  #424242;
+	-fx-text-fill: WHITE;
+}
+
 #passwordInputField {
 	-fx-background-color: #717988;
 	-fx-text-fill: WHITE;
