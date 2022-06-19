@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.PrefService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -13,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import javax.inject.Inject;
 import java.util.Random;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -23,7 +26,6 @@ public class JoinGamePopUpController{
     @FXML public Label wrongPasswordLabel;
     @FXML public Button joinButton;
     @FXML public VBox popUpBox;
-
     private NewGameLobbyService newGameLobbyService;
     private Game game;
 
@@ -32,28 +34,15 @@ public class JoinGamePopUpController{
     private LobbyScreenController lobbyScreenController;
     private String randomColor;
 
-    private boolean darkMode;
-
-    public void init(boolean darkMode, App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game) {
+    public void init(App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game) {
         this.newGameLobbyService = newGameLobbyService;
         this.game = game;
         this.lobbyScreenController = lobbyScreenController;
         this.randomColor = this.getRandomColor();
         this.app = app;
-        this.darkMode = darkMode;
         wrongPasswordLabel.visibleProperty().set(false);
         BooleanBinding invalid = Bindings.equal(passwordInputField.textProperty(), "");
         joinButton.disableProperty().bind(invalid);
-        if(darkMode){
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/JoinGamePopup.css")));
-            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css");
-            System.out.println(darkMode);
-        } else {
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css")));
-            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/JoinGamePopup.css");
-            System.out.println(darkMode);
-        }
-
     }
 
     public void joinGame() {

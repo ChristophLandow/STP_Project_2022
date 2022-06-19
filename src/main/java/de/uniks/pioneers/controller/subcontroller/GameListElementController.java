@@ -94,7 +94,7 @@ public class GameListElementController implements Controller {
                     try {
                         node = loader.load();
                         JoinGamePopUpController joinGamePopUpController = loader.getController();
-                        joinGamePopUpController.init(this.darkMode, this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
+                        joinGamePopUpController.init(this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -103,6 +103,13 @@ public class GameListElementController implements Controller {
                     assert node != null;
                     Scene scene = new Scene(node);
                     stage.setScene(scene);
+                    if(prefService.getDarkModeState()){
+                        scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/JoinGamePopup.css")));
+                        scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css");
+                    } else {
+                        scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css")));
+                        scene.getStylesheets().add("/de/uniks/pioneers/styles/JoinGamePopup.css");
+                    }
                     stage.show();
                 }
             }
