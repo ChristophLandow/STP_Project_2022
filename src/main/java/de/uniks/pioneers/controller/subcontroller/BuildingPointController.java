@@ -43,7 +43,6 @@ public class BuildingPointController {
                                    IngameService ingameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
                                    UserService userService) {
-
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
@@ -51,7 +50,6 @@ public class BuildingPointController {
         this.gameStorage = gameStorage;
         this.gameId = gameId;
         this.fieldPane = fieldPane;
-
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
@@ -64,25 +62,12 @@ public class BuildingPointController {
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
     }
-
-    public void addEventArea() {
-        this.fieldPane.getChildren().add(eventView);
-    }
-
-    public Circle getView() {
-        return this.view;
-    }
-
-    public HexTile getTile() {
-        return this.tile;
-    }
-
-    public ArrayList<StreetPointController> getAdjacentStreets() {
-        return this.adjacentStreets;
-    }
+    public void addEventArea() {this.fieldPane.getChildren().add(eventView);}
+    public HexTile getTile() {return this.tile;}
 
     public void build() {
         // post build move
+
         String buildingType;
         if (this.action.contains("settlement")) {
             buildingType = "settlement";
@@ -173,11 +158,6 @@ public class BuildingPointController {
         if(this.building != null){
         this.view.setVisible(false);}
     }
-
-    public void mark() {
-        this.view.setFill(BLUE);
-    }
-
     public void setAction(String action) {
         this.action = action;
     }

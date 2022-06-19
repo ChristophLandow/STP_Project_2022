@@ -15,11 +15,6 @@ public class HexTileController {
     public HexTileController(HexTile tile, Polygon view) {
         this.tile = tile;
         this.view = view;
-        init();
-    }
-
-    public void init() {
-        this.view.setOnMouseClicked(this::info);
     }
 
     public void findCorners(ArrayList<BuildingPointController> buildingPointControllers) {
@@ -149,17 +144,6 @@ public class HexTileController {
                 this.corners[i].adjacentStreets.add(this.edges[((i-1)+6)%6]);
                 this.edges[((i-1)+6)%6].adjacentBuildings.add(this.corners[i]);
             }
-        }
-    }
-
-    private void info(MouseEvent mouseEvent) {
-        this.yield();
-    }
-    public void yield() {
-        for(BuildingPointController buildingPointController : this.corners){
-
-            if(buildingPointController != null){
-            buildingPointController.mark();}
         }
     }
 }
