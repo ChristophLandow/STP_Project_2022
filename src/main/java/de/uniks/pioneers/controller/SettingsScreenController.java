@@ -49,7 +49,6 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
-    private boolean darkMode;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
 
@@ -80,14 +79,14 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage = new Stage();
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(SETTINGS_SCREEN_TITLE);
-            if(darkMode) {
+            if(prefService.getDarkModeState()) {
                 this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
             } else {
                 this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/SettingsScreen.css");
             }
             this.stage.show();
         } else {
-            if(darkMode) {
+            if(prefService.getDarkModeState()) {
                 this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
             } else {
                 this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/SettingsScreen.css");
@@ -99,6 +98,11 @@ public class SettingsScreenController implements Controller, Initializable {
         app.setIcons(stage);
         stage.setOnCloseRequest(event -> leave());
         musicChoiceBox.setTooltip((new Tooltip("Choose your background music")));
+        if(prefService.getDarkModeState()){
+            darkMode_RadioButton.setSelected(true);
+        } else {
+            lightMode_RadioButton.setSelected(true);
+        }
         volumeSlider.setMin(0);
         volumeSlider.setMax(1);
         volumeSlider.setValue(0.3);
@@ -216,11 +220,6 @@ public class SettingsScreenController implements Controller, Initializable {
             stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
         }
     }
-
-    public void setDarkMode(){
-        darkMode = true;
-    }
-
     public void leave() {
         if(mediaPlayer != null) {
             mediaPlayer.stop();
@@ -229,8 +228,5 @@ public class SettingsScreenController implements Controller, Initializable {
     }
     public App getApp() {
         return this.app;
-    }
-    public void setBrightMode(){
-        darkMode = false;
     }
 }
