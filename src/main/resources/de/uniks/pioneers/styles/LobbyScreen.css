@@ -12,8 +12,17 @@
     -fx-text-fill: black;
 }
 
-.button {
+#EditProfileButton {
     -fx-background-color: #156EAD;
     -fx-text-fill: white;
 }
 
+#LogoutButton {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}
+
+#NewGameButton {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}

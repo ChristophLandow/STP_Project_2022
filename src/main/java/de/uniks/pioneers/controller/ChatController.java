@@ -8,6 +8,7 @@ import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GroupService;
 import de.uniks.pioneers.services.MessageService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -53,7 +54,9 @@ public class ChatController implements Controller {
     private final ListChangeListener<ChatTabController> listChangeListener = c -> sendButtonBinding();
     private String currentGroupId;
     private final Timer timer = new Timer();
-    private boolean darkMode = false;
+
+    @Inject
+    PrefService prefService;
 
     @Inject
     public ChatController(App app, MessageService messageService, UserService userService,
@@ -109,10 +112,12 @@ public class ChatController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
-        if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_ChatScreen.css");
+        if(prefService.getDarkModeState()){
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/ChatScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_ChatScreen.css");
         } else {
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/ChatScreen.css");
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_ChatScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/ChatScreen.css");
         }
         this.sendButton.setDefaultButton(true);
         Node textFieldNode = this.messageTextField;
@@ -189,11 +194,6 @@ public class ChatController implements Controller {
     public void leave(ActionEvent ignoredEvent) {
         this.messageService.getchatUserList().clear();
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
-        if(darkMode){
-            lobbyController.setDarkMode();
-        } else {
-            lobbyController.setBrightMode();
-        }
         app.show(lobbyController);
     }
 
@@ -238,13 +238,5 @@ public class ChatController implements Controller {
 
     public App getApp() {
         return this.app;
-    }
-
-    public void setDarkMode() {
-        darkMode = true;
-    }
-
-    public void setBrightMode() {
-        darkMode = false;
     }
 }

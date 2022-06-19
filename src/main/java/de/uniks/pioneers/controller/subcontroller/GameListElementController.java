@@ -35,8 +35,6 @@ public class GameListElementController implements Controller {
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
     public SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    private boolean darkMode = false;
-
     @Inject
     public GameListElementController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
@@ -94,7 +92,7 @@ public class GameListElementController implements Controller {
                     try {
                         node = loader.load();
                         JoinGamePopUpController joinGamePopUpController = loader.getController();
-                        joinGamePopUpController.init(newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
+                        joinGamePopUpController.init(this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -103,20 +101,18 @@ public class GameListElementController implements Controller {
                     assert node != null;
                     Scene scene = new Scene(node);
                     stage.setScene(scene);
+                    if(prefService.getDarkModeState()){
+                        scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/JoinGamePopup.css")));
+                        scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css");
+                    } else {
+                        scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_JoinGamePopup.css")));
+                        scene.getStylesheets().add("/de/uniks/pioneers/styles/JoinGamePopup.css");
+                    }
                     stage.show();
                 }
             }
         }
     }
-
-    public void setDarkMode() {
-        darkMode = true;
-    }
-
-    public void setBrightMode() {
-        darkMode = false;
-    }
-
     public App getApp(){
         return this.app;
     }

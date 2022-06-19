@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.subcontroller.EditAvatarSpinnerController;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -54,8 +55,10 @@ public class EditProfileController implements Controller {
     @FXML public Text avatarStatusText;
     @FXML public Button cancelButton;
 
+    @Inject
+    PrefService prefService;
+
     private final App app;
-    public boolean darkMode = false;
     private final UserService userService;
     private final LoginService loginService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -107,10 +110,12 @@ public class EditProfileController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
-        if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
+        if(prefService.getDarkModeState()){
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/EditProfileScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
         } else {
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/EditProfileScreen.css");
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/EditProfileScreen.css");
         }
         // get currentUser from Server and display name
         this.usernameLabel.setText(userService.getCurrentUser().name());
@@ -216,11 +221,6 @@ public class EditProfileController implements Controller {
 
     public void toLobby() {
         LobbyScreenController lobbyController =  lobbyScreenControllerProvider.get();
-        if(darkMode){
-            lobbyController.setDarkMode();
-        } else {
-            lobbyController.setBrightMode();
-        }
         this.app.show(lobbyController);
     }
 
@@ -253,15 +253,6 @@ public class EditProfileController implements Controller {
         avatarStr = newAvatar;
         resetAvatar();
     }
-
-    public void setDarkMode(){
-        darkMode = true;
-    }
-
-    public void setBrightMode(){
-        darkMode = false;
-    }
-
     public App getApp() {
         return this.app;
     }

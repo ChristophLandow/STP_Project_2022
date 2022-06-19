@@ -10,12 +10,27 @@
     -fx-text-fill: black;
 }
 
+#sendButton {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}
+
+#startGameButton {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}
+
+#readyButton {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}
+
+#leaveButton {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}
+
 .text-field {
     -fx-background-color: #ffffff;
     -fx-text-fill: black;
-}
-
-.button {
-    -fx-background-color: #156EAD;
-    -fx-text-fill: white;
 }

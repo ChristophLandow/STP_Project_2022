@@ -5,8 +5,3 @@
 #rules{
     -fx-fill: rgb(255, 255, 255);
 }
-
-.button {
-    -fx-background-color: #156EAD;
-    -fx-text-fill: white;
-}

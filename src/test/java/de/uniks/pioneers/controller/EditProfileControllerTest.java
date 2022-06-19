@@ -5,6 +5,7 @@ import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
@@ -31,6 +32,9 @@ class EditProfileControllerTest extends ApplicationTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    PrefService prefService;
 
     @Mock
     LoginService loginService;

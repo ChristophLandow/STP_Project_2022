@@ -7,6 +7,43 @@
     -fx-text-fill:black;
 }
 
+#sendMessageField{
+    -fx-background-color: #ffffff;
+    -fx-text-fill: BLACK;
+}
+
+
+#roadFrame {
+    -fx-background-color:  #F5F5F5;
+}
+
+#settlementFrame {
+    -fx-background-color:  #F5F5F5;
+}
+
+#cityFrame {
+    -fx-background-color: #F5F5F5;
+}
+
+#turnPane {
+    -fx-background-color: #F5F5F5;
+}
+
+#timeLabel {
+    -fx-background-color:  #F5F5F5;
+    -fx-fill: WHITE;
+}
+
+#currentSituationLabel{
+    -fx-background-color: #F5F5F5;
+    -fx-fill: WHITE;
+}
+
+#situationLabel {
+    -fx-background-color:  #F5F5F5;
+    -fx-fill: WHITE;
+}
+
 #upRectangle{
     -fx-fill: #F5F5F5;
 }

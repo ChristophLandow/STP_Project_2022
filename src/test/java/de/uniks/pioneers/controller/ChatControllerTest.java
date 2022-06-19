@@ -7,10 +7,7 @@ import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.GroupDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.GroupService;
-import de.uniks.pioneers.services.MessageService;
-import de.uniks.pioneers.services.UserService;
-import de.uniks.pioneers.services.UserlistService;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
@@ -62,6 +59,9 @@ class ChatControllerTest extends ApplicationTest {
 
     @Mock
     ChatTabController chatTabController;
+
+    @Mock
+    PrefService prefService;
 
     @InjectMocks
     ChatController chatController;
