@@ -340,6 +340,7 @@ public class TestModule {
     @Singleton
     static PrefService prefService() {
 
+        System.out.println("test");
         return new PrefService(null, null,null, null){
 
             @Override

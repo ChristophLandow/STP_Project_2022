@@ -10,6 +10,7 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
@@ -47,6 +48,9 @@ class AsMember extends ApplicationTest {
 
     @Mock
     NewGameLobbyService newGameLobbyService;
+
+    @Mock
+    PrefService prefService;
 
     @Mock
     EventListener eventListener;
