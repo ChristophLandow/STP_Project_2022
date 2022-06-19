@@ -203,7 +203,6 @@ public class IngameScreenController implements Controller {
         });
         // remaining building count change listener
         gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
-
             if(c.getKey().equals(ROAD)){this.streetCountLabel.setText(c.getValueAdded().toString());}
             if(c.getKey().equals(SETTLEMENT)){this.houseCountLabel.setText(c.getValueAdded().toString());}
             if(c.getKey().equals(CITY)){this.cityCountLabel.setText(c.getValueAdded().toString());}

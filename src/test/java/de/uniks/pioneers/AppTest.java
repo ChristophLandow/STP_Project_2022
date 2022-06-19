@@ -81,7 +81,8 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         type(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
-        //verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "founding-roll"));
+        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
+        clickOn("#leftDiceImageView");
     }
 
 
