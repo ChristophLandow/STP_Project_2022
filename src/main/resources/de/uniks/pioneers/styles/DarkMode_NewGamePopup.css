@@ -2,6 +2,14 @@
 	-fx-background-color:  #424242;
 }
 
+#nameLen {
+	-fx-text-fill: RED;
+}
+
+#passwordLen {
+	-fx-text-fill: RED;
+}
+
 .text-field {
 	-fx-background-color: #717988;
 	-fx-text-fill: rgb(255, 255, 255);

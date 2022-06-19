@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.services.PrefService;
 import javafx.event.ActionEvent;
@@ -49,11 +50,14 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
+
+    private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
+                                    Provider<LobbyGameListController> lobbyGameListControllerProvider,
                                     Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider,
                                     Provider<EditProfileController> editProfileControllerProvider,
                                     Provider<ChatController> chatControllerProvider,
@@ -70,6 +74,7 @@ public class SettingsScreenController implements Controller, Initializable {
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.lobbyUserlistControllerProvider = lobbyUserlistControllerProvider;
+        this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
     }
 
     @Override
@@ -177,6 +182,8 @@ public class SettingsScreenController implements Controller, Initializable {
         LoginScreenController loginController = loginScreenControllerProvider.get();
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         LobbyUserlistController userListController = lobbyUserlistControllerProvider.get();
+        LobbyGameListController gameListController = lobbyGameListControllerProvider.get();
+
         //handle the options
         if (lightMode_RadioButton.isSelected()){
             prefService.saveDarkModeState(DARKMODE_FALSE);
@@ -196,6 +203,8 @@ public class SettingsScreenController implements Controller, Initializable {
             rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/RulesScreen.css");
             userListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_UserListView.css")));
             userListController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/UserListView.css");
+            gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css")));
+            gameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
             stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css")));
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/SettingsScreen.css");
         }
@@ -216,6 +225,8 @@ public class SettingsScreenController implements Controller, Initializable {
             rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
             userListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/UserListView.css")));
             userListController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_UserListView.css");
+            gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LobbyGameList.css")));
+            gameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
             stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/SettingsScreen.css")));
             stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
         }

@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
@@ -14,6 +15,7 @@ public class OnlineUserlistController {
     protected final MessageService messageService;
     protected final UserlistService userlistService;
     protected final EventListener eventListener;
+
 
     @Inject
     public OnlineUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener) {
@@ -68,6 +70,7 @@ public class OnlineUserlistController {
     }
 
     public void init() {
+
     }
 
     public void renderUser(User user) {
