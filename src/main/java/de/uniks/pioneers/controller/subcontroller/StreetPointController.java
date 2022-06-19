@@ -76,20 +76,13 @@ public class StreetPointController {
         if(gameStorage.roadsRemaining < 1){return;}
         boolean valid = false;
 
-        for(BuildingPointController building : this.adjacentBuildings){
-            if (building.getBuilding() != null && building.getBuilding().owner().equals(this.userService.getCurrentUser()._id())) {
-                //check if own building is adjacent
-                valid = true;
-                break;
-            }
-            for(StreetPointController street : building.adjacentStreets){
-
-                if(!this.action.equals(FOUNDING_ROAD_2) && (street != this) && street.building != null && street.building.owner().equals(this.userService.getCurrentUser()._id())){
-                    //check if own road is adjacent, only valid outside of founding phase
-                    valid = true;
-                    break;
-                }
-            }
+        if(gameStorage.roadsRemaining < 1 ){return;}
+        if (uploadCoords[3]==3){
+            gameService.isValidFromThree(this.uploadCoords);
+        }else if (uploadCoords[3]==7){
+            gameService.isValidFromSeven(this.uploadCoords);
+        }else {
+            gameService.isValidFromEleven(this.uploadCoords);
         }
 
         if (valid) {
