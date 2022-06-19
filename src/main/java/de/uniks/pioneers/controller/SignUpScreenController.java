@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -52,10 +53,12 @@ public class SignUpScreenController implements Controller {
     @FXML public Text passwordStatusText;
     @FXML public Text avatarStatusText;
 
+    @Inject
+    PrefService prefService;
+
     public final SimpleStringProperty userName = new SimpleStringProperty();
     public final SimpleStringProperty password = new SimpleStringProperty();
     private final App app;
-    private boolean darkMode = false;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final UserService userService;
     private String avatar;
@@ -72,7 +75,7 @@ public class SignUpScreenController implements Controller {
     public void init() {
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
-        if(darkMode){
+        if(prefService.getDarkModeState()){
             stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/SignUpScreen.css")));
             stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css");
         } else {
@@ -214,29 +217,11 @@ public class SignUpScreenController implements Controller {
 
         LoginScreenController loginController = this.loginScreenControllerProvider.get();
         loginController.userName.set(textFieldUserName.getText());
-        if(darkMode){
-            loginController.setDarkMode();
-        } else{
-            loginController.setBrightMode();
-        }
         this.app.show(loginController);
     }
 
     public void leave() {
         LoginScreenController loginController = loginScreenControllerProvider.get();
-        if(darkMode){
-            loginController.setDarkMode();
-        } else {
-            loginController.setBrightMode();
-        }
         this.app.show(loginController);
-    }
-
-    public void setDarkMode(){
-        darkMode = true;
-    }
-
-    public void setBrightMode(){
-        darkMode = false;
     }
 }

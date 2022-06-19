@@ -40,7 +40,6 @@ public class LoginScreenController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final PrefService prefService;
-    private boolean darkMode = false;
 
     @Inject
     public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService) {
@@ -95,7 +94,7 @@ public class LoginScreenController implements Controller {
                     .subscribe();
         }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
-        if(darkMode){
+        if(prefService.getDarkModeState()){
             app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LoginScreen.css")));
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_LoginScreen.css");
         } else {
@@ -136,40 +135,17 @@ public class LoginScreenController implements Controller {
         SignUpScreenController signUpScreenController = this.signUpScreenControllerProvider.get();
         signUpScreenController.userName.set(textFieldUserName.getText());
         signUpScreenController.password.set(passwordField.getText());
-        if(darkMode){
-            signUpScreenController.setDarkMode();
-        } else {
-            signUpScreenController.setBrightMode();
-        }
         this.app.show(signUpScreenController);
     }
 
     public void toRules() {
         RulesScreenController ruleController = rulesScreenControllerProvider.get();
-        if(darkMode){
-            ruleController.setDarkMode();
-        } else{
-            ruleController.setBrightMode();
-        }
         ruleController.init();
     }
 
     public void toLobby() {
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
-        if(darkMode){
-            lobbyController.setDarkMode();
-        } else {
-            lobbyController.setBrightMode();
-        }
         this.app.show(lobbyController);
-    }
-
-    public void setDarkMode() {
-        darkMode = true;
-    }
-
-    public void setBrightMode(){
-        darkMode = false;
     }
 
     public App getApp() {

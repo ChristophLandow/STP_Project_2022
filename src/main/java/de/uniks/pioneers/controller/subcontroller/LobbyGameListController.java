@@ -37,7 +37,6 @@ public class LobbyGameListController {
     private final Provider<GameListElementController> gameListElementControllerProvider;
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-    public boolean darkMode = false;
 
     @Inject
     public LobbyGameListController(App app, EventListener eventListener,
@@ -123,11 +122,6 @@ public class LobbyGameListController {
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
-        if(darkMode){
-            gameListElementController.setDarkMode();
-        } else {
-            gameListElementController.setBrightMode();
-        }
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
@@ -164,14 +158,6 @@ public class LobbyGameListController {
 
     public void stop() {
         disposable.dispose();
-    }
-
-    public void setDarkMode() {
-        darkMode = true;
-    }
-
-    public void setBrightMode() {
-        darkMode = false;
     }
 
     public App getApp() {

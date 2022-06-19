@@ -11,6 +11,7 @@ import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -81,6 +82,9 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject ColorPickerController colorPickerController;
 
+    @Inject
+    PrefService prefService;
+
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final NewGameLobbyService newGameLobbyService;
@@ -97,7 +101,6 @@ public class NewGameScreenLobbyController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private GameChatController gameChatController;
     private boolean clientReady = false;
-    private boolean darkMode= false;
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
@@ -112,7 +115,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public void init() {
-        if(darkMode){
+        if(prefService.getDarkModeState()){
             app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/NewGameScreen.css")));
             app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css");
         } else {
@@ -188,11 +191,6 @@ public class NewGameScreenLobbyController implements Controller {
 
     private void openRules(MouseEvent mouseEvent) {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
-        if(darkMode){
-          rulesController.setDarkMode();
-        } else {
-            rulesController.setBrightMode();
-        }
         rulesController.init();
     }
 
@@ -366,11 +364,6 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void toIngame(Game game, List<User> users, String myColor) {
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
-        if(darkMode) {
-            ingameScreenController.setDarkmode();
-        } else {
-            ingameScreenController.setBrightMode();
-        }
         ingameScreenController.game.set(game);
         ingameScreenController.loadMap();
         ingameScreenController.setUsers(users);
@@ -441,15 +434,7 @@ public class NewGameScreenLobbyController implements Controller {
         }).start();
     }
 
-    public void setBrightMode(){
-        darkMode = false;
-    }
-
     public App getApp() {
         return this.app;
-    }
-
-    public void setDarkMode() {
-        darkMode = true;
     }
 }

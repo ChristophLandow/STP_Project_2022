@@ -53,6 +53,8 @@ public class IngameScreenController implements Controller {
     @FXML public Rectangle downRectangle, upRectangle;
 
     @Inject GameChatController gameChatController;
+
+    @Inject PrefService prefService;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
@@ -75,7 +77,6 @@ public class IngameScreenController implements Controller {
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
-    public boolean darkMode;
     private boolean onClose = false;
 
     @Inject
@@ -200,7 +201,7 @@ public class IngameScreenController implements Controller {
             }
         });
 
-        if(darkMode){
+        if(prefService.getDarkModeState()){
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
         } else {
@@ -305,12 +306,6 @@ public class IngameScreenController implements Controller {
 
     public void leave() {
         LobbyScreenController newLobbyController = lobbyScreenControllerProvider.get();
-        System.out.println("Ingame : " + this.darkMode);
-        if(this.darkMode){
-            newLobbyController.setDarkMode();
-        } else {
-            newLobbyController.setBrightMode();
-        }
         if(game.get().owner().equals(userService.getCurrentUser()._id())) {
             gameChatController.sendMessage("Host left the Game!", game.get());
             disposable.add(gameService.deleteGame(game.get()._id())
@@ -335,21 +330,11 @@ public class IngameScreenController implements Controller {
 
     public void toRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
-        if(darkMode){
-            rulesController.setDarkMode();
-        } else {
-            rulesController.setBrightMode();
-        }
         rulesController.init();
     }
 
     public void toSettings() {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
-        if(darkMode){
-            settingsController.setDarkMode();
-        } else{
-            settingsController.setBrightMode();
-        }
         settingsController.init();
     }
 
@@ -368,12 +353,7 @@ public class IngameScreenController implements Controller {
                 .subscribe();
     }
     private void buildBoardUI(){this.boardController.buildBoardUI();}
-    public void setDarkmode(){
-        darkMode = true;
-    }
-    public void setBrightMode(){
-        darkMode = false;
-    }
+
     public void selectStreet() {
         this.gameStorage.selectedBuilding = ROAD;
         this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
