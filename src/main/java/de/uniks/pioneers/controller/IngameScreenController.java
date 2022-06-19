@@ -10,6 +10,7 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -199,6 +200,11 @@ public class IngameScreenController implements Controller {
             } else if (c.wasRemoved()) {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
+        });
+        // remaining building count change listener
+        gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
+
+
         });
 
         if(prefService.getDarkModeState()){

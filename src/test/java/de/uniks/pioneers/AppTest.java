@@ -14,7 +14,6 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import org.testfx.util.WaitForAsyncUtils;
-
 import static org.testfx.api.FxAssert.verifyThat;
 
 @ExtendWith(MockitoExtension.class)

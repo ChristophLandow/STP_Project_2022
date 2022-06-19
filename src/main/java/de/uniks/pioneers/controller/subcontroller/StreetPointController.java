@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_2;
+import static de.uniks.pioneers.GameConstants.ROAD;
 
 public class StreetPointController {
     private final GameService gameService;
@@ -73,7 +74,7 @@ public class StreetPointController {
 
     public void placeStreet(MouseEvent mouseEvent) {
 
-        if(gameStorage.roadsRemaining < 1){return;}
+        if(gameStorage.remainingBuildings.get(ROAD) < 1){return;}
         boolean valid = false;
 
         for(BuildingPointController building : this.adjacentBuildings){
@@ -93,7 +94,7 @@ public class StreetPointController {
         }
 
         if (valid) {
-            gameStorage.roadsRemaining -= 1;
+            gameStorage.remainingBuildings.put(ROAD, gameStorage.remainingBuildings.get(ROAD) -1);
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
             disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
                     .observeOn(FX_SCHEDULER)
