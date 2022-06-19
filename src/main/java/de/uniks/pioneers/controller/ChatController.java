@@ -106,9 +106,6 @@ public class ChatController implements Controller {
         chatUserlistController.chatTabPane = this.chatTabPane;
         chatUserlistController.render();
         chatUserlistController.init();
-        if(prefService.getDarkModeState()){
-
-        }
         return view;
     }
 
