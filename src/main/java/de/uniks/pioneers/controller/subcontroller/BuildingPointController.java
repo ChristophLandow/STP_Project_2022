@@ -164,12 +164,12 @@ public class BuildingPointController {
     }
 
     private void dye(MouseEvent mouseEvent) {
-        this.view.setFill(GREEN);
+        this.view.setFill(BUILDING_POINT_HOVER);
         this.view.setVisible(true);
     }
 
     private void undye(MouseEvent mouseEvent) {
-        this.view.setFill(RED);
+        this.view.setFill(BUILDING_POINT_STANDARD);
         if(this.building != null){
         this.view.setVisible(false);}
     }

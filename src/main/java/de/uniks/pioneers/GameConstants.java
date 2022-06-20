@@ -30,6 +30,10 @@ public class GameConstants {
     public static final double CITY_HEIGHT = 60;
 
     public static final Color RED = Color.RED;
+
+    public static final  Color BUILDING_POINT_STANDARD = Color.rgb(16, 78, 139);
+
+    public static final Color BUILDING_POINT_HOVER = Color.rgb(30, 144, 255);
     public static final Color BLUE = Color.BLUE;
 
     public static final Color GREEN = Color.GREEN;
