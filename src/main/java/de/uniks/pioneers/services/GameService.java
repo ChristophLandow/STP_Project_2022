@@ -55,6 +55,7 @@ public class GameService {
         this.initMoveListener();
     }
 
+
     private void initMoveListener() {
         String patternToObserveMoves = String.format("games.%s.moves.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveMoves, Move.class)
@@ -68,7 +69,6 @@ public class GameService {
                 })
         );
     }
-
 
     private void initPlayerListener() {
         String patternToObservePlayers = String.format("games.%s.players.*.*", game.get()._id());
@@ -100,10 +100,6 @@ public class GameService {
         );
     }
 
-    public void findMe() {
-        me = userService.getCurrentUser()._id();
-    }
-
 
     public void loadPlayers(Game game) {
         // REST - get players from server
@@ -112,7 +108,7 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
-                    findMe();
+                    me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }
 
@@ -138,12 +134,36 @@ public class GameService {
     }
 
     public boolean checkRoadSpot(int x, int y, int z, int side) {
-        return buildings.stream().anyMatch(building -> building.x() == x && building.y() == y && building.z() == z
-                && building.owner().equals(me)
-                && building.type().equals("road"));
+        return buildings.stream().anyMatch(building -> building.owner().equals(me)
+                && building.type().equals("road")
+                && building.x() == x && building.y() == y && building.z() == z && building.side() == side);
     }
 
+    public boolean checkRoad() {
+        Player mario = players.get(me);
+        try {
+            return mario.resources().lumber() >= 1 && mario.resources().brick() >= 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
+    public boolean checkSettlement() {
+        Player mario = players.get(me);
+        try {
+            return mario.resources().lumber() >= 1 && mario.resources().brick() >= 1
+                    && mario.resources().grain() >= 1 && mario.resources().wool() >= 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-
+    public boolean checkCity() {
+        Player mario = players.get(me);
+        try {
+            return mario.resources().ore() >= 3 && mario.resources().grain() >= 2;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

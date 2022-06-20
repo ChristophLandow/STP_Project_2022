@@ -72,17 +72,18 @@ public class StreetPointController {
     }
 
     public void placeStreet(MouseEvent mouseEvent) {
-
-        if(gameStorage.roadsRemaining < 1){return;}
         boolean valid = false;
 
-        if(gameStorage.roadsRemaining < 1 ){return;}
-        if (uploadCoords[3]==3){
-            gameService.isValidFromThree(this.uploadCoords);
-        }else if (uploadCoords[3]==7){
-            gameService.isValidFromSeven(this.uploadCoords);
-        }else {
-            gameService.isValidFromEleven(this.uploadCoords);
+        if (gameStorage.roadsRemaining < 1 || !gameService.checkRoad()) {
+            return;
+        } else {
+            if (uploadCoords[3] == 3) {
+                valid = gameService.isValidFromThree(this.uploadCoords);
+            } else if (uploadCoords[3] == 7) {
+                valid  = gameService.isValidFromSeven(this.uploadCoords);
+            } else {
+                valid = gameService.isValidFromEleven(this.uploadCoords);
+            }
         }
 
         if (valid) {
@@ -105,17 +106,17 @@ public class StreetPointController {
 
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
-        Rectangle road =  new Rectangle(60,7, Paint.valueOf(player.color()));
+        Rectangle road = new Rectangle(60, 7, Paint.valueOf(player.color()));
         Scene scene = view.getScene();
         Pane root = (Pane) scene.getRoot();
         root.getChildren().add(road);
-        road.setLayoutX(view.getLayoutX()-14);
-        road.setLayoutY(view.getLayoutY()+12);
+        road.setLayoutX(view.getLayoutX() - 14);
+        road.setLayoutY(view.getLayoutY() + 12);
         if (building.side() == 3) {
             road.setRotate(90);
         } else if (building.side() == 7) {
             road.setRotate(30);
-        }else {
+        } else {
             road.setRotate(-30);
         }
         this.building = building;

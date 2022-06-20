@@ -83,6 +83,8 @@ public class BuildingPointController {
 
     public void build() {
         // post build move
+        System.out.println(generateKeyString());
+
         String buildingType;
         if (this.action.contains("settlement")) {
             buildingType = "settlement";
