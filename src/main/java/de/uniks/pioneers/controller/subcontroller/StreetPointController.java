@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_1;
 import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_2;
 
 public class StreetPointController {
@@ -72,17 +73,16 @@ public class StreetPointController {
     }
 
     public void placeStreet(MouseEvent mouseEvent) {
-        boolean valid = false;
+        System.out.println(generateKeyString());
+        boolean valid;
 
-        if (gameStorage.roadsRemaining < 1 || !gameService.checkRoad()) {
-            return;
+        if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
+            valid = checkBuildings();
         } else {
-            if (uploadCoords[3] == 3) {
-                valid = gameService.isValidFromThree(this.uploadCoords);
-            } else if (uploadCoords[3] == 7) {
-                valid  = gameService.isValidFromSeven(this.uploadCoords);
-            } else {
-                valid = gameService.isValidFromEleven(this.uploadCoords);
+            if (gameStorage.roadsRemaining >= 1 && gameService.checkRoad()) {
+                valid = checkRoads() || checkBuildings();
+            }else {
+                valid = false;
             }
         }
 
@@ -98,10 +98,30 @@ public class StreetPointController {
         }
     }
 
+    private boolean checkBuildings() {
+        if (uploadCoords[3] == 3) {
+            return gameService.checkBuildingsFromThree(this.uploadCoords);
+        } else if (uploadCoords[3] == 7) {
+            return gameService.checkBuildingsFromSeven(this.uploadCoords);
+        } else {
+            return gameService.checkBuildingsFromEleven(this.uploadCoords);
+        }
+    }
+
+    private Boolean checkRoads() {
+        if (uploadCoords[3] == 3) {
+            return gameService.isValidFromThree(this.uploadCoords);
+        } else if (uploadCoords[3] == 7) {
+            return gameService.isValidFromSeven(this.uploadCoords);
+        } else {
+            return gameService.isValidFromEleven(this.uploadCoords);
+        }
+    }
+
     private void reset(Node node) {
-        node.setOnMouseClicked(null);
-        node.setOnMouseEntered(null);
-        node.setOnMouseExited(null);
+        //node.setOnMouseClicked(null);
+        //node.setOnMouseEntered(null);
+        //node.setOnMouseExited(null);
     }
 
     public void renderRoad(Building building) {

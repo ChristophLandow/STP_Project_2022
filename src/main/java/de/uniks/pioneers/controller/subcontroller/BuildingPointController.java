@@ -83,7 +83,7 @@ public class BuildingPointController {
 
     public void build() {
         // post build move
-        System.out.println(generateKeyString());
+
 
         String buildingType;
         if (this.action.contains("settlement")) {
@@ -99,9 +99,9 @@ public class BuildingPointController {
     }
 
     private void reset(Node node) {
-        node.setOnMouseClicked(null);
-        node.setOnMouseEntered(null);
-        node.setOnMouseExited(null);
+        //node.setOnMouseClicked(null);
+        //node.setOnMouseEntered(null);
+        //node.setOnMouseExited(null);
     }
 
     public void placeBuilding(Building building) {
@@ -138,6 +138,8 @@ public class BuildingPointController {
     }
 
     private void info(MouseEvent mouseEvent) {
+        System.out.println(generateKeyString());
+
         boolean invalid = false;
         if(gameStorage.settlementsRemaining > 0 && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
             for (StreetPointController street : adjacentStreets) {

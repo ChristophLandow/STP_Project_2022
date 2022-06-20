@@ -384,4 +384,19 @@ public class IngameScreenController implements Controller {
         this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+
+    public void onTradePressed(MouseEvent mouseEvent) {
+    }
+
+    public void onCityPressed(MouseEvent mouseEvent) {
+    }
+
+    public void onHousePressed(MouseEvent mouseEvent) {
+    }
+
+    public void onStreetPressed(MouseEvent mouseEvent) {
+    }
+
+    public void onHammerPressed(MouseEvent mouseEvent) {
+    }
 }

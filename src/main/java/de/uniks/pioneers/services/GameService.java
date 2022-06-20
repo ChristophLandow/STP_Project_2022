@@ -55,7 +55,6 @@ public class GameService {
         this.initMoveListener();
     }
 
-
     private void initMoveListener() {
         String patternToObserveMoves = String.format("games.%s.moves.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveMoves, Move.class)
@@ -100,7 +99,6 @@ public class GameService {
         );
     }
 
-
     public void loadPlayers(Game game) {
         // REST - get players from server
         players = FXCollections.observableHashMap();
@@ -110,6 +108,12 @@ public class GameService {
                     list.forEach(player -> players.put(player.userId(), player));
                     me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
+    }
+
+    public boolean checkRoadSpot(int x, int y, int z, int side) {
+        return buildings.stream().anyMatch(building -> building.owner().equals(me)
+                && building.type().equals("road")
+                && building.x() == x && building.y() == y && building.z() == z && building.side() == side);
     }
 
     public boolean isValidFromThree(int[] uploadCoords) {
@@ -133,10 +137,25 @@ public class GameService {
                 || checkRoadSpot(uploadCoords[0]+1,uploadCoords[1],uploadCoords[2]-1,7);
     }
 
-    public boolean checkRoadSpot(int x, int y, int z, int side) {
+    public boolean checkBuildingSpot(int x, int y, int z, int side) {
         return buildings.stream().anyMatch(building -> building.owner().equals(me)
-                && building.type().equals("road")
+                && !building.type().equals("road")
                 && building.x() == x && building.y() == y && building.z() == z && building.side() == side);
+    }
+
+    public boolean checkBuildingsFromThree(int[] uploadCoords) {
+        return checkBuildingSpot(uploadCoords[0]+1,uploadCoords[1],uploadCoords[2]-1,6)
+                || checkBuildingSpot(uploadCoords[0],uploadCoords[1]-1,uploadCoords[2]+1,0);
+    }
+
+    public boolean checkBuildingsFromSeven(int[] uploadCoords) {
+        return checkBuildingSpot(uploadCoords[0]-1,uploadCoords[1],uploadCoords[2]+1,0)
+                || checkBuildingSpot(uploadCoords[0],uploadCoords[1],uploadCoords[2],6);
+    }
+
+    public boolean checkBuildingsFromEleven(int[] uploadCoords) {
+        return checkBuildingSpot(uploadCoords[0],uploadCoords[1],uploadCoords[2],0)
+                || checkBuildingSpot(uploadCoords[0],uploadCoords[1]+1,uploadCoords[2]-1,6);
     }
 
     public boolean checkRoad() {
@@ -166,4 +185,6 @@ public class GameService {
             return false;
         }
     }
+
+
 }
