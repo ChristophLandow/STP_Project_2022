@@ -22,8 +22,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_1;
-import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_2;
+import static de.uniks.pioneers.GameConstants.*;
 
 public class StreetPointController {
     private final GameService gameService;
@@ -79,7 +78,7 @@ public class StreetPointController {
         if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
             valid = checkBuildings();
         } else {
-            if (gameStorage.roadsRemaining >= 1 && gameService.checkRoad()) {
+            if (gameStorage.remainingBuildings.get(ROAD) >= 1 && gameService.checkRoad()) {
                 valid = checkRoads() || checkBuildings();
             }else {
                 valid = false;
@@ -87,7 +86,7 @@ public class StreetPointController {
         }
 
         if (valid) {
-            gameStorage.roadsRemaining -= 1;
+            gameStorage.remainingBuildings.put(ROAD, gameStorage.remainingBuildings.get(ROAD)-1 );
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
             disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
                     .observeOn(FX_SCHEDULER)
@@ -119,9 +118,9 @@ public class StreetPointController {
     }
 
     private void reset(Node node) {
-        //node.setOnMouseClicked(null);
-        //node.setOnMouseEntered(null);
-        //node.setOnMouseExited(null);
+        node.setOnMouseClicked(null);
+        node.setOnMouseEntered(null);
+        node.setOnMouseExited(null);
     }
 
     public void renderRoad(Building building) {
