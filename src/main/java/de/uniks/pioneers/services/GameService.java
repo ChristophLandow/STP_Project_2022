@@ -12,11 +12,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class GameService {
@@ -63,25 +63,11 @@ public class GameService {
                     final Move move = moveEvent.data();
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
-                        handleMove(move);
+
                     }
-                }));
+                })
+        );
     }
-
-    private void handleMove(Move move){
-        switch (move.action()) {
-            case ROLL -> {
-            }
-            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> {
-            }
-            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> {
-            }
-            case BUILD -> {
-
-            }
-        }
-    }
-
 
     private void initPlayerListener() {
         String patternToObservePlayers = String.format("games.%s.players.*.*", game.get()._id());
@@ -113,16 +99,6 @@ public class GameService {
         );
     }
 
-    public void findMe() {
-        me = userService.getCurrentUser()._id();
-    }
-
-    public boolean checkRoadSpot(int x, int y, int z) {
-        return buildings.stream().anyMatch(building -> building.x() == x && building.y() == y && building.z() == z
-                && building.owner().equals(me)
-                && building.type().equals("settlement"));
-    }
-
     public void loadPlayers(Game game) {
         // REST - get players from server
         players = FXCollections.observableHashMap();
@@ -130,7 +106,85 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
-                    findMe();
+                    me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }
+
+    public boolean checkRoadSpot(int x, int y, int z, int side) {
+        return buildings.stream().anyMatch(building -> building.owner().equals(me)
+                && building.type().equals("road")
+                && building.x() == x && building.y() == y && building.z() == z && building.side() == side);
+    }
+
+    public boolean isValidFromThree(int[] uploadCoords) {
+        return checkRoadSpot(uploadCoords[0]+1,uploadCoords[1],uploadCoords[2]-1,7)
+                || checkRoadSpot(uploadCoords[0]+1, uploadCoords[1]-1,uploadCoords[2],11)
+                || checkRoadSpot(uploadCoords[0], uploadCoords[1]-1, uploadCoords[2]+1,11)
+                || checkRoadSpot(uploadCoords[0]+1,uploadCoords[1]-1,uploadCoords[2],7);
+    }
+
+    public boolean isValidFromSeven(int[] uploadCoords) {
+        return checkRoadSpot(uploadCoords[0]-1, uploadCoords[1],uploadCoords[2]+1,11)
+                || checkRoadSpot(uploadCoords[0]-1, uploadCoords[1]+1,uploadCoords[2],3)
+                || checkRoadSpot(uploadCoords[0], uploadCoords[1]-1, uploadCoords[2]+1,11)
+                || checkRoadSpot(uploadCoords[0]-1,uploadCoords[1],uploadCoords[2]+1,3);
+    }
+
+    public boolean isValidFromEleven(int[] uploadCoords) {
+        return checkRoadSpot(uploadCoords[0]-1, uploadCoords[1]+1,uploadCoords[2],3)
+                || checkRoadSpot(uploadCoords[0], uploadCoords[1]+1,uploadCoords[2]-1,7)
+                || checkRoadSpot(uploadCoords[0], uploadCoords[1]+1, uploadCoords[2]-1,3)
+                || checkRoadSpot(uploadCoords[0]+1,uploadCoords[1],uploadCoords[2]-1,7);
+    }
+
+    public boolean checkBuildingSpot(int x, int y, int z, int side) {
+        return buildings.stream().anyMatch(building -> building.owner().equals(me)
+                && !building.type().equals("road")
+                && building.x() == x && building.y() == y && building.z() == z && building.side() == side);
+    }
+
+    public boolean checkBuildingsFromThree(int[] uploadCoords) {
+        return checkBuildingSpot(uploadCoords[0]+1,uploadCoords[1],uploadCoords[2]-1,6)
+                || checkBuildingSpot(uploadCoords[0],uploadCoords[1]-1,uploadCoords[2]+1,0);
+    }
+
+    public boolean checkBuildingsFromSeven(int[] uploadCoords) {
+        return checkBuildingSpot(uploadCoords[0]-1,uploadCoords[1],uploadCoords[2]+1,0)
+                || checkBuildingSpot(uploadCoords[0],uploadCoords[1],uploadCoords[2],6);
+    }
+
+    public boolean checkBuildingsFromEleven(int[] uploadCoords) {
+        return checkBuildingSpot(uploadCoords[0],uploadCoords[1],uploadCoords[2],0)
+                || checkBuildingSpot(uploadCoords[0],uploadCoords[1]+1,uploadCoords[2]-1,6);
+    }
+
+    public boolean checkRoad() {
+        Player mario = players.get(me);
+        try {
+            return mario.resources().lumber() >= 1 && mario.resources().brick() >= 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean checkSettlement() {
+        Player mario = players.get(me);
+        try {
+            return mario.resources().lumber() >= 1 && mario.resources().brick() >= 1
+                    && mario.resources().grain() >= 1 && mario.resources().wool() >= 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean checkCity() {
+        Player mario = players.get(me);
+        try {
+            return mario.resources().ore() >= 3 && mario.resources().grain() >= 2;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
 }
