@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.model.User;
@@ -21,6 +22,8 @@ public class ChatUserlistController extends OnlineUserlistController {
     public TabPane chatTabPane;
     public ChatController chatController;
 
+    private App app;
+
     @Inject
     public ChatUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener) {
         super(userService, messageService, userlistService, eventListener);
@@ -36,6 +39,7 @@ public class ChatUserlistController extends OnlineUserlistController {
     @Override
     public void renderUser(User user) {
         Label newUser = new Label(user.name());
+        newUser.setId("newUser");
         newUser.setOnMouseClicked(this::openChat);
         this.userListView.getItems().add(newUser);
     }

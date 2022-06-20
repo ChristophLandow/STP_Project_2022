@@ -10,6 +10,7 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -29,6 +30,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -52,6 +54,8 @@ public class IngameScreenController implements Controller {
     @FXML public Rectangle downRectangle, upRectangle;
 
     @Inject GameChatController gameChatController;
+
+    @Inject PrefService prefService;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
@@ -74,7 +78,6 @@ public class IngameScreenController implements Controller {
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
-    private boolean darkMode = false;
     private boolean onClose = false;
 
     @Inject
@@ -129,11 +132,6 @@ public class IngameScreenController implements Controller {
 
         // set variables
         app.getStage().setTitle(INGAME_SCREEN_TITLE);
-        if(darkMode){
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
-        } else {
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
-        }
         gameService.game.set(game.get());
 
         // init game chat controller
@@ -203,6 +201,20 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
+        // remaining building count change listener
+        gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
+            if(c.getKey().equals(ROAD)){this.streetCountLabel.setText(c.getValueAdded().toString());}
+            if(c.getKey().equals(SETTLEMENT)){this.houseCountLabel.setText(c.getValueAdded().toString());}
+            if(c.getKey().equals(CITY)){this.cityCountLabel.setText(c.getValueAdded().toString());}
+        });
+
+        if(prefService.getDarkModeState()){
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+        } else {
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
+        }
     }
     private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
 
@@ -300,13 +312,7 @@ public class IngameScreenController implements Controller {
     }
 
     public void leave() {
-        LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
-        if(darkMode){
-            lobbyController.setDarkMode();
-        } else {
-            lobbyController.setBrightMode();
-        }
-
+        LobbyScreenController newLobbyController = lobbyScreenControllerProvider.get();
         if(game.get().owner().equals(userService.getCurrentUser()._id())) {
             gameChatController.sendMessage("Host left the Game!", game.get());
             disposable.add(gameService.deleteGame(game.get()._id())
@@ -315,7 +321,7 @@ public class IngameScreenController implements Controller {
                         this.stop();
                         disposable.dispose();
                         if(!onClose) {
-                            app.show(lobbyController);
+                            app.show(newLobbyController);
                         }
                     }, Throwable::printStackTrace));
         } else {
@@ -324,28 +330,18 @@ public class IngameScreenController implements Controller {
             timerService.reset();
             disposable.dispose();
             if(!onClose) {
-                app.show(lobbyController);
+                app.show(newLobbyController);
             }
         }
     }
 
     public void toRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
-        if(darkMode){
-            rulesController.setDarkMode();
-        } else {
-            rulesController.setBrightMode();
-        }
         rulesController.init();
     }
 
     public void toSettings() {
         SettingsScreenController settingsController = settingsScreenControllerProvider.get();
-        if(darkMode){
-            settingsController.setDarkMode();
-        } else{
-            settingsController.setBrightMode();
-        }
         settingsController.init();
     }
 
@@ -364,11 +360,7 @@ public class IngameScreenController implements Controller {
                 .subscribe();
     }
     private void buildBoardUI(){this.boardController.buildBoardUI();}
-    public void setDarkmode(){darkMode = true;}
 
-    public void setBrightMode(){
-        darkMode = false;
-    }
     public void selectStreet() {
         this.gameStorage.selectedBuilding = ROAD;
         this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));

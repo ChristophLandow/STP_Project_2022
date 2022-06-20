@@ -61,6 +61,7 @@ public class ChatTabController {
         this.chatBox = new VBox();
 
         scrollPane = new ScrollPane(this.chatBox);
+        scrollPane.setId("chatUserListScrollPane");
         scrollPane.setPrefHeight(579);
 
         chatBox.heightProperty().addListener(u->scrollPane.setVvalue(1D));

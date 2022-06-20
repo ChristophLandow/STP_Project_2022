@@ -23,7 +23,6 @@ import javax.inject.Provider;
 public class LobbyUserlistController extends OnlineUserlistController {
     public VBox usersVBox;
     private final App app;
-    private boolean darkMode = false;
     private final Provider<ChatController> chatControllerProvider;
 
     @Inject
@@ -47,7 +46,7 @@ public class LobbyUserlistController extends OnlineUserlistController {
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("grid");
         Label username = new Label(user.name());
-        username.getStyleClass().add("NameLabel");
+        username.setId("NameLabel");
         username.setOnMouseClicked(this::openChat);
 
         ImageView imgView;
@@ -121,19 +120,7 @@ public class LobbyUserlistController extends OnlineUserlistController {
         if(this.messageService.getchatUserList().size() > Constants.MAX_OPEN_CHATS){
             this.messageService.getchatUserList().remove(0);
         }
-        ChatController chatController = chatControllerProvider.get();
-        if(darkMode){
-            chatController.setDarkMode();
-        }
-        app.show(chatController);
-    }
-
-    public void setDarkMode() {
-        darkMode = true;
-    }
-
-    public void setBrightMode(){
-        darkMode = false;
+        app.show(chatControllerProvider.get());
     }
 
     public App getApp() {

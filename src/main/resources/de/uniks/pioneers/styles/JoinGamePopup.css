@@ -2,17 +2,17 @@
 	-fx-background-color:  #F5F5F5;
 }
 
-.text-field {
+#wrongPasswordLabel {
+	-fx-background-color: #F5F5F5;
+	-fx-text-fill: RED;
+}
+
+#passwordInputField {
 	-fx-background-color: #ffffff;
 	-fx-text-fill: black;
 }
 
-.label{
-	fx-background-color: #F5F5F5;
-	-fx-text-fill: black;
-}
-
-.button {
+#joinButton {
 	-fx-background-color: #156EAD;
 	-fx-text-fill: white;
 }

@@ -1,0 +1,15 @@
+#GameListView {
+    -fx-background-color: #717988;
+}
+
+#creationTime {
+    -fx-text-fill: BLACK;
+}
+
+#title {
+    -fx-text-fill: BLACK
+}
+
+#memberCount {
+    -fx-text-fill: BLACK;
+}

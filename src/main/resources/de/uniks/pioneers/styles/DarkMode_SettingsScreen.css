@@ -2,6 +2,10 @@
 	-fx-background-color:  #424242;
 }
 
+.choice-box .label {
+	-fx-text-fill: BLACK;
+}
+
 .label{
 	-fx-text-fill: rgb(255, 255, 255);
 }

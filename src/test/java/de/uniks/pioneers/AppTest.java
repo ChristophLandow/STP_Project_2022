@@ -14,7 +14,6 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import org.testfx.util.WaitForAsyncUtils;
-
 import static org.testfx.api.FxAssert.verifyThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -82,7 +81,11 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         type(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
-        //verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "founding-roll"));
+        write("\t\t\tHallo Test Test");
+        type(KeyCode.ENTER);
+        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
+        clickOn("#leftDiceImageView");
+
     }
 
 

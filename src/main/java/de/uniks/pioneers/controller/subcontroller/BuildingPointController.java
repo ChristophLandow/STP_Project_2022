@@ -43,7 +43,6 @@ public class BuildingPointController {
                                    IngameService ingameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
                                    UserService userService) {
-
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
@@ -51,7 +50,6 @@ public class BuildingPointController {
         this.gameStorage = gameStorage;
         this.gameId = gameId;
         this.fieldPane = fieldPane;
-
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
@@ -64,26 +62,11 @@ public class BuildingPointController {
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
     }
-
-    public void addEventArea() {
-        this.fieldPane.getChildren().add(eventView);
-    }
-
-    public Circle getView() {
-        return this.view;
-    }
-
-    public HexTile getTile() {
-        return this.tile;
-    }
-
-    public ArrayList<StreetPointController> getAdjacentStreets() {
-        return this.adjacentStreets;
-    }
+    public void addEventArea() {this.fieldPane.getChildren().add(eventView);}
+    public HexTile getTile() {return this.tile;}
 
     public void build() {
         // post build move
-
 
         String buildingType;
         if (this.action.contains("settlement")) {
@@ -99,9 +82,9 @@ public class BuildingPointController {
     }
 
     private void reset(Node node) {
-        //node.setOnMouseClicked(null);
-        //node.setOnMouseEntered(null);
-        //node.setOnMouseExited(null);
+        node.setOnMouseClicked(null);
+        node.setOnMouseEntered(null);
+        node.setOnMouseExited(null);
     }
 
     public void placeBuilding(Building building) {
@@ -138,10 +121,8 @@ public class BuildingPointController {
     }
 
     private void info(MouseEvent mouseEvent) {
-        System.out.println(generateKeyString());
-
         boolean invalid = false;
-        if(gameStorage.settlementsRemaining > 0 && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
+        if(gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
             for (StreetPointController street : adjacentStreets) {
                 for (BuildingPointController building : street.getAdjacentBuildings()) {
                     if (building != this) {
@@ -152,7 +133,7 @@ public class BuildingPointController {
                 }
             }
         }
-        if(gameStorage.citiesRemaining > 0 && gameStorage.selectedBuilding.equals(CITY)) {
+        if(gameStorage.remainingBuildings.get(CITY) > 0 && gameStorage.selectedBuilding.equals(CITY)) {
             if(this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())){
 
                 invalid = true;
@@ -161,8 +142,8 @@ public class BuildingPointController {
         }
         if(!invalid) {
 
-            if(gameStorage.selectedBuilding.equals(SETTLEMENT)){gameStorage.settlementsRemaining -= 1;}
-            if(gameStorage.selectedBuilding.equals(CITY)){gameStorage.citiesRemaining -= 1;}
+            if(gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")){gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) -1);}
+            if(gameStorage.selectedBuilding.equals(CITY)){gameStorage.remainingBuildings.put(CITY, gameStorage.remainingBuildings.get(CITY) -1);}
             build();
         }
     }
@@ -177,11 +158,6 @@ public class BuildingPointController {
         if(this.building != null){
         this.view.setVisible(false);}
     }
-
-    public void mark() {
-        this.view.setFill(BLUE);
-    }
-
     public void setAction(String action) {
         this.action = action;
     }

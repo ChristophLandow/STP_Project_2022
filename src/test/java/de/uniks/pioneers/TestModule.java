@@ -349,6 +349,15 @@ public class TestModule {
             }
             @Override
             public void remember(){}
+
+            @Override
+            public boolean getDarkModeState(){
+                return true;
+            }
+
+            @Override
+            public void saveDarkModeState(String string){
+            }
         };}
 
     @Provides

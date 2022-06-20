@@ -5,6 +5,7 @@ import de.uniks.pioneers.rest.GameApiService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
+import static de.uniks.pioneers.Constants.*;
 
 import static de.uniks.pioneers.Constants.REMEMBER_ME;
 
@@ -60,5 +61,13 @@ public class PrefService {
 
     private void forgetSavedGame() {
         preferences.put("leavedGame", "");
+    }
+
+    public void saveDarkModeState(String state){
+        preferences.put("darkMode", state);
+    }
+
+    public boolean getDarkModeState(){
+        return preferences.get("darkMode", "").equals(DARKMODE_TRUE);
     }
 }

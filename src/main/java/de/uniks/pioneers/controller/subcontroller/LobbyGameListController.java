@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
@@ -37,7 +38,6 @@ public class LobbyGameListController {
     private final Provider<GameListElementController> gameListElementControllerProvider;
     private final List<GameListElementController> gameListElementControllers = new ArrayList<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-    private boolean darkMode = false;
 
     @Inject
     public LobbyGameListController(App app, EventListener eventListener,
@@ -123,11 +123,6 @@ public class LobbyGameListController {
 
     private void renderGame(Game game) {
         GameListElementController gameListElementController = gameListElementControllerProvider.get();
-        if(darkMode){
-            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
-        } else {
-            gameListElementController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
-        }
         Parent node = gameListElementController.render();
         node.setId(game._id());
         User creator = returnUserById(game.owner());
@@ -164,14 +159,6 @@ public class LobbyGameListController {
 
     public void stop() {
         disposable.dispose();
-    }
-
-    public void setDarkMode() {
-        darkMode = true;
-    }
-
-    public void setBrightMode() {
-        darkMode = false;
     }
 
     public App getApp() {
