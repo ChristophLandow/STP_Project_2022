@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.FOUNDING_ROAD_2;
+import static de.uniks.pioneers.GameConstants.*;
 
 public class StreetPointController {
     private final GameService gameService;
@@ -72,28 +72,21 @@ public class StreetPointController {
     }
 
     public void placeStreet(MouseEvent mouseEvent) {
+        System.out.println(generateKeyString());
+        boolean valid;
 
-        if(gameStorage.roadsRemaining < 1){return;}
-        boolean valid = false;
-
-        for(BuildingPointController building : this.adjacentBuildings){
-            if (building.getBuilding() != null && building.getBuilding().owner().equals(this.userService.getCurrentUser()._id())) {
-                //check if own building is adjacent
-                valid = true;
-                break;
-            }
-            for(StreetPointController street : building.adjacentStreets){
-
-                if(!this.action.equals(FOUNDING_ROAD_2) && (street != this) && street.building != null && street.building.owner().equals(this.userService.getCurrentUser()._id())){
-                    //check if own road is adjacent, only valid outside of founding phase
-                    valid = true;
-                    break;
-                }
+        if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
+            valid = checkBuildings();
+        } else {
+            if (gameStorage.remainingBuildings.get(ROAD) >= 1 && gameService.checkRoad()) {
+                valid = checkRoads() || checkBuildings();
+            }else {
+                valid = false;
             }
         }
 
         if (valid) {
-            gameStorage.roadsRemaining -= 1;
+            gameStorage.remainingBuildings.put(ROAD, gameStorage.remainingBuildings.get(ROAD)-1 );
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
             disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
                     .observeOn(FX_SCHEDULER)
@@ -101,6 +94,26 @@ public class StreetPointController {
                         Pane fieldPane = (Pane) this.view.getScene().getRoot().lookup("#fieldPane");
                         fieldPane.getChildren().forEach(this::reset);
                     }));
+        }
+    }
+
+    private boolean checkBuildings() {
+        if (uploadCoords[3] == 3) {
+            return gameService.checkBuildingsFromThree(this.uploadCoords);
+        } else if (uploadCoords[3] == 7) {
+            return gameService.checkBuildingsFromSeven(this.uploadCoords);
+        } else {
+            return gameService.checkBuildingsFromEleven(this.uploadCoords);
+        }
+    }
+
+    private Boolean checkRoads() {
+        if (uploadCoords[3] == 3) {
+            return gameService.isValidFromThree(this.uploadCoords);
+        } else if (uploadCoords[3] == 7) {
+            return gameService.isValidFromSeven(this.uploadCoords);
+        } else {
+            return gameService.isValidFromEleven(this.uploadCoords);
         }
     }
 
@@ -112,17 +125,17 @@ public class StreetPointController {
 
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
-        Rectangle road =  new Rectangle(60,7, Paint.valueOf(player.color()));
+        Rectangle road = new Rectangle(60, 7, Paint.valueOf(player.color()));
         Scene scene = view.getScene();
         Pane root = (Pane) scene.getRoot();
         root.getChildren().add(road);
-        road.setLayoutX(view.getLayoutX()-14);
-        road.setLayoutY(view.getLayoutY()+12);
+        road.setLayoutX(view.getLayoutX() - 14);
+        road.setLayoutY(view.getLayoutY() + 12);
         if (building.side() == 3) {
             road.setRotate(90);
         } else if (building.side() == 7) {
             road.setRotate(30);
-        }else {
+        } else {
             road.setRotate(-30);
         }
         this.building = building;

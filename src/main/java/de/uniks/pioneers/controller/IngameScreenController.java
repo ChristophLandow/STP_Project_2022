@@ -10,6 +10,7 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -200,6 +201,12 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
+        // remaining building count change listener
+        gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
+            if(c.getKey().equals(ROAD)){this.streetCountLabel.setText(c.getValueAdded().toString());}
+            if(c.getKey().equals(SETTLEMENT)){this.houseCountLabel.setText(c.getValueAdded().toString());}
+            if(c.getKey().equals(CITY)){this.cityCountLabel.setText(c.getValueAdded().toString());}
+        });
 
         if(prefService.getDarkModeState()){
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
@@ -369,4 +376,19 @@ public class IngameScreenController implements Controller {
         this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+
+    public void onTradePressed(MouseEvent mouseEvent) {
+    }
+
+    public void onCityPressed(MouseEvent mouseEvent) {
+    }
+
+    public void onHousePressed(MouseEvent mouseEvent) {
+    }
+
+    public void onStreetPressed(MouseEvent mouseEvent) {
+    }
+
+    public void onHammerPressed(MouseEvent mouseEvent) {
+    }
 }
