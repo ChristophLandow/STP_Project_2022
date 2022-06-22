@@ -62,7 +62,7 @@ public class DiceSubcontroller {
     }
 
     private void roll(MouseEvent mouseEvent) {
-        CreateMoveDto rollMove = new CreateMoveDto(this.action, null);
+        CreateMoveDto rollMove = new CreateMoveDto(this.action, null, null);
         disposable.add(ingameService.postMove(gameService.game.get()._id(), rollMove)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {

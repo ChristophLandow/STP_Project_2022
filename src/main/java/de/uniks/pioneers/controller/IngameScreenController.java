@@ -260,7 +260,7 @@ public class IngameScreenController implements Controller {
     }
 
     private void endTurn(MouseEvent mouseEvent) {
-        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
