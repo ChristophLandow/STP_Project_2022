@@ -34,16 +34,18 @@ public class RobberController implements Controller {
     private String action;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    private final DiscardResourcesController discardResourcesController;
+
     public RobberController(App app, HexTile tile, String action){
         this.tile = tile;
         this.action = action;
         this.app = app;
+        this.discardResourcesController = new DiscardResourcesController();
     }
 
     @Override
     public void init(){
-        discard();
-        itsRobbingTime();
+        //itsRobbingTime();
 
     }
 
@@ -55,9 +57,6 @@ public class RobberController implements Controller {
     @Override
     public Parent render() {
         return null;
-    }
-
-    private void discard() {
     }
 
     public HexTile getTile(){

@@ -41,7 +41,6 @@ public class DiscardResourcesController implements Controller {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css")));
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DiscardResourcesPopup.css");
         }
-        
     }
 
     @Override
