@@ -2,10 +2,7 @@ package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.ws.EventListener;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import javax.inject.Inject;
@@ -19,9 +16,11 @@ public class GameStorage {
     @Inject EventListener eventListener;
     private List<Tile> map;
 
+    private double zoomedIn = 1.3;
+    private double zoomedOut = 0.99;
+
     @Inject
     public GameStorage() {
-
         remainingBuildings.put(ROAD, 15);
         remainingBuildings.put(SETTLEMENT, 5);
         remainingBuildings.put(CITY, 4);
@@ -35,7 +34,20 @@ public class GameStorage {
         return map;
     }
 
+    public double getZoomedIn(){
+        return this.zoomedIn;
+    }
+
+    public double getZoomedOut(){
+        return this.zoomedOut;
+    }
+
     public void setMap(List<Tile> map) {
         this.map = map;
+    }
+
+    public void setZoom(double zoomedIn, double zoomedOut){
+        this.zoomedIn = zoomedIn;
+        this.zoomedOut = zoomedOut;
     }
 }

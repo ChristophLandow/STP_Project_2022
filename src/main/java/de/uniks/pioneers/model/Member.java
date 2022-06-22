@@ -6,5 +6,6 @@ public record Member(
     String gameId,
     String userId,
     boolean ready,
-    String color
+    String color,
+    boolean spectator
 ) {}

@@ -149,12 +149,12 @@ public class BuildingPointController {
     }
 
     private void dye(MouseEvent mouseEvent) {
-        this.view.setFill(BUILDING_POINT_HOVER);
+        this.view.setFill(HOVER_COLOR);
         this.view.setVisible(true);
     }
 
     private void undye(MouseEvent mouseEvent) {
-        this.view.setFill(BUILDING_POINT_STANDARD);
+        this.view.setFill(STANDARD_COLOR);
         if(this.building != null){
         this.view.setVisible(false);}
     }
@@ -168,5 +168,11 @@ public class BuildingPointController {
 
     public Building getBuilding() {
         return building;
+    }
+
+    public void moveBuildingToFront(){
+        if(this.displayedBuilding != null){
+            this.displayedBuilding.toFront();
+        }
     }
 }
