@@ -23,12 +23,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -135,13 +135,11 @@ public class LobbyScreenController implements Controller {
                 alertLoading.setTitle("Loading");
                 alertLoading.setHeaderText("Game is loading...");
                 alertLoading.getButtonTypes().clear();
-                alertLoading.setGraphic(new ImageView(getClass().getResource("progress.gif").toString()));
+                alertLoading.setGraphic(new ImageView(Objects.requireNonNull(getClass().getResource("progress.gif")).toString()));
 
                 new Thread(() -> {
                     try {
-                        Platform.runLater(() -> {
-                            alertLoading.showAndWait();
-                        });
+                        Platform.runLater(alertLoading::showAndWait);
                         Thread.sleep(10000);
                         Platform.runLater(() -> {
                             alertLoading.getButtonTypes().add(ButtonType.CLOSE);

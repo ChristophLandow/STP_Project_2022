@@ -10,7 +10,6 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -30,7 +29,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -38,7 +36,6 @@ import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-
     @FXML public Pane fieldPane, root, turnPane;
     @FXML public Pane roadFrame, settlementFrame, cityFrame, situationPane;
     @FXML public ScrollPane chatScrollPane, userScrollPane;
@@ -80,7 +77,6 @@ public class IngameScreenController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
     private boolean onClose = false;
-    private List<Member> spectators;
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -395,48 +391,32 @@ public class IngameScreenController implements Controller {
         this.users = users;
     }
 
-    public void loadSpectators() {
-        for(Member member : gameService.members) {
-            renderSpectator(member);
-        }
-    }
-
     public void loadMap() {
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnComplete(this::buildBoardUI)
                 .subscribe();
     }
-    private void buildBoardUI(){this.boardController.buildBoardUI();}
+    private void buildBoardUI() {
+        this.boardController.buildBoardUI();
+    }
 
     public void selectStreet() {
         this.gameStorage.selectedBuilding = ROAD;
         this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+    }
     public void selectSettlement() {
         this.gameStorage.selectedBuilding = SETTLEMENT;
         this.settlementFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+    }
     public void selectCity() {
         this.gameStorage.selectedBuilding = CITY;
         this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
-
-    public void onTradePressed(MouseEvent mouseEvent) {
-    }
-
-    public void onCityPressed(MouseEvent mouseEvent) {
-    }
-
-    public void onHousePressed(MouseEvent mouseEvent) {
-    }
-
-    public void onStreetPressed(MouseEvent mouseEvent) {
-    }
-
-    public void onHammerPressed(MouseEvent mouseEvent) {
+        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
     }
 }

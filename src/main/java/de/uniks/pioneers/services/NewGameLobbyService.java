@@ -15,7 +15,6 @@ import java.util.List;
 
 @Singleton
 public class NewGameLobbyService {
-
     private final GameApiService gameApiService;
     private final GameMemberApiService gameMemberApiService;
     private final MessageApiService messageApiService;
@@ -52,10 +51,6 @@ public class NewGameLobbyService {
 
     public Observable<List<MessageDto>> getMessages(String id) {
         return messageApiService.getChatMessages("games", id);
-    }
-
-    public Observable<MessageDto> updateMessage(String parent, String id, UpdateMessageDto message) {
-        return messageApiService.updateMessage("games", parent, id, message);
     }
 
     public Observable<Member> patchMember(String groupId, String userId, boolean ready, String color, boolean spectator) {

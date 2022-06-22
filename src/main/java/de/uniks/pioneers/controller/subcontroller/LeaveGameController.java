@@ -5,21 +5,16 @@ import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -28,31 +23,23 @@ public class LeaveGameController {
     private final NewGameLobbyService newGameLobbyService;
     private final UserService userService;
     private final PrefService prefService;
-    private final GameService gameService;
     private List<User> users;
     private final ObservableList<Member> members;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private boolean leavedWithButton;
     private String myColor;
-    private Alert alert;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
 
     @Inject
-    public LeaveGameController(NewGameScreenLobbyController newGameScreenLobbyController, NewGameLobbyService newGameLobbyService, UserService userService, PrefService prefService, GameService gameService) {
+    public LeaveGameController(NewGameScreenLobbyController newGameScreenLobbyController, NewGameLobbyService newGameLobbyService, UserService userService, PrefService prefService) {
         this.newGameScreenLobbyController = newGameScreenLobbyController;
         this.newGameLobbyService = newGameLobbyService;
         this.userService = userService;
         this.prefService = prefService;
-        this.gameService = gameService;
         this.users = new ArrayList<>();
         this.members = FXCollections.observableArrayList();
         this.leavedWithButton = false;
         this.myColor = "";
-
-        this.alert = new Alert(Alert.AlertType.ERROR);
-        this.alert.getButtonTypes().clear();
-        this.alert.getDialogPane().setMinHeight(100);
-        this.alert.setHeaderText("Game is loading");
     }
 
     public void saveLeavedGame(String gameID, List<User> users, String myColor) {

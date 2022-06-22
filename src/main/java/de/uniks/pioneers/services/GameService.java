@@ -9,11 +9,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -21,7 +18,6 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public ObservableList<Member> members = FXCollections.observableArrayList();
-    private List<Member> memberList;
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();

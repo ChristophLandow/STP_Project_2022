@@ -82,9 +82,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
     @Inject Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject ColorPickerController colorPickerController;
-
-    @Inject
-    PrefService prefService;
+    @Inject PrefService prefService;
 
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;

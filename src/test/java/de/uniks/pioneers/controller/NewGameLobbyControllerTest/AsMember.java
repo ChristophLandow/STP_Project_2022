@@ -82,9 +82,9 @@ class AsMember extends ApplicationTest {
     private String patternToObserveUserJoining;
 
     private final Game testGame = new Game("1", "2", "3", "name", "1", 2,false);
-    private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff");
-    private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02);
-    private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03);
+    private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff", false);
+    private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02, false);
+    private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03, false);
     private final MessageDto message01 = new MessageDto("1","1","1","1","hello there");
     private final MessageDto message02 = new MessageDto("2","2","2","2","how are you ");
     private final User owner  = new User("1", "owner", "online", randomAvatar01);
