@@ -23,12 +23,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -131,7 +131,25 @@ public class LobbyScreenController implements Controller {
             cancelButton.setText("No");
             Optional<ButtonType> option = alert.showAndWait();
             if(option.get() == ButtonType.OK) {
-                leaveGameController.loadLeavedGame(leavedGame);
+                Alert alertLoading = new Alert(Alert.AlertType.CONFIRMATION);
+                alertLoading.setTitle("Loading");
+                alertLoading.setHeaderText("Game is loading...");
+                alertLoading.getButtonTypes().clear();
+                alertLoading.setGraphic(new ImageView(Objects.requireNonNull(getClass().getResource("progress.gif")).toString()));
+
+                new Thread(() -> {
+                    try {
+                        Platform.runLater(alertLoading::showAndWait);
+                        Thread.sleep(10000);
+                        Platform.runLater(() -> {
+                            alertLoading.getButtonTypes().add(ButtonType.CLOSE);
+                            alertLoading.close();
+                        });
+                        leaveGameController.loadLeavedGame(leavedGame);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
             }
         }
 

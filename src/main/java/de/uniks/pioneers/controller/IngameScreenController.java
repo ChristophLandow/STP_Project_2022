@@ -38,7 +38,6 @@ import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-
     @FXML public Pane fieldPane, root, turnPane;
     @FXML
     public AnchorPane scrollAnchorPane;
@@ -59,6 +58,7 @@ public class IngameScreenController implements Controller {
 
     @Inject PrefService prefService;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
+    @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
@@ -196,6 +196,16 @@ public class IngameScreenController implements Controller {
             }
         });
 
+        //this.loadSpectators();
+        gameService.members.addListener((ListChangeListener<? super Member>) c -> {
+            c.next();
+            if (c.wasAdded()) {
+                c.getAddedSubList().forEach(this::renderSpectator);
+            } else if (c.wasRemoved()) {
+                c.getRemoved().forEach(this::deleteSpectator);
+            }
+        });
+
         // buildings change listener
         gameService.buildings.addListener((ListChangeListener<? super Building>) c -> {
             c.next();
@@ -233,6 +243,33 @@ public class IngameScreenController implements Controller {
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
+    }
+
+    public void deleteSpectator(Member member) {
+        Node removal = playerListView.getItems().stream().filter(node -> node.getId().equals(member.userId())).findAny().orElse(null);
+        playerListView.getItems().remove(removal);
+    }
+
+    public void renderSpectator(Member member) {
+        if(member.spectator()) {
+            if(userService.getCurrentUser()._id().equals(member.userId())) {
+                hammerImageView.setVisible(false);
+                streetCountLabel.setVisible(false);
+                houseCountLabel.setVisible(false);
+                cityCountLabel.setVisible(false);
+                streetSVG.setVisible(false);
+                citySVG.setVisible(false);
+                houseSVG.setVisible(false);
+                tradeImageView.setVisible(false);
+                hourglassImageView.setVisible(false);
+                nextTurnImageView.setVisible(false);
+            }
+
+            IngamePlayerListSpectatorController spectatorListElement = spectatorProvider.get();
+            spectatorListElement.setNodeListView(playerListView);
+            spectatorListElement.init(game.get()._id(), member.userId());
+            spectatorListElement.render(game.get().owner());
+        }
     }
 
     private void deleteBuilding(Building building) {}
@@ -359,46 +396,37 @@ public class IngameScreenController implements Controller {
         timerService.reset();
     }
 
-    public void setUsers(List<User> users) {this.users = users;}
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     public void loadMap() {
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
                 .doOnComplete(this::buildBoardUI)
                 .subscribe();
     }
-    private void buildBoardUI(){this.boardController.buildBoardUI();}
+    private void buildBoardUI() {
+        this.boardController.buildBoardUI();
+    }
 
     public void selectStreet() {
         this.gameStorage.selectedBuilding = ROAD;
         this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+    }
     public void selectSettlement() {
         this.gameStorage.selectedBuilding = SETTLEMENT;
         this.settlementFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
+        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+    }
     public void selectCity() {
         this.gameStorage.selectedBuilding = CITY;
         this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));}
-
-    public void onTradePressed(MouseEvent mouseEvent) {
-    }
-
-    public void onCityPressed(MouseEvent mouseEvent) {
-    }
-
-    public void onHousePressed(MouseEvent mouseEvent) {
-    }
-
-    public void onStreetPressed(MouseEvent mouseEvent) {
-
-    }
-
-    public void onHammerPressed(MouseEvent mouseEvent) {
-
+        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
     }
 
 
