@@ -169,4 +169,10 @@ public class BuildingPointController {
     public Building getBuilding() {
         return building;
     }
+
+    public void moveBuildingToFront(){
+        if(this.displayedBuilding != null){
+            this.displayedBuilding.toFront();
+        }
+    }
 }
