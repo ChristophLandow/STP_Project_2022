@@ -91,7 +91,7 @@ public class BoardController {
         for (HexTile edge : edges) {
 
             Circle circ = new Circle(3);
-            circ.setFill(BUILDING_POINT_STANDARD);
+            circ.setFill(STANDARD_COLOR);
 
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
@@ -104,7 +104,7 @@ public class BoardController {
         for (HexTile corner : corners) {
 
             Circle circ = new Circle(6);
-            circ.setFill(BUILDING_POINT_STANDARD);
+            circ.setFill(STANDARD_COLOR);
 
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
