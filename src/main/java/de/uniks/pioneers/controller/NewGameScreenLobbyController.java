@@ -73,6 +73,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public Label clientReadyLabel;
     @FXML public ColorPicker colorPicker;
     @FXML public SVGPath houseSVG;
+    @FXML public ImageView spectatorImageView;
     @FXML public ImageView clientAvatar;
     @FXML public Label clientUserNameLabel;
     @FXML public CheckBox spectatorCheckBox;
@@ -332,11 +333,17 @@ public class NewGameScreenLobbyController implements Controller {
                         if (clientReady) {
                             clientReadyLabel.setText("Ready");
                             clientReadyBox.setBackground(Background.fill(Color.GREEN));
-                            colorPickerController.setDisable(true);
+                            if(!spectatorImageView.isVisible()) {
+                                colorPickerController.setDisable(true);
+                            }
                         } else {
                             clientReadyLabel.setText("Not Ready");
                             clientReadyBox.setBackground(Background.fill(Color.RED));
-                            colorPickerController.setDisable(false);
+                            if(spectatorImageView.isVisible()) {
+                                colorPickerController.setDisable(true);
+                            } else {
+                                colorPickerController.setDisable(false);
+                            }
                         }
                     }, Throwable::printStackTrace));
             this.reactivateReadyButton();
@@ -443,6 +450,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     public void onCheckBoxClicked() {
         houseSVG.setVisible(!spectatorCheckBox.isSelected());
+        spectatorImageView.setVisible(spectatorCheckBox.isSelected());
         colorPicker.setDisable(spectatorCheckBox.isSelected());
     }
 }

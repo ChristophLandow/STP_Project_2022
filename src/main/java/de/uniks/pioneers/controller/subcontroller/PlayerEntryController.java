@@ -21,6 +21,7 @@ public class PlayerEntryController implements Controller {
     @FXML ImageView playerAvatar;
     @FXML Label playerNameLabel;
     @FXML SVGPath playerHouseSVG;
+    @FXML ImageView spectatorImageView;
     @FXML HBox playerReadyBox;
     @FXML Label playerReadyLabel;
     private String playerColor;
@@ -62,16 +63,19 @@ public class PlayerEntryController implements Controller {
     public void setReady(boolean ready, boolean spectator) {
         if(ready && !spectator) {
             this.playerHouseSVG.setVisible(true);
+            this.spectatorImageView.setVisible(false);
             this.playerReadyLabel.setText("Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.GREEN));
         } else if(ready && spectator) {
             this.playerHouseSVG.setVisible(false);
+            this.spectatorImageView.setVisible(true);
             this.playerReadyLabel.setText("Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.GREEN));
         } else {
             this.playerHouseSVG.setVisible(false);
+            this.spectatorImageView.setVisible(false);
             this.playerReadyLabel.setText("Not Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.RED));
