@@ -56,6 +56,7 @@ public class ZoomableScrollpane {
     }
 
     public void zoom(double zoomValue){
+        //Scales the fieldPane for a zoom effect
         fieldScale.setX(zoomValue);
         fieldScale.setY(zoomValue);
         fieldScale.setPivotX(this.fieldPane.getScaleX());
