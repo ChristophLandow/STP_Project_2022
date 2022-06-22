@@ -126,11 +126,10 @@ public class StreetPointController {
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
         Rectangle road = new Rectangle(60, 7, Paint.valueOf(player.color()));
-        Scene scene = view.getScene();
-        Pane root = (Pane) scene.getRoot();
-        root.getChildren().add(road);
-        road.setLayoutX(view.getLayoutX() - 14);
-        road.setLayoutY(view.getLayoutY() + 12);
+        fieldPane.getChildren().add(road);
+        road.setLayoutX(view.getLayoutX() - road.getWidth()/2);
+        road.setLayoutY(view.getLayoutY() - road.getHeight()/2);
+
         if (building.side() == 3) {
             road.setRotate(90);
         } else if (building.side() == 7) {
@@ -138,6 +137,11 @@ public class StreetPointController {
         } else {
             road.setRotate(-30);
         }
+
+        for(BuildingPointController neighbourBuilding: adjacentBuildings){
+            neighbourBuilding.moveBuildingToFront();
+        }
+
         this.building = building;
     }
 

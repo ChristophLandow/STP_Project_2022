@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -37,8 +39,10 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
     @FXML public Pane fieldPane, root, turnPane;
+    @FXML
+    public AnchorPane scrollAnchorPane;
     @FXML public Pane roadFrame, settlementFrame, cityFrame, situationPane;
-    @FXML public ScrollPane chatScrollPane, userScrollPane;
+    @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
     @FXML public SVGPath streetSVG, houseSVG, citySVG;
     @FXML public Button rulesButton, leaveButton, settingsButton;
     @FXML public VBox messageVBox;
@@ -57,6 +61,8 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
+
+    @Inject Provider<ZoomableScrollpane> zoomableScrollpaneProvider;
 
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
@@ -223,6 +229,9 @@ public class IngameScreenController implements Controller {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
+
+        ZoomableScrollpane zoomableScrollpane = zoomableScrollpaneProvider.get();
+        zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane);
     }
     private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
 
@@ -419,4 +428,6 @@ public class IngameScreenController implements Controller {
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
     }
+
+
 }
