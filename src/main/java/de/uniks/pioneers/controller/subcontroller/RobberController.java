@@ -21,15 +21,24 @@ public class RobberController {
     private String action;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    public RobberController(HexTile tile){
+    public RobberController(HexTile tile, String action){
         this.tile = tile;
+        this.action = action;
+    }
+
+    public void init(){
+        discard();
+        itsRobbingTime();
+    }
+
+    private void discard() {
     }
 
     public HexTile getTile(){
         return this.tile;
     }
 
-    private void itsRobbingTime(MouseEvent mouseEvent) {
+    private void itsRobbingTime() {
         CreateMoveDto robMove = new CreateMoveDto(this.action, null, null);
         disposable.add(ingameService.postMove(gameService.game.get()._id(), robMove)
                 .observeOn(FX_SCHEDULER)

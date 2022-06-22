@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+import static de.uniks.pioneers.GameConstants.*;
 
 import javax.inject.Inject;
 
@@ -49,6 +50,9 @@ public class DiceSubcontroller {
                 c.getAddedSubList().forEach(move -> {
                     if (move.action().equals(FOUNDING_ROLL) || move.action().equals(ROLL)) {
                         showRolledNumber(move.action(), move.roll());
+                        if(move.roll() == ROBBER_NUMBER){
+
+                        }
                     }
                 });
             }
@@ -98,6 +102,7 @@ public class DiceSubcontroller {
         animateDice();
         leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource(leftDice + ".png")).toString());
         this.leftDiceView.setImage(leftDiceImage);
+
     }
 
     private void animateDice() {
