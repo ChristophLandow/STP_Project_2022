@@ -9,8 +9,12 @@ import de.uniks.pioneers.services.PrefService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -22,6 +26,8 @@ public class DiscardResourcesController implements Controller {
     GameService gameService;
     @Inject
     PrefService prefService;
+
+    @FXML AnchorPane anchorPane;
     @FXML Text XfromSixText;
     @FXML Text SlashText;
     @FXML Text SixText;
@@ -30,7 +36,10 @@ public class DiscardResourcesController implements Controller {
     @FXML Spinner<Integer> PolarBearSpinner;
     @FXML Spinner<Integer> IceSpinner;
     @FXML Spinner<Integer> WaleSpinner;
+    @FXML Button DiscardResourcesOKButton;
     private App app;
+
+    private Stage stage;
 
     @Override
     public void init() {
@@ -41,6 +50,11 @@ public class DiscardResourcesController implements Controller {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css")));
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DiscardResourcesPopup.css");
         }
+        // create stage and set window on close request
+        stage = (Stage) anchorPane.getScene().getWindow();
+        Window window = stage;
+        //Soll den Räuber erneut auslösen, wenn man das Fenster einfach wegklickt!
+        //window.setOnCloseRequest(event -> ingameScreenController.itsRobberyTime;
     }
 
     @Override
@@ -60,5 +74,9 @@ public class DiscardResourcesController implements Controller {
             return null;
         }
         return parent;
+    }
+
+    public void discardAndLeave(){
+
     }
 }
