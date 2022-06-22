@@ -1,9 +1,6 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.model.Building;
-import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.Move;
-import de.uniks.pioneers.model.Player;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
@@ -16,11 +13,15 @@ import javafx.collections.ObservableMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.List;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 @Singleton
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
+    public ObservableList<Member> members = FXCollections.observableArrayList();
+    private List<Member> memberList;
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
@@ -29,13 +30,15 @@ public class GameService {
     public String me;
     private final UserService userService;
     private final IngameService ingameService;
+    private final NewGameLobbyService newGameLobbyService;
     @Inject EventListener eventListener;
 
     @Inject
-    public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService) {
+    public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService, NewGameLobbyService newGameLobbyService) {
         this.gameApiService = gameApiService;
         this.userService = userService;
         this.ingameService = ingameService;
+        this.newGameLobbyService = newGameLobbyService;
     }
 
     public Observable<Game> deleteGame(String gameId) {
@@ -102,10 +105,15 @@ public class GameService {
     public void loadPlayers(Game game) {
         // REST - get players from server
         players = FXCollections.observableHashMap();
+        members = FXCollections.observableArrayList();
+
         disposable.add(ingameService.getAllPlayers(game._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
+                    disposable.add(newGameLobbyService.getAll(game._id())
+                            .observeOn(FX_SCHEDULER)
+                            .subscribe(this.members::setAll, Throwable::printStackTrace));
                     me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }
@@ -185,6 +193,4 @@ public class GameService {
             return false;
         }
     }
-
-
 }

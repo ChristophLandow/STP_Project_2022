@@ -54,8 +54,12 @@ public class NewGameLobbyService {
         return messageApiService.getChatMessages("games", id);
     }
 
-    public Observable<Member> patchMember(String groupId, String userId, boolean ready, String color) {
-        return gameMemberApiService.patchMember(groupId, userId, new UpdateMemberDto(ready, color));
+    public Observable<MessageDto> updateMessage(String parent, String id, UpdateMessageDto message) {
+        return messageApiService.updateMessage("games", parent, id, message);
+    }
+
+    public Observable<Member> patchMember(String groupId, String userId, boolean ready, String color, boolean spectator) {
+        return gameMemberApiService.patchMember(groupId, userId, new UpdateMemberDto(ready, color, spectator));
     }
 
     public Observable<Game> updateGame(Game game, String password, boolean started) {

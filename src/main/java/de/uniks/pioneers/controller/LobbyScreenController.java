@@ -131,7 +131,27 @@ public class LobbyScreenController implements Controller {
             cancelButton.setText("No");
             Optional<ButtonType> option = alert.showAndWait();
             if(option.get() == ButtonType.OK) {
-                leaveGameController.loadLeavedGame(leavedGame);
+                Alert alertLoading = new Alert(Alert.AlertType.CONFIRMATION);
+                alertLoading.setTitle("Loading");
+                alertLoading.setHeaderText("Game is loading...");
+                alertLoading.getButtonTypes().clear();
+                alertLoading.setGraphic(new ImageView(getClass().getResource("progress.gif").toString()));
+
+                new Thread(() -> {
+                    try {
+                        Platform.runLater(() -> {
+                            alertLoading.showAndWait();
+                        });
+                        Thread.sleep(10000);
+                        Platform.runLater(() -> {
+                            alertLoading.getButtonTypes().add(ButtonType.CLOSE);
+                            alertLoading.close();
+                        });
+                        leaveGameController.loadLeavedGame(leavedGame);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
             }
         }
 

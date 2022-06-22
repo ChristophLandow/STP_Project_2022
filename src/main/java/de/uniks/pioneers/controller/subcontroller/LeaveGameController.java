@@ -10,10 +10,16 @@ import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -24,10 +30,11 @@ public class LeaveGameController {
     private final PrefService prefService;
     private final GameService gameService;
     private List<User> users;
-    private final List<Member> members;
+    private final ObservableList<Member> members;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private boolean leavedWithButton;
     private String myColor;
+    private Alert alert;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
 
     @Inject
@@ -38,9 +45,14 @@ public class LeaveGameController {
         this.prefService = prefService;
         this.gameService = gameService;
         this.users = new ArrayList<>();
-        this.members = new ArrayList<>();
+        this.members = FXCollections.observableArrayList();
         this.leavedWithButton = false;
         this.myColor = "";
+
+        this.alert = new Alert(Alert.AlertType.ERROR);
+        this.alert.getButtonTypes().clear();
+        this.alert.getDialogPane().setMinHeight(100);
+        this.alert.setHeaderText("Game is loading");
     }
 
     public void saveLeavedGame(String gameID, List<User> users, String myColor) {
@@ -72,7 +84,6 @@ public class LeaveGameController {
     }
 
     private void toIngameScreen(Game leavedGame, String myColor) {
-        gameService.loadPlayers(leavedGame);
         newGameScreenLobbyController.toIngame(leavedGame, users, myColor);
     }
 }

@@ -75,6 +75,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public SVGPath houseSVG;
     @FXML public ImageView clientAvatar;
     @FXML public Label clientUserNameLabel;
+    @FXML public CheckBox spectatorCheckBox;
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<GameChatController> gameChatControllerProvider;
@@ -160,7 +161,7 @@ public class NewGameScreenLobbyController implements Controller {
         this.RulesButton.setOnMouseClicked(this::openRules);
 
         // add listener for member observable
-        members.addListener((ListChangeListener<? super Member>) c -> {
+        this.members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();
             if (c.wasAdded()) {
                 c.getAddedSubList().forEach(this::renderUser);
@@ -224,7 +225,7 @@ public class NewGameScreenLobbyController implements Controller {
 
             if (!currentUser._id().equals(member.userId())) {
                 PlayerEntryController playerEntryController = new PlayerEntryController(userImage, user.name(), member.color(), user._id());
-                playerEntryController.setReady(member.ready());
+                playerEntryController.setReady(member.ready(), member.spectator());
                 playerEntries.put(user._id(), playerEntryController);
                 userBox.getChildren().add(playerEntryController.getPlayerEntry());
                 if(userBox.getChildren().size() > 3) {
@@ -259,7 +260,7 @@ public class NewGameScreenLobbyController implements Controller {
                         members.add(member);
                     } else if (memberEvent.event().endsWith(".updated")) {
                         members.replaceAll(m -> m.userId().equals(member.userId()) ? member : m);
-                        setReadyColor(member.userId(), member.ready(), member.color());
+                        setReadyColor(member.userId(), member.ready(), member.color(), member.spectator());
                     } else if (memberEvent.event().endsWith(".deleted")) {
                         members.remove(member);
                     }
@@ -301,6 +302,7 @@ public class NewGameScreenLobbyController implements Controller {
             // set start button invisible if currentUser is not gameOwner
             if (!currentUser._id().equals(game.get().owner())) {
                 startGameButton.setVisible(false);
+                spectatorCheckBox.setVisible(true);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -313,16 +315,19 @@ public class NewGameScreenLobbyController implements Controller {
         // set member "ready" true in API
         boolean difference = true;
 
-        for (PlayerEntryController entry : playerEntries.values()) {
-            if (entry.getReady() && !colorPickerController.checkColorDifference(entry.getPlayerColor())) {
-                difference = false;
-                break;
+        if(!spectatorCheckBox.isSelected()) {
+            for(PlayerEntryController entry : playerEntries.values()) {
+                if(entry.getReady() && !colorPickerController.checkColorDifference(entry.getPlayerColor()) && !entry.getSpectator()) {
+                    difference = false;
+                    break;
+                }
             }
         }
 
         if (difference) {
             clientReady = !clientReady;
-            disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor())
+            spectatorCheckBox.setDisable(clientReady);
+            disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor(), spectatorCheckBox.isSelected())
                     .observeOn(FX_SCHEDULER)
                             .doOnError(Throwable::printStackTrace)
                     .subscribe(result -> {
@@ -345,9 +350,9 @@ public class NewGameScreenLobbyController implements Controller {
         return difference;
     }
 
-    private void setReadyColor(String memberId, boolean ready, String hexColor) {
-        if (playerEntries.containsKey(memberId)) {
-            playerEntries.get(memberId).setReady(ready);
+    private void setReadyColor(String memberId, boolean ready, String hexColor, boolean spectator) {
+        if(playerEntries.containsKey(memberId)) {
+            playerEntries.get(memberId).setReady(ready, spectator);
             playerEntries.get(memberId).setColor(hexColor);
         }
     }
@@ -411,7 +416,7 @@ public class NewGameScreenLobbyController implements Controller {
         colorPickerController.setColor(hexColor);
 
         if (game.get().owner().equals(currentUser._id())) {
-            disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor())
+            disposable.add(newGameLobbyService.patchMember(game.get()._id(), currentUser._id(), clientReady, colorPickerController.getColor(), false)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(result -> {
                     }, Throwable::printStackTrace));
@@ -436,5 +441,10 @@ public class NewGameScreenLobbyController implements Controller {
 
     public App getApp() {
         return this.app;
+    }
+
+    public void onCheckBoxClicked() {
+        houseSVG.setVisible(!spectatorCheckBox.isSelected());
+        colorPicker.setDisable(spectatorCheckBox.isSelected());
     }
 }

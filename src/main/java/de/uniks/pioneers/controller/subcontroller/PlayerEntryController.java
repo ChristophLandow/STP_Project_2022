@@ -25,6 +25,7 @@ public class PlayerEntryController implements Controller {
     @FXML Label playerReadyLabel;
     private String playerColor;
     private boolean ready;
+    private boolean spectator;
 
     public PlayerEntryController(Image playerAvatar, String playerName, String hexColor, String playerID) {
         this.render();
@@ -58,9 +59,14 @@ public class PlayerEntryController implements Controller {
         }
     }
 
-    public void setReady(boolean ready) {
-        if(ready) {
+    public void setReady(boolean ready, boolean spectator) {
+        if(ready && !spectator) {
             this.playerHouseSVG.setVisible(true);
+            this.playerReadyLabel.setText("Ready");
+            this.playerReadyLabel.setAlignment(Pos.CENTER);
+            this.playerReadyBox.setBackground(Background.fill(Color.GREEN));
+        } else if(ready && spectator) {
+            this.playerHouseSVG.setVisible(false);
             this.playerReadyLabel.setText("Ready");
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.GREEN));
@@ -70,7 +76,9 @@ public class PlayerEntryController implements Controller {
             this.playerReadyLabel.setAlignment(Pos.CENTER);
             this.playerReadyBox.setBackground(Background.fill(Color.RED));
         }
+
         this.ready = ready;
+        this.spectator = spectator;
     }
 
     public void setColor(String hexColor) {
@@ -88,5 +96,9 @@ public class PlayerEntryController implements Controller {
 
     public boolean getReady() {
         return this.ready;
+    }
+
+    public boolean getSpectator() {
+        return this.spectator;
     }
 }

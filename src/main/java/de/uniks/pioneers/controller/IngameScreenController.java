@@ -57,6 +57,7 @@ public class IngameScreenController implements Controller {
 
     @Inject PrefService prefService;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
+    @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
@@ -79,6 +80,7 @@ public class IngameScreenController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
     private boolean onClose = false;
+    private List<Member> spectators;
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -192,6 +194,16 @@ public class IngameScreenController implements Controller {
             }
         });
 
+        //this.loadSpectators();
+        gameService.members.addListener((ListChangeListener<? super Member>) c -> {
+            c.next();
+            if (c.wasAdded()) {
+                c.getAddedSubList().forEach(this::renderSpectator);
+            } else if (c.wasRemoved()) {
+                c.getRemoved().forEach(this::deleteSpectator);
+            }
+        });
+
         // buildings change listener
         gameService.buildings.addListener((ListChangeListener<? super Building>) c -> {
             c.next();
@@ -226,6 +238,33 @@ public class IngameScreenController implements Controller {
         IngamePlayerListElementController playerListElement = elementProvider.get();
         playerListElement.nodeListView = playerListView;
         playerListElement.render(player.userId());
+    }
+
+    public void deleteSpectator(Member member) {
+        Node removal = playerListView.getItems().stream().filter(node -> node.getId().equals(member.userId())).findAny().orElse(null);
+        playerListView.getItems().remove(removal);
+    }
+
+    public void renderSpectator(Member member) {
+        if(member.spectator()) {
+            if(userService.getCurrentUser()._id().equals(member.userId())) {
+                hammerImageView.setVisible(false);
+                streetCountLabel.setVisible(false);
+                houseCountLabel.setVisible(false);
+                cityCountLabel.setVisible(false);
+                streetSVG.setVisible(false);
+                citySVG.setVisible(false);
+                houseSVG.setVisible(false);
+                tradeImageView.setVisible(false);
+                hourglassImageView.setVisible(false);
+                nextTurnImageView.setVisible(false);
+            }
+
+            IngamePlayerListSpectatorController spectatorListElement = spectatorProvider.get();
+            spectatorListElement.setNodeListView(playerListView);
+            spectatorListElement.init(game.get()._id(), member.userId());
+            spectatorListElement.render(game.get().owner());
+        }
     }
 
     private void deleteBuilding(Building building) {}
@@ -352,7 +391,16 @@ public class IngameScreenController implements Controller {
         timerService.reset();
     }
 
-    public void setUsers(List<User> users) {this.users = users;}
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public void loadSpectators() {
+        for(Member member : gameService.members) {
+            renderSpectator(member);
+        }
+    }
+
     public void loadMap() {
         this.ingameService.getMap(this.game.get()._id())
                 .observeOn(FX_SCHEDULER)
