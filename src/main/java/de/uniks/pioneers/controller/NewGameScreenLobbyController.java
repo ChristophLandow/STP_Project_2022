@@ -73,10 +73,10 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public ImageView clientAvatar;
     @FXML public Label clientUserNameLabel;
     @FXML public CheckBox spectatorCheckBox;
-
-    @FXML
-    public Spinner<Integer> boardSizeSpinner;
+    @FXML public Spinner<Integer> boardSizeSpinner;
+    @FXML public Spinner<Integer> victoryPointSpinner;
     public Label boardSizeLabel;
+    public Label victoryPointsLabel;
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<GameChatController> gameChatControllerProvider;
@@ -197,9 +197,14 @@ public class NewGameScreenLobbyController implements Controller {
         boardSizeSpinner.editorProperty().get().setAlignment(Pos.CENTER);
         boardSizeSpinner.getValueFactory().setValue(2);
 
+        victoryPointSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,15,10));
+        victoryPointSpinner.editorProperty().get().setAlignment(Pos.CENTER);
+
         if(!currentUser._id().equals(game.get().owner())){
             boardSizeSpinner.setVisible(false);
             boardSizeLabel.setVisible(false);
+            victoryPointsLabel.setVisible(false);
+            victoryPointSpinner.setVisible(false);
         }
     }
 
@@ -353,11 +358,7 @@ public class NewGameScreenLobbyController implements Controller {
                         } else {
                             clientReadyLabel.setText("Not Ready");
                             clientReadyBox.setBackground(Background.fill(Color.RED));
-                            if(spectatorImageView.isVisible()) {
-                                colorPickerController.setDisable(true);
-                            } else {
-                                colorPickerController.setDisable(false);
-                            }
+                            colorPickerController.setDisable(spectatorImageView.isVisible());
                         }
                     }, Throwable::printStackTrace));
             this.reactivateReadyButton();
@@ -379,10 +380,14 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
-            disposable.add(newGameLobbyService.updateGame(game.get(), password.get(), true, boardSizeSpinner.getValueFactory().getValue(), 10)
+            disposable.add(newGameLobbyService.updateGame(game.get(), password.get(), true, boardSizeSpinner.getValueFactory().getValue(), victoryPointSpinner.getValueFactory().getValue())
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
-                    .subscribe(response -> this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor()), Throwable::printStackTrace));
+                    .subscribe(response -> {
+                        this.game.setValue(response);
+                        System.out.println(this.game.toString());
+                        this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor());
+                    }, Throwable::printStackTrace));
         }
     }
 

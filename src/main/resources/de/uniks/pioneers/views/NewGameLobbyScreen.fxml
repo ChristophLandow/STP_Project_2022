@@ -120,12 +120,12 @@
             </HBox>
             <HBox prefHeight="43.0" prefWidth="349.0">
                <children>
-                  <Label alignment="TOP_LEFT" prefHeight="25.0" prefWidth="248.0">
+                  <Label fx:id="victoryPointsLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="248.0" text="Victory Points to win:">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Spinner prefHeight="25.0" prefWidth="104.0" />
+                  <Spinner fx:id="victoryPointSpinner" prefHeight="25.0" prefWidth="98.0" />
                </children>
             </HBox>
             <Label fx:id="RightNowText" prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
