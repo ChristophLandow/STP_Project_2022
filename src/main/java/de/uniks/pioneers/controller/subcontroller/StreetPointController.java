@@ -124,7 +124,7 @@ public class StreetPointController {
 
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
-        Rectangle road = new Rectangle(60, 8.5, Paint.valueOf(player.color()));
+        Rectangle road = new Rectangle(60, 9, Paint.valueOf(player.color()));
         fieldPane.getChildren().add(road);
         road.setLayoutX(view.getLayoutX() - road.getWidth()/2);
         road.setLayoutY(view.getLayoutY() - road.getHeight()/2);
