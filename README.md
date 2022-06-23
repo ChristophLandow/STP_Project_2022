@@ -124,10 +124,10 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
   - [X] Founding-settlement phase
   - [X] Roll
   - [X] End turn
-  - [ ] Buy and build pieces
-  - [ ] Member list
+  - [X] Buy and build pieces
+  - [X] Member list
   - [X] Settings
-  - [ ] Dark mode
+  - [X] Dark mode
   - [X] Music
 
 <p align="right">(<a href="#top">back to top</a>)</p>

@@ -10,10 +10,8 @@ import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -40,6 +38,7 @@ public class StreetPointController {
     public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
     private String action;
     private Building building;
+    private Rectangle streetRect;
 
     @Inject
     public StreetPointController(GameService gameService, IngameService ingameService, UserService userService, GameStorage gameStorage) {
@@ -57,7 +56,7 @@ public class StreetPointController {
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
-        this.eventView.setRadius(15);
+        this.eventView.setRadius(gameStorage.getHexScale()/5);
         this.eventView.setOpacity(0);
     }
 
@@ -88,7 +87,7 @@ public class StreetPointController {
         if (valid) {
             gameStorage.remainingBuildings.put(ROAD, gameStorage.remainingBuildings.get(ROAD)-1 );
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
-            disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, newBuilding))
+            disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, null, null, null, newBuilding))
                     .observeOn(FX_SCHEDULER)
                     .subscribe(move -> {
                         Pane fieldPane = (Pane) this.view.getScene().getRoot().lookup("#fieldPane");
@@ -125,12 +124,11 @@ public class StreetPointController {
 
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
-        Rectangle road = new Rectangle(60, 7, Paint.valueOf(player.color()));
-        Scene scene = view.getScene();
-        Pane root = (Pane) scene.getRoot();
-        root.getChildren().add(road);
-        road.setLayoutX(view.getLayoutX() - 14);
-        road.setLayoutY(view.getLayoutY() + 12);
+        Rectangle road = new Rectangle(this.gameStorage.getHexScale()/1.25, this.gameStorage.getHexScale()/8.3, Paint.valueOf(player.color()));
+        fieldPane.getChildren().add(road);
+        road.setLayoutX(view.getLayoutX() - road.getWidth()/2);
+        road.setLayoutY(view.getLayoutY() - road.getHeight()/2);
+
         if (building.side() == 3) {
             road.setRotate(90);
         } else if (building.side() == 7) {
@@ -138,15 +136,21 @@ public class StreetPointController {
         } else {
             road.setRotate(-30);
         }
+
+        for(BuildingPointController neighbourBuilding: adjacentBuildings){
+            neighbourBuilding.moveBuildingToFront();
+        }
+
+        streetRect = road;
         this.building = building;
     }
 
     private void dye(MouseEvent mouseEvent) {
-        this.view.setFill(Color.rgb(0, 255, 0));
+        this.view.setFill(HOVER_COLOR);
     }
 
     private void undye(MouseEvent mouseEvent) {
-        this.view.setFill(Color.rgb(255, 0, 0));
+        this.view.setFill(STANDARD_COLOR);
     }
 
     public String generateKeyString() {
@@ -159,5 +163,13 @@ public class StreetPointController {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public void setVisible(boolean isVisible){
+        this.view.setVisible(isVisible);
+
+        if(this.streetRect != null){
+            this.streetRect.setVisible(isVisible);
+        }
     }
 }

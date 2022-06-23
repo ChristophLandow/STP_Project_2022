@@ -3,7 +3,9 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
+import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.LobbyService;
+import de.uniks.pioneers.services.PrefService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -39,13 +41,14 @@ public class CreateNewGamePopUpController implements Controller {
     @FXML public Button createGameButton;
     @FXML public Label nameLen;
     @FXML public Label passwordLen;
+
+    @Inject
+    PrefService prefService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<LobbyService> lobbyServiceProvider;
     final CompositeDisposable disposable = new CompositeDisposable();
     private Stage stage;
     private LobbyScreenController lobbyScreenController;
-
-    private boolean darkMode = false;
 
     @Inject
     public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<LobbyService> lobbyServiceProvider) {
@@ -88,6 +91,13 @@ public class CreateNewGamePopUpController implements Controller {
         stage = (Stage) popUpBox.getScene().getWindow();
         Window window = stage;
         window.setOnCloseRequest(event -> lobbyScreenController.isCreatingGame.set(false));
+        if(prefService.getDarkModeState()){
+            stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/NewGamePopup.css")));
+            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
+        } else {
+            stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css")));
+            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/NewGamePopup.css");
+        }
     }
 
     @Override
@@ -114,13 +124,5 @@ public class CreateNewGamePopUpController implements Controller {
         Random obj = new Random();
         int rand_num = obj.nextInt(0xffffff + 1);
         return String.format("#%06x", rand_num);
-    }
-
-    public void setDarkMode() {
-        darkMode = true;
-    }
-
-    public void setBrightMode(){
-        darkMode = false;
     }
 }

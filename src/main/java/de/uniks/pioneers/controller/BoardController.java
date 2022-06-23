@@ -5,14 +5,12 @@ import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.*;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,29 +32,28 @@ public class BoardController {
     private final HashMap<String, StreetPointController> streetPointControllerHashMap = new HashMap<>();
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
-    private final int gameSize;
     private final IngameService ingameService;
     private final UserService userService;
+    private final MapRenderService mapRenderService;
     private final TimerService timerService;
     public SimpleObjectProperty<Game> game;
 
-    public BoardController(IngameService ingameService, UserService userService, TimerService timerService, SimpleObjectProperty<Game> game, int gameSize, GameStorage gameStorage){
+    public BoardController(IngameService ingameService, UserService userService, TimerService timerService, SimpleObjectProperty<Game> game, GameStorage gameStorage, MapRenderService mapRenderService){
 
         this.ingameService = ingameService;
         this.userService = userService;
         this.timerService = timerService;
         this.game = game;
-        this.gameSize = gameSize;
         this.gameStorage = gameStorage;
-
+        this.mapRenderService = mapRenderService;
     }
 
 
     public void buildBoardUI() {
         BoardGenerator generator = new BoardGenerator();
-        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
-        List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1);
-        List<HexTile> corners = generator.generateCorners(2 * this.gameSize + 1);
+        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap(), this.gameStorage.getHexScale());
+        List<HexTile> edges = generator.generateEdges(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
+        List<HexTile> corners = generator.generateCorners(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
 
         for (HexTile hexTile : tiles) {
 
@@ -68,48 +65,56 @@ public class BoardController {
                     0.0, -1.0,
                     -Math.sqrt(3) / 2, -0.5,
                     -Math.sqrt(3) / 2, 0.5);
-            hex.setScaleX(scale);
-            hex.setScaleY(scale);
+            hex.setScaleX(gameStorage.getHexScale());
+            hex.setScaleY(gameStorage.getHexScale());
             Image image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + hexTile.type + ".png")).toString());
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
             hex.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(hex);
 
+            ImageView numberImage = null;
             if (!hexTile.type.equals("desert")) {
                 String numberURL = "ingame/tile_" + hexTile.number + ".png";
-                ImageView numberImage = new ImageView(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
-                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
-                numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
-                numberImage.setFitHeight(30);
-                numberImage.setFitWidth(30);
+                numberImage = new ImageView(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
+                double numberSize = gameStorage.getHexScale()/2.5;
+                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - numberSize/2);
+                numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - numberSize/2);
+                numberImage.setFitHeight(numberSize);
+                numberImage.setFitWidth(numberSize);
                 this.fieldPane.getChildren().add(numberImage);
             }
-            this.tileControllers.add(new HexTileController(hexTile, hex));
+            HexTileController newHexTileController = new HexTileController(hexTile, hex, numberImage);
+            newHexTileController.setVisible(false);
+            this.tileControllers.add(newHexTileController);
         }
 
         for (HexTile edge : edges) {
 
-            Circle circ = new Circle(3);
-            circ.setFill(BUILDING_POINT_STANDARD);
+            Circle circ = new Circle(gameStorage.getHexScale()/16.5);
+            circ.setFill(STANDARD_COLOR);
 
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
             StreetPointController streetPointController = streetPointControllerProvider.get();
             streetPointController.post(edge, circ, this.fieldPane);
+            streetPointController.setVisible(false);
             streetPointControllers.add(streetPointController);
         }
 
         for (HexTile corner : corners) {
 
-            Circle circ = new Circle(6);
-            circ.setFill(BUILDING_POINT_STANDARD);
+            Circle circ = new Circle(gameStorage.getHexScale()/12.5);
+            circ.setFill(STANDARD_COLOR);
 
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
             circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
             this.fieldPane.getChildren().add(circ);
-            this.buildingControllers.add(new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService));
+            BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
+            newbuildingPointController.setVisible(false);
+            this.buildingControllers.add(newbuildingPointController);
+
         }
         for (HexTileController tile : tileControllers) {
 
@@ -129,6 +134,9 @@ public class BoardController {
                     streetPoint.generateKeyString(),
                     streetPoint);
         }
+
+        mapRenderService.setTileControllers(this.tileControllers);
+
         loadSnowAnimation();
     }
 

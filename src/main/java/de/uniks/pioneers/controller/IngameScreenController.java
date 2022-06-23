@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -37,14 +39,16 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
     @FXML public Pane fieldPane, root, turnPane;
+    @FXML
+    public AnchorPane scrollAnchorPane;
     @FXML public Pane roadFrame, settlementFrame, cityFrame, situationPane;
-    @FXML public ScrollPane chatScrollPane, userScrollPane;
+    @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
     @FXML public SVGPath streetSVG, houseSVG, citySVG;
     @FXML public Button rulesButton, leaveButton, settingsButton;
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
     @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel;
-    @FXML public Label timeLabel, situationLabel;
+    @FXML public Label timeLabel, situationLabel, loadingLabel;
     @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView;
     @FXML public ImageView leftDiceImageView, rightDiceImageView, hammerImageView;
     @FXML public ListView<Node> playerListView;
@@ -58,6 +62,10 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
+    @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
+    @Inject Provider<RobberController> robberControllerProvider;
+
+
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -66,8 +74,10 @@ public class IngameScreenController implements Controller {
     private List<User> users;
     private final App app;
     private final GameStorage gameStorage;
+    private final MapRenderService mapRenderService;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
+
     private final IngameService ingameService;
     private final UserService userService;
     private final TimerService timerService;
@@ -81,26 +91,27 @@ public class IngameScreenController implements Controller {
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                  Provider<RobberController> robberControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
                                   UserService userService, GameService gameService,
                                   EventListener eventListener, LeaveGameController leaveGameController,
-                                  TimerService timerService) {
+                                  TimerService timerService, MapRenderService mapRenderService) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
+        this.mapRenderService = mapRenderService;
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
+        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        int gameSize = 2;
-        this.boardController = new BoardController(ingameService, userService, timerService, game, gameSize, this.gameStorage);
+        this.boardController = new BoardController(ingameService, userService, timerService, game, this.gameStorage, this.mapRenderService);
     }
 
     @Override
@@ -177,6 +188,9 @@ public class IngameScreenController implements Controller {
             ingamePlayerResourcesController.root = this.root;
             ingamePlayerResourcesController.render();
             ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
+
+            ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
+            zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane, loadingLabel);
         });
 
         gameService.loadPlayers(game.get());
@@ -301,7 +315,7 @@ public class IngameScreenController implements Controller {
     }
 
     private void endTurn(MouseEvent mouseEvent) {
-        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
@@ -395,6 +409,8 @@ public class IngameScreenController implements Controller {
     public void stop() {
         gameChatController.stop();
         settingsScreenControllerProvider.get().stop();
+        this.fieldPane.getChildren().clear();
+        this.mapRenderService.stop();
         timerService.reset();
     }
 
@@ -430,4 +446,6 @@ public class IngameScreenController implements Controller {
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
     }
+
+
 }

@@ -81,7 +81,7 @@ class AsMember extends ApplicationTest {
     private String patternToObserveUserUser02;
     private String patternToObserveUserJoining;
 
-    private final Game testGame = new Game("1", "2", "3", "name", "1", 2,false);
+    private final Game testGame = new Game("1", "2", "3", "name", "1", 2,false, null);
     private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff", false);
     private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02, false);
     private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03, false);

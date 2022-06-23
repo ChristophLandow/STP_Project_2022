@@ -1,6 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
 import java.util.ArrayList;
 import static java.lang.Math.abs;
@@ -8,13 +8,15 @@ import static java.lang.Math.sqrt;
 
 public class HexTileController {
     private final Polygon view;
+    private final ImageView numberImage;
     public HexTile tile;
     public BuildingPointController[] corners = new BuildingPointController[6];
     public StreetPointController[] edges = new StreetPointController[6];
 
-    public HexTileController(HexTile tile, Polygon view) {
+    public HexTileController(HexTile tile, Polygon view, ImageView numberImage) {
         this.tile = tile;
         this.view = view;
+        this.numberImage = numberImage;
     }
 
     public void findCorners(ArrayList<BuildingPointController> buildingPointControllers) {
@@ -145,5 +147,29 @@ public class HexTileController {
                 this.edges[((i-1)+6)%6].adjacentBuildings.add(this.corners[i]);
             }
         }
+    }
+
+    public void setVisible(boolean isVisible){
+        this.view.setVisible(isVisible);
+
+        if(numberImage != null){
+            numberImage.setVisible(isVisible);
+        }
+
+        for(BuildingPointController buildingPointController: this.corners){
+            if(buildingPointController != null) {
+                buildingPointController.setVisible(isVisible);
+            }
+        }
+
+        for(StreetPointController streetPointController: this.edges){
+            if(streetPointController != null) {
+                streetPointController.setVisible(isVisible);
+            }
+        }
+    }
+
+    public Polygon getView() {
+        return view;
     }
 }
