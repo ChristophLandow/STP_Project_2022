@@ -53,7 +53,7 @@ public class BuildingPointController {
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
-        this.eventView.setRadius(15);
+        this.eventView.setRadius(gameStorage.getHexScale()/5);
         this.eventView.setOpacity(0);
     }
 
@@ -76,7 +76,7 @@ public class BuildingPointController {
         }
 
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
-        disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding))
+        disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
     }

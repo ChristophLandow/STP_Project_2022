@@ -3,16 +3,11 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
-import de.uniks.pioneers.controller.subcontroller.GameChatController;
-import de.uniks.pioneers.controller.subcontroller.PlayerEntryController;
+import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.NewGameLobbyService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
@@ -26,6 +21,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -78,6 +74,10 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public Label clientUserNameLabel;
     @FXML public CheckBox spectatorCheckBox;
 
+    @FXML
+    public Spinner<Integer> boardSizeSpinner;
+    public Label boardSizeLabel;
+
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<GameChatController> gameChatControllerProvider;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
@@ -87,9 +87,12 @@ public class NewGameScreenLobbyController implements Controller {
 
     private final EventListener eventListener;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
+
     private final NewGameLobbyService newGameLobbyService;
     private final App app;
     private final UserService userService;
+
+    private final GameStorage gameStorage;
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     public SimpleStringProperty password = new SimpleStringProperty();
@@ -104,13 +107,15 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Inject
     public NewGameScreenLobbyController(EventListener eventListener, Provider<RulesScreenController> rulesScreenControllerProvider,
-                                        NewGameLobbyService newGameLobbyService, App app, UserService userService, GameService gameService) {
+                                        NewGameLobbyService newGameLobbyService, App app, UserService userService,
+                                        GameService gameService, GameStorage gameStorage) {
         this.eventListener = eventListener;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.newGameLobbyService = newGameLobbyService;
         this.app = app;
         this.userService = userService;
         this.gameService = gameService;
+        this.gameStorage = gameStorage;
     }
 
     @Override
@@ -187,6 +192,15 @@ public class NewGameScreenLobbyController implements Controller {
                 .setUsers(this.users.values().stream().toList());
         gameChatController.render();
         gameChatController.init();
+
+        boardSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10));
+        boardSizeSpinner.editorProperty().get().setAlignment(Pos.CENTER);
+        boardSizeSpinner.getValueFactory().setValue(2);
+
+        if(!currentUser._id().equals(game.get().owner())){
+            boardSizeSpinner.setVisible(false);
+            boardSizeLabel.setVisible(false);
+        }
     }
 
     private void openRules(MouseEvent mouseEvent) {
@@ -365,7 +379,7 @@ public class NewGameScreenLobbyController implements Controller {
     public void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
-            disposable.add(newGameLobbyService.updateGame(game.get(), password.get(), true)
+            disposable.add(newGameLobbyService.updateGame(game.get(), password.get(), true, boardSizeSpinner.getValueFactory().getValue(), 10)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
                     .subscribe(response -> this.toIngame(this.game.get(), this.users.values().stream().toList(), colorPickerController.getColor()), Throwable::printStackTrace));
@@ -373,6 +387,7 @@ public class NewGameScreenLobbyController implements Controller {
     }
 
     public void toIngame(Game game, List<User> users, String myColor) {
+        gameStorage.calcZoom(boardSizeSpinner.getValue());
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         ingameScreenController.game.set(game);
         ingameScreenController.loadMap();
