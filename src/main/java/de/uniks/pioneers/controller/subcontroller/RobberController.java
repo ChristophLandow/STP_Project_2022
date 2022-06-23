@@ -7,11 +7,20 @@ import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
+
 public class RobberController implements Controller {
+
+    @Inject
+    Provider<DiscardResourcesController> discardResourcesControllerProvider;
     private final GameService gameService;
 
     private final PrefService prefService;
@@ -20,11 +29,14 @@ public class RobberController implements Controller {
     private String action;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    public RobberController(GameService gameService, PrefService prefService, IngameService ingameService){
+    @Inject
+    public RobberController(Provider<DiscardResourcesController> discardResourcesControllerProvider
+            , GameService gameService, PrefService prefService, IngameService ingameService){
+        this.discardResourcesControllerProvider = discardResourcesControllerProvider;
         this.gameService = gameService;
         this.prefService = prefService;
         this.ingameService = ingameService;
-        discard();
+
     }
 
     @Override
@@ -34,10 +46,22 @@ public class RobberController implements Controller {
     }
 
     private void discard() {
-        DiscardResourcesController discardController = new DiscardResourcesController();
-        discardController.render();
+        DiscardResourcesController discardController = discardResourcesControllerProvider.get();
+
+        Parent node = discardController.render();
+        Stage stage = new Stage();
+        stage.setTitle("Discard resource cards");
+        Scene scene = new Scene(node);
+        stage.setScene(scene);
+        if(prefService.getDarkModeState()){
+            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DiscardResourcesPopup.css")));
+            scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css");
+        } else {
+            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css")));
+            scene.getStylesheets().add("/de/uniks/pioneers/styles/DiscardResourcesPopup.css");
+        }
         discardController.init();
-        System.out.println(gameService.me);
+        stage.show();
     }
 
     @Override

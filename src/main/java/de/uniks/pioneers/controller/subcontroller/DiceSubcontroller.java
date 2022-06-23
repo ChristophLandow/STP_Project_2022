@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import static de.uniks.pioneers.GameConstants.*;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import java.util.Objects;
 import java.util.Timer;
@@ -26,6 +27,9 @@ import static de.uniks.pioneers.GameConstants.FOUNDING_ROLL;
 import static de.uniks.pioneers.GameConstants.ROLL;
 
 public class DiceSubcontroller {
+
+    @Inject
+    Provider<RobberController> robberControllerProvider;
     private final PrefService prefService;
     private ImageView leftDiceView;
     private ImageView rightDiceView;
@@ -37,8 +41,9 @@ public class DiceSubcontroller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     
     @Inject
-    public DiceSubcontroller(IngameService ingameService, GameService gameService, PrefService prefService,
+    public DiceSubcontroller(Provider<RobberController> robberControllerProvider, IngameService ingameService, GameService gameService, PrefService prefService,
                              TimerService timerService) {
+        this.robberControllerProvider = robberControllerProvider;
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.timerService = timerService;
@@ -53,7 +58,8 @@ public class DiceSubcontroller {
                 c.getAddedSubList().forEach(move -> {
                     if (move.action().equals(FOUNDING_ROLL) || move.action().equals(ROLL)) {
                         showRolledNumber(move.action(), move.roll());
-                        RobberController robber = new RobberController(gameService, prefService, ingameService);
+                        RobberController robber = robberControllerProvider.get();
+                        robber.init();
                     }
                 });
             }
