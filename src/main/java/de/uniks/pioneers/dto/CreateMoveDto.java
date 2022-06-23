@@ -1,5 +1,6 @@
 package de.uniks.pioneers.dto;
 
+import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Resources;
 
 public record CreateMoveDto(

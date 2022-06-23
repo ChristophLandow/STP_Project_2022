@@ -63,6 +63,8 @@ public class IngameScreenController implements Controller {
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
     @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
+    @Inject Provider<RobberController> robberControllerProvider;
+
 
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
@@ -74,6 +76,7 @@ public class IngameScreenController implements Controller {
     private final GameStorage gameStorage;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
+
     private final IngameService ingameService;
     private final UserService userService;
     private final TimerService timerService;
@@ -86,6 +89,7 @@ public class IngameScreenController implements Controller {
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                  Provider<RobberController> robberControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
@@ -101,7 +105,7 @@ public class IngameScreenController implements Controller {
         this.eventListener = eventListener;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
+        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         int gameSize = 2;
