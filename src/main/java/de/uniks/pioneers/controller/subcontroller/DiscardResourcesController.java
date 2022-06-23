@@ -73,9 +73,9 @@ public class DiscardResourcesController implements Initializable, Controller {
             wale = 0;
         }
         if(ingameResources.wool() != null){
-            carbon = ingameResources.wool();
+            polarbear = ingameResources.wool();
         } else {
-            carbon = 0;
+            polarbear = 0;
         }
         if(ingameResources.brick() != null){
             ice = ingameResources.brick();
@@ -83,7 +83,7 @@ public class DiscardResourcesController implements Initializable, Controller {
             ice = 0;
         }
         if(ingameResources.ore() != null){
-            polarbear = ingameResources.ore();
+            carbon = ingameResources.ore();
         } else {
             carbon = 0;
         }

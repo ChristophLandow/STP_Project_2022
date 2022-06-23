@@ -105,7 +105,7 @@ public class IngameScreenController implements Controller {
         this.eventListener = eventListener;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
+        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         int gameSize = 2;
