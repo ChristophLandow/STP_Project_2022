@@ -111,7 +111,7 @@ public class IngamePlayerListSpectatorController {
         disposable.add(newGameLobbyService.deleteMember(gameID, playerID)
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(response -> System.out.println("kick")));
+                .subscribe());
     }
 
     public void stop() {
