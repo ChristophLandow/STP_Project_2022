@@ -30,7 +30,7 @@ public class LobbyService {
     }
 
     public Observable<Game> createGame(String name, boolean started, String password) {
-        return gameApiService.create(new CreateGameDto(name, started, password));
+        return gameApiService.create(new CreateGameDto(name, started, null, password));
     }
 
     public Observable<Game> deleteGame(String id) {

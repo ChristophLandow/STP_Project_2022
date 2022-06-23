@@ -26,7 +26,7 @@ public class Constants {
     public static final String WS_PREFIX = "/ws/v3";
     public static final String EVENTS_AUTH_TOKEN = "/events?authToken=";
 
-    public static final String API_V2_PIONEERS_PREFIX =  "/api/v2/games/{gameId}";
+    public static final String API_V3_PIONEERS_PREFIX =  "/api/v3/games/{gameId}";
 
     public static final String LOGIN_URL = BASE_URL + API_PREFIX + "/auth/login";
     public static final String SIGN_UP_URL = BASE_URL + API_PREFIX + "/users";

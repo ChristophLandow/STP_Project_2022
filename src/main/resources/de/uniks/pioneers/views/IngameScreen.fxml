@@ -8,13 +8,30 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
 
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
-   <Pane fx:id="fieldPane" layoutX="18.0" layoutY="15.0" prefHeight="637.0" prefWidth="715.0" style="-fx-background-color:#87CEEB; -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
+   <ScrollPane fx:id="fieldScrollPane" layoutX="18.0" layoutY="15.0" pannable="true" prefHeight="631.0" prefWidth="715.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 1; -fx-background: #87CEEB;">
+     <content>
+       <AnchorPane fx:id="scrollAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="637.0" prefWidth="715.0">
+            <children>
+               <Pane fx:id="fieldPane" prefHeight="637.0" prefWidth="715.0" style="-fx-background-color: #87CEEB;">
+                  <children>
+                     <Label layoutX="277.0" layoutY="301.0" text="Loading map...">
+                        <font>
+                           <Font size="25.0" />
+                        </font>
+                     </Label>
+                  </children></Pane>
+            </children>
+         </AnchorPane>
+     </content>
+   </ScrollPane>
    <Button fx:id="leaveButton" layoutX="751.0" layoutY="14.0" mnemonicParsing="false" onAction="#leave" prefHeight="30.0" prefWidth="258.0" text="Leave" />
    <Button fx:id="rulesButton" layoutX="751.0" layoutY="58.0" mnemonicParsing="false" onAction="#toRules" prefHeight="30.0" prefWidth="120.0" text="Rules" />
    <Button fx:id="settingsButton" layoutX="889.0" layoutY="58.0" mnemonicParsing="false" onAction="#toSettings" prefHeight="30.0" prefWidth="120.0" text="Settings" />

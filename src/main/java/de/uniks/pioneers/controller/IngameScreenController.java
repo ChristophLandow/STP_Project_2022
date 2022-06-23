@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -37,8 +39,10 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
     @FXML public Pane fieldPane, root, turnPane;
+    @FXML
+    public AnchorPane scrollAnchorPane;
     @FXML public Pane roadFrame, settlementFrame, cityFrame, situationPane;
-    @FXML public ScrollPane chatScrollPane, userScrollPane;
+    @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
     @FXML public SVGPath streetSVG, houseSVG, citySVG;
     @FXML public Button rulesButton, leaveButton, settingsButton;
     @FXML public VBox messageVBox;
@@ -58,6 +62,10 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
+    @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
+    @Inject Provider<RobberController> robberControllerProvider;
+
+
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -68,6 +76,7 @@ public class IngameScreenController implements Controller {
     private final GameStorage gameStorage;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
+
     private final IngameService ingameService;
     private final UserService userService;
     private final TimerService timerService;
@@ -81,6 +90,7 @@ public class IngameScreenController implements Controller {
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                  Provider<RobberController> robberControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
                                   IngameService ingameService, GameStorage gameStorage,
@@ -96,7 +106,7 @@ public class IngameScreenController implements Controller {
         this.eventListener = eventListener;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
+        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         int gameSize = 2;
@@ -224,6 +234,9 @@ public class IngameScreenController implements Controller {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
+
+        ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
+        zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane);
     }
     private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
 
@@ -301,7 +314,7 @@ public class IngameScreenController implements Controller {
     }
 
     private void endTurn(MouseEvent mouseEvent) {
-        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
@@ -430,4 +443,6 @@ public class IngameScreenController implements Controller {
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
     }
+
+
 }
