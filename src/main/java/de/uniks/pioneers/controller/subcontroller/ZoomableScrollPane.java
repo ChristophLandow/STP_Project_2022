@@ -1,8 +1,12 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.services.GameStorage;
+import de.uniks.pioneers.services.MapRenderService;
+import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -15,29 +19,44 @@ public class ZoomableScrollPane {
     private ScrollPane scrollPane;
     private AnchorPane anchorPane;
     private Pane fieldPane;
+    private Label loadingLabel;
 
     final private Scale fieldScale = new Scale();
 
     private final GameStorage gameStorage;
+    private final MapRenderService mapRenderService;
 
     @Inject
-    ZoomableScrollPane(GameStorage gameStorage){
+    ZoomableScrollPane(GameStorage gameStorage, MapRenderService mapRenderService){
         this.gameStorage = gameStorage;
+        this.mapRenderService = mapRenderService;
     }
 
-    public void init(ScrollPane scrollPane, Pane fieldPane, AnchorPane anchorPane){
+    public void init(ScrollPane scrollPane, Pane fieldPane, AnchorPane anchorPane, Label loadingLabel){
         this.scrollPane = scrollPane;
         this.fieldPane = fieldPane;
         this.anchorPane = anchorPane;
-
-        if(gameStorage.getZoomedOut() == -1){
-            adjustPane();
-        }
+        this.loadingLabel = loadingLabel;
 
         this.fieldPane.getTransforms().add(fieldScale);
-        zoomOut();
+
+        if(gameStorage.getZoomedOut() != -1) {
+            zoomOut();
+        }
+        else{
+            zoomIn();
+        }
+
+        loadingLabel.setVisible(false);
 
         addMouseScrolling(anchorPane);
+
+        Platform.runLater(mapRenderService::checkPoints);
+        this.anchorPane.heightProperty().addListener(observable -> scrollPane.setVvalue(0.5));
+        this.anchorPane.widthProperty().addListener(observable -> {
+            scrollPane.setHvalue(0.5);
+            Platform.runLater(mapRenderService::checkPoints);
+        });
     }
 
     public void zoomIn(){
@@ -46,9 +65,6 @@ public class ZoomableScrollPane {
             zoom(gameStorage.getZoomedIn());
             scrollPane.setFitToHeight(false);
             scrollPane.setFitToWidth(false);
-
-            this.anchorPane.heightProperty().addListener(observable -> scrollPane.setVvalue(0.5));
-            this.anchorPane.widthProperty().addListener(observable -> scrollPane.setHvalue(0.5));
         }
     }
 
@@ -75,7 +91,7 @@ public class ZoomableScrollPane {
 
     public void addMouseScrolling(Node node) {
         node.setOnScroll((ScrollEvent event) -> {
-            if(event.isControlDown()) {
+            if(event.isControlDown() && gameStorage.getZoomedOut() != -1) {
                 double deltaY = event.getDeltaY();
                 if (deltaY < 0) {
                     zoomOut();
@@ -83,11 +99,10 @@ public class ZoomableScrollPane {
                     zoomIn();
                 }
             }
-        });
-    }
 
-    public void adjustPane(){
-        this.fieldPane.setPrefWidth(this.fieldPane.getWidth()*1.5);
-        this.fieldPane.setPrefHeight(this.fieldPane.getHeight()*1.5);
+            mapRenderService.checkPoints();
+        });
+
+        node.setOnMouseDragged((MouseEvent e) -> mapRenderService.checkPoints());
     }
 }
