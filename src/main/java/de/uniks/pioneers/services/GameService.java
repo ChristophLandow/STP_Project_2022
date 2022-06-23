@@ -50,6 +50,7 @@ public class GameService {
 
         // init players listener
         this.initPlayerListener();
+        this.initMemberListener();
         this.initBuildingsListener();
         this.initMoveListener();
     }
@@ -82,6 +83,22 @@ public class GameService {
                     }
                 })
         );
+    }
+
+    private void initMemberListener() {
+        String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveGameMembers, Member.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(memberEvent -> {
+                    final Member member = memberEvent.data();
+                    if (memberEvent.event().endsWith(".created")) {
+                        members.add(member);
+                    } else if (memberEvent.event().endsWith(".updated")) {
+                        members.replaceAll(m -> m.userId().equals(member.userId()) ? member : m);
+                    } else if (memberEvent.event().endsWith(".deleted")) {
+                        members.remove(member);
+                    }
+                }));
     }
 
     private void initBuildingsListener() {

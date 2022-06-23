@@ -77,6 +77,7 @@ public class IngameScreenController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
     private boolean onClose = false;
+    private boolean kicked = false;
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -239,6 +240,11 @@ public class IngameScreenController implements Controller {
     public void deleteSpectator(Member member) {
         Node removal = playerListView.getItems().stream().filter(node -> node.getId().equals(member.userId())).findAny().orElse(null);
         playerListView.getItems().remove(removal);
+
+        if(member.userId().equals(userService.getCurrentUser()._id())) {
+            kicked = true;
+            leave();
+        }
     }
 
     public void renderSpectator(Member member) {
@@ -360,7 +366,12 @@ public class IngameScreenController implements Controller {
                         }
                     }, Throwable::printStackTrace));
         } else {
-            leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
+            if(!kicked) {
+                leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Kicked by Host");
+                alert.show();
+            }
             this.stop();
             timerService.reset();
             disposable.dispose();
