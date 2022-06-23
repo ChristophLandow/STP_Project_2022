@@ -62,7 +62,7 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
-    @Inject Provider<ZoomableScrollpane> zoomableScrollpaneProvider;
+    @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
 
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
@@ -230,7 +230,7 @@ public class IngameScreenController implements Controller {
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
 
-        ZoomableScrollpane zoomableScrollpane = zoomableScrollpaneProvider.get();
+        ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
         zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane);
     }
     private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
@@ -304,7 +304,7 @@ public class IngameScreenController implements Controller {
     }
 
     private void endTurn(MouseEvent mouseEvent) {
-        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {

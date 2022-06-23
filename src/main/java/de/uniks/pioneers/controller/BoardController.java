@@ -54,9 +54,9 @@ public class BoardController {
 
     public void buildBoardUI() {
         BoardGenerator generator = new BoardGenerator();
-        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap());
-        List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1);
-        List<HexTile> corners = generator.generateCorners(2 * this.gameSize + 1);
+        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap(), this.gameStorage.getHexScale());
+        List<HexTile> edges = generator.generateEdges(2 * this.gameSize + 1, gameStorage.getHexScale());
+        List<HexTile> corners = generator.generateCorners(2 * this.gameSize + 1, gameStorage.getHexScale());
 
         for (HexTile hexTile : tiles) {
 
@@ -68,8 +68,8 @@ public class BoardController {
                     0.0, -1.0,
                     -Math.sqrt(3) / 2, -0.5,
                     -Math.sqrt(3) / 2, 0.5);
-            hex.setScaleX(scale);
-            hex.setScaleY(scale);
+            hex.setScaleX(gameStorage.getHexScale());
+            hex.setScaleY(gameStorage.getHexScale());
             Image image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + hexTile.type + ".png")).toString());
             hex.setFill(new ImagePattern(image));
             hex.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
@@ -79,10 +79,11 @@ public class BoardController {
             if (!hexTile.type.equals("desert")) {
                 String numberURL = "ingame/tile_" + hexTile.number + ".png";
                 ImageView numberImage = new ImageView(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
-                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - 15);
-                numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - 15);
-                numberImage.setFitHeight(30);
-                numberImage.setFitWidth(30);
+                double numberSize = gameStorage.getHexScale()/2.5;
+                numberImage.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2 - numberSize/2);
+                numberImage.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2 - numberSize/2);
+                numberImage.setFitHeight(numberSize);
+                numberImage.setFitWidth(numberSize);
                 this.fieldPane.getChildren().add(numberImage);
             }
             this.tileControllers.add(new HexTileController(hexTile, hex));
@@ -90,7 +91,7 @@ public class BoardController {
 
         for (HexTile edge : edges) {
 
-            Circle circ = new Circle(3);
+            Circle circ = new Circle(gameStorage.getHexScale()/16.5);
             circ.setFill(BUILDING_POINT_STANDARD);
 
             circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
@@ -103,7 +104,7 @@ public class BoardController {
 
         for (HexTile corner : corners) {
 
-            Circle circ = new Circle(6);
+            Circle circ = new Circle(gameStorage.getHexScale()/12.5);
             circ.setFill(BUILDING_POINT_STANDARD);
 
             circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
