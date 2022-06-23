@@ -24,7 +24,7 @@
    <ImageView fx:id="WaleImageView" fitHeight="150.0" fitWidth="110.0" layoutX="512.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../../controller/subcontroller/images/card_whale.png" />
    </ImageView>
-   <Text fx:id="XfromSixText" layoutX="669.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X">
+   <Text fx:id="numeratorText" layoutX="669.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X">
       <font>
          <Font size="36.0" />
       </font>
@@ -34,7 +34,7 @@
          <Font size="50.0" />
       </font>
    </Text>
-   <Text fx:id="SixText" layoutX="742.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="6">
+   <Text fx:id="denominatorText" layoutX="742.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="6">
       <font>
          <Font size="36.0" />
       </font>

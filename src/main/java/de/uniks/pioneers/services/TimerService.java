@@ -49,7 +49,6 @@ public class TimerService {
                 );
             }
         };
-
         this.initCountdown(new Timer(), 10);
         timer.schedule(task, 10 * 1000);
     }
