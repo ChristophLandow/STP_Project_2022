@@ -12,9 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,12 +56,12 @@ class LobbyServiceTest {
 
     @Test
     void createGame() {
-        Game testGame = new Game("1","2","3","n","o", 1, false);
+        Game testGame = new Game("1","2","3","n","o", 1, false, null);
         when(gameApiService.create(any())).thenReturn(Observable.just(testGame));
 
         final Game result = lobbyService.createGame("n",false,"p").blockingFirst();
         assertEquals(result.name(),"n");
 
-        verify(gameApiService).create(new CreateGameDto("n",false,"p"));
+        verify(gameApiService).create(new CreateGameDto("n",false, null,"p"));
     }
 }

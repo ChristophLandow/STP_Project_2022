@@ -62,9 +62,9 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
+    @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
     @Inject Provider<RobberController> robberControllerProvider;
 
-    @Inject Provider<ZoomableScrollpane> zoomableScrollpaneProvider;
 
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
@@ -105,10 +105,9 @@ public class IngameScreenController implements Controller {
         this.eventListener = eventListener;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
+        this.diceSubcontroller = new DiceSubcontroller(ingameService, gameService, timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        this.robberControllerProvider = robberControllerProvider;
         int gameSize = 2;
         this.boardController = new BoardController(ingameService, userService, timerService, game, gameSize, this.gameStorage);
     }
@@ -235,7 +234,7 @@ public class IngameScreenController implements Controller {
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
 
-        ZoomableScrollpane zoomableScrollpane = zoomableScrollpaneProvider.get();
+        ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
         zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane);
     }
     private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
@@ -309,7 +308,7 @@ public class IngameScreenController implements Controller {
     }
 
     private void endTurn(MouseEvent mouseEvent) {
-        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null);
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
         disposable.add(ingameService.postMove(game.get()._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {

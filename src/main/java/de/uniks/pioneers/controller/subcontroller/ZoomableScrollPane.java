@@ -10,7 +10,7 @@ import javafx.scene.transform.Scale;
 
 import javax.inject.Inject;
 
-public class ZoomableScrollpane {
+public class ZoomableScrollPane {
 
     private ScrollPane scrollPane;
     private AnchorPane anchorPane;
@@ -21,7 +21,7 @@ public class ZoomableScrollpane {
     private final GameStorage gameStorage;
 
     @Inject
-    ZoomableScrollpane(GameStorage gameStorage){
+    ZoomableScrollPane(GameStorage gameStorage){
         this.gameStorage = gameStorage;
     }
 
@@ -30,29 +30,36 @@ public class ZoomableScrollpane {
         this.fieldPane = fieldPane;
         this.anchorPane = anchorPane;
 
+        if(gameStorage.getZoomedOut() == -1){
+            adjustPane();
+        }
+
         this.fieldPane.getTransforms().add(fieldScale);
-        zoom(gameStorage.getZoomedOut());
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
+        zoomOut();
 
         addMouseScrolling(anchorPane);
     }
 
     public void zoomIn(){
-        zoom(1);
-        zoom(gameStorage.getZoomedIn());
-        scrollPane.setFitToHeight(false);
-        scrollPane.setFitToWidth(false);
+        if(gameStorage.getZoomedIn() != gameStorage.getZoomedOut()) {
+            zoom(1);
+            zoom(gameStorage.getZoomedIn());
+            scrollPane.setFitToHeight(false);
+            scrollPane.setFitToWidth(false);
 
-        this.anchorPane.heightProperty().addListener(observable -> scrollPane.setVvalue(0.5));
-        this.anchorPane.widthProperty().addListener(observable -> scrollPane.setHvalue(0.5));
+            this.anchorPane.heightProperty().addListener(observable -> scrollPane.setVvalue(0.5));
+            this.anchorPane.widthProperty().addListener(observable -> scrollPane.setHvalue(0.5));
+        }
     }
 
     public void zoomOut(){
-        zoom(1);
-        zoom(gameStorage.getZoomedOut());
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
+        if(gameStorage.getZoomedOut() != -1) {
+            zoom(1);
+            zoom(gameStorage.getZoomedOut());
+
+            scrollPane.setFitToHeight(true);
+            scrollPane.setFitToWidth(true);
+        }
     }
 
     public void zoom(double zoomValue){
@@ -77,5 +84,10 @@ public class ZoomableScrollpane {
                 }
             }
         });
+    }
+
+    public void adjustPane(){
+        this.fieldPane.setPrefWidth(this.fieldPane.getWidth()*1.5);
+        this.fieldPane.setPrefHeight(this.fieldPane.getHeight()*1.5);
     }
 }

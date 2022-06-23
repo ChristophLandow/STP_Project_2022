@@ -29,7 +29,7 @@ class BoardGeneratorTest {
         tiles.add(new Tile(1,0,-1,"mountains",6));
         tiles.add(new Tile(-1,0,1,"pasture",7));
 
-        List<HexTile> board = boardGenerator.generateTiles(tiles);
+        List<HexTile> board = boardGenerator.generateTiles(tiles, 75);
 
         assertEquals(board.size(), 7);
 
@@ -49,7 +49,7 @@ class BoardGeneratorTest {
     @Test
     void generateEdges() {
 
-        List<HexTile> edges = boardGenerator.generateEdges(3);
+        List<HexTile> edges = boardGenerator.generateEdges(3, 75);
 
         assertEquals(edges.size(), 30);
 
@@ -70,7 +70,7 @@ class BoardGeneratorTest {
     @Test
     void generateCorners() {
 
-        List<HexTile> corners = boardGenerator.generateCorners(3);
+        List<HexTile> corners = boardGenerator.generateCorners(3, 75);
 
         assertEquals(corners.size(), 24);
 

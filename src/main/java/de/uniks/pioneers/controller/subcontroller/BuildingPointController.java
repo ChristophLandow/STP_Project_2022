@@ -76,7 +76,7 @@ public class BuildingPointController {
         }
 
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
-        disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, newBuilding, null))
+        disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
     }

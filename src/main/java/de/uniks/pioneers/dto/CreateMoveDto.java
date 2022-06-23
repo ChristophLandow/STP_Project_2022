@@ -4,7 +4,9 @@ import de.uniks.pioneers.model.Building;
 
 public record CreateMoveDto(
         String action,
-        CreateBuildingDto building,
-        RobDto robber
+        RobDto rob,
+        Resources resources,
+        String partner,
+        CreateBuildingDto building
 ) {
 }
