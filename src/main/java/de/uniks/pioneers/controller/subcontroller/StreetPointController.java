@@ -38,6 +38,7 @@ public class StreetPointController {
     public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
     private String action;
     private Building building;
+    private Rectangle streetRect;
 
     @Inject
     public StreetPointController(GameService gameService, IngameService ingameService, UserService userService, GameStorage gameStorage) {
@@ -123,7 +124,7 @@ public class StreetPointController {
 
     public void renderRoad(Building building) {
         Player player = gameService.players.get(building.owner());
-        Rectangle road = new Rectangle(60, 9, Paint.valueOf(player.color()));
+        Rectangle road = new Rectangle(this.gameStorage.getHexScale()/1.25, this.gameStorage.getHexScale()/8.3, Paint.valueOf(player.color()));
         fieldPane.getChildren().add(road);
         road.setLayoutX(view.getLayoutX() - road.getWidth()/2);
         road.setLayoutY(view.getLayoutY() - road.getHeight()/2);
@@ -140,6 +141,7 @@ public class StreetPointController {
             neighbourBuilding.moveBuildingToFront();
         }
 
+        streetRect = road;
         this.building = building;
     }
 
@@ -161,5 +163,13 @@ public class StreetPointController {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public void setVisible(boolean isVisible){
+        this.view.setVisible(isVisible);
+
+        if(this.streetRect != null){
+            this.streetRect.setVisible(isVisible);
+        }
     }
 }
