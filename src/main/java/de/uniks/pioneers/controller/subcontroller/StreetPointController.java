@@ -145,11 +145,11 @@ public class StreetPointController {
     }
 
     private void dye(MouseEvent mouseEvent) {
-        this.view.setFill(Color.rgb(0, 255, 0));
+        this.view.setFill(HOVER_COLOR);
     }
 
     private void undye(MouseEvent mouseEvent) {
-        this.view.setFill(Color.rgb(255, 0, 0));
+        this.view.setFill(STANDARD_COLOR);
     }
 
     public String generateKeyString() {
