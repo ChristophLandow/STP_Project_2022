@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
@@ -16,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -63,6 +66,10 @@ public class IngameScreenController implements Controller {
     @Inject Provider<StreetPointController> streetPointControllerProvider;
 
     @Inject Provider<ZoomableScrollpane> zoomableScrollpaneProvider;
+
+
+    @Inject Provider<TradePopUpController> tradePopUpControllerProvider;
+    private Stage popUpStage;
 
     private final GameService gameService;
     private final LeaveGameController leaveGameController;
@@ -430,4 +437,13 @@ public class IngameScreenController implements Controller {
     }
 
 
+
+    public void openTradePopUp() {
+        popUpStage = new Stage();
+        TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
+        Parent root = tradePopUpController.render();
+        Scene scene = new Scene(root);
+        popUpStage.setScene(scene);
+        popUpStage.show();
+    }
 }
