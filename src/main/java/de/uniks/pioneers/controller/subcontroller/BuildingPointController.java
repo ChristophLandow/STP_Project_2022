@@ -53,7 +53,7 @@ public class BuildingPointController {
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
-        this.eventView.setRadius(15);
+        this.eventView.setRadius(gameStorage.getHexScale()/5);
         this.eventView.setOpacity(0);
     }
 

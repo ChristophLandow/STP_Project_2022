@@ -62,6 +62,7 @@ public class DiceSubcontroller {
                     if(move.action().equals(ROLL)){
                         RobberController robber = robberControllerProvider.get();
                         robber.init();
+                        
                     }
                 });
             }
