@@ -58,6 +58,8 @@ public class DiceSubcontroller {
                 c.getAddedSubList().forEach(move -> {
                     if (move.action().equals(FOUNDING_ROLL) || move.action().equals(ROLL)) {
                         showRolledNumber(move.action(), move.roll());
+                    }
+                    if(move.action().equals(ROLL)){
                         RobberController robber = robberControllerProvider.get();
                         robber.init();
                     }

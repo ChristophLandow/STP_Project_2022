@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -23,20 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 public class DiscardResourcesController implements Initializable, Controller {
-
-    @Inject Provider<RobberController> robberControllerProvider;
-    private final IngameService ingameService;
-    private final GameService gameService;
-    private final PrefService prefService;
-    public Integer wale;
-    public Integer ice;
-    public Integer polarbear;
-    public Integer fish;
-    public Integer carbon;
-
-
 
     @FXML private AnchorPane anchorPane;
     @FXML private Text XfromSixText;
@@ -47,19 +35,58 @@ public class DiscardResourcesController implements Initializable, Controller {
     @FXML private Spinner<Integer> PolarBearSpinner;
     @FXML private Spinner<Integer> IceSpinner;
     @FXML private Spinner<Integer> WaleSpinner;
+
+    private final  Provider<RobberController> robberControllerProvider;
+
+    @Inject
+    IngameService ingameService;
+    @Inject
+    GameService gameService;
+    @Inject
+    PrefService prefService;
+    public Integer wale;
+    public Integer ice;
+    public Integer polarbear;
+    public Integer fish;
+    public Integer carbon;
     private Stage stage;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     public DiscardResourcesController(Provider<RobberController> robberControllerProvider, GameService gameService, PrefService prefService, IngameService ingameService) {
         this.robberControllerProvider = robberControllerProvider;
-        this.gameService = gameService;
-        this.prefService = prefService;
-        this.ingameService = ingameService;
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //load Resources
+        Resources ingameResources = gameService.players.get(gameService.me).resources();
+        if(ingameResources.lumber() != null){
+            fish = ingameResources.lumber();
+        } else {
+            fish = 0;
+        }
+        if(ingameResources.grain() != null){
+            wale = ingameResources.grain();
+        } else {
+            wale = 0;
+        }
+        if(ingameResources.wool() != null){
+            carbon = ingameResources.wool();
+        } else {
+            carbon = 0;
+        }
+        if(ingameResources.brick() != null){
+            ice = ingameResources.brick();
+        } else {
+            ice = 0;
+        }
+        if(ingameResources.ore() != null){
+            polarbear = ingameResources.ore();
+        } else {
+            carbon = 0;
+        }
         SpinnerValueFactory<Integer> carbonValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, carbon);
         carbonValueFactory.setValue(0);
         CarbonSpinner.setValueFactory(carbonValueFactory);
@@ -79,13 +106,22 @@ public class DiscardResourcesController implements Initializable, Controller {
 
     @Override
     public void init(){
-        stage = (Stage) anchorPane.getScene().getWindow();
-        Resources resources = gameService.players.get(gameService.me).resources();
-        fish = resources.lumber();
-        wale = resources.grain();
-        carbon = resources.wool();
-        ice = resources.brick();
-        polarbear = resources.ore();
+        //set stage
+
+        this.stage = new Stage();
+        Parent node = render();
+        Stage stage = new Stage();
+        stage.setTitle("Discard resource cards");
+        Scene scene = new Scene(node);
+        stage.setScene(scene);
+        if(prefService.getDarkModeState()){
+            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DiscardResourcesPopup.css")));
+            scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css");
+        } else {
+            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css")));
+            scene.getStylesheets().add("/de/uniks/pioneers/styles/DiscardResourcesPopup.css");
+        }
+        stage.show();
     }
 
     @Override
@@ -101,13 +137,14 @@ public class DiscardResourcesController implements Initializable, Controller {
     @Override
     public Parent render() {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/DiscardResourcesPopup.fxml"));
-        Parent node;
+        loader.setControllerFactory(c->this);
+        final Parent discardView;
         try {
-            node = loader.load();
+            discardView = loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return node;
+        return discardView;
     }
 
     public void chooseResources(){
@@ -116,6 +153,7 @@ public class DiscardResourcesController implements Initializable, Controller {
         int polarbearDeiscard = PolarBearSpinner.getValue();
         int fishDiscard = FishSpinner.getValue();
         int carbonDiscard = CarbonSpinner.getValue();
+
     }
 
     public void show() {
