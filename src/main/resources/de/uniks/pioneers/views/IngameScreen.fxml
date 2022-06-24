@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -13,24 +14,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.text.Font?>
 
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
-   <ScrollPane fx:id="fieldScrollPane" fitToHeight="true" fitToWidth="true" layoutX="18.0" layoutY="15.0" pannable="true" prefHeight="631.0" prefWidth="715.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 1; -fx-background: #87CEEB;">
-     <content>
-       <AnchorPane fx:id="scrollAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="637.0" prefWidth="715.0">
+   <ScrollPane fx:id="fieldScrollPane" hbarPolicy="NEVER" layoutX="18.0" layoutY="15.0" pannable="true" prefHeight="631.0" prefWidth="715.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 1; -fx-background: #87CEEB;" vbarPolicy="NEVER">
+      <content>
+         <AnchorPane fx:id="scrollAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="637.0" prefWidth="715.0">
             <children>
-               <Pane fx:id="fieldPane" prefHeight="637.0" prefWidth="715.0" style="-fx-background-color: #87CEEB;">
+               <Pane fx:id="fieldPane" prefHeight="637.0" prefWidth="715.0">
                   <children>
-                     <Label fx:id="loadingLabel" layoutX="297.0" layoutY="297.0" text="Loading...">
-                        <font>
-                           <Font size="29.0" />
-                        </font>
-                     </Label>
+                     <Canvas fx:id="mapCanvas" height="696.0" width="715.0" />
                   </children></Pane>
             </children>
          </AnchorPane>
-     </content>
+      </content>
    </ScrollPane>
    <Button fx:id="leaveButton" layoutX="751.0" layoutY="14.0" mnemonicParsing="false" onAction="#leave" prefHeight="30.0" prefWidth="258.0" text="Leave" />
    <Button fx:id="rulesButton" layoutX="751.0" layoutY="58.0" mnemonicParsing="false" onAction="#toRules" prefHeight="30.0" prefWidth="120.0" text="Rules" />

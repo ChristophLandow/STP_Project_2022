@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -53,7 +54,9 @@ public class IngameScreenController implements Controller {
     @FXML public ImageView leftDiceImageView, rightDiceImageView, hammerImageView;
     @FXML public ListView<Node> playerListView;
     @FXML public Rectangle downRectangle, upRectangle;
+    @FXML public Canvas mapCanvas;
 
+    public ZoomableScrollPane zoomableScrollPane;
     @Inject GameChatController gameChatController;
 
     @Inject PrefService prefService;
@@ -94,10 +97,10 @@ public class IngameScreenController implements Controller {
                                   Provider<RobberController> robberControllerProvider,
                                   Provider<RulesScreenController> rulesScreenControllerProvider,
                                   Provider<SettingsScreenController> settingsScreenControllerProvider,
-                                  IngameService ingameService, GameStorage gameStorage,
+                                  IngameService ingameService, GameStorage gameStorage,  MapRenderService mapRenderService,
                                   UserService userService, GameService gameService,
                                   EventListener eventListener, LeaveGameController leaveGameController,
-                                  TimerService timerService, MapRenderService mapRenderService) {
+                                  TimerService timerService) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
@@ -127,6 +130,12 @@ public class IngameScreenController implements Controller {
         }
         this.boardController.fieldPane = this.fieldPane;
         this.boardController.streetPointControllerProvider = this.streetPointControllerProvider;
+
+        this.zoomableScrollPane = zoomableScrollpaneProvider.get();
+        this.zoomableScrollPane.init(fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
+
+        Platform.runLater(this.zoomableScrollPane::render);
+
         return view;
     }
 
@@ -188,9 +197,6 @@ public class IngameScreenController implements Controller {
             ingamePlayerResourcesController.root = this.root;
             ingamePlayerResourcesController.render();
             ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
-
-            ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
-            zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane, loadingLabel);
         });
 
         gameService.loadPlayers(game.get());

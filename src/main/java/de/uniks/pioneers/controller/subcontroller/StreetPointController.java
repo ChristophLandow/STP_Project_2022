@@ -167,9 +167,11 @@ public class StreetPointController {
 
     public void setVisible(boolean isVisible){
         this.view.setVisible(isVisible);
+        this.view.setDisable(!isVisible);
 
         if(this.streetRect != null){
             this.streetRect.setVisible(isVisible);
+            this.streetRect.setDisable(!isVisible);
         }
     }
 }
