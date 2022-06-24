@@ -53,7 +53,7 @@ public class NewGameLobbyReadyController {
         startButton.setOnAction(this::startGame);
     }
 
-    private boolean onSetReadyButton(ActionEvent actionEvent) {
+    public boolean onSetReadyButton(ActionEvent actionEvent) {
         // set member "ready" true in API
         boolean difference = true;
 
@@ -95,7 +95,7 @@ public class NewGameLobbyReadyController {
     }
 
 
-    private boolean allUsersReady() {
+    public boolean allUsersReady() {
         boolean playersReady = true;
 
         for (PlayerEntryController entry : playerEntries.values()) {
