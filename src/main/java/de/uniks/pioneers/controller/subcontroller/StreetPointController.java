@@ -7,7 +7,6 @@ import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -25,7 +24,6 @@ import static de.uniks.pioneers.GameConstants.*;
 public class StreetPointController {
     private final GameService gameService;
     private final IngameService ingameService;
-    private final UserService userService;
 
     private final GameStorage gameStorage;
     private Pane fieldPane;
@@ -37,14 +35,12 @@ public class StreetPointController {
     public int[] uploadCoords = new int[4];
     public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
     private String action;
-    private Building building;
     private Rectangle streetRect;
 
     @Inject
-    public StreetPointController(GameService gameService, IngameService ingameService, UserService userService, GameStorage gameStorage) {
+    public StreetPointController(GameService gameService, IngameService ingameService, GameStorage gameStorage) {
         this.gameService = gameService;
         this.ingameService = ingameService;
-        this.userService = userService;
         this.gameStorage = gameStorage;
     }
 
@@ -142,7 +138,6 @@ public class StreetPointController {
         }
 
         streetRect = road;
-        this.building = building;
     }
 
     private void dye(MouseEvent mouseEvent) {

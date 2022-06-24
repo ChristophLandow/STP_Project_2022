@@ -3,10 +3,8 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.MapRenderService;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -23,8 +21,6 @@ public class ZoomableScrollPane {
     private ScrollPane scrollPane;
     private AnchorPane anchorPane;
     private Canvas canvas;
-
-    private GraphicsContext gc;
 
     private Pane fieldPane;
 
@@ -47,14 +43,13 @@ public class ZoomableScrollPane {
         this.fieldPane = fieldPane;
         this.anchorPane = anchorPane;
         this.canvas = canvas;
-        this.gc = canvas.getGraphicsContext2D();
 
         resizeMap();
 
         this.fieldPane.getTransforms().add(fieldScale);
 
         this.mapRenderService.setMapCanvas(canvas);
-        this.mapRenderService.setGc(gc);
+        this.mapRenderService.setGc(canvas.getGraphicsContext2D());
     }
 
     public void render(){
@@ -81,6 +76,7 @@ public class ZoomableScrollPane {
 
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            scrollPane.setPannable(true);
         }
     }
 
@@ -89,17 +85,19 @@ public class ZoomableScrollPane {
             zoom(1);
             zoom(gameStorage.getZoomedOut());
 
-            double paddingLeft = (MAP_WIDTH - (gameStorage.getZoomedOut()*mapWidth))/2 + 1;
-
+            double paddingLeft = (MAP_WIDTH - (gameStorage.getZoomedOut() * mapWidth)) / 2 + 1;
             double paddingTop = 0;
+
             if(gameStorage.getMapRadius() < 2){
                 paddingTop = (MAP_HEIGHT - (gameStorage.getZoomedOut()*mapHeight))/2 + 2;
             }
+
             fieldPane.setLayoutX(paddingLeft);
             fieldPane.setLayoutY(paddingTop);
 
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scrollPane.setPannable(false);
         }
     }
 
@@ -135,12 +133,16 @@ public class ZoomableScrollPane {
 
     private void resizeMap(){
         double hexagonWidth = Math.sqrt(3) * gameStorage.getHexScale();
-        mapWidth = (2*gameStorage.getMapRadius() + 1) * hexagonWidth;
-        mapWidth += (mapWidth*MAP_PADDING);
+        mapWidth = (2*gameStorage.getMapRadius() + 1) * hexagonWidth + MAP_PADDING_X;
 
         double hexagonHeight = 2 * gameStorage.getHexScale();
-        mapHeight = (2*gameStorage.getMapRadius() + 1) * hexagonHeight;
-        mapHeight += (mapHeight*MAP_PADDING);
+
+        if(gameStorage.getMapRadius()%2 == 0){
+            mapHeight = (gameStorage.getMapRadius()+1)*hexagonHeight + gameStorage.getMapRadius()*gameStorage.getHexScale() + MAP_PADDING_Y;
+        }
+        else{
+            mapHeight = gameStorage.getMapRadius()*hexagonHeight + (gameStorage.getMapRadius()+1)*gameStorage.getHexScale() + gameStorage.getHexScale() + MAP_PADDING_Y;
+        }
 
         this.fieldPane.setPrefHeight(mapHeight);
         this.fieldPane.setPrefWidth(mapWidth);

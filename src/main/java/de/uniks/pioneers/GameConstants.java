@@ -8,7 +8,9 @@ public class GameConstants {
     public static final double MAP_Y = 15;
     public static final double MAP_WIDTH = 715;
     public static final double MAP_HEIGHT = 631;
-    public static final double MAP_PADDING = 0.001;
+
+    public static final double MAP_PADDING_X = 120;
+    public static final double MAP_PADDING_Y = 120;
     public static final double eulerC = 0.57721566490153286060651209008240243104215933593992;
 
     // move actions

@@ -60,65 +60,33 @@ public class GameStorage {
 
     public void calcZoom(int mapRadius){
         this.mapRadius = mapRadius;
+        hexRadiusFactor = 5;
 
-        switch(mapRadius){
-            case 0:
+        switch (mapRadius) {
+            case 0 -> {
                 this.hexScale = 180;
                 this.zoomedIn = -1;
-                break;
-            case 1:
+            }
+            case 1 -> {
                 this.hexScale = 100;
                 this.zoomedIn = -1;
-                break;
-            case 12:
-            case 13:
+            }
+            default -> {
                 this.hexScale = 120;
+                double hexagonHeight = 2 * hexScale;
+                double mapHeight;
+                if (mapRadius % 2 == 0) {
+                    mapHeight = (mapRadius + 1) * hexagonHeight + mapRadius * hexScale + MAP_PADDING_Y;
+                } else {
+                    mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y;
+                }
+                this.zoomedOut = (MAP_HEIGHT / mapHeight);
                 this.zoomedIn = 1;
-                this.zoomedOut = -1;
-                break;
-            default:
-                this.hexScale = 120;
-                double hexagonHeight = 2 * this.hexScale;
-                double mapHeight = (2*this.mapRadius + 1) * hexagonHeight + MAP_PADDING * 2;
-                this.zoomedOut = (MAP_HEIGHT/mapHeight);
-                this.zoomedIn = 1;
-                break;
-            /*case 2:
-                hexScale = 120;
-                zoomedIn = 1;
-                zoomedOut = 0.6;
-                break;
-            case 3:
-                hexScale = 52;
-                break;
-            case 4:
-                hexScale = 40;
-                break;
-            case 5:
-                hexScale = 33;
-                break;
-            case 6:
-                hexScale = 28;
-                break;
-            case 7:
-            case 8:
-            case 9:
-                hexScale = 18;
-                zoomedOut = -1;
-                zoomedIn = 5;
-                break;
-            case 10:
-                hexScale = 16;
-                zoomedOut = -1;
-                zoomedIn = 5;
-                break;*/
+            }
         }
 
-        if(mapRadius < 7){
-            hexRadiusFactor = 5;
-        }
-        else{
-            hexRadiusFactor = 2;
+        if(mapRadius >= 4){
+            this.zoomedIn = 0.7;
         }
     }
 }

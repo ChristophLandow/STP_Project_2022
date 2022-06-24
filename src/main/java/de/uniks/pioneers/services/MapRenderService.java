@@ -5,13 +5,10 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -74,8 +71,7 @@ public class MapRenderService {
 
     public void checkPoints(){
         for(HexTileController hexTileController: tileControllers){
-            //hexTileController.setVisible(isOnScreen(hexTileController.getView(),gameStorage.getHexScale()*gameStorage.getHexRadiusFactor()));
-            hexTileController.setVisible(isOnScreen(hexTileController.getView(),-10));
+            hexTileController.setVisible(isOnScreen(hexTileController.getView(),gameStorage.getHexScale()*gameStorage.getHexRadiusFactor()));
         }
     }
 
@@ -86,5 +82,6 @@ public class MapRenderService {
 
     public void stop(){
         this.tileControllers.clear();
+        this.finishedLoading = false;
     }
 }

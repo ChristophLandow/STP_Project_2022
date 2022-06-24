@@ -1,14 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.services.GameStorage;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
