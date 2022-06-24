@@ -126,11 +126,11 @@ public class DiscardResourcesController implements Initializable, Controller {
             spinner.valueProperty().addListener(new ChangeListener<Integer>() {
                 @Override
                 public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-                    int oldNumerator = 0;
+                    int newNumerator = 0;
                     for(Spinner<Integer> spinner : spinnerLIst){
-                        oldNumerator += spinner.getValue();
+                        newNumerator += spinner.getValue();
                     }
-                    numeratorText.setText(Integer.toString(oldNumerator - oldValue + newValue));
+                    numeratorText.setText(Integer.toString(newNumerator));
                 }
             });
         }
