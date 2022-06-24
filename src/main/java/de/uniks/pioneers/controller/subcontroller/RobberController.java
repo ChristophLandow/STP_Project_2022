@@ -31,7 +31,7 @@ public class RobberController implements Controller {
     @Override
     public void init(){
         discard();
-        //itsRobbingTime();
+
     }
 
     private void discard() {
@@ -45,9 +45,6 @@ public class RobberController implements Controller {
     @Override
     public Parent render() {
         return null;
-    }
-
-    private void itsRobbingTime() {
     }
 
     private void setRobber() {
