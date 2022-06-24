@@ -48,7 +48,7 @@ public class IngameScreenController implements Controller {
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
     @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel;
-    @FXML public Label timeLabel, situationLabel;
+    @FXML public Label timeLabel, situationLabel, loadingLabel;
     @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView;
     @FXML public ImageView leftDiceImageView, rightDiceImageView, hammerImageView;
     @FXML public ListView<Node> playerListView;
@@ -74,6 +74,7 @@ public class IngameScreenController implements Controller {
     private List<User> users;
     private final App app;
     private final GameStorage gameStorage;
+    private final MapRenderService mapRenderService;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final Provider<SettingsScreenController> settingsScreenControllerProvider;
 
@@ -86,6 +87,7 @@ public class IngameScreenController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private String myColor;
     private boolean onClose = false;
+    private boolean kicked = false;
 
     @Inject
     public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
@@ -95,12 +97,13 @@ public class IngameScreenController implements Controller {
                                   IngameService ingameService, GameStorage gameStorage,
                                   UserService userService, GameService gameService,
                                   EventListener eventListener, LeaveGameController leaveGameController,
-                                  TimerService timerService) {
+                                  TimerService timerService, MapRenderService mapRenderService) {
         this.app = app;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.settingsScreenControllerProvider = settingsScreenControllerProvider;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
+        this.mapRenderService = mapRenderService;
         this.userService = userService;
         this.eventListener = eventListener;
         this.gameService = gameService;
@@ -108,8 +111,7 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
         this.leaveGameController = leaveGameController;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        int gameSize = 2;
-        this.boardController = new BoardController(ingameService, userService, timerService, game, gameSize, this.gameStorage);
+        this.boardController = new BoardController(ingameService, userService, timerService, game, this.gameStorage, this.mapRenderService);
     }
 
     @Override
@@ -186,6 +188,9 @@ public class IngameScreenController implements Controller {
             ingamePlayerResourcesController.root = this.root;
             ingamePlayerResourcesController.render();
             ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
+
+            ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
+            zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane, loadingLabel);
         });
 
         gameService.loadPlayers(game.get());
@@ -233,9 +238,6 @@ public class IngameScreenController implements Controller {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
-
-        ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
-        zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane);
     }
     private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
 
@@ -252,6 +254,11 @@ public class IngameScreenController implements Controller {
     public void deleteSpectator(Member member) {
         Node removal = playerListView.getItems().stream().filter(node -> node.getId().equals(member.userId())).findAny().orElse(null);
         playerListView.getItems().remove(removal);
+
+        if(member.userId().equals(userService.getCurrentUser()._id())) {
+            kicked = true;
+            leave();
+        }
     }
 
     public void renderSpectator(Member member) {
@@ -373,7 +380,12 @@ public class IngameScreenController implements Controller {
                         }
                     }, Throwable::printStackTrace));
         } else {
-            leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
+            if(!kicked) {
+                leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Kicked by Host");
+                alert.show();
+            }
             this.stop();
             timerService.reset();
             disposable.dispose();
@@ -397,6 +409,8 @@ public class IngameScreenController implements Controller {
     public void stop() {
         gameChatController.stop();
         settingsScreenControllerProvider.get().stop();
+        this.fieldPane.getChildren().clear();
+        this.mapRenderService.stop();
         timerService.reset();
     }
 

@@ -92,12 +92,15 @@ public class BuildingPointController {
         SVGPath buildingSVG = new SVGPath();
         if(building.type().equals(SETTLEMENT)){
             buildingSVG.setContent(GameConstants.SETTLEMENT_SVG);
-            buildingSVG.setLayoutX(view.getLayoutX() - HOUSE_WIDTH / 1.2);
-            buildingSVG.setLayoutY(view.getLayoutY() - HOUSE_HEIGHT);}
+            buildingSVG.setLayoutX(view.getLayoutX() - HOUSE_WIDTH);
+            buildingSVG.setLayoutY(view.getLayoutY() - HOUSE_HEIGHT);
+        }
         else{
+            System.out.println("Build City");
             buildingSVG.setContent(CITY_SVG);
             buildingSVG.setLayoutX(view.getLayoutX() - CITY_WIDTH);
-            buildingSVG.setLayoutY(view.getLayoutY() - CITY_HEIGHT);}
+            buildingSVG.setLayoutY(view.getLayoutY() - CITY_HEIGHT);
+        }
         buildingSVG.setFill(Color.WHITE);
         buildingSVG.setStrokeWidth(1.5);
         buildingSVG.setStrokeType(StrokeType.OUTSIDE);
@@ -106,6 +109,9 @@ public class BuildingPointController {
         disposable.add(ingameService.getPlayer(building.gameId(), building.owner())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(player -> buildingSVG.setStroke(Paint.valueOf(player.color()))));
+
+        buildingSVG.setScaleX(gameStorage.getHexScale()/BUILDING_SCALING);
+        buildingSVG.setScaleY(gameStorage.getHexScale()/BUILDING_SCALING);
 
         // set position on game field
         this.fieldPane.getChildren().remove(this.displayedBuilding);
@@ -173,6 +179,15 @@ public class BuildingPointController {
     public void moveBuildingToFront(){
         if(this.displayedBuilding != null){
             this.displayedBuilding.toFront();
+            this.eventView.toFront();
+        }
+    }
+
+    public void setVisible(boolean isVisible){
+        this.view.setVisible(isVisible);
+
+        if(this.displayedBuilding != null){
+            this.displayedBuilding.setVisible(isVisible);
         }
     }
 }

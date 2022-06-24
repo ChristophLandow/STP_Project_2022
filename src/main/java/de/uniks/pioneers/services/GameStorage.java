@@ -4,7 +4,6 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
@@ -15,23 +14,23 @@ import static de.uniks.pioneers.GameConstants.*;
 public class GameStorage {
     @Inject EventListener eventListener;
     private List<Tile> map;
-
     private int mapRadius;
-
     private  double hexScale = 75;
+    private double hexRadiusFactor = 3;
     private double zoomedIn = 1.4;
     private double zoomedOut = 1;
-
-    @Inject
-    public GameStorage() {
-        remainingBuildings.put(ROAD, 15);
-        remainingBuildings.put(SETTLEMENT, 5);
-        remainingBuildings.put(CITY, 4);
-    }
 
     public String selectedBuilding = "";
 
     public ObservableMap<String, Integer> remainingBuildings = FXCollections.observableHashMap();
+
+    @Inject
+    public GameStorage() {
+        System.out.println("Test");
+        remainingBuildings.put(ROAD, 15);
+        remainingBuildings.put(SETTLEMENT, 5);
+        remainingBuildings.put(CITY, 4);
+    }
 
     public List<Tile> getMap() {
         return map;
@@ -43,6 +42,10 @@ public class GameStorage {
 
     public double getHexScale() {
         return hexScale;
+    }
+
+    public double getHexRadiusFactor() {
+        return hexRadiusFactor;
     }
 
     public double getZoomedIn(){
@@ -73,7 +76,7 @@ public class GameStorage {
                 this.zoomedOut = 1;
                 break;
             case 2:
-                hexScale = 75;
+                hexScale = 74;
                 zoomedOut = 0.99;
                 break;
             case 3:
@@ -91,10 +94,22 @@ public class GameStorage {
             case 7:
             case 8:
             case 9:
-            case 10:
-                hexScale = 75;
-                zoomedOut = 1;
+                hexScale = 18;
+                zoomedOut = -1;
+                zoomedIn = 5;
                 break;
+            case 10:
+                hexScale = 16;
+                zoomedOut = -1;
+                zoomedIn = 5;
+                break;
+        }
+
+        if(mapRadius < 7){
+            hexRadiusFactor = 5;
+        }
+        else{
+            hexRadiusFactor = 2;
         }
     }
 }

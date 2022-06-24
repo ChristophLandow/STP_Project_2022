@@ -16,15 +16,15 @@
 <?import javafx.scene.text.Font?>
 
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
-   <ScrollPane fx:id="fieldScrollPane" layoutX="18.0" layoutY="15.0" pannable="true" prefHeight="631.0" prefWidth="715.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 1; -fx-background: #87CEEB;">
+   <ScrollPane fx:id="fieldScrollPane" fitToHeight="true" fitToWidth="true" layoutX="18.0" layoutY="15.0" pannable="true" prefHeight="631.0" prefWidth="715.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 1; -fx-background: #87CEEB;">
      <content>
        <AnchorPane fx:id="scrollAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="637.0" prefWidth="715.0">
             <children>
                <Pane fx:id="fieldPane" prefHeight="637.0" prefWidth="715.0" style="-fx-background-color: #87CEEB;">
                   <children>
-                     <Label layoutX="277.0" layoutY="301.0" text="Loading map...">
+                     <Label fx:id="loadingLabel" layoutX="297.0" layoutY="297.0" text="Loading...">
                         <font>
-                           <Font size="25.0" />
+                           <Font size="29.0" />
                         </font>
                      </Label>
                   </children></Pane>
