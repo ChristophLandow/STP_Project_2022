@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.controller.subcontroller.HexTile;
+import de.uniks.pioneers.model.Harbor;
 import de.uniks.pioneers.model.Tile;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,8 @@ public class BoardGenerator {
     private final List<HexTile> edges = new ArrayList<>();
     private final List<HexTile> corners = new ArrayList<>();
 
+    private final List<HexTile> harbors = new ArrayList<>();
+
     public List<HexTile> generateTiles(List<Tile> tiles, double hexScale) {
 
         for(Tile tile : tiles) {
@@ -21,6 +24,16 @@ public class BoardGenerator {
             board.add(newHexTile);
         }
         return this.board;
+    }
+
+    public List<HexTile> generateHarbors(List<Harbor> harborList, double hexScale) {
+
+        for(Harbor harbor : harborList) {
+            HexTile newHexTile = new HexTile(harbor.x(), harbor.z(), harbor.y(), hexScale, true);
+            newHexTile.setGameInfo(harbor.type(), harbor.side());
+            harbors.add(newHexTile);
+        }
+        return this.harbors;
     }
 
     public List<HexTile> generateEdges(int size, double hexScale) {

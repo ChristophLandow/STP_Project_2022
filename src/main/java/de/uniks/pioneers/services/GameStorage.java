@@ -14,6 +14,7 @@ import static de.uniks.pioneers.GameConstants.*;
 public class GameStorage {
     @Inject EventListener eventListener;
     private List<Tile> map;
+    private List<Harbor> harbors;
     private int mapRadius;
     private  double hexScale = 75;
     private double hexRadiusFactor = 3;
@@ -35,6 +36,8 @@ public class GameStorage {
     public List<Tile> getMap() {
         return map;
     }
+
+    public List<Harbor> getHarbors() { return harbors; }
 
     public int getMapRadius(){
         return this.mapRadius;
@@ -58,6 +61,10 @@ public class GameStorage {
 
     public void setMap(List<Tile> map) {
         this.map = map;
+    }
+
+    public void setHarbors(List<Harbor> harbors) {
+        this.harbors = harbors;
     }
 
     public void calcZoom(int mapRadius){

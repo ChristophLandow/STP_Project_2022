@@ -34,7 +34,10 @@ public class IngameService {
 
     public Observable<Map> getMap (String gameId) {
         return pioneersApiService.getMap(gameId)
-                .doOnNext(result -> gameStorage.setMap(result.tiles()));
+                .doOnNext(result -> {
+                    gameStorage.setMap(result.tiles());
+                    gameStorage.setHarbors(result.harbors());
+                });
     }
 
     public Observable<State> getCurrentState(String gameId) {

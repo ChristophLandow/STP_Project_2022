@@ -54,6 +54,7 @@ public class BoardController {
         List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap(), this.gameStorage.getHexScale());
         List<HexTile> edges = generator.generateEdges(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
         List<HexTile> corners = generator.generateCorners(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
+        List<HexTile> harbors = generator.generateHarbors(this.gameStorage.getHarbors(), this.gameStorage.getHexScale());
 
         for (HexTile hexTile : tiles) {
 
