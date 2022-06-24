@@ -48,4 +48,6 @@ public class IngameService {
     public Observable<Player> updatePlayer(String gameId, String userId, boolean active) {
         return pioneersApiService.updatePlayer(gameId, userId, new UpdatePlayerDto(active));
     }
+
+
 }
