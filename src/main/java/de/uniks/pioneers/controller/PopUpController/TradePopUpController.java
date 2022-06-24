@@ -80,14 +80,12 @@ public class TradePopUpController {
     }
 
     public void init(){
+        root.getStylesheets().add("/de/uniks/pioneers/styles/SpinnerLowerArrowWidth.css");
         // setup spinners
         List<Spinner> spinners= new ArrayList<>();
         spinnerBox.getChildren().forEach(node -> spinners.add((Spinner) node));
         spinnerBoxI.getChildren().forEach(node -> spinners.add((Spinner) node));
         spinners.forEach(spinner -> {
-
-
-
 
             spinnerValueFactory= new SpinnerValueFactory<Integer>() {
                 @Override
