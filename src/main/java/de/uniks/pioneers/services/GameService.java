@@ -210,4 +210,8 @@ public class GameService {
     public void setMembers(ObservableList<Member> lobbyMembers) {
         this.lobbyMembers = lobbyMembers;
     }
+
+    public Game getGame() {
+        return game.get();
+    }
 }
