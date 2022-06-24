@@ -4,11 +4,9 @@ package de.uniks.pioneers.controller.PopUpController;
 import de.uniks.pioneers.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -16,6 +14,8 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class TradePopUpController {
@@ -58,10 +58,12 @@ public class TradePopUpController {
     @FXML public VBox playerListBox;
     @FXML public ListView playerList;
 
+    private SpinnerValueFactory<Integer> spinnerValueFactory;
 
 
     @Inject
     public TradePopUpController() {
+
     }
 
 
@@ -76,6 +78,43 @@ public class TradePopUpController {
         }
         return node;
     }
+
+    public void init(){
+        // setup spinners
+        List<Spinner> spinners= new ArrayList<>();
+        spinnerBox.getChildren().forEach(node -> spinners.add((Spinner) node));
+        spinnerBoxI.getChildren().forEach(node -> spinners.add((Spinner) node));
+        spinners.forEach(spinner -> {
+
+
+
+
+            spinnerValueFactory= new SpinnerValueFactory<Integer>() {
+                @Override
+                public void decrement(int steps) {
+                    int currentValue = getValue();
+                    if (currentValue>0){
+                        setValue(currentValue-1);
+                    }
+                }
+
+                @Override
+                public void increment(int steps) {
+                    int currentValue = getValue();
+                    setValue(currentValue+1);
+                }
+            };
+
+            spinnerValueFactory.setValue(0);
+            spinner.setValueFactory(spinnerValueFactory);
+        });
+    }
+
+
+
+
+
+
 
 
 

@@ -442,6 +442,7 @@ public class IngameScreenController implements Controller {
         popUpStage = new Stage();
         TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
         Parent root = tradePopUpController.render();
+        tradePopUpController.init();
         Scene scene = new Scene(root);
         popUpStage.setScene(scene);
         popUpStage.show();
