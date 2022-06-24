@@ -18,6 +18,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public ObservableList<Member> members = FXCollections.observableArrayList();
+    public ObservableList<Member> lobbyMembers;
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
@@ -118,15 +119,14 @@ public class GameService {
     public void loadPlayers(Game game) {
         // REST - get players from server
         players = FXCollections.observableHashMap();
-        members = FXCollections.observableArrayList();
 
         disposable.add(ingameService.getAllPlayers(game._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
-                    disposable.add(newGameLobbyService.getAll(game._id())
-                            .observeOn(FX_SCHEDULER)
-                            .subscribe(this.members::setAll, Throwable::printStackTrace));
+                    System.out.println(members);
+                    members.addAll(lobbyMembers);
+                    System.out.println(members);
                     me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }
@@ -205,5 +205,13 @@ public class GameService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public void setMembers(ObservableList<Member> lobbyMembers) {
+        this.lobbyMembers = lobbyMembers;
+    }
+
+    public Game getGame() {
+        return game.get();
     }
 }

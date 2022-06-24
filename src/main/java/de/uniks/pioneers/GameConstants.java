@@ -20,6 +20,8 @@ public class GameConstants {
     public static final String ROLL = "roll";
     public static final String BUILD = "build";
 
+    public static final String DROP = "drop";
+
     // action strings
     public static final String ROLL_DICE = "roll the dice";
     public static final String PLACE_SETTLEMENT = "place settlement";
