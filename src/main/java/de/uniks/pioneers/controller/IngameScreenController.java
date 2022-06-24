@@ -193,10 +193,9 @@ public class IngameScreenController implements Controller {
             zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane, loadingLabel);
         });
 
-        gameService.loadPlayers(game.get());
-
         // add change listeners
         // players change listener
+        gameService.loadPlayers(game.get());
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if (c.wasAdded() && !c.wasRemoved()) {
                 this.renderPlayer(c.getValueAdded());
