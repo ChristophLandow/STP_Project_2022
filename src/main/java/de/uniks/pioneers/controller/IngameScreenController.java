@@ -3,7 +3,6 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
-import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
@@ -17,18 +16,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -38,80 +33,59 @@ import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-    @FXML public Pane fieldPane, root, turnPane;
-    @FXML
-    public AnchorPane scrollAnchorPane;
-    @FXML public Pane roadFrame, settlementFrame, cityFrame, situationPane;
+    @FXML public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane;
+    @FXML public AnchorPane scrollAnchorPane;
     @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
     @FXML public SVGPath streetSVG, houseSVG, citySVG;
     @FXML public Button rulesButton, leaveButton, settingsButton;
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
-    @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel;
-    @FXML public Label timeLabel, situationLabel, loadingLabel;
-    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView;
-    @FXML public ImageView leftDiceImageView, rightDiceImageView, hammerImageView;
+    @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel, loadingLabel;
+    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
     @FXML public ListView<Node> playerListView;
     @FXML public Rectangle downRectangle, upRectangle;
 
     @Inject GameChatController gameChatController;
-
     @Inject PrefService prefService;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
     @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
-
     @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
     @Inject Provider<RobberController> robberControllerProvider;
-
+    @Inject LeaveGameController leaveGameController;
+    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject Provider<SettingsScreenController> settingsScreenControllerProvider;
+    @Inject EventListener eventListener;
 
     private final GameService gameService;
-    private final LeaveGameController leaveGameController;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private List<User> users;
     private final App app;
     private final GameStorage gameStorage;
     private final MapRenderService mapRenderService;
-    private final Provider<RulesScreenController> rulesScreenControllerProvider;
-    private final Provider<SettingsScreenController> settingsScreenControllerProvider;
-
     private final IngameService ingameService;
     private final UserService userService;
     private final TimerService timerService;
-    private final EventListener eventListener;
     private final BoardController boardController;
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private String myColor;
-    private boolean onClose = false;
-    private boolean kicked = false;
+    private IngameStateController ingameStateController;
+    private IngamePlayerController ingamePlayerController;
 
     @Inject
-    public IngameScreenController(App app,Provider<LobbyScreenController> lobbyScreenControllerProvider,
-                                  Provider<RobberController> robberControllerProvider,
-                                  Provider<RulesScreenController> rulesScreenControllerProvider,
-                                  Provider<SettingsScreenController> settingsScreenControllerProvider,
-                                  IngameService ingameService, GameStorage gameStorage,
-                                  UserService userService, GameService gameService,
-                                  EventListener eventListener, LeaveGameController leaveGameController,
-                                  TimerService timerService, MapRenderService mapRenderService) {
+    public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
+                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService) {
         this.app = app;
-        this.rulesScreenControllerProvider = rulesScreenControllerProvider;
-        this.settingsScreenControllerProvider = settingsScreenControllerProvider;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
         this.mapRenderService = mapRenderService;
         this.userService = userService;
-        this.eventListener = eventListener;
         this.gameService = gameService;
         this.timerService = timerService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
-        this.leaveGameController = leaveGameController;
-        this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
-        this.boardController = new BoardController(ingameService, userService, timerService, game, this.gameStorage, this.mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, timerService, game, gameStorage, mapRenderService);
     }
 
     @Override
@@ -133,7 +107,7 @@ public class IngameScreenController implements Controller {
     @Override
     public void init() {
         this.app.getStage().setOnCloseRequest(event -> {
-            onClose = true;
+            leaveGameController.setOnClose(true);
             leave();
             userService.editProfile(null, null, null, "offline").subscribe();
             Platform.exit();
@@ -155,13 +129,17 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
+        new IngameSelectController(gameStorage, roadFrame, settlementFrame, cityFrame, streetSVG, houseSVG, citySVG);
+        leaveGameController.init(this, gameChatController);
+
         // set timeLabel of timer
         this.timerService.setTimeLabel(this.timeLabel);
 
         // set dice subcontroller
         this.diceSubcontroller.init();
-        this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView)
-                .setRightDiceView(this.rightDiceImageView);
+        this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
+
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get());
 
         // init game attributes and event listeners
         gameService.initGame();
@@ -169,7 +147,7 @@ public class IngameScreenController implements Controller {
         // REST - get game state from server
         disposable.add(ingameService.getCurrentState(game.get()._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(this::handleGameState));
+                .subscribe(ingameStateController::handleGameState));
 
         // init game state listener
         String patternToObserveGameState = String.format("games.%s.state.*", game.get()._id());
@@ -177,7 +155,7 @@ public class IngameScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".updated")) {
-                        this.handleGameState(gameEvent.data());
+                        ingameStateController.handleGameState(gameEvent.data());
                     }
                 })
         );
@@ -193,25 +171,24 @@ public class IngameScreenController implements Controller {
             zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane, loadingLabel);
         });
 
-        gameService.loadPlayers(game.get());
+        ingamePlayerController = new IngamePlayerController(userService, leaveGameController, elementProvider, playerListView, spectatorProvider, game.get(), hammerImageView, streetCountLabel,
+                                                            houseCountLabel, cityCountLabel, streetSVG, citySVG, houseSVG, tradeImageView, hourglassImageView, nextTurnImageView);
 
         // add change listeners
         // players change listener
+        gameService.loadPlayers(game.get());
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if (c.wasAdded() && !c.wasRemoved()) {
-                this.renderPlayer(c.getValueAdded());
-            } else if (c.wasRemoved() && !c.wasAdded()) {
-                this.deletePlayer(c.getValueRemoved());
-            }
-        });
+                ingamePlayerController.renderPlayer(c.getValueAdded());
+            }});
 
         //this.loadSpectators();
         gameService.members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();
             if (c.wasAdded()) {
-                c.getAddedSubList().forEach(this::renderSpectator);
+                c.getAddedSubList().forEach(ingamePlayerController::renderSpectator);
             } else if (c.wasRemoved()) {
-                c.getRemoved().forEach(this::deleteSpectator);
+                c.getRemoved().forEach(ingamePlayerController::deleteSpectator);
             }
         });
 
@@ -239,124 +216,17 @@ public class IngameScreenController implements Controller {
             this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
         }
     }
-    private void renderBuilding(Building building) {this.boardController.renderBuilding(building);}
-
-    private void deletePlayer(Player player) {
-        // TODO: remove player from list
-    }
-
-    public void renderPlayer(Player player) {
-        IngamePlayerListElementController playerListElement = elementProvider.get();
-        playerListElement.nodeListView = playerListView;
-        playerListElement.render(player.userId());
-    }
-
-    public void deleteSpectator(Member member) {
-        Node removal = playerListView.getItems().stream().filter(node -> node.getId().equals(member.userId())).findAny().orElse(null);
-        playerListView.getItems().remove(removal);
-
-        if(member.userId().equals(userService.getCurrentUser()._id())) {
-            kicked = true;
-            leave();
-        }
-    }
-
-    public void renderSpectator(Member member) {
-        if(member.spectator()) {
-            if(userService.getCurrentUser()._id().equals(member.userId())) {
-                hammerImageView.setVisible(false);
-                streetCountLabel.setVisible(false);
-                houseCountLabel.setVisible(false);
-                cityCountLabel.setVisible(false);
-                streetSVG.setVisible(false);
-                citySVG.setVisible(false);
-                houseSVG.setVisible(false);
-                tradeImageView.setVisible(false);
-                hourglassImageView.setVisible(false);
-                nextTurnImageView.setVisible(false);
-            }
-
-            IngamePlayerListSpectatorController spectatorListElement = spectatorProvider.get();
-            spectatorListElement.setNodeListView(playerListView);
-            spectatorListElement.init(game.get()._id(), member.userId());
-            spectatorListElement.render(game.get().owner());
-        }
+    private void renderBuilding(Building building) {
+        this.boardController.renderBuilding(building);
     }
 
     private void deleteBuilding(Building building) {}
-
-    private void handleGameState(State currentState) {
-        // enable corresponding user to perform their action
-        ExpectedMove move = currentState.expectedMoves().get(0);
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
-            // enable posting move
-            switch (move.action()) {
-                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
-                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
-                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
-                case BUILD -> {
-                    // set builder timer, in progress...
-                    this.timerService.setBuildTimer(new Timer());
-                    this.enableEndTurn();
-                    this.enableBuildingPoints(move.action());
-                    this.enableStreetPoints(move.action());
-                }
-            }
-        }
-        this.setSituationLabel(move.players().get(0), move.action());
-    }
-
-    private void enableStreetPoints(String action) { this.boardController.enableStreetPoints(action); }
-
-    private void enableBuildingPoints(String action) { this.boardController.enableBuildingPoints(action); }
-
-    private void enableEndTurn() {
-        this.turnPane.setOnMouseClicked(this::endTurn);
-    }
-
-    private void endTurn(MouseEvent mouseEvent) {
-        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
-        disposable.add(ingameService.postMove(game.get()._id(), moveDto)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(move -> {
-                    this.turnPane.setOnMouseClicked(null);
-                    this.timerService.reset();
-                })
-        );
-    }
-    private void setSituationLabel(String playerId, String action) {
-        // set game state label
-        String playerName;
-        String actionString = "";
-        switch (action) {
-            case ROLL, FOUNDING_ROLL -> actionString = "roll the dice";
-            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> actionString = "place road";
-            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
-            case BUILD -> actionString = BUILD;
-        }
-
-        if (playerId.equals(userService.getCurrentUser()._id())) {
-            playerName = "ME";
-            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/next.png")).toString()));
-        } else {
-            playerName = userService.getUserById(playerId).blockingFirst().name();
-            this.hourglassImageView.setImage(new Image(Objects.requireNonNull(getClass().getResource("ingame/sanduhr.png")).toString()));
-        }
-        this.situationLabel.setText(playerName + ":\n" + actionString);
-    }
-
-    private void enableRoll(String action) {
-        // init dice subcontroller
-        this.diceSubcontroller.setAction(action);
-        this.diceSubcontroller.activate();
-    }
 
     public App getApp() {
         return this.app;
     }
 
     public void setPlayerColor(String hexColor) {
-        this.myColor = hexColor;
         streetSVG.setFill(Paint.valueOf(hexColor));
         houseSVG.setFill(Color.WHITE);
         houseSVG.setStroke(Paint.valueOf(hexColor));
@@ -367,32 +237,7 @@ public class IngameScreenController implements Controller {
     }
 
     public void leave() {
-        LobbyScreenController newLobbyController = lobbyScreenControllerProvider.get();
-        if(game.get().owner().equals(userService.getCurrentUser()._id())) {
-            gameChatController.sendMessage("Host left the Game!", game.get());
-            disposable.add(gameService.deleteGame(game.get()._id())
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(res -> {
-                        this.stop();
-                        disposable.dispose();
-                        if(!onClose) {
-                            app.show(newLobbyController);
-                        }
-                    }, Throwable::printStackTrace));
-        } else {
-            if(!kicked) {
-                leaveGameController.saveLeavedGame(this.game.get()._id(), users, myColor);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Kicked by Host");
-                alert.show();
-            }
-            this.stop();
-            timerService.reset();
-            disposable.dispose();
-            if(!onClose) {
-                app.show(newLobbyController);
-            }
-        }
+        leaveGameController.leave();
     }
 
     public void toRules() {
@@ -427,25 +272,4 @@ public class IngameScreenController implements Controller {
     private void buildBoardUI() {
         this.boardController.buildBoardUI();
     }
-
-    public void selectStreet() {
-        this.gameStorage.selectedBuilding = ROAD;
-        this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
-        this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-    }
-    public void selectSettlement() {
-        this.gameStorage.selectedBuilding = SETTLEMENT;
-        this.settlementFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
-        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-    }
-    public void selectCity() {
-        this.gameStorage.selectedBuilding = CITY;
-        this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
-        this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-    }
-
-
 }

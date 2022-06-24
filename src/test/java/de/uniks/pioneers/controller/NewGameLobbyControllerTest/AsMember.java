@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
+import de.uniks.pioneers.controller.subcontroller.NewGameLobbyReadyController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
@@ -15,6 +16,8 @@ import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -58,6 +61,9 @@ class AsMember extends ApplicationTest {
     @Mock
     ColorPickerController colorPickerController;
 
+    @Mock
+    NewGameLobbyReadyController newGameLobbyReadyController;
+
     @Spy
     App app = new App(null);
 
@@ -100,51 +106,42 @@ class AsMember extends ApplicationTest {
         patternToObserveUserUser02 = String.format("users.%s.updated", user02._id());
         patternToObserveUserJoining = String.format("users.%s.updated", userJoining._id());
         String patternToObserveGame = String.format("games.%s.*", testGame._id());
-
-
         when(app.getStage()).thenReturn(stage);
 
         //when(newGameLobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
 
         when(userService.getCurrentUser()).thenReturn(user02);
 
-        when(eventListener.listen(patternToObserveUserOwner, User.class))
-                .thenReturn(Observable.just(new Event<>("users.1.updated", owner)));
-        when(eventListener.listen(patternToObserveUserUser02, User.class))
-                .thenReturn(Observable.just(new Event<>("users.2.updated", user02)));
-        when(eventListener.listen(patternToObserveUserJoining, User.class))
-                .thenReturn(Observable.just(new Event<>("users.3.updated", userJoining)));
+        when(eventListener.listen(patternToObserveUserOwner, User.class)).thenReturn(Observable.just(new Event<>("users.1.updated", owner)));
+        when(eventListener.listen(patternToObserveUserUser02, User.class)).thenReturn(Observable.just(new Event<>("users.2.updated", user02)));
+        when(eventListener.listen(patternToObserveUserJoining, User.class)).thenReturn(Observable.just(new Event<>("users.3.updated", userJoining)));
 
         when(newGameLobbyService.getAll("3")).thenReturn(Observable.just(List.of(member01, member02)));
 
-        when(userService.getUserById("1"))
-                .thenReturn(Observable.just(owner));
-        when(userService.getUserById("2"))
-                .thenReturn(Observable.just(user02));
-        when(userService.getUserById("3")).thenReturn(Observable.just(userJoining))
-                .thenReturn(Observable.just(userJoining));
+        when(userService.getUserById("1")).thenReturn(Observable.just(owner));
+        when(userService.getUserById("2")).thenReturn(Observable.just(user02));
+        when(userService.getUserById("3")).thenReturn(Observable.just(userJoining)).thenReturn(Observable.just(userJoining));
 
-        when(eventListener.listen(patternToObserveGameMembers, Member.class))
-                .thenReturn(Observable.just(new Event<>("games.3.member.3.created", nowMember)));
+        when(eventListener.listen(patternToObserveGameMembers, Member.class)).thenReturn(Observable.just(new Event<>("games.3.member.3.created", nowMember)));
 
-        when(eventListener.listen(patternToObserveGame, Game.class))
-                .thenReturn(Observable.just(new Event<>("games.3.updated", testGame)));
+        when(eventListener.listen(patternToObserveGame, Game.class)).thenReturn(Observable.just(new Event<>("games.3.updated", testGame)));
 
         when(gameChatControllerProvider.get()).thenReturn(gameChatController);
         when(newGameLobbyService.getMessages(testGame._id())).thenReturn(Observable.just(List.of(message01, message02)));
         when(eventListener.listen("games." + testGame._id() + ".messages.*.*", MessageDto.class))
                 .thenReturn(Observable.just(new Event<>("games.3.messages.1.created", message01)))
                 .thenReturn(Observable.just(new Event<>("games.3.messages.2.created", message02)));
+        when(newGameLobbyService.getMembers()).thenReturn(FXCollections.observableArrayList());
 
-        newGameScreenLobbyController.password.set("12345678");
-        newGameScreenLobbyController.game.set(testGame);
+        newGameScreenLobbyController.setPassword("12345678");
+        newGameScreenLobbyController.setGame(testGame);
         app.start(stage);
         app.show(newGameScreenLobbyController);
     }
 
     @Test
     void initControllerAsOMember() {
-        List<Member> members = newGameScreenLobbyController.getMembers();
+        List<Member> members = newGameLobbyService.getMembers();
 
         assertEquals(members.get(1).createdAt(), "2");
         assertEquals(members.get(1).updatedAt(), "2");
@@ -152,7 +149,7 @@ class AsMember extends ApplicationTest {
         assertEquals(members.get(1).userId(), "2");
         assertTrue(members.get(1).ready());
 
-        assertEquals(members.size(), 3);
+        assertEquals(members.size(), 2);
 
         // assertions for current user box, colorpicker gets random color
         FxAssert.verifyThat("#gameNameLabel", LabeledMatchers.hasText("name"));
@@ -183,8 +180,8 @@ class AsMember extends ApplicationTest {
         verify(newGameLobbyService).getMessages(testGame._id());
         verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
 
-        Platform.runLater(() -> assertThat(newGameScreenLobbyController.onSetReadyButton()).isEqualTo(false));
-        Platform.runLater(() -> assertThat(newGameScreenLobbyController.allUsersReady()).isEqualTo(false));
+        Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
+        Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));
     }
 
     public String createRandomColor()

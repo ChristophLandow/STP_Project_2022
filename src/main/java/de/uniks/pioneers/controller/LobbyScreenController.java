@@ -237,8 +237,8 @@ public class LobbyScreenController implements Controller {
 
     public void showNewGameLobby(Game game, String password, String hexColor) {
         NewGameScreenLobbyController newGameScreenLobbyController = newGameScreenLobbyControllerProvider.get();
-        newGameScreenLobbyController.game.set(game);
-        newGameScreenLobbyController.password.set(password);
+        newGameScreenLobbyController.setGame(game);
+        newGameScreenLobbyController.setPassword(password);
         isCreatingGame.set(false);
         app.show(newGameScreenLobbyController);
         newGameScreenLobbyController.setPlayerColor(hexColor);
