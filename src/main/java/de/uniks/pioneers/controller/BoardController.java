@@ -201,7 +201,7 @@ public class BoardController {
                 newHexTileController.setVisible(false);
                 this.tileControllers.add(newHexTileController);
             });
-            Thread.sleep(30);
+            Thread.sleep(mapRenderService.calcSleepHexagon());
         }
     }
 

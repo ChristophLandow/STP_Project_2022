@@ -60,6 +60,18 @@ public class MapRenderService {
         return gc;
     }
 
+    public int calcSleepHexagon(){
+        if(gameStorage.getMapRadius() > 7){
+            return 40;
+        }
+        else  if(gameStorage.getMapRadius() >= 4){
+            return 20;
+        }
+        else{
+            return 10;
+        }
+    }
+
     public void checkPoints(){
         for(HexTileController hexTileController: tileControllers){
             //hexTileController.setVisible(isOnScreen(hexTileController.getView(),gameStorage.getHexScale()*gameStorage.getHexRadiusFactor()));
