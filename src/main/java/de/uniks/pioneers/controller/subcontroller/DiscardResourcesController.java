@@ -157,11 +157,12 @@ public class DiscardResourcesController implements Initializable, Controller {
 
     @Override
     public void stop() {
-
+        spinnerLIst.clear();
     }
 
     public void discardAndLeave(){
         chooseResources();
+        stop();
         stage.close();
     }
 
