@@ -61,19 +61,17 @@ public class BoardController {
                         Thread.sleep(mapRenderService.calcSleepHexagon());
                     }
 
-                    Thread.sleep(500);
                     for (HexTile edge : edges) {
                         Platform.runLater(() -> loadEdge(edge));
-                        Thread.sleep(10);
+                        Thread.sleep(0,500000);
                     }
 
-                    Thread.sleep(500);
                     for (HexTile corner : corners) {
                         Platform.runLater(() -> loadCorner(corner));
-                        Thread.sleep(10);
+                        Thread.sleep(0,500000);
                     }
 
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                     linkTiles();
 
                     Thread.sleep(10);

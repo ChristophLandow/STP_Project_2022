@@ -139,8 +139,7 @@ public class HexTileController {
     // interconnects street and building controllers
     public void link(){
         for(int i = 0; i < 6; i++){
-            if(!
-                    this.corners[i].adjacentStreets.contains(this.edges[i])){
+            if(!this.corners[i].adjacentStreets.contains(this.edges[i])){
                 this.corners[i].adjacentStreets.add(this.edges[i]);
                 this.edges[i].adjacentBuildings.add(this.corners[i]);
             }
