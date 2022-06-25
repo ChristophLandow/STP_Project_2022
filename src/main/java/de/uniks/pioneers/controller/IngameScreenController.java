@@ -54,7 +54,7 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
-    @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
+    @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
     @Inject Provider<RobberController> robberControllerProvider;
     @Inject LeaveGameController leaveGameController;
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -105,7 +105,7 @@ public class IngameScreenController implements Controller {
         this.boardController.fieldPane = this.fieldPane;
         this.boardController.streetPointControllerProvider = this.streetPointControllerProvider;
 
-        this.zoomableScrollPane = zoomableScrollpaneProvider.get();
+        this.zoomableScrollPane = zoomableScrollPaneProvider.get();
         this.zoomableScrollPane.init(fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
 
         Platform.runLater(this.zoomableScrollPane::render);

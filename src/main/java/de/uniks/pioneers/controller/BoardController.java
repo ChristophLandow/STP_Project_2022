@@ -53,27 +53,78 @@ public class BoardController {
         List<HexTile> edges = generator.generateEdges(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
         List<HexTile> corners = generator.generateCorners(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
 
-        Thread hextileRenderThread = new Thread(() -> {
-            try{
-                loadHexagons(tiles);
-                Thread.sleep(500);
-                loadEdges(edges);
-                Thread.sleep(500);
-                loadCorners(corners);
-                Thread.sleep(1000);
-                linkTiles();
-                Thread.sleep(10);
-                mapRenderService.setTileControllers(this.tileControllers);
-                loadSnowAnimation();
-                mapRenderService.setFinishedLoading(true);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+        if(gameStorage.getMapRadius() > 4) {
+            Thread hextileRenderThread = new Thread(() -> {
+                try {
+                    loadHexagons(tiles);
+                    Thread.sleep(500);
+                    loadEdges(edges);
+                    Thread.sleep(500);
+                    loadCorners(corners);
+                    Thread.sleep(2000);
+                    linkTiles();
+                    Thread.sleep(10);
+                    mapRenderService.setTileControllers(this.tileControllers);
+                    loadSnowAnimation();
+                    mapRenderService.setFinishedLoading(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
-        hextileRenderThread.setDaemon(true);
-        hextileRenderThread.start();
+            hextileRenderThread.setDaemon(true);
+            hextileRenderThread.start();
+        }
+        else{
+            for (HexTile hexTile : tiles) {
+                drawCanvasHexagon(
+                        new double[]{0.0, Math.sqrt(3)/2, Math.sqrt(3)/2, 0.0, -Math.sqrt(3)/2, -Math.sqrt(3)/2},
+                        new double[]{1.0, 0.5, -0.5, -1.0, -0.5, 0.5},
+                        hexTile.x + this.fieldPane.getPrefWidth() / 2,
+                        -hexTile.y + this.fieldPane.getPrefHeight() / 2,
+                        hexTile.type,
+                        hexTile.number
+                );
+
+                Circle hexView = new Circle(0);
+                hexView.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
+                hexView.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
+                this.fieldPane.getChildren().add(hexView);
+
+                HexTileController newHexTileController = new HexTileController(hexTile, hexView);
+                newHexTileController.setVisible(false);
+                this.tileControllers.add(newHexTileController);
+            }
+
+            for (HexTile edge : edges) {
+                Circle circ = new Circle(gameStorage.getHexScale() / 16.5);
+                circ.setFill(STANDARD_COLOR);
+
+                circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
+                circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
+                this.fieldPane.getChildren().add(circ);
+                StreetPointController streetPointController = streetPointControllerProvider.get();
+                streetPointController.post(edge, circ, this.fieldPane);
+                streetPointControllers.add(streetPointController);
+            }
+
+            for (HexTile corner : corners) {
+                Circle circ = new Circle(gameStorage.getHexScale() / 12.5);
+                circ.setFill(STANDARD_COLOR);
+
+                circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
+                circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
+                this.fieldPane.getChildren().add(circ);
+                BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
+                this.buildingControllers.add(newbuildingPointController);
+            }
+
+            linkTiles();
+            mapRenderService.setTileControllers(this.tileControllers);
+            loadSnowAnimation();
+            mapRenderService.setFinishedLoading(true);
+        }
+
     }
 
     private void loadHexagons(List<HexTile> tiles ) throws InterruptedException {
