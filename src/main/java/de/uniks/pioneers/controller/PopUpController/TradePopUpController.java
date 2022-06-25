@@ -158,7 +158,7 @@ public class TradePopUpController {
     private void setupSpinner(Spinner spinner) {
         String id = spinner.getId();
         System.out.println(id);
-        Pattern pattern = Pattern.compile("packeis");
+        Pattern pattern = Pattern.compile("");
         Matcher matcher = pattern.matcher(id);
         System.out.println(matcher.matches());
         String type = id.substring(0,matcher.start());
