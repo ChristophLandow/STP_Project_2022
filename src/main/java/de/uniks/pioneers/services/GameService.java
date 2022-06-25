@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.ws.EventListener;
@@ -40,6 +41,7 @@ public class GameService {
     public Observable<Game> deleteGame(String gameId) {
         return gameApiService.delete(gameId);
     }
+
 
     public void initGame() {
         // REST - get buildings from server

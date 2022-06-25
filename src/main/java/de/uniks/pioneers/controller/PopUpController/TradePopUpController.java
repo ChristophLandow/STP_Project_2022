@@ -2,6 +2,8 @@ package de.uniks.pioneers.controller.PopUpController;
 
 
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.IngameService;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,17 +15,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TradePopUpController {
+
+    private final IngameService ingameService;
     @FXML
     public AnchorPane root;
     @FXML
@@ -89,10 +94,20 @@ public class TradePopUpController {
 
     private class TradeSpinnerFactory extends SpinnerValueFactory<Integer> {
 
+
+        private final IngameService ingameService;
+        private final Pair<String, String> types;
+
+        public TradeSpinnerFactory(Pair<String, String> types, IngameService ingameService) {
+            this.types = types;
+            this.ingameService = ingameService;
+        }
+
         @Override
         public void decrement(int steps) {
 
-            if (getValue() > 0) {
+            if (getValue() > 0 ) {
+
                 setValue(getValue() - 1);
             }
         }
@@ -106,8 +121,8 @@ public class TradePopUpController {
 
 
     @Inject
-    public TradePopUpController() {
-
+    public TradePopUpController(IngameService ingameService) {
+        this.ingameService = ingameService;
     }
 
 
@@ -125,19 +140,12 @@ public class TradePopUpController {
 
     public void init() {
         root.getStylesheets().add("/de/uniks/pioneers/styles/SpinnerLowerArrowWidth.css");
+
         // setup spinners
-        Map<String, Spinner> spinners = new HashMap<>();
-        spinnerBoxOffer.getChildren().forEach(node -> spinners.put(node.getId(), (Spinner) node));
-        spinnerBoxGet.getChildren().forEach(node -> spinners.put(node.getId(), (Spinner) node));
+        spinnerBoxOffer.getChildren().forEach(node -> setupSpinner((Spinner) node));
+        spinnerBoxGet.getChildren().forEach(node -> setupSpinner((Spinner) node));
 
-        spinners.values().forEach(spinner -> {
-            spinner.getId().f
-            TradeSpinnerFactory factory = new TradeSpinnerFactory();
-            factory.setValue(0);
-            spinner.setValueFactory(factory);
-        });
-
-
+        // create EventHandler for trade with bank
         EventHandler<MouseEvent> eventHandler = event -> {
 
         };
@@ -145,6 +153,21 @@ public class TradePopUpController {
         tradeWithBank.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 
+    }
+
+    private void setupSpinner(Spinner spinner) {
+        String id = spinner.getId();
+        System.out.println(id);
+        Pattern pattern = Pattern.compile("packeis");
+        Matcher matcher = pattern.matcher(id);
+        System.out.println(matcher.matches());
+        String type = id.substring(0,matcher.start());
+        String offerXorGet = id.substring(matcher.end());
+        Pair<String, String> spinnerTyp = new Pair<>(type,offerXorGet);
+        System.out.println(spinnerTyp);
+        TradeSpinnerFactory factory = new TradeSpinnerFactory(spinnerTyp, ingameService);
+        factory.setValue(0);
+        spinner.setValueFactory(factory);
     }
 
 

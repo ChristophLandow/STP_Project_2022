@@ -87,7 +87,7 @@
                   </HBox>
                   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="270.0" spacing="5.0">
                      <children>
-                        <ImageView fx:id="packeisResourceI" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView id="packeisGet" fx:id="packeisResourceI" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_ice.png" />
                            </image>
@@ -120,10 +120,10 @@
                   <HBox fx:id="spinnerBoxGet" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="270.0" spacing="5.0">
                      <children>
                         <Spinner id="packeisGet" prefHeight="25.0" prefWidth="30.0" />
-                        <Spinner prefHeight="25.0" prefWidth="30.0" />
-                        <Spinner prefHeight="25.0" prefWidth="30.0" />
-                        <Spinner prefHeight="25.0" prefWidth="30.0" />
-                        <Spinner prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="fellGet" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="fischGet" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="kohleGet" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="walknochenGet" prefHeight="25.0" prefWidth="30.0" />
                      </children>
                   </HBox>
                   <HBox fx:id="tradeButtons" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="270.0">
