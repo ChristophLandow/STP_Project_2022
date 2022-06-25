@@ -75,7 +75,9 @@ class AppTest extends ApplicationTest {
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","001", true, "#ffffff", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","002", true, "#000000", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","003", true, "#888888", false)));
-        write("\t\t\tHallo Test Test\t");
+        write("\t");
+        type(KeyCode.DOWN);
+        write("\t\tHallo Test Test\t");
         type(KeyCode.ENTER);
         write("\t");
         type(KeyCode.ENTER);
@@ -83,7 +85,7 @@ class AppTest extends ApplicationTest {
 
         //IngameScreen
         WaitForAsyncUtils.waitForFxEvents();
-        write("\t\t\tHallo Test Test");
+        write("\t\t\tHallo Test");
         type(KeyCode.ENTER);
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
         clickOn("#leftDiceImageView");

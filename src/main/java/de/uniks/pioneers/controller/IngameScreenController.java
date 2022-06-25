@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -40,18 +41,20 @@ public class IngameScreenController implements Controller {
     @FXML public Button rulesButton, leaveButton, settingsButton;
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
-    @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel, loadingLabel;
+    @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
     @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
     @FXML public ListView<Node> playerListView;
     @FXML public Rectangle downRectangle, upRectangle;
+    @FXML public Canvas mapCanvas;
 
+    public ZoomableScrollPane zoomableScrollPane;
     @Inject GameChatController gameChatController;
     @Inject PrefService prefService;
     @Inject Provider<IngamePlayerListElementController> elementProvider;
     @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
-    @Inject Provider<ZoomableScrollPane> zoomableScrollpaneProvider;
+    @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
     @Inject Provider<RobberController> robberControllerProvider;
     @Inject LeaveGameController leaveGameController;
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -85,7 +88,7 @@ public class IngameScreenController implements Controller {
         this.gameService = gameService;
         this.timerService = timerService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
-        this.boardController = new BoardController(ingameService, userService, timerService, game, gameStorage, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, game, gameStorage, mapRenderService);
     }
 
     @Override
@@ -101,6 +104,12 @@ public class IngameScreenController implements Controller {
         }
         this.boardController.fieldPane = this.fieldPane;
         this.boardController.streetPointControllerProvider = this.streetPointControllerProvider;
+
+        this.zoomableScrollPane = zoomableScrollPaneProvider.get();
+        this.zoomableScrollPane.init(fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
+
+        Platform.runLater(this.zoomableScrollPane::render);
+
         return view;
     }
 
@@ -132,9 +141,35 @@ public class IngameScreenController implements Controller {
         new IngameSelectController(gameStorage, roadFrame, settlementFrame, cityFrame, streetSVG, houseSVG, citySVG);
         leaveGameController.init(this, gameChatController);
 
+        Thread waitForMapLoadedThread = new Thread(() -> {
+            try{
+                while(!this.mapRenderService.isFinishedLoading()){
+                    Thread.sleep(300);
+                }
+
+                initWhenMapFinishedRendering();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        waitForMapLoadedThread.setDaemon(true);
+        waitForMapLoadedThread.start();
+
         // set timeLabel of timer
         this.timerService.setTimeLabel(this.timeLabel);
 
+        if(prefService.getDarkModeState()){
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+        } else {
+            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
+            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
+        }
+    }
+
+    private void initWhenMapFinishedRendering(){
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
@@ -166,13 +201,10 @@ public class IngameScreenController implements Controller {
             ingamePlayerResourcesController.root = this.root;
             ingamePlayerResourcesController.render();
             ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
-
-            ZoomableScrollPane zoomableScrollpane = zoomableScrollpaneProvider.get();
-            zoomableScrollpane.init(fieldScrollPane, fieldPane, scrollAnchorPane, loadingLabel);
         });
 
         ingamePlayerController = new IngamePlayerController(userService, leaveGameController, elementProvider, playerListView, spectatorProvider, game.get(), hammerImageView, streetCountLabel,
-                                                            houseCountLabel, cityCountLabel, streetSVG, citySVG, houseSVG, tradeImageView, hourglassImageView, nextTurnImageView);
+                houseCountLabel, cityCountLabel, streetSVG, citySVG, houseSVG, tradeImageView, hourglassImageView, nextTurnImageView);
 
         // add change listeners
         // players change listener
@@ -207,15 +239,8 @@ public class IngameScreenController implements Controller {
             if(c.getKey().equals(SETTLEMENT)){this.houseCountLabel.setText(c.getValueAdded().toString());}
             if(c.getKey().equals(CITY)){this.cityCountLabel.setText(c.getValueAdded().toString());}
         });
-
-        if(prefService.getDarkModeState()){
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
-        } else {
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
-        }
     }
+
     private void renderBuilding(Building building) {
         this.boardController.renderBuilding(building);
     }
@@ -257,6 +282,7 @@ public class IngameScreenController implements Controller {
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
         timerService.reset();
+        mapRenderService.stop();
     }
 
     public void setUsers(List<User> users) {

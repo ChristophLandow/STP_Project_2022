@@ -7,14 +7,15 @@ import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.MapRenderService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ import static de.uniks.pioneers.GameConstants.*;
 public class StreetPointController {
     private final GameService gameService;
     private final IngameService ingameService;
-    private final UserService userService;
 
     private final GameStorage gameStorage;
+    private final MapRenderService mapRenderService;
     private Pane fieldPane;
     public HexTile tile;
     private Circle view;
@@ -37,15 +38,13 @@ public class StreetPointController {
     public int[] uploadCoords = new int[4];
     public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
     private String action;
-    private Building building;
-    private Rectangle streetRect;
 
     @Inject
-    public StreetPointController(GameService gameService, IngameService ingameService, UserService userService, GameStorage gameStorage) {
+    public StreetPointController(GameService gameService, IngameService ingameService, GameStorage gameStorage, MapRenderService mapRenderService) {
         this.gameService = gameService;
         this.ingameService = ingameService;
-        this.userService = userService;
         this.gameStorage = gameStorage;
+        this.mapRenderService = mapRenderService;
     }
 
     public void post(HexTile tile, Circle view, Pane fieldPane) {
@@ -123,26 +122,33 @@ public class StreetPointController {
     }
 
     public void renderRoad(Building building) {
-        Player player = gameService.players.get(building.owner());
-        Rectangle road = new Rectangle(this.gameStorage.getHexScale()/1.25, this.gameStorage.getHexScale()/8.3, Paint.valueOf(player.color()));
-        fieldPane.getChildren().add(road);
-        road.setLayoutX(view.getLayoutX() - road.getWidth()/2);
-        road.setLayoutY(view.getLayoutY() - road.getHeight()/2);
+        if(this.view.getRadius() != 0) {
+            Player player = gameService.players.get(building.owner());
+            double centerX = tile.x + this.fieldPane.getPrefWidth() / 2;
+            double centerY = -tile.y + this.fieldPane.getPrefHeight() / 2;
 
-        if (building.side() == 3) {
-            road.setRotate(90);
-        } else if (building.side() == 7) {
-            road.setRotate(30);
-        } else {
-            road.setRotate(-30);
+            double streetWidth = this.gameStorage.getHexScale() / 1.25;
+            double streetHeight = this.gameStorage.getHexScale() / 8.3;
+
+            mapRenderService.getGc().save();
+
+            if (building.side() == 3) {
+                mapRenderService.getGc().transform(new Affine(new Rotate(90, centerX, centerY)));
+            } else if (building.side() == 7) {
+                mapRenderService.getGc().transform(new Affine(new Rotate(30, centerX, centerY)));
+            } else {
+                mapRenderService.getGc().transform(new Affine(new Rotate(-30, centerX, centerY)));
+            }
+
+            mapRenderService.getGc().setFill(Paint.valueOf(player.color()));
+            mapRenderService.getGc().fillRect(centerX - streetWidth / 2, centerY - streetHeight / 2, streetWidth, streetHeight);
+
+            mapRenderService.getGc().restore();
+
+            this.reset(this.eventView);
+            this.view.setVisible(false);
+            this.view.setRadius(0);
         }
-
-        for(BuildingPointController neighbourBuilding: adjacentBuildings){
-            neighbourBuilding.moveBuildingToFront();
-        }
-
-        streetRect = road;
-        this.building = building;
     }
 
     private void dye(MouseEvent mouseEvent) {
@@ -165,11 +171,14 @@ public class StreetPointController {
         this.action = action;
     }
 
-    public void setVisible(boolean isVisible){
-        this.view.setVisible(isVisible);
+    public boolean alreadyPlacedStreet(){
+        return this.view.getRadius() == 0;
+    }
 
-        if(this.streetRect != null){
-            this.streetRect.setVisible(isVisible);
+    public void setVisible(boolean isVisible){
+        if(this.view.getRadius() != 0) {
+            this.view.setVisible(isVisible);
+            this.view.setDisable(!isVisible);
         }
     }
 }
