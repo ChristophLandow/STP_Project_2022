@@ -5,19 +5,30 @@ import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
 import java.util.List;
+
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.BUILD;
 
 @Singleton
 public class IngameService {
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
+    private final GameService gameService;
+    private final CompositeDisposable disposable = new CompositeDisposable();
+    private java.util.Map<String, Integer> trade = new HashMap<>();
 
     @Inject
-    public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
+    public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage, GameService gameService) {
         this.pioneersApiService = pioneersApiService;
         this.gameStorage = gameStorage;
+        this.gameService = gameService;
     }
 
     public Observable<List<Player>> getAllPlayers(String gameId) {
@@ -47,5 +58,29 @@ public class IngameService {
 
     public Observable<Player> updatePlayer(String gameId, String userId, boolean active) {
         return pioneersApiService.updatePlayer(gameId, userId, new UpdatePlayerDto(active));
+    }
+
+    public void getOrCreateTrade(String value, int i) {
+        if (trade.containsKey(value)){
+            int oldValue = trade.get(value);
+            trade.replace(value,oldValue+i);
+        }else {
+            trade.put(value,1);
+        }
+    }
+
+    public void tradeWithBank(){
+        Resources offer = new Resources (0,trade.get("walknochen"),trade.get("packeis"),
+                trade.get("kohle"),trade.get("fisch"), trade.get("fell"));
+
+        String bank = "684072366f72202b72406465";
+
+        disposable.add(postMove(gameService.game.get()._id(),new CreateMoveDto(BUILD,offer,bank))
+                .observeOn(FX_SCHEDULER)
+                .subscribe(move -> {
+                    trade = new HashMap<>();
+                })
+        );
+
     }
 }
