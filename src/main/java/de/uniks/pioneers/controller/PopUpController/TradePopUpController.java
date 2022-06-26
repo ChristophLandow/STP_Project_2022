@@ -112,7 +112,8 @@ public class TradePopUpController {
         }
 
         private void updateTrade() {
-            if (types.getKey().equals("offer")){
+            if (types.getKey().equals("Offer")){
+                System.out.println(types.getValue());
                 ingameService.getOrCreateTrade(types.getValue(),-1);
             }else {
                 ingameService.getOrCreateTrade(types.getValue(),1);
@@ -143,8 +144,8 @@ public class TradePopUpController {
         root.getStylesheets().add("/de/uniks/pioneers/styles/SpinnerLowerArrowWidth.css");
 
         // setup spinners
-        spinnerBoxOffer.getChildren().forEach(node -> setupSpinner((Spinner) node);
-        spinnerBoxGet.getChildren().forEach(node -> setupSpinner((Spinner) node);
+        spinnerBoxOffer.getChildren().forEach(node -> setupSpinner((Spinner) node));
+        spinnerBoxGet.getChildren().forEach(node -> setupSpinner((Spinner) node));
 
         // create EventHandler for trade with bank
         EventHandler<MouseEvent> bankHandler = event -> {
@@ -172,7 +173,6 @@ public class TradePopUpController {
         String resourceTyp = id.substring(0,start);
         String offerXorGet = id.substring(end-1,id.length());
         Pair<String, String> spinnerTyp = new Pair<>(offerXorGet, resourceTyp);
-        System.out.println(spinnerTyp.getKey()+ " "+ spinnerTyp.getValue());
         TradeSpinnerFactory factory = new TradeSpinnerFactory(spinnerTyp, ingameService);
         factory.setValue(0);
         spinner.setValueFactory(factory);

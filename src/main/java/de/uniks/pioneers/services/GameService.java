@@ -44,6 +44,7 @@ public class GameService {
 
 
     public void initGame() {
+        ingameService.game.set(game.get());
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)

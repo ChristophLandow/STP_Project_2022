@@ -6,6 +6,7 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.property.SimpleObjectProperty;
 
 
 import javax.inject.Inject;
@@ -20,15 +21,14 @@ import static de.uniks.pioneers.GameConstants.BUILD;
 public class IngameService {
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
-    private final GameService gameService;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private java.util.Map<String, Integer> trade = new HashMap<>();
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
 
     @Inject
-    public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage, GameService gameService) {
+    public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
         this.pioneersApiService = pioneersApiService;
         this.gameStorage = gameStorage;
-        this.gameService = gameService;
     }
 
     public Observable<List<Player>> getAllPlayers(String gameId) {
@@ -65,22 +65,29 @@ public class IngameService {
             int oldValue = trade.get(value);
             trade.replace(value,oldValue+i);
         }else {
-            trade.put(value,1);
+            trade.put(value,i);
         }
     }
 
+
+
     public void tradeWithBank(){
-        Resources offer = new Resources (0,trade.get("walknochen"),trade.get("packeis"),
+        Resources offer = new Resources (trade.get("walknochen"),trade.get("packeis"),
                 trade.get("kohle"),trade.get("fisch"), trade.get("fell"));
+
+        System.out.println(offer);
 
         String bank = "684072366f72202b72406465";
 
-        disposable.add(postMove(gameService.game.get()._id(),new CreateMoveDto(BUILD,offer,bank))
+        disposable.add(postMove(game.get()._id(),new CreateMoveDto(BUILD,offer,bank))
                 .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
                 .subscribe(move -> {
                     trade = new HashMap<>();
                 })
         );
+
+        trade = new HashMap<>();
 
     }
 }

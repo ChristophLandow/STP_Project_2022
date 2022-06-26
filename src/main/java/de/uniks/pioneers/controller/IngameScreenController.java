@@ -284,6 +284,7 @@ public class IngameScreenController implements Controller {
     private void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
+        System.out.println("new game state: " + move);
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             switch (move.action()) {
