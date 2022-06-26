@@ -136,6 +136,11 @@ public class BoardController {
                     streetPoint);
         }
 
+        for (HexTile harbor : harbors) {
+            ImageView imageV = getHarborImage(harbor.type);
+            this.fieldPane.getChildren().add(placeHarbor(harbor.x, harbor.y, imageV, harbor.number));
+        }
+
         mapRenderService.setTileControllers(this.tileControllers);
 
         loadSnowAnimation();
@@ -168,5 +173,71 @@ public class BoardController {
             controller.setAction(action);
             controller.init();
         }
+    }
+
+    private ImageView getHarborImage(String type) {
+        if (type == null) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_general.png")).toString());
+        } else if (type.equals("ore")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_coal.png")).toString());
+        } else if (type.equals("brick")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_iceberg.png")).toString());
+        } else if (type.equals("wool")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_polar-bear.png")).toString());
+        } else if (type.equals("lumber")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_fish.png")).toString());
+        } else if (type.equals("grain")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_whale.png")).toString());
+        } else {
+            return null;
+        }
+    }
+
+    private ImageView placeHarbor(double x, double y, ImageView image, Integer side) {
+        double width = this.fieldPane.getPrefWidth();
+        double height = this.fieldPane.getPrefHeight();
+        double scale = this.gameStorage.getHexScale();
+        double x_plus = x + width / 2 - scale / 2 + 0.75 * scale;
+        double x_minus = x + width / 2 - scale / 2 - 0.75 * scale;
+        double y_plus = y + height / 2 - scale / 2 + 1.25 * scale;
+        double y_minus = y + height / 2 - scale / 2 - 1.25 * scale;
+        if (side == 1) {
+            image.setLayoutX(x_plus);
+            image.setLayoutY(y_plus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(150);
+        } else if (side == 3) {
+            image.setLayoutX(x + width / 2 - scale / 2 + 1.5 * scale);
+            image.setLayoutY(y + height / 2 - scale / 2);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(90);
+        } else if (side == 5) {
+            image.setLayoutX(x_plus);
+            image.setLayoutY(y_minus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(30);
+        } else if (side == 7) {
+            image.setLayoutX(x_minus);
+            image.setLayoutY(y_minus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(330);
+        } else if (side == 9) {
+            image.setLayoutX(x + width / 2 - scale / 2 - 1.5 * scale);
+            image.setLayoutY(y + height / 2 - scale / 2);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(270);
+        } else if (side == 11) {
+            image.setLayoutX(x_minus);
+            image.setLayoutY(y_plus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(210);
+        }
+        return image;
     }
 }
