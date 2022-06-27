@@ -2,19 +2,20 @@ package de.uniks.pioneers.dto;
 
 import de.uniks.pioneers.model.Resources;
 
- public record CreateMoveDto(
+public record CreateMoveDto(
         String action,
-        CreateBuildingDto building,
+        RobDto rob,
         Resources resources,
-        String partner
+        String partner,
+        CreateBuildingDto building
 ) {
 
-  public CreateMoveDto(String action, Resources resources, String partner) {
-   this(action,null,resources,partner);
-  }
+    public CreateMoveDto(String action, Resources resources, String partner) {
+        this(action, null, resources, partner, null);
+    }
 
-  public CreateMoveDto(String action, CreateBuildingDto building) {
-   this(action, building, null, null);
-  }
+    public CreateMoveDto(String action, CreateBuildingDto building) {
+        this(action, null, null, null, building);
+    }
 
- }
+}

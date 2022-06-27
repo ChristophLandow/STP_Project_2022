@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
+import de.uniks.pioneers.controller.subcontroller.NewGameLobbyReadyController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
@@ -15,6 +16,9 @@ import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -57,6 +61,9 @@ class AsOwner extends ApplicationTest {
     @Mock
     ColorPickerController colorPickerController;
 
+    @Mock
+    NewGameLobbyReadyController newGameLobbyReadyController;
+
     @Spy
     App app = new App(null);
 
@@ -80,7 +87,7 @@ class AsOwner extends ApplicationTest {
     private String patternToObserveUserUser02;
     private String patternToObserveUserJoining;
 
-    private final Game testGame = new Game("1", "2", "3", "name", "1", 2,false);
+    private final Game testGame = new Game("1", "2", "3", "name", "1", 2,false, null);
     private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff",false);
     private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02,false);
     private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03,false);
@@ -125,16 +132,17 @@ class AsOwner extends ApplicationTest {
         when(eventListener.listen("games." + testGame._id() + ".messages.*.*", MessageDto.class))
                 .thenReturn(Observable.just(new Event<>("games.3.messages.1.created", message01)))
                 .thenReturn(Observable.just(new Event<>("games.3.messages.2.created", message02)));
+        when(newGameLobbyService.getMembers()).thenReturn(FXCollections.observableArrayList());
 
-        newGameScreenLobbyController.password.set("12345678");
-        newGameScreenLobbyController.game.set(testGame);
+        newGameScreenLobbyController.setPassword("12345678");
+        newGameScreenLobbyController.setGame(testGame);
         app.start(stage);
         app.show(newGameScreenLobbyController);
     }
 
     @Test
     void initControllerAsOwner() {
-        List<Member> members = newGameScreenLobbyController.getMembers();
+        List<Member> members = newGameLobbyService.getMembers();
 
         assertEquals(members.get(1).createdAt(), "2");
         assertEquals(members.get(1).updatedAt(), "2");
@@ -142,7 +150,7 @@ class AsOwner extends ApplicationTest {
         assertEquals(members.get(1).userId(), "2");
         assertTrue(members.get(1).ready());
 
-        assertEquals(members.size(), 3);
+        assertEquals(members.size(), 2);
 
         // assertions for current user box, colorpicker gets random color
         FxAssert.verifyThat("#gameNameLabel", LabeledMatchers.hasText("name"));
@@ -173,8 +181,8 @@ class AsOwner extends ApplicationTest {
         verify(newGameLobbyService).getMessages(testGame._id());
         verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
 
-        Platform.runLater(() -> assertThat(newGameScreenLobbyController.onSetReadyButton()).isEqualTo(false));
-        Platform.runLater(() -> assertThat(newGameScreenLobbyController.allUsersReady()).isEqualTo(false));
+        Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
+        Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));
     }
 
     public String createRandomColor()

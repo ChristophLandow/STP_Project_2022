@@ -4,6 +4,7 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.TimerService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.animation.Interpolator;
@@ -13,8 +14,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+import static de.uniks.pioneers.GameConstants.*;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import java.util.Objects;
 import java.util.Timer;
@@ -24,6 +27,10 @@ import static de.uniks.pioneers.GameConstants.FOUNDING_ROLL;
 import static de.uniks.pioneers.GameConstants.ROLL;
 
 public class DiceSubcontroller {
+
+    @Inject
+    Provider<RobberController> robberControllerProvider;
+    private final PrefService prefService;
     private ImageView leftDiceView;
     private ImageView rightDiceView;
     private String action;
@@ -34,11 +41,13 @@ public class DiceSubcontroller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     
     @Inject
-    public DiceSubcontroller(IngameService ingameService, GameService gameService,
+    public DiceSubcontroller(Provider<RobberController> robberControllerProvider, IngameService ingameService, GameService gameService, PrefService prefService,
                              TimerService timerService) {
+        this.robberControllerProvider = robberControllerProvider;
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.timerService = timerService;
+        this.prefService = prefService;
     }
     
     public void init() {
@@ -49,6 +58,11 @@ public class DiceSubcontroller {
                 c.getAddedSubList().forEach(move -> {
                     if (move.action().equals(FOUNDING_ROLL) || move.action().equals(ROLL)) {
                         showRolledNumber(move.action(), move.roll());
+                    }
+                    if(move.action().equals(ROLL)){
+                        RobberController robber = robberControllerProvider.get();
+                        robber.init();
+                        
                     }
                 });
             }
@@ -62,7 +76,7 @@ public class DiceSubcontroller {
     }
 
     private void roll(MouseEvent mouseEvent) {
-        CreateMoveDto rollMove = new CreateMoveDto(this.action, null);
+        CreateMoveDto rollMove = new CreateMoveDto(this.action, null, null, null, null);
         disposable.add(ingameService.postMove(gameService.game.get()._id(), rollMove)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
@@ -98,6 +112,7 @@ public class DiceSubcontroller {
         animateDice();
         leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource(leftDice + ".png")).toString());
         this.leftDiceView.setImage(leftDiceImage);
+
     }
 
     private void animateDice() {

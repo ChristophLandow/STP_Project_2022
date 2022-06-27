@@ -26,7 +26,6 @@ import javax.inject.Provider;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -94,14 +93,14 @@ class LobbyScreenControllerTest extends ApplicationTest {
         //Setup lobby controller API calls
         when(prefService.recall()).thenReturn("");
 
-        Game testGame = new Game(today+"T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false);
+        Game testGame = new Game(today+"T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null);
 
         when(userService.editProfile(null,null,null,"online")).thenReturn(Observable.just(new User("","","","")));
         when(userService.editProfile(null,null,null,"offline")).thenReturn(Observable.just(new User("","","","")));
         when(userService.getCurrentUser()).thenReturn(new User("","","",null));
 
         when(lobbyService.getGames()).thenReturn(Observable.just(List.of(testGame)));
-        when(eventListener.listen("games.*.*", Game.class)).thenReturn(Observable.just(new Event<Game>("games.001.updated",testGame)));
+        when(eventListener.listen("games.*.*", Game.class)).thenReturn(Observable.just(new Event<>("games.001.updated",testGame)));
 
         when(userlistService.getUsers()).thenReturn(FXCollections.observableArrayList());
         when(lobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));

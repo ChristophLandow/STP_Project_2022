@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.DiscardResourcesController">
+   <ImageView fx:id="CarbonImageView" fitHeight="150.0" fitWidth="110.0" layoutX="26.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../../controller/subcontroller/images/card_carbon.png" />
+   </ImageView>
+   <ImageView fx:id="FishImageView" fitHeight="150.0" fitWidth="110.0" layoutX="149.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../../controller/subcontroller/images/card_fish.png" />
+   </ImageView>
+   <ImageView fx:id="IceImageView" fitHeight="150.0" fitWidth="110.0" layoutX="272.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../../controller/subcontroller/images/card_ice.png" />
+   </ImageView>
+   <ImageView fx:id="PolarbearImageView" fitHeight="150.0" fitWidth="110.0" layoutX="391.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../../controller/subcontroller/images/card_polarbear.png" />
+   </ImageView>
+   <ImageView fx:id="WaleImageView" fitHeight="150.0" fitWidth="110.0" layoutX="512.0" layoutY="79.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../../controller/subcontroller/images/card_whale.png" />
+   </ImageView>
+   <Text fx:id="numeratorText" layoutX="669.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Text>
+   <Text fx:id="SlashText" layoutX="707.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="/">
+      <font>
+         <Font size="50.0" />
+      </font>
+   </Text>
+   <Text fx:id="denominatorText" layoutX="742.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="6">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Text>
+   <Spinner fx:id="CarbonSpinner" layoutX="31.0" layoutY="267.0" prefHeight="61.0" prefWidth="92.0" />
+   <Spinner fx:id="FishSpinner" layoutX="154.0" layoutY="265.0" prefHeight="61.0" prefWidth="92.0" />
+   <Spinner fx:id="IceSpinner" layoutX="277.0" layoutY="265.0" prefHeight="61.0" prefWidth="92.0" />
+   <Spinner fx:id="PolarBearSpinner" layoutX="396.0" layoutY="265.0" prefHeight="61.0" prefWidth="92.0" />
+   <Spinner fx:id="WaleSpinner" layoutX="517.0" layoutY="267.0" prefHeight="61.0" prefWidth="92.0" />
+   <Button fx:id="DiscardResourcesOKButton" layoutX="670.0" layoutY="267.0" mnemonicParsing="false" onAction="#discardAndLeave" text="OK">
+      <font>
+         <Font size="27.0" />
+      </font>
+   </Button>
+</AnchorPane>

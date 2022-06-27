@@ -39,7 +39,7 @@ public class TimerService {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                CreateMoveDto moveDto = new CreateMoveDto(action, null);
+                CreateMoveDto moveDto = new CreateMoveDto(action, null, null, null, null);
                 disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {
@@ -49,7 +49,6 @@ public class TimerService {
                 );
             }
         };
-
         this.initCountdown(new Timer(), 10);
         timer.schedule(task, 10 * 1000);
     }
@@ -60,7 +59,7 @@ public class TimerService {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                CreateMoveDto moveDto = new CreateMoveDto(BUILD, null);
+                CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
                 disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {

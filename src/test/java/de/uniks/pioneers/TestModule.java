@@ -179,36 +179,36 @@ public class TestModule {
             public Observable<List<Game>> getGames() {
 
                 ArrayList<Game> games = new ArrayList<>();
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","002",1,false));
-                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","003",1,false));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","002",1,false, null));
+                games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","TestGameC","003",1,false, null));
                 return Observable.just(games);
             }
 
             @Override
             public Observable<Game> getGame(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","000",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","000",1,false, null));
             }
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10)));
 
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(1,10)));
 
             }
 
             @Override
             public Observable<Game> delete(String id) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, null));
 
             }
         };
@@ -378,7 +378,7 @@ public class TestModule {
                 tiles.add(new Tile(1,0,-1,"mountains",6));
                 tiles.add(new Tile(-1,0,1,"pasture",7));
 
-                tiles.add(new Tile(2,-1,-1,"pasture",2));
+                /*tiles.add(new Tile(2,-1,-1,"pasture",2));
                 tiles.add(new Tile(-2,1,1,"fields",3));
                 tiles.add(new Tile(-1,-1,2,"forest",4));
                 tiles.add(new Tile(1,1,-2,"hills",5));
@@ -389,9 +389,10 @@ public class TestModule {
                 tiles.add(new Tile(0,2,-2,"forest",4));
                 tiles.add(new Tile(0,-2,2,"hills",5));
                 tiles.add(new Tile(2,0,-2,"mountains",6));
-                tiles.add(new Tile(-2,0,2,"pasture",7));
+                tiles.add(new Tile(-2,0,2,"pasture",7));*/
 
-                return Observable.just(new Map("000", tiles));
+                //TODO: Add Harbors
+                return Observable.just(new Map("000", tiles, null));
             }
 
             @Override
@@ -399,10 +400,10 @@ public class TestModule {
 
                 List<Player> players = new ArrayList<>();
 
-                players.add(new Player("000","000","#ff0000",1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
-                players.add(new Player("000","001","#00ff00",2, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
-                players.add(new Player("000","002","#0000ff",3, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
-                players.add(new Player("000","003","#ffffff",4, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
+                players.add(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","001","#00ff00", true,2, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","002","#0000ff", true,3, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","003","#ffffff", true,4, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
 
                 return Observable.just(players);
             }
@@ -420,7 +421,7 @@ public class TestModule {
                 ArrayList<ExpectedMove> expectedMoves = new ArrayList<>();
                 expectedMoves.add(new ExpectedMove("founding-roll",players));
 
-                return Observable.just(new State("2022-06-09T15:11:51.795Z","000", expectedMoves));
+                return Observable.just(new State("2022-06-09T15:11:51.795Z","000", expectedMoves, null));
             }
 
             @Override
@@ -436,12 +437,12 @@ public class TestModule {
 
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
-                return Observable.just(new Move("000","2022-06-09T15:11:51.795Z","000","000","founding-roll",1,""));
+                return Observable.just(new Move("000","2022-06-09T15:11:51.795Z","000","000","founding-roll",1,"", null, null, null));
             }
 
             @Override
             public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
-                return  Observable.just(new Player("000","000","#ff0000",1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1)));
+                return  Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
             }
         };
 

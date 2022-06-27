@@ -19,6 +19,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public ObservableList<Member> members = FXCollections.observableArrayList();
+    public ObservableList<Member> lobbyMembers;
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
@@ -53,6 +54,7 @@ public class GameService {
 
         // init players listener
         this.initPlayerListener();
+        this.initMemberListener();
         this.initBuildingsListener();
         this.initMoveListener();
     }
@@ -87,6 +89,22 @@ public class GameService {
         );
     }
 
+    private void initMemberListener() {
+        String patternToObserveGameMembers = String.format("games.%s.members.*.*", game.get()._id());
+        disposable.add(eventListener.listen(patternToObserveGameMembers, Member.class)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(memberEvent -> {
+                    final Member member = memberEvent.data();
+                    if (memberEvent.event().endsWith(".created")) {
+                        members.add(member);
+                    } else if (memberEvent.event().endsWith(".updated")) {
+                        members.replaceAll(m -> m.userId().equals(member.userId()) ? member : m);
+                    } else if (memberEvent.event().endsWith(".deleted")) {
+                        members.remove(member);
+                    }
+                }));
+    }
+
     private void initBuildingsListener() {
         String patternToObserveBuildings = String.format("games.%s.buildings.*.*", game.get()._id());
         disposable.add(eventListener.listen(patternToObserveBuildings, Building.class)
@@ -104,15 +122,14 @@ public class GameService {
     public void loadPlayers(Game game) {
         // REST - get players from server
         players = FXCollections.observableHashMap();
-        members = FXCollections.observableArrayList();
 
         disposable.add(ingameService.getAllPlayers(game._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
-                    disposable.add(newGameLobbyService.getAll(game._id())
-                            .observeOn(FX_SCHEDULER)
-                            .subscribe(this.members::setAll, Throwable::printStackTrace));
+                    System.out.println(members);
+                    members.addAll(lobbyMembers);
+                    System.out.println(members);
                     me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }
@@ -191,5 +208,13 @@ public class GameService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public void setMembers(ObservableList<Member> lobbyMembers) {
+        this.lobbyMembers = lobbyMembers;
+    }
+
+    public Game getGame() {
+        return game.get();
     }
 }
