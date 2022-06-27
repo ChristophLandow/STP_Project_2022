@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
@@ -69,15 +70,16 @@ public class IngameService {
         }
     }
 
-
-
     public void tradeWithBank(){
         Resources offer = new Resources (trade.get("walknochen"),trade.get("packeis"),
                 trade.get("kohle"),trade.get("fisch"), trade.get("fell"));
 
         System.out.println(offer);
+        System.out.println(game.get()._id());
 
         String bank = "684072366f72202b72406465";
+        //CreateBuildingDto buildingDto = new CreateBuildingDto(0,0,0,0,null);
+        CreateBuildingDto buildingDto = new CreateBuildingDto(0,0,0,6,"settlement");
 
         disposable.add(postMove(game.get()._id(),new CreateMoveDto(BUILD,offer,bank))
                 .observeOn(FX_SCHEDULER)

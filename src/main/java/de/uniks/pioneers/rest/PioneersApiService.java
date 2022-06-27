@@ -27,7 +27,7 @@ public interface PioneersApiService {
     @GET(API_V2_PIONEERS_PREFIX+"/buildings/{buildingId}")
     Observable<Building> getBuilding (@Path("gameId") String gameId, @Path("buildingId") String buildingId);
 
-    @POST(API_V2_PIONEERS_PREFIX+"/moves")
+    @POST("/api/v3/games/{gameId}/moves")
     Observable<Move> postMove (@Path("gameId") String gameId, @Body CreateMoveDto dto);
 
     @PATCH("/api/v3/games/{gameId}/players/{userId}")

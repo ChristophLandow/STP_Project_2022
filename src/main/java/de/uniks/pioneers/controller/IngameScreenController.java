@@ -436,9 +436,7 @@ public class IngameScreenController implements Controller {
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
     }
-
-
-
+    
     public void openTradePopUp() {
         popUpStage = new Stage();
         TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
