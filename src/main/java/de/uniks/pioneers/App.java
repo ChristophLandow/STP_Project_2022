@@ -35,7 +35,7 @@ public class App extends Application {
         }
         stage.show();
 
-        //new InternetConnectionService();
+        new InternetConnectionService();
     }
 
     @Override

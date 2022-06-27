@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +18,7 @@ import javafx.util.Pair;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,6 +87,8 @@ public class TradePopUpController {
     public HBox spinnerBoxOffer;
     @FXML
     public HBox spinnerBoxGet;
+    @FXML
+    public HBox getImages;
 
 
     private class TradeSpinnerFactory extends SpinnerValueFactory<Integer> {
@@ -143,6 +147,24 @@ public class TradePopUpController {
     public void init() {
         root.getStylesheets().add("/de/uniks/pioneers/styles/SpinnerLowerArrowWidth.css");
 
+        List<String> subStrings = List.of("ice", "polarbear", "fish","carbon", "whale");
+        Iterator<String> first = subStrings.iterator();
+        Iterator<String> second = subStrings.iterator();
+
+        offerImages.getChildren().forEach(node -> {
+            ImageView imageView = (ImageView) node;
+            String resourceURL = String.format("/de/uniks/pioneers/controller/subcontroller/images/card_%s.png",first.next());
+            Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
+            imageView.setImage(img);
+        });
+
+        getImages.getChildren().forEach(node -> {
+            ImageView imageView = (ImageView) node;
+            String resourceURL = String.format("/de/uniks/pioneers/controller/subcontroller/images/card_%s.png",second.next());
+            Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
+            imageView.setImage(img);
+        });
+
         // setup spinners
         spinnerBoxOffer.getChildren().forEach(node -> setupSpinner((Spinner) node));
         spinnerBoxGet.getChildren().forEach(node -> setupSpinner((Spinner) node));
@@ -153,7 +175,6 @@ public class TradePopUpController {
         };
 
         tradeWithBank.addEventHandler(MouseEvent.MOUSE_CLICKED, bankHandler);
-
     }
 
     private void setupSpinner(Spinner spinner) {

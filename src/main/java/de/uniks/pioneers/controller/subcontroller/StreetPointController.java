@@ -70,7 +70,6 @@ public class StreetPointController {
     }
 
     public void placeStreet(MouseEvent mouseEvent) {
-        System.out.println(generateKeyString());
         boolean valid;
 
         if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
