@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -25,6 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -61,6 +65,10 @@ public class IngameScreenController implements Controller {
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
     @Inject Provider<SettingsScreenController> settingsScreenControllerProvider;
     @Inject EventListener eventListener;
+
+
+    @Inject Provider<TradePopUpController> tradePopUpControllerProvider;
+    private Stage popUpStage;
 
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
@@ -297,5 +305,15 @@ public class IngameScreenController implements Controller {
     }
     private void buildBoardUI() {
         this.boardController.buildBoardUI();
+    }
+
+    public void openTradePopUp() {
+        popUpStage = new Stage();
+        TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
+        Parent root = tradePopUpController.render();
+        tradePopUpController.init();
+        Scene scene = new Scene(root);
+        popUpStage.setScene(scene);
+        popUpStage.show();
     }
 }

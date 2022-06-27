@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.ws.EventListener;
@@ -42,7 +43,9 @@ public class GameService {
         return gameApiService.delete(gameId);
     }
 
+
     public void initGame() {
+        ingameService.game.set(game.get());
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())
                 .observeOn(FX_SCHEDULER)

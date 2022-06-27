@@ -30,6 +30,6 @@ public interface PioneersApiService {
     @POST(API_V3_PIONEERS_PREFIX +"/moves")
     Observable<Move> postMove (@Path("gameId") String gameId, @Body CreateMoveDto dto);
 
-    @PATCH("/api/v3/games/{gameId}/players/{userId}")
+    @PATCH(API_V3_PIONEERS_PREFIX +"/players/{userId}")
     Observable<Player> updatePlayer (@Path("gameId") String gameId, @Path("userId") String userId, @Body UpdatePlayerDto dto);
 }
