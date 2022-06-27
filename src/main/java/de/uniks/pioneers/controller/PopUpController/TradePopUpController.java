@@ -154,7 +154,6 @@ public class TradePopUpController {
 
         tradeWithBank.addEventHandler(MouseEvent.MOUSE_CLICKED, bankHandler);
 
-
     }
 
     private void setupSpinner(Spinner spinner) {
