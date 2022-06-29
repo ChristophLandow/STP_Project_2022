@@ -7,6 +7,7 @@ import de.uniks.pioneers.services.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -20,7 +21,6 @@ import static de.uniks.pioneers.GameConstants.*;
 import static de.uniks.pioneers.GameConstants.CITY;
 
 public class BoardController {
-
 
     public Pane fieldPane;
 
@@ -72,6 +72,11 @@ public class BoardController {
                         Thread.sleep(0,500000);
                     }
 
+                    for (HexTile harbor : harbors) {
+                        Platform.runLater(() -> loadHarbor(harbor));
+                        Thread.sleep(0,500000);
+                    }
+
                     Thread.sleep(1000);
                     linkTiles();
 
@@ -91,6 +96,7 @@ public class BoardController {
             tiles.forEach(this::loadHexagon);
             edges.forEach(this::loadEdge);
             corners.forEach(this::loadCorner);
+            harbors.forEach(this::loadHarbor);
             linkTiles();
             mapRenderService.setTileControllers(this.tileControllers);
             loadSnowAnimation();
@@ -142,6 +148,11 @@ public class BoardController {
         this.buildingControllers.add(newbuildingPointController);
     }
 
+    private void loadHarbor(HexTile harbor) {
+        ImageView imageV = getHarborImage(harbor.type);
+        this.fieldPane.getChildren().add(placeHarbor(harbor.x, harbor.y, imageV, harbor.number));
+    }
+
     private void linkTiles(){
         for (HexTileController tile : this.tileControllers) {
             tile.findEdges(this.streetPointControllers);
@@ -159,11 +170,6 @@ public class BoardController {
             this.streetPointControllerHashMap.put(
                     streetPoint.generateKeyString(),
                     streetPoint);
-        }
-
-        for (HexTile harbor : harbors) {
-            ImageView imageV = getHarborImage(harbor.type);
-            this.fieldPane.getChildren().add(placeHarbor(harbor.x, harbor.y, imageV, harbor.number));
         }
 
         mapRenderService.setTileControllers(this.tileControllers);
@@ -301,5 +307,11 @@ public class BoardController {
             image.rotateProperty().set(330);
         }
         return image;
+    }
+
+    public void stop() {
+        this.buildingControllers.clear();
+        this.streetPointControllers.clear();
+        this.tileControllers.clear();
     }
 }
