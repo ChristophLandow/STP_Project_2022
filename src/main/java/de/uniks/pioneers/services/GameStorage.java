@@ -84,9 +84,9 @@ public class GameStorage {
                 double hexagonHeight = 2 * hexScale;
                 double mapHeight;
                 if (mapRadius % 2 == 0) {
-                    mapHeight = (mapRadius + 1) * hexagonHeight + mapRadius * hexScale + MAP_PADDING_Y;
+                    mapHeight = (mapRadius + 1) * hexagonHeight + mapRadius * hexScale + MAP_PADDING_Y + hexScale;
                 } else {
-                    mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y;
+                    mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y + hexScale;
                 }
                 this.zoomedOut = (MAP_HEIGHT / mapHeight);
                 this.zoomedIn = 1;
