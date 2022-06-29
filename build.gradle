@@ -85,7 +85,6 @@ test {
         showStackTraces = true
     }
 
-/*
     systemProperties = [
             'java.awt.headless': 'true',
             'testfx.robot'     : 'glass',
@@ -95,7 +94,7 @@ test {
             'prism.order'      : 'sw',
             'prism.text'       : 't2k',
     ]
-*/
+
     jvmArgs += [
             '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
             '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
