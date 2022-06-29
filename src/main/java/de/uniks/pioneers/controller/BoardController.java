@@ -199,44 +199,44 @@ public class BoardController {
         double scale = this.gameStorage.getHexScale();
         double x_plus = x + width / 2 - scale / 2 + 0.75 * scale;
         double x_minus = x + width / 2 - scale / 2 - 0.75 * scale;
-        double y_plus = y + height / 2 - scale / 2 + 1.25 * scale;
-        double y_minus = y + height / 2 - scale / 2 - 1.25 * scale;
+        double y_plus = -y + height / 2 - scale / 2 + 1.25 * scale;
+        double y_minus = -y + height / 2 - scale / 2 - 1.25 * scale;
         if (side == 1) {
-            image.setLayoutX(x_plus);
-            image.setLayoutY(y_plus);
-            image.setFitHeight(scale);
-            image.setFitWidth(scale);
-            image.rotateProperty().set(150);
-        } else if (side == 3) {
-            image.setLayoutX(x + width / 2 - scale / 2 + 1.5 * scale);
-            image.setLayoutY(y + height / 2 - scale / 2);
-            image.setFitHeight(scale);
-            image.setFitWidth(scale);
-            image.rotateProperty().set(90);
-        } else if (side == 5) {
             image.setLayoutX(x_plus);
             image.setLayoutY(y_minus);
             image.setFitHeight(scale);
             image.setFitWidth(scale);
             image.rotateProperty().set(30);
+        } else if (side == 3) {
+            image.setLayoutX(x + width / 2 - scale / 2 + 1.5 * scale);
+            image.setLayoutY(-y + height / 2 - scale / 2);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(90);
+        } else if (side == 5) {
+            image.setLayoutX(x_plus);
+            image.setLayoutY(y_plus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(150);
         } else if (side == 7) {
-            image.setLayoutX(x_minus);
-            image.setLayoutY(y_minus);
-            image.setFitHeight(scale);
-            image.setFitWidth(scale);
-            image.rotateProperty().set(330);
-        } else if (side == 9) {
-            image.setLayoutX(x + width / 2 - scale / 2 - 1.5 * scale);
-            image.setLayoutY(y + height / 2 - scale / 2);
-            image.setFitHeight(scale);
-            image.setFitWidth(scale);
-            image.rotateProperty().set(270);
-        } else if (side == 11) {
             image.setLayoutX(x_minus);
             image.setLayoutY(y_plus);
             image.setFitHeight(scale);
             image.setFitWidth(scale);
             image.rotateProperty().set(210);
+        } else if (side == 9) {
+            image.setLayoutX(x + width / 2 - scale / 2 - 1.5 * scale);
+            image.setLayoutY(-y + height / 2 - scale / 2);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(270);
+        } else if (side == 11) {
+            image.setLayoutX(x_minus);
+            image.setLayoutY(y_minus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(330);
         }
         return image;
     }

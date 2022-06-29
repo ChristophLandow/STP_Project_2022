@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.uniks.pioneers.GameConstants.*;
@@ -15,6 +16,7 @@ public class GameStorage {
     @Inject EventListener eventListener;
     private List<Tile> map;
     private List<Harbor> harbors;
+    private final List<String> tradeOptions = new ArrayList<>();
     private int mapRadius;
     private  double hexScale = 75;
     private double hexRadiusFactor = 3;
@@ -27,7 +29,6 @@ public class GameStorage {
 
     @Inject
     public GameStorage() {
-        System.out.println("Test");
         remainingBuildings.put(ROAD, 15);
         remainingBuildings.put(SETTLEMENT, 5);
         remainingBuildings.put(CITY, 4);
@@ -71,45 +72,35 @@ public class GameStorage {
         this.mapRadius = mapRadius;
         this.zoomedIn = 1 + (mapRadius)*0.2;
 
-        switch(mapRadius){
-            case 0:
+        switch (mapRadius) {
+            case 0 -> {
                 hexScale = 140;
                 this.zoomedIn = 1;
                 this.zoomedOut = 1;
-                break;
-            case 1:
+            }
+            case 1 -> {
                 hexScale = 110;
                 this.zoomedIn = 1;
                 this.zoomedOut = 1;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 hexScale = 74;
                 zoomedOut = 0.99;
-                break;
-            case 3:
-                hexScale = 52;
-                break;
-            case 4:
-                hexScale = 40;
-                break;
-            case 5:
-                hexScale = 33;
-                break;
-            case 6:
-                hexScale = 28;
-                break;
-            case 7:
-            case 8:
-            case 9:
+            }
+            case 3 -> hexScale = 52;
+            case 4 -> hexScale = 40;
+            case 5 -> hexScale = 33;
+            case 6 -> hexScale = 28;
+            case 7, 8, 9 -> {
                 hexScale = 18;
                 zoomedOut = -1;
                 zoomedIn = 5;
-                break;
-            case 10:
+            }
+            case 10 -> {
                 hexScale = 16;
                 zoomedOut = -1;
                 zoomedIn = 5;
-                break;
+            }
         }
 
         if(mapRadius < 7){
@@ -117,6 +108,16 @@ public class GameStorage {
         }
         else{
             hexRadiusFactor = 2;
+        }
+    }
+
+    public List<String> getTradeOptions() {
+        return tradeOptions;
+    }
+
+    public void addToTradeOptions(String tradeOption) {
+        if (!tradeOptions.contains(tradeOption)) {
+            this.tradeOptions.add(tradeOption);
         }
     }
 }
