@@ -7,4 +7,6 @@ public record CreateBuildingDto(
         int side,
         String type
 ) {
+
+
 }

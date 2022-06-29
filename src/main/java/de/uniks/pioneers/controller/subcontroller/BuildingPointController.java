@@ -126,7 +126,6 @@ public class BuildingPointController {
         this.view.toFront();
         this.view.setVisible(false);
         this.eventView.toFront();
-
     }
 
     private void info(MouseEvent mouseEvent) {
@@ -165,7 +164,7 @@ public class BuildingPointController {
     private void undye(MouseEvent mouseEvent) {
         this.view.setFill(STANDARD_COLOR);
         if(this.building != null){
-        this.view.setVisible(false);}
+            this.view.setVisible(false);}
     }
     public void setAction(String action) {
         this.action = action;
@@ -179,18 +178,14 @@ public class BuildingPointController {
         return building;
     }
 
-    public void moveBuildingToFront(){
-        if(this.displayedBuilding != null){
-            this.displayedBuilding.toFront();
-            this.eventView.toFront();
-        }
-    }
-
     public void setVisible(boolean isVisible){
-        this.view.setVisible(isVisible);
-
         if(this.displayedBuilding != null){
             this.displayedBuilding.setVisible(isVisible);
+            this.displayedBuilding.setDisable(!isVisible);
+        }
+        else{
+            this.view.setVisible(isVisible);
+            this.view.setDisable(!isVisible);
         }
     }
 

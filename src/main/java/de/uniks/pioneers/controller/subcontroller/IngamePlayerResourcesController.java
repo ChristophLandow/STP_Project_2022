@@ -93,6 +93,7 @@ public class IngamePlayerResourcesController {
             String key = c.getKey();
             if (key.equals(gameService.me)) {
                 if (c.wasRemoved() && c.wasAdded()) {
+                    System.out.println(" your ressources: "+ c.getValueAdded().resources());
                     setDataToElement(c.getValueAdded(), c.getValueRemoved());
                 }
             }

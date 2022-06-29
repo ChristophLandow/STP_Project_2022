@@ -1,22 +1,24 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Circle;
 import java.util.ArrayList;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class HexTileController {
-    private final Polygon view;
-    private final ImageView numberImage;
+    //private final Circle view;
+    private final Circle view;
+    //private final ImageView numberImage;
     public HexTile tile;
     public BuildingPointController[] corners = new BuildingPointController[6];
     public StreetPointController[] edges = new StreetPointController[6];
 
-    public HexTileController(HexTile tile, Polygon view, ImageView numberImage) {
+    public HexTileController(HexTile tile, Circle view) {
         this.tile = tile;
         this.view = view;
-        this.numberImage = numberImage;
+        this.view.setVisible(false);
+        this.view.setDisable(true);
     }
 
     public void findCorners(ArrayList<BuildingPointController> buildingPointControllers) {
@@ -150,12 +152,6 @@ public class HexTileController {
     }
 
     public void setVisible(boolean isVisible){
-        this.view.setVisible(isVisible);
-
-        if(numberImage != null){
-            numberImage.setVisible(isVisible);
-        }
-
         for(BuildingPointController buildingPointController: this.corners){
             if(buildingPointController != null) {
                 buildingPointController.setVisible(isVisible);
@@ -169,7 +165,7 @@ public class HexTileController {
         }
     }
 
-    public Polygon getView() {
+    public Circle getView() {
         return view;
     }
 }

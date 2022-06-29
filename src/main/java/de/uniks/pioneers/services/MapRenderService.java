@@ -3,6 +3,8 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,6 +18,12 @@ public class MapRenderService {
     private final GameStorage gameStorage;
     private ArrayList<HexTileController> tileControllers = new ArrayList<>();
 
+    private Canvas mapCanvas;
+
+    private GraphicsContext gc;
+
+    private boolean finishedLoading = false;
+
     @Inject
     MapRenderService(GameStorage gameStorage){
         this.gameStorage = gameStorage;
@@ -23,6 +31,42 @@ public class MapRenderService {
 
     public void setTileControllers(ArrayList<HexTileController> tileControllers) {
         this.tileControllers = tileControllers;
+    }
+
+    public void setFinishedLoading(boolean finishedLoading) {
+        this.finishedLoading = finishedLoading;
+    }
+
+    public void setMapCanvas(Canvas mapCanvas) {
+        this.mapCanvas = mapCanvas;
+    }
+
+    public void setGc(GraphicsContext gc) {
+        this.gc = gc;
+    }
+
+    public boolean isFinishedLoading() {
+        return finishedLoading;
+    }
+
+    public Canvas getMapCanvas() {
+        return mapCanvas;
+    }
+
+    public GraphicsContext getGc() {
+        return gc;
+    }
+
+    public int calcSleepHexagon(){
+        if(gameStorage.getMapRadius() > 7){
+            return 40;
+        }
+        else  if(gameStorage.getMapRadius() >= 4){
+            return 20;
+        }
+        else{
+            return 10;
+        }
     }
 
     public void checkPoints(){
@@ -38,5 +82,6 @@ public class MapRenderService {
 
     public void stop(){
         this.tileControllers.clear();
+        this.finishedLoading = false;
     }
 }

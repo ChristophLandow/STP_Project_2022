@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="390.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.PopUpController.TradePopUpController">
+   <children>
+      <HBox fx:id="subRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="390.0">
+         <children>
+            <VBox fx:id="tradeBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="270.0">
+               <children>
+                  <HBox fx:id="timerBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="270.0">
+                     <children>
+                        <Label fx:id="timer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="30.0" text="00:42">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="offerBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="270.0">
+                     <children>
+                        <Label fx:id="offer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="35.0" text="Offer:">
+                           <HBox.margin>
+                              <Insets left="50.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox fx:id="offerImages" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="270.0" spacing="5.0">
+                     <children>
+                        <ImageView fx:id="packeisResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="fellResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="fischResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="kohleResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="walknochenResource" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="spinnerBoxOffer" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="270.0" spacing="5.0">
+                     <children>
+                        <Spinner id="packeisOffer" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="fellOffer" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="fischOffer" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="kohleOffer" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="walknochenOffer" prefHeight="25.0" prefWidth="30.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="getBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="270.0">
+                     <children>
+                        <Label fx:id="get" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="30.0" text="Get:">
+                           <HBox.margin>
+                              <Insets left="50.0" top="15.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="getImages" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="270.0" spacing="5.0">
+                     <children>
+                        <ImageView id="packeisGet" fx:id="packeisResourceI" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="fellGet" fx:id="fellResourceI" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="fischGet" fx:id="fischResourceI" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="kohleGet" fx:id="kohleResourceI" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView id="walknochenGet" fx:id="walknochenResourceI" fitHeight="45.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox fx:id="spinnerBoxGet" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="270.0" spacing="5.0">
+                     <children>
+                        <Spinner id="packeisGet" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="fellGet" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="fischGet" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="kohleGet" prefHeight="25.0" prefWidth="30.0" />
+                        <Spinner id="walknochenGet" prefHeight="25.0" prefWidth="30.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="tradeButtons" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="270.0">
+                     <children>
+                        <Button fx:id="cancel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" scaleX="0.8" scaleY="0.8" text="cancel" />
+                        <Button fx:id="offerToPlayers" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" scaleX="0.8" scaleY="0.8" text="offer to players" />
+                        <Button fx:id="tradeWithBank" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" scaleX="0.8" scaleY="0.8" text="trade with bank" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="playerListBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="120.0">
+               <children>
+                  <ListView fx:id="playerList" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="110.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

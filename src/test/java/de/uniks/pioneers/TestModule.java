@@ -194,14 +194,14 @@ public class TestModule {
             @Override
             public Observable<Game> create(CreateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, null));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10)));
 
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, null));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(1,10)));
 
             }
 
@@ -378,7 +378,7 @@ public class TestModule {
                 tiles.add(new Tile(1,0,-1,"mountains",6));
                 tiles.add(new Tile(-1,0,1,"pasture",7));
 
-                tiles.add(new Tile(2,-1,-1,"pasture",2));
+                /*tiles.add(new Tile(2,-1,-1,"pasture",2));
                 tiles.add(new Tile(-2,1,1,"fields",3));
                 tiles.add(new Tile(-1,-1,2,"forest",4));
                 tiles.add(new Tile(1,1,-2,"hills",5));
@@ -389,7 +389,7 @@ public class TestModule {
                 tiles.add(new Tile(0,2,-2,"forest",4));
                 tiles.add(new Tile(0,-2,2,"hills",5));
                 tiles.add(new Tile(2,0,-2,"mountains",6));
-                tiles.add(new Tile(-2,0,2,"pasture",7));
+                tiles.add(new Tile(-2,0,2,"pasture",7));*/
 
                 //TODO: Add Harbors
                 return Observable.just(new Map("000", tiles, null));
