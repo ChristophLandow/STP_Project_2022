@@ -113,6 +113,7 @@ public class GameService {
                     final Building building = buildingEvent.data();
                     if (buildingEvent.event().endsWith(".created") || buildingEvent.event().endsWith(".updated")) {
                         // render new building
+                        System.out.println(building);
                         this.buildings.add(building);
                     }
                 })
