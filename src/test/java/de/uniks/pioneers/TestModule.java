@@ -201,7 +201,7 @@ public class TestModule {
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
 
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(1,10)));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(2,10)));
 
             }
 
@@ -391,8 +391,14 @@ public class TestModule {
                 tiles.add(new Tile(2,0,-2,"mountains",6));
                 tiles.add(new Tile(-2,0,2,"pasture",7));*/
 
-                //TODO: Add Harbors
-                return Observable.just(new Map("000", tiles, null));
+                List<Harbor> harbors = new ArrayList<>();
+                harbors.add(new Harbor(1, 0, -1, "grain", 1));
+                harbors.add(new Harbor(1, -1, 0, null, 3));
+                harbors.add(new Harbor(0, -1, 1, "wool", 5));
+                harbors.add(new Harbor(-1, 0, -1, "ore", 7));
+                harbors.add(new Harbor(-1, 1, 0, null, 9));
+                harbors.add(new Harbor(0, 1, -1, "lumber", 11));
+                return Observable.just(new Map("000", tiles, harbors));
             }
 
             @Override

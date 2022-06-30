@@ -4,9 +4,9 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.uniks.pioneers.GameConstants.*;
@@ -15,6 +15,8 @@ import static de.uniks.pioneers.GameConstants.*;
 public class GameStorage {
     @Inject EventListener eventListener;
     private List<Tile> map;
+    private List<Harbor> harbors;
+    private final List<String> tradeOptions = new ArrayList<>();
     private int mapRadius;
     private  double hexScale = 75;
     private double hexRadiusFactor = 3;
@@ -33,6 +35,8 @@ public class GameStorage {
     public List<Tile> getMap() {
         return map;
     }
+
+    public List<Harbor> getHarbors() { return harbors; }
 
     public int getMapRadius(){
         return this.mapRadius;
@@ -58,6 +62,10 @@ public class GameStorage {
         this.map = map;
     }
 
+    public void setHarbors(List<Harbor> harbors) {
+        this.harbors = harbors;
+    }
+
     public void calcZoom(int mapRadius){
         this.mapRadius = mapRadius;
         hexRadiusFactor = 5;
@@ -76,9 +84,9 @@ public class GameStorage {
                 double hexagonHeight = 2 * hexScale;
                 double mapHeight;
                 if (mapRadius % 2 == 0) {
-                    mapHeight = (mapRadius + 1) * hexagonHeight + mapRadius * hexScale + MAP_PADDING_Y;
+                    mapHeight = (mapRadius + 1) * hexagonHeight + mapRadius * hexScale + MAP_PADDING_Y + hexScale;
                 } else {
-                    mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y;
+                    mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y + hexScale;
                 }
                 this.zoomedOut = (MAP_HEIGHT / mapHeight);
                 this.zoomedIn = 1;
@@ -87,6 +95,16 @@ public class GameStorage {
 
         if(mapRadius >= 4){
             this.zoomedIn = 0.7;
+        }
+    }
+
+    public List<String> getTradeOptions() {
+        return tradeOptions;
+    }
+
+    public void addToTradeOptions(String tradeOption) {
+        if (!tradeOptions.contains(tradeOption)) {
+            this.tradeOptions.add(tradeOption);
         }
     }
 }
