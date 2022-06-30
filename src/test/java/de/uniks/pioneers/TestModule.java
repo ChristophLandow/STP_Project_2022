@@ -394,14 +394,14 @@ public class TestModule {
                 List<Harbor> harbors = new ArrayList<>();
                 harbors.add(new Harbor(2, 0, -2, "grain", 1));
                 harbors.add(new Harbor(2, -1, -1, "wool", 1));
-                harbors.add(new Harbor(2, -2, 0, "null", 3));
-                harbors.add(new Harbor(1, -2, 1, "null", 5));
+                harbors.add(new Harbor(2, -2, 0, null, 3));
+                harbors.add(new Harbor(1, -2, 1, null, 5));
                 harbors.add(new Harbor(0, -2, 2, "brick", 7));
                 harbors.add(new Harbor(-1, -1, 2, "lumber", 7));
                 harbors.add(new Harbor(-2, 0, 2, "grain", 9));
                 harbors.add(new Harbor(-2, 1, 1, "ore", 9));
-                harbors.add(new Harbor(-1, 2, -1, "null", 11));
-                harbors.add(new Harbor(-2, 2, 0, "null", 9));
+                harbors.add(new Harbor(-1, 2, -1, null, 11));
+                harbors.add(new Harbor(-2, 2, 0, null, 9));
                 harbors.add(new Harbor(0, 2, -2, "brick", 11));
                 harbors.add(new Harbor(1, 1, -2, "lumber", 1));
                 return Observable.just(new Map("000", tiles, harbors));
