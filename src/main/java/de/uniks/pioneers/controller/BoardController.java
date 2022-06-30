@@ -173,8 +173,6 @@ public class BoardController {
         }
 
         mapRenderService.setTileControllers(this.tileControllers);
-
-        loadSnowAnimation();
     }
 
     private void loadSnowAnimation() {new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);}
