@@ -391,7 +391,6 @@ public class TestModule {
                 tiles.add(new Tile(2,0,-2,"mountains",6));
                 tiles.add(new Tile(-2,0,2,"pasture",7));*/
 
-                //TODO: Add Harbors
                 List<Harbor> harbors = new ArrayList<>();
                 harbors.add(new Harbor(2, 0, -2, "grain", 1));
                 harbors.add(new Harbor(2, -1, -1, "wool", 1));
