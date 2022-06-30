@@ -86,4 +86,19 @@ public class IngameService {
                 })
         );
     }
+
+    public void tradeWithPlayers() {
+        Resources offer = new Resources (trade.get("walknochen"),trade.get("packeis"),
+                trade.get("kohle"),trade.get("fisch"), trade.get("fell"));
+
+        System.out.println(offer);
+
+        disposable.add(postMove(game.get()._id(),new CreateMoveDto(BUILD,offer))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe(move -> {
+                    trade = new HashMap<>();
+                })
+        );
+    }
 }

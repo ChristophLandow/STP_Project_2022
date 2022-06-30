@@ -158,7 +158,7 @@ public class TradePopUpController implements Controller {
 
         // setup EventHandler for trade with player
         playerHandler = event -> {
-
+            ingameService.tradeWithPlayers();
         };
 
         // setup EventHandler for cancel and stage closed

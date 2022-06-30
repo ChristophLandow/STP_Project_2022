@@ -49,6 +49,8 @@ public class IngameStateController {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            System.out.println("Its your turn ");
+            System.out.println("expected move : " + move);
             // enable posting move
             switch (move.action()) {
                 case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
