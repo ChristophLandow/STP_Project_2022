@@ -35,8 +35,10 @@ public class RobberController implements Controller {
     }
 
     private void discard() {
+        /*
         DiscardResourcesController discardController = discardResourcesControllerProvider.get();
         discardController.init();
+        */
     }
 
     @Override
