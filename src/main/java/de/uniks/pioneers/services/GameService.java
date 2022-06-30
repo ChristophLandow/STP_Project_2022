@@ -1,6 +1,5 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.ws.EventListener;
@@ -10,6 +9,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -42,7 +42,6 @@ public class GameService {
     public Observable<Game> deleteGame(String gameId) {
         return gameApiService.delete(gameId);
     }
-
 
     public void initGame() {
         ingameService.game.set(game.get());
@@ -127,9 +126,7 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
-                    System.out.println(members);
                     members.addAll(lobbyMembers);
-                    System.out.println(members);
                     me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }
