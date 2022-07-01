@@ -180,12 +180,9 @@ public class BoardController {
     public void renderBuilding(Building building) {
 
         String coords = building.x() + " " + building.y() + " " + building.z() + " " + building.side();
-        System.out.println("coords " + coords);
         if (Objects.equals(building.type(), SETTLEMENT) || Objects.equals(building.type(), CITY)) {
             // find corresponding buildingPointController
-            System.out.println(buildingPointControllerHashMap.get(coords));
             BuildingPointController controller = buildingPointControllerHashMap.get(coords);
-            //System.out.println(buildingPointControllerHashMap);
             controller.placeBuilding(building);
         } else {
             // find corresponding streetPointController

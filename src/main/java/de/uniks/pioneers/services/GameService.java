@@ -113,7 +113,6 @@ public class GameService {
                     final Building building = buildingEvent.data();
                     if (buildingEvent.event().endsWith(".created") || buildingEvent.event().endsWith(".updated")) {
                         // render new building
-                        System.out.println(building);
                         this.buildings.add(building);
                     }
                 })
@@ -128,9 +127,7 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
-                    System.out.println(members);
                     members.addAll(lobbyMembers);
-                    System.out.println(members);
                     me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }

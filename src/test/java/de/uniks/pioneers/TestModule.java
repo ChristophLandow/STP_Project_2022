@@ -413,7 +413,6 @@ public class TestModule {
 
             @Override
             public Observable<State> getCurrentState(String gameId) {
-                System.out.println("getCurrentState");
                 ArrayList<String> players = new ArrayList<>();
                 players.add("000");
                 ArrayList<ExpectedMove> expectedMoves = new ArrayList<>();
@@ -434,7 +433,6 @@ public class TestModule {
 
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
-                System.out.println(dto);
                 if(dto.building() != null) {
                     return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner()));
                 } else {
@@ -444,7 +442,6 @@ public class TestModule {
 
             @Override
             public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
-                System.out.println("updatePlayer");
                 return Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
             }
         };
