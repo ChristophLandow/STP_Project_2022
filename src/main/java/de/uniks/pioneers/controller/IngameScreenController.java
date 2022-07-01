@@ -93,19 +93,19 @@ public class IngameScreenController implements Controller {
     @Inject
     Provider<SettingsScreenController> settingsScreenControllerProvider;
     @Inject
+    Provider<TradePopUpController> tradePopUpControllerProvider;
+    @Inject
     Provider<TradeOfferPopUpController> tradeOfferPopUpControllerProvider;
     @Inject
     EventListener eventListener;
 
 
-    @Inject
-    Provider<TradePopUpController> tradePopUpControllerProvider;
+    private final App app;
     private Stage popUpStage;
 
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private List<User> users;
-    private final App app;
     private final GameStorage gameStorage;
     private final MapRenderService mapRenderService;
     private final IngameService ingameService;
@@ -116,6 +116,7 @@ public class IngameScreenController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private IngameStateController ingameStateController;
     private IngamePlayerController ingamePlayerController;
+    private ChangeListener<Boolean> tradeOfferListener;
 
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
@@ -273,6 +274,7 @@ public class IngameScreenController implements Controller {
                 c.getRemoved().forEach(this::deleteBuilding);
             }
         });
+
         // remaining building count change listener
         gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
             if (c.getKey().equals(ROAD)) {
@@ -286,7 +288,8 @@ public class IngameScreenController implements Controller {
             }
         });
 
-        ChangeListener<Boolean> tradeOfferListener = ((observable, oldValue, newValue) -> {
+        // init listener for incoming trade offer
+        tradeOfferListener = ((observable, oldValue, newValue) -> {
             if (oldValue.equals(false) && newValue.equals(true)){
                 openTradeOfferPopUp();
             }else if (oldValue.equals(true) && newValue.equals(false)){
@@ -294,7 +297,7 @@ public class IngameScreenController implements Controller {
             }
         });
 
-
+        ingameService.tradeIsOffered.addListener(tradeOfferListener);
     }
 
     private void renderBuilding(Building building) {
@@ -340,6 +343,7 @@ public class IngameScreenController implements Controller {
         this.mapRenderService.stop();
         timerService.reset();
         mapRenderService.stop();
+        ingameService.tradeIsOffered.removeListener(tradeOfferListener);
     }
 
     public void setUsers(List<User> users) {
@@ -361,12 +365,14 @@ public class IngameScreenController implements Controller {
 
     public void openTradePopUp() {
         popUpStage = new Stage();
+        popUpStage.setTitle("Pioneers - trade");
         popUpController = tradePopUpControllerProvider.get();
         showPopUpStage();
     }
 
     private void openTradeOfferPopUp() {
         popUpStage = new Stage();
+        popUpStage.setTitle("trade offer");
         popUpController = tradeOfferPopUpControllerProvider.get();
         showPopUpStage();
     }
