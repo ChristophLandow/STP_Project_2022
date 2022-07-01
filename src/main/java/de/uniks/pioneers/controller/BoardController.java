@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,17 +34,21 @@ public class BoardController {
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
     private final IngameService ingameService;
+    private final GameService gameService;
     private final UserService userService;
     private final MapRenderService mapRenderService;
     public SimpleObjectProperty<Game> game;
 
-    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game, GameStorage gameStorage, MapRenderService mapRenderService){
+    private  Thread hextileRenderThread;
 
+    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game,
+                           GameStorage gameStorage, GameService gameService, MapRenderService mapRenderService){
         this.ingameService = ingameService;
+        this.gameService = gameService;
         this.userService = userService;
-        this.game = game;
         this.gameStorage = gameStorage;
         this.mapRenderService = mapRenderService;
+        this.game = game;
     }
 
 
@@ -54,7 +59,7 @@ public class BoardController {
         List<HexTile> corners = generator.generateCorners(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
 
         if(gameStorage.getMapRadius() > 4) {
-            Thread hextileRenderThread = new Thread(() -> {
+            this.hextileRenderThread = new Thread(() -> {
                 try {
                     for (HexTile hexTile : tiles) {
                         Platform.runLater(() -> loadHexagon(hexTile));
@@ -78,9 +83,8 @@ public class BoardController {
                     mapRenderService.setTileControllers(this.tileControllers);
                     loadSnowAnimation();
                     mapRenderService.setFinishedLoading(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+                catch (InterruptedException ignored){}
             });
 
             hextileRenderThread.setDaemon(true);
@@ -108,13 +112,19 @@ public class BoardController {
                 hexTile.number
         );
 
-        Circle hexView = new Circle(0);
+        Circle hexView = new Circle(gameStorage.getHexScale()/8);
         hexView.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
         hexView.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
+        hexView.setVisible(false);
         this.fieldPane.getChildren().add(hexView);
 
-        HexTileController newHexTileController = new HexTileController(hexTile, hexView);
-        newHexTileController.setVisible(false);
+        Circle eventHexView = new Circle(gameStorage.getHexScale()/1.4);
+        eventHexView.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
+        eventHexView.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
+        eventHexView.setFill(Color.gray(0,0.1));
+        this.fieldPane.getChildren().add(eventHexView);
+
+        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView);
         this.tileControllers.add(newHexTileController);
     }
 
@@ -137,7 +147,7 @@ public class BoardController {
         circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
         circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
         this.fieldPane.getChildren().add(circ);
-        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
+        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
         this.buildingControllers.add(newbuildingPointController);
     }
 
@@ -180,6 +190,12 @@ public class BoardController {
         }
     }
 
+    public void enableHexagonPoints(){
+        for (HexTileController controller : tileControllers) {
+            controller.init();
+        }
+    }
+
     public void enableStreetPoints(String action) {
         for (StreetPointController controller : streetPointControllerHashMap.values()) {
             controller.setAction(action);
@@ -191,6 +207,10 @@ public class BoardController {
             controller.setAction(action);
             controller.init();
         }
+    }
+
+    public void stop(){
+        if(hextileRenderThread != null) this.hextileRenderThread.interrupt();
     }
 
     public void drawCanvasHexagon(double[] xPoints, double[] yPoints, double layoutX, double layoutY, String type, int number){

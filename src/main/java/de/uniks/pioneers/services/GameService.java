@@ -1,6 +1,5 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.ws.EventListener;
@@ -13,12 +12,15 @@ import javafx.collections.ObservableMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.ArrayList;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 @Singleton
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public ObservableList<Member> members = FXCollections.observableArrayList();
+    private final ArrayList<User> users = new ArrayList<>();
     public ObservableList<Member> lobbyMembers;
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
@@ -67,7 +69,6 @@ public class GameService {
                     final Move move = moveEvent.data();
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
-
                     }
                 })
         );
@@ -210,8 +211,39 @@ public class GameService {
         }
     }
 
+    public int getRessourcesSize(){
+        Resources ingameResources = players.get(me).resources();
+        int result = 0;
+
+        if(ingameResources.grain() != null){
+            result += ingameResources.grain();
+        }
+
+        if(ingameResources.brick() != null){
+            result += ingameResources.brick();
+        }
+
+        if(ingameResources.ore() != null){
+            result += ingameResources.ore();
+        }
+
+        if(ingameResources.lumber() != null){
+            result += ingameResources.lumber();
+        }
+
+        if(ingameResources.wool() != null){
+            result += ingameResources.wool();
+        }
+
+        return result;
+    }
+
     public void setMembers(ObservableList<Member> lobbyMembers) {
         this.lobbyMembers = lobbyMembers;
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
     public Game getGame() {

@@ -21,14 +21,10 @@ public class ZoomableScrollPane {
     private ScrollPane scrollPane;
     private AnchorPane anchorPane;
     private Canvas canvas;
-
     private Pane fieldPane;
-
     final private Scale fieldScale = new Scale();
-
     private final GameStorage gameStorage;
     private final MapRenderService mapRenderService;
-
     private double mapWidth;
     private double mapHeight;
 

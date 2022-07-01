@@ -14,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-import static de.uniks.pioneers.GameConstants.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -58,11 +57,11 @@ public class DiceSubcontroller {
                 c.getAddedSubList().forEach(move -> {
                     if (move.action().equals(FOUNDING_ROLL) || move.action().equals(ROLL)) {
                         showRolledNumber(move.action(), move.roll());
-                    }
-                    if(move.action().equals(ROLL)){
-                        RobberController robber = robberControllerProvider.get();
-                        robber.init();
-                        
+
+                        if(move.roll() == 7){
+                            RobberController robber = robberControllerProvider.get();
+                            robber.init();
+                        }
                     }
                 });
             }
