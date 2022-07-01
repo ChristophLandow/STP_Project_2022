@@ -271,6 +271,7 @@ public class IngameScreenController implements Controller {
 
     public void leave() {
         leaveGameController.leave();
+        this.stop();
     }
 
     public void toRules() {
@@ -289,6 +290,7 @@ public class IngameScreenController implements Controller {
         settingsScreenControllerProvider.get().stop();
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
+        this.boardController.stop();
         timerService.reset();
         mapRenderService.stop();
     }
