@@ -21,6 +21,9 @@ public class GameConstants {
     public static final String FOUNDING_ROAD_2 = "founding-road-2";
     public static final String ROLL = "roll";
     public static final String BUILD = "build";
+    public static final String OFFER = "offer";
+    public static final String ACCEPT = "accept";
+
 
     public static final String DROP = "drop";
 

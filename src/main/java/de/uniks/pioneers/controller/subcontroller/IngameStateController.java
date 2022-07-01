@@ -63,6 +63,10 @@ public class IngameStateController {
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
+                case OFFER -> {
+                    System.out.println(currentState);
+                    ingameService.tradeIsOffered.set(true);
+                }
             }
         }
         this.setSituationLabel(move.players().get(0), move.action());
@@ -99,6 +103,8 @@ public class IngameStateController {
             case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> actionString = "place road";
             case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
             case BUILD -> actionString = BUILD;
+            case OFFER -> actionString = OFFER;
+            case ACCEPT -> actionString = ACCEPT;
         }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {

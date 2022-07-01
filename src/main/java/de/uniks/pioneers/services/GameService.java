@@ -13,7 +13,10 @@ import javafx.collections.ObservableMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.Objects;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.BUILD;
 
 @Singleton
 public class GameService {
@@ -66,7 +69,9 @@ public class GameService {
                     final Move move = moveEvent.data();
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
-
+                        if (move.action().equals(BUILD) && move.resources()!=null && !Objects.equals(move.userId(), me)){
+                            ingameService.tradeOffer.set(move);
+                        }
                     }
                 })
         );

@@ -117,6 +117,13 @@ public class IngamePlayerResourcesController {
             fischCount.setLayoutY(fellResource.getLayoutY());
         }
 
+        /*  lumber = fisch
+            brick = packeis
+            wool = fell
+            grain = walknochen
+            ore = kohle
+         */
+
         if (grain > 0) {
             resourcesHBox.getChildren().add(walknochenResource);
             resourcesHBox.getChildren().add(walknochenCount);

@@ -4,6 +4,7 @@ import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
+import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
@@ -23,6 +24,7 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class BuildingPointController {
     private final Pane fieldPane;
+    private final GameService gameService;
     private final Circle view;
     private final Circle eventView;
     private final IngameService ingameService;
@@ -42,7 +44,7 @@ public class BuildingPointController {
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
-                                   UserService userService) {
+                                   UserService userService, GameService gameService) {
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
@@ -50,6 +52,7 @@ public class BuildingPointController {
         this.gameStorage = gameStorage;
         this.gameId = gameId;
         this.fieldPane = fieldPane;
+        this.gameService = gameService;
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
@@ -127,7 +130,7 @@ public class BuildingPointController {
 
     private void info(MouseEvent mouseEvent) {
         boolean invalid = false;
-        if(gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
+        if(gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkSettlement() && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
             for (StreetPointController street : adjacentStreets) {
                 for (BuildingPointController building : street.getAdjacentBuildings()) {
                     if (building != this) {
@@ -138,7 +141,7 @@ public class BuildingPointController {
                 }
             }
         }
-        if(gameStorage.remainingBuildings.get(CITY) > 0 && gameStorage.selectedBuilding.equals(CITY)) {
+        if(gameStorage.remainingBuildings.get(CITY) > 0 && gameService.checkCity() && gameStorage.selectedBuilding.equals(CITY)) {
             if(this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())){
 
                 invalid = true;

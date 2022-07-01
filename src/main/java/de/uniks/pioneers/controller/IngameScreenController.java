@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.*;
@@ -10,6 +11,8 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -33,41 +36,70 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-    @FXML public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane;
-    @FXML public AnchorPane scrollAnchorPane;
-    @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
-    @FXML public SVGPath streetSVG, houseSVG, citySVG;
-    @FXML public Button rulesButton, leaveButton, settingsButton;
-    @FXML public VBox messageVBox;
-    @FXML public TextField sendMessageField;
-    @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
-    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
-    @FXML public ListView<Node> playerListView;
-    @FXML public Rectangle downRectangle, upRectangle;
-    @FXML public Canvas mapCanvas;
+    @FXML
+    public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane;
+    @FXML
+    public AnchorPane scrollAnchorPane;
+    @FXML
+    public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
+    @FXML
+    public SVGPath streetSVG, houseSVG, citySVG;
+    @FXML
+    public Button rulesButton, leaveButton, settingsButton;
+    @FXML
+    public VBox messageVBox;
+    @FXML
+    public TextField sendMessageField;
+    @FXML
+    public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
+    @FXML
+    public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
+    @FXML
+    public ListView<Node> playerListView;
+    @FXML
+    public Rectangle downRectangle, upRectangle;
+    @FXML
+    public Canvas mapCanvas;
 
     public ZoomableScrollPane zoomableScrollPane;
-    @Inject GameChatController gameChatController;
-    @Inject PrefService prefService;
-    @Inject Provider<IngamePlayerListElementController> elementProvider;
-    @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
-    @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
-    @Inject Provider<StreetPointController> streetPointControllerProvider;
-    @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
-    @Inject Provider<RobberController> robberControllerProvider;
-    @Inject LeaveGameController leaveGameController;
-    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
-    @Inject Provider<SettingsScreenController> settingsScreenControllerProvider;
-    @Inject EventListener eventListener;
+    @Inject
+    GameChatController gameChatController;
+    @Inject
+    PrefService prefService;
+    @Inject
+    Provider<IngamePlayerListElementController> elementProvider;
+    @Inject
+    Provider<IngamePlayerListSpectatorController> spectatorProvider;
+    @Inject
+    Provider<IngamePlayerResourcesController> resourcesControllerProvider;
+    @Inject
+    Provider<StreetPointController> streetPointControllerProvider;
+    @Inject
+    Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
+    @Inject
+    Provider<RobberController> robberControllerProvider;
+    @Inject
+    LeaveGameController leaveGameController;
+    @Inject
+    Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @Inject
+    Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject
+    Provider<SettingsScreenController> settingsScreenControllerProvider;
+    @Inject
+    Provider<TradeOfferPopUpController> tradeOfferPopUpControllerProvider;
+    @Inject
+    EventListener eventListener;
 
 
-    @Inject Provider<TradePopUpController> tradePopUpControllerProvider;
+    @Inject
+    Provider<TradePopUpController> tradePopUpControllerProvider;
     private Stage popUpStage;
 
     private final GameService gameService;
@@ -95,8 +127,8 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
-        this.boardController = new BoardController(ingameService, userService, game, gameStorage, mapRenderService);
+        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService);
+        this.boardController = new BoardController(ingameService, userService, gameService, game, gameStorage, mapRenderService);
     }
 
     @Override
@@ -150,14 +182,13 @@ public class IngameScreenController implements Controller {
         leaveGameController.init(this, gameChatController);
 
         Thread waitForMapLoadedThread = new Thread(() -> {
-            try{
-                while(!this.mapRenderService.isFinishedLoading()){
+            try {
+                while (!this.mapRenderService.isFinishedLoading()) {
                     Thread.sleep(300);
                 }
 
                 initWhenMapFinishedRendering();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -168,16 +199,16 @@ public class IngameScreenController implements Controller {
         // set timeLabel of timer
         this.timerService.setTimeLabel(this.timeLabel);
 
-        if(prefService.getDarkModeState()){
+        if (prefService.getDarkModeState()) {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
         } else {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
+            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/IngameScreen.css");
         }
     }
 
-    private void initWhenMapFinishedRendering(){
+    private void initWhenMapFinishedRendering() {
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
@@ -220,7 +251,8 @@ public class IngameScreenController implements Controller {
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if (c.wasAdded() && !c.wasRemoved()) {
                 ingamePlayerController.renderPlayer(c.getValueAdded());
-            }});
+            }
+        });
 
         //this.loadSpectators();
         gameService.members.addListener((ListChangeListener<? super Member>) c -> {
@@ -243,17 +275,34 @@ public class IngameScreenController implements Controller {
         });
         // remaining building count change listener
         gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
-            if(c.getKey().equals(ROAD)){this.streetCountLabel.setText(c.getValueAdded().toString());}
-            if(c.getKey().equals(SETTLEMENT)){this.houseCountLabel.setText(c.getValueAdded().toString());}
-            if(c.getKey().equals(CITY)){this.cityCountLabel.setText(c.getValueAdded().toString());}
+            if (c.getKey().equals(ROAD)) {
+                this.streetCountLabel.setText(c.getValueAdded().toString());
+            }
+            if (c.getKey().equals(SETTLEMENT)) {
+                this.houseCountLabel.setText(c.getValueAdded().toString());
+            }
+            if (c.getKey().equals(CITY)) {
+                this.cityCountLabel.setText(c.getValueAdded().toString());
+            }
         });
+
+        ChangeListener<Boolean> tradeOfferListener = ((observable, oldValue, newValue) -> {
+            if (oldValue.equals(false) && newValue.equals(true)){
+                openTradeOfferPopUp();
+            }else if (oldValue.equals(true) && newValue.equals(false)){
+                closePopUpStage();
+            }
+        });
+
+
     }
 
     private void renderBuilding(Building building) {
         this.boardController.renderBuilding(building);
     }
 
-    private void deleteBuilding(Building building) {}
+    private void deleteBuilding(Building building) {
+    }
 
     public App getApp() {
         return this.app;
@@ -303,17 +352,35 @@ public class IngameScreenController implements Controller {
                 .doOnComplete(this::buildBoardUI)
                 .subscribe();
     }
+
     private void buildBoardUI() {
         this.boardController.buildBoardUI();
     }
 
+    Controller popUpController;
+
     public void openTradePopUp() {
         popUpStage = new Stage();
-        TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
-        Parent root = tradePopUpController.render();
-        tradePopUpController.init();
+        popUpController = tradePopUpControllerProvider.get();
+        showPopUpStage();
+    }
+
+    private void openTradeOfferPopUp() {
+        popUpStage = new Stage();
+        popUpController = tradeOfferPopUpControllerProvider.get();
+        showPopUpStage();
+    }
+
+    private void showPopUpStage(){
+        Parent root = popUpController.render();
+        popUpController.init();
         Scene scene = new Scene(root);
         popUpStage.setScene(scene);
         popUpStage.show();
+    }
+
+    private void closePopUpStage() {
+        popUpController.stop();
+        popUpStage.close();
     }
 }

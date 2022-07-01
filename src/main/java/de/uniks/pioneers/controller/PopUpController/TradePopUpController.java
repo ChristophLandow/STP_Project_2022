@@ -27,6 +27,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static de.uniks.pioneers.GameConstants.OFFER;
+
 
 public class TradePopUpController implements Controller {
 
@@ -84,7 +86,7 @@ public class TradePopUpController implements Controller {
         }
 
         private void updateTrade() {
-            if (types.getKey().equals("Offer")){
+            if (types.getKey().equals(OFFER)){
                 ingameService.getOrCreateTrade(types.getValue(),-1);
             }else {
                 ingameService.getOrCreateTrade(types.getValue(),1);
@@ -115,7 +117,7 @@ public class TradePopUpController implements Controller {
     @Override
     public void init() {
         // init model
-        //ingameService.initTrade();
+
 
         // set stylesheet for spinners
         root.getStylesheets().add("/de/uniks/pioneers/styles/SpinnerLowerArrowWidth.css");
