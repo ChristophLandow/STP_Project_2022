@@ -21,12 +21,14 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -192,7 +194,18 @@ public class DiscardResourcesController implements Initializable, Controller {
                 .observeOn(FX_SCHEDULER).subscribe(move -> {
                     robberService.getRobberState().set(ROBBER_MOVE);
                     stop();
-                }));
+                },this::handleHttpError));
+    }
+
+    private  void handleHttpError(Throwable exception) throws IOException {
+        String errorBody;
+        if (exception instanceof HttpException httpException) {
+            errorBody = Objects.requireNonNull(Objects.requireNonNull(httpException.response()).errorBody()).string();
+        } else {
+            return;
+        }
+
+        System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 
     public void show() {

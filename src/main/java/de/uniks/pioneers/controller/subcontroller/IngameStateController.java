@@ -65,6 +65,7 @@ public class IngameStateController {
                     // set builder timer, in progress...
                     this.timerService.setBuildTimer(new Timer());
                     this.enableEndTurn();
+                    this.enableHexagonPoints();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }

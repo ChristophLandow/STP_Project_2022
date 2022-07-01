@@ -44,7 +44,7 @@ public class RobberController implements Controller {
     }
 
     private void discard() {
-        if(gameService.getRessourcesSize() >= 7) {
+        if(gameService.getRessourcesSize() >= 8) {
             discardResourcesController = discardResourcesControllerProvider.get();
             discardResourcesController.init();
         }
