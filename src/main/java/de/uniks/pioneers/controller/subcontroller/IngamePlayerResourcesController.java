@@ -4,7 +4,6 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
-import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
@@ -65,10 +63,10 @@ public class IngamePlayerResourcesController {
         if(me != null) {
             initDataToElement(me);
         }
-        addPlayerListener();
 
         this.fellCount.setTextFill(Color.BLACK);
         this.kohleCount.setTextFill(Color.BLACK);
+        new ResourceAnimationController(root, gameService, this);
     }
 
     private void setImages() {
@@ -85,19 +83,6 @@ public class IngamePlayerResourcesController {
         kohleResource.setImage(kohleImg);
 
         resourcesHBox.getChildren().clear();
-    }
-
-    private void addPlayerListener() {
-        // add listener for observable players list
-        gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
-            String key = c.getKey();
-            if (key.equals(gameService.me)) {
-                if (c.wasRemoved() && c.wasAdded()) {
-                    System.out.println(" your ressources: "+ c.getValueAdded().resources());
-                    setDataToElement(c.getValueAdded(), c.getValueRemoved());
-                }
-            }
-        });
     }
 
     public void initDataToElement(Player me) {
@@ -153,79 +138,59 @@ public class IngamePlayerResourcesController {
         walknochenCount.setText(String.valueOf(grain));
     }
 
-    private void setDataToElement(Player valueAdded, Player valueRemoved) {
-        // records are immutable
-        Resources resources = valueAdded.resources();
-        int brick = resources.brick() == null ? 0 : resources.brick();
-        int grain = resources.grain() == null ? 0 : resources.grain();
-        int ore = resources.ore() == null ? 0 : resources.ore();
-        int lumber = resources.lumber() == null ? 0 : resources.lumber();
-        int wool = resources.wool() == null ? 0 : resources.wool();
-        int unknown = resources.unknown() == null ? 0 : resources.unknown();
+    public void setBrickToElement() {
+        resourcesHBox.getChildren().add(packeisResource);
+        resourcesHBox.getChildren().add(packeisCount);
+        packeisCount.setLayoutX(packeisCount.getLayoutX());
+        packeisCount.setLayoutY(packeisCount.getLayoutY());
+    }
 
-        resources = valueRemoved.resources();
-        int oldBrick = resources.brick() == null ? 0 : resources.brick();
-        int oldGrain = resources.grain() == null ? 0 : resources.grain();
-        int oldOre = resources.ore() == null ? 0 : resources.ore();
-        int oldLumber = resources.lumber() == null ? 0 : resources.lumber();
-        int oldWool = resources.wool() == null ? 0 : resources.wool();
-        int oldUnknown = resources.unknown() == null ? 0 : resources.unknown();
+    public void setBrickCount(int resCount) {
+        packeisCount.setText(String.valueOf(resCount));
+    }
 
-        if (lumber==0 && oldLumber>0){
-            resourcesHBox.getChildren().remove(fischResource);
-            resourcesHBox.getChildren().remove(fischCount);
-        }else if (lumber>0 && oldLumber==0){
-            resourcesHBox.getChildren().add(fischResource);
-            resourcesHBox.getChildren().add(fischCount);
-            fischCount.setLayoutX(fellResource.getLayoutX());
-            fischCount.setLayoutY(fellResource.getLayoutY());
-        }
+    public void setGrainToElement() {
+        resourcesHBox.getChildren().add(walknochenResource);
+        resourcesHBox.getChildren().add(walknochenCount);
+        walknochenCount.setLayoutX(walknochenResource.getLayoutX());
+        walknochenCount.setLayoutY(walknochenResource.getLayoutY());
+    }
 
-        if (grain==0 && oldGrain>0){
-            resourcesHBox.getChildren().remove(walknochenResource);
-            resourcesHBox.getChildren().remove(walknochenCount);
-        }else if (grain>0 && oldGrain==0){
-            resourcesHBox.getChildren().add(walknochenResource);
-            resourcesHBox.getChildren().add(walknochenCount);
-            walknochenCount.setLayoutX(walknochenResource.getLayoutX());
-            walknochenCount.setLayoutY(walknochenResource.getLayoutY());
-        }
+    public void setGrainCount(int resCount) {
+        walknochenCount.setText(String.valueOf(resCount));
+    }
 
-        if (wool==0 && oldWool>0){
-            resourcesHBox.getChildren().remove(fellResource);
-            resourcesHBox.getChildren().remove(fellCount);
-        }else if (wool>0 && oldWool==0){
-            resourcesHBox.getChildren().add(fellResource);
-            resourcesHBox.getChildren().add(fellCount);
-            fellCount.setLayoutX(fellResource.getLayoutX());
-            fellCount.setLayoutY(fellResource.getLayoutY());
-        }
+    public void setOreToElement() {
+        resourcesHBox.getChildren().add(kohleResource);
+        resourcesHBox.getChildren().add(kohleCount);
+        kohleCount.setLayoutX(kohleResource.getLayoutX());
+        kohleCount.setLayoutY(kohleResource.getLayoutY());
+    }
 
-        if (brick==0 && oldBrick>0){
-            resourcesHBox.getChildren().remove(packeisResource);
-            resourcesHBox.getChildren().remove(packeisCount);
-        }else if (brick>0 && oldBrick==0){
-            resourcesHBox.getChildren().add(packeisResource);
-            resourcesHBox.getChildren().add(packeisCount);
-            packeisCount.setLayoutX(packeisCount.getLayoutX());
-            packeisCount.setLayoutY(packeisCount.getLayoutY());
-        }
+    public void setOreCount(int resCount) {
+        kohleCount.setText(String.valueOf(resCount));
+    }
 
-        if (ore==0 && oldOre>0){
-            resourcesHBox.getChildren().remove(kohleResource);
-            resourcesHBox.getChildren().remove(kohleCount);
-        }else if (ore>0 && oldOre==0){
-            resourcesHBox.getChildren().add(kohleResource);
-            resourcesHBox.getChildren().add(kohleCount);
-            kohleCount.setLayoutX(kohleResource.getLayoutX());
-            kohleCount.setLayoutY(kohleResource.getLayoutY());
-        }
+    public void setLumberToElement() {
+        resourcesHBox.getChildren().add(fischResource);
+        resourcesHBox.getChildren().add(fischCount);
+        fischCount.setLayoutX(fellResource.getLayoutX());
+        fischCount.setLayoutY(fellResource.getLayoutY());
+    }
 
-        fischCount.setText(String.valueOf(lumber));
-        packeisCount.setText(String.valueOf(brick));
-        fellCount.setText(String.valueOf(wool));
-        kohleCount.setText(String.valueOf(ore));
-        walknochenCount.setText(String.valueOf(grain));
+    public void setLumberCount(int resCount) {
+        fischCount.setText(String.valueOf(resCount));
+    }
+
+    public void setWoolToElement() {
+        resourcesHBox.getChildren().add(fellResource);
+        resourcesHBox.getChildren().add(fellCount);
+        fellCount.setLayoutX(fellResource.getLayoutX());
+        fellCount.setLayoutY(fellResource.getLayoutY());
+    }
+
+    public void setWoolCount(int resCount) {
+        fellCount.setText(String.valueOf(resCount));
     }
 }
 
