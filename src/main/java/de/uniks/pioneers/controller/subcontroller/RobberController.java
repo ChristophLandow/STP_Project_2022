@@ -41,7 +41,6 @@ public class RobberController implements Controller {
         if(newValue == GameConstants.ROBBER_STEAL){
             rob();
         }
-    }
 
     private void discard() {
         if(gameService.getRessourcesSize() >= 7) {

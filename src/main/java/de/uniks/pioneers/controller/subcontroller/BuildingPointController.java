@@ -1,9 +1,11 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.GameConstants;
+import de.uniks.pioneers.controller.BoardController;
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
+import de.uniks.pioneers.model.Harbor;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
@@ -19,6 +21,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
@@ -83,6 +86,7 @@ public class BuildingPointController {
         }
 
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
+        checkTradeOptions();
         disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, newBuilding))
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
@@ -103,7 +107,6 @@ public class BuildingPointController {
             buildingSVG.setLayoutY(view.getLayoutY() - HOUSE_HEIGHT);
         }
         else{
-            System.out.println("Build City");
             buildingSVG.setContent(CITY_SVG);
             buildingSVG.setLayoutX(view.getLayoutX() - CITY_WIDTH);
             buildingSVG.setLayoutY(view.getLayoutY() - CITY_HEIGHT);
@@ -204,4 +207,51 @@ public class BuildingPointController {
             this.view.setDisable(!isVisible);
         }
     }
+
+    private void checkTradeOptions() {
+        // checks for every harbor if it is near the current building point an if so adds the option to tradeOptions in game storage
+        int upX = 0;
+        int upY = 1;
+        int upZ = 2;
+        for (Harbor harbor : gameStorage.getHarbors()) {
+            if (harbor.side() == 1) {
+                if (harbor.x() == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && harbor.z() == uploadCoords[upZ] && uploadCoords[3] == 0) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                } else if ((harbor.x() + 1) == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && (harbor.z() - 1) == uploadCoords[upZ] && uploadCoords[3] == 6) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                }
+            } else if (harbor.side() == 3) {
+                if ((harbor.x() + 1) == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && (harbor.z() - 1) == uploadCoords[upZ] && uploadCoords[3] == 6) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                } else if (harbor.x() == uploadCoords[upX] && (harbor.y() - 1) == uploadCoords[upY] && (harbor.z() + 1) == uploadCoords[upZ] && uploadCoords[3] == 0) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                }
+            } else if (harbor.side() == 5) {
+                if (harbor.x() == uploadCoords[upX] && (harbor.y() - 1) == uploadCoords[upY] && (harbor.z() + 1) == uploadCoords[upZ] && uploadCoords[3] == 0) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                } else if (harbor.x() == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && harbor.z() == uploadCoords[upZ] && uploadCoords[3] == 6) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                }
+            } else if (harbor.side() == 7) {
+                if (harbor.x() == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && harbor.z() == uploadCoords[upZ] && uploadCoords[3] == 6) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                } else if ((harbor.x() - 1) == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && (harbor.z() + 1) == uploadCoords[upZ] && uploadCoords[3] == 0) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                }
+            } else if (harbor.side() == 9) {
+                if ((harbor.x() - 1) == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && (harbor.z() + 1) == uploadCoords[upZ] && uploadCoords[3] == 0) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                } else if (harbor.x() == uploadCoords[upX] && (harbor.y() + 1) == uploadCoords[upY] && (harbor.z() - 1) == uploadCoords[upZ] && uploadCoords[3] == 6) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                }
+            } else if (harbor.side() == 11) {
+                if (harbor.x() == uploadCoords[upX] && (harbor.y() + 1) == uploadCoords[upY] && (harbor.z() - 1) == uploadCoords[upZ] && uploadCoords[3] == 6) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                } else if (harbor.x() == uploadCoords[upX] && harbor.y() == uploadCoords[upY] && harbor.z() == uploadCoords[upZ] && uploadCoords[3] == 0) {
+                    gameStorage.addToTradeOptions(harbor.type());
+                }
+            }
+        }
+    }
+
 }

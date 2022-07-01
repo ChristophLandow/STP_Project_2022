@@ -8,9 +8,7 @@ import dagger.Provides;
 import de.uniks.pioneers.dto.*;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
-import de.uniks.pioneers.services.NewGameLobbyService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.TokenStorage;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
@@ -29,14 +27,15 @@ import static org.mockito.Mockito.*;
 
 @Module
 public class TestModule {
-
     public static PublishSubject<Event<Member>> gameMemberSubject = PublishSubject.create();
     public static PublishSubject<Event<Game>> gameSubject = PublishSubject.create();
+    public static PublishSubject<Event<State>> gameStateSubject = PublishSubject.create();
+    public static PublishSubject<Event<Building>> gameBuildingSubject = PublishSubject.create();
+    public static PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
 
     @Provides
     @Singleton
-    static AuthApiService authApiService(){
-
+    AuthApiService authApiService(){
         return new AuthApiService() {
             @Override
             public Observable<LoginResult> login(LoginDto dto) {
@@ -65,7 +64,7 @@ public class TestModule {
 
     @Provides
     @Singleton
-    static ObjectMapper mapper(){
+    ObjectMapper mapper(){
         return new ObjectMapper()
                 .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -74,7 +73,7 @@ public class TestModule {
 
     @Provides
     @Singleton
-    static OkHttpClient client(TokenStorage tokenStorage) {
+    OkHttpClient client(TokenStorage tokenStorage) {
         return new OkHttpClient.Builder().addInterceptor(chain -> {
             final String token = tokenStorage.getAccessToken();
             if (token == null) {
@@ -91,8 +90,7 @@ public class TestModule {
 
     @Provides
     @Singleton
-    static EventListener eventListener(){
-
+    EventListener eventListener() {
         EventListener eventListener = mock(EventListener.class);
 
         when(eventListener.listen("users.*.*", User.class)).thenReturn(PublishSubject.create());
@@ -108,24 +106,22 @@ public class TestModule {
 
         when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(PublishSubject.create());
-        when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(PublishSubject.create());
-        when(eventListener.listen("games.000.state.*", State.class)).thenReturn(PublishSubject.create());
-        when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(PublishSubject.create());
-
-
+        when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(gameBuildingSubject);
+        when(eventListener.listen("games.000.state.*", State.class)).thenReturn(gameStateSubject);
+        when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(gameMoveSubject);
 
         return eventListener;
-
     }
+
     @Provides
     @Singleton
-    Preferences prefs(){
-
+    Preferences prefs() {
         return Preferences.userNodeForPackage(Main.class);
     }
+
     @Provides
     @Singleton
-    static Retrofit retrofit (OkHttpClient client, ObjectMapper mapper){
+    Retrofit retrofit (OkHttpClient client, ObjectMapper mapper) {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL+API_PREFIX+"/")
                 .client(client)
@@ -133,9 +129,10 @@ public class TestModule {
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createAsync())
                 .build();
     }
+
     @Provides
     @Singleton
-    static UserApiService userApiService(){
+    UserApiService userApiService(){
         return new UserApiService() {
             @Override
             public Observable<User> create(CreateUserDto dto) {
@@ -170,14 +167,13 @@ public class TestModule {
             }
         };
     }
+
     @Provides
     @Singleton
-    static GameApiService gameApiService() {
-
+    GameApiService gameApiService() {
         return new GameApiService() {
             @Override
             public Observable<List<Game>> getGames() {
-
                 ArrayList<Game> games = new ArrayList<>();
                 games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null));
                 games.add(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","002","TestGameB","002",1,false, null));
@@ -187,48 +183,37 @@ public class TestModule {
 
             @Override
             public Observable<Game> getGame(String id) {
-
                 return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestGameA","000",1,false, null));
             }
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
-
                 return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10)));
-
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
-
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(1,10)));
-
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(2,10)));
             }
 
             @Override
             public Observable<Game> delete(String id) {
-
                 return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, null));
-
             }
         };
-
     }
 
     @Provides
     @Singleton
-    static MessageApiService messageApiService() {
-
+    MessageApiService messageApiService() {
         return new MessageApiService() {
             @Override
             public Observable<MessageDto> sendMessage(String namespace, String parent, CreateMessageDto dto) {
-
                 return Observable.just(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","A",dto.body()));
             }
 
             @Override
             public Observable<List<MessageDto>> getChatMessages(String namespace, String parent) {
-
                 ArrayList<MessageDto> messages = new ArrayList<>();
                 messages.add(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","A","Hallo"));
                 messages.add(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","B","Hallo2"));
@@ -238,7 +223,6 @@ public class TestModule {
 
             @Override
             public Observable<MessageDto> updateMessage(String namespace, String parent, String id, UpdateMessageDto dto) {
-
                 return Observable.just(new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","A",dto.body()));
             }
         };
@@ -246,17 +230,15 @@ public class TestModule {
 
     @Provides
     @Singleton
-    static GroupApiService groupApiService() {
+    GroupApiService groupApiService() {
         return new GroupApiService() {
             @Override
             public Observable<GroupDto> newGroup(CreateGroupDto dto) {
-
                 return Observable.just(new GroupDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",new ArrayList<>(),"TestGroup"));
             }
 
             @Override
             public Observable<List<GroupDto>> getGroupsWithUsers(String users) {
-
                 ArrayList<GroupDto> groups = new ArrayList<>();
                 groups.add(new GroupDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",new ArrayList<>(),"TestGroup"));
                 return Observable.just(groups);
@@ -266,40 +248,34 @@ public class TestModule {
 
     @Provides
     @Singleton
-    static GameMemberApiService gameMemberApiService() {
-
+    GameMemberApiService gameMemberApiService() {
         return new GameMemberApiService() {
             @Override
             public Observable<List<Member>> getAll(String gameId) {
-
                 ArrayList<Member> users = new ArrayList<>();
                 return Observable.just(users);
             }
 
             @Override
             public Observable<Member> createMember(String gameId, CreateMemberDto dto) {
-
                 return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000",false));
             }
 
             @Override
             public Observable<Member> deleteMember(String gameId, String userId) {
-
                 return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",false, "#ff0000",false));
             }
 
             @Override
             public Observable<Member> patchMember(String gameId, String userId, UpdateMemberDto dto) {
-
                 return Observable.just(new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z",gameId,"000",true, "#ff0000",false));
             }
         };
     }
 
     @Provides
-    static NewGameLobbyService newGameLobbyService(){
+    NewGameLobbyService newGameLobbyService(){
         return new NewGameLobbyService(gameApiService(),gameMemberApiService(),messageApiService(), authApiService()){
-
             private String currentMemberId;
 
             public Observable<List<Member>> getAll(String id){
@@ -338,32 +314,35 @@ public class TestModule {
 
     @Provides
     @Singleton
-    static PrefService prefService() {
-
-        return new PrefService(null, null,null, null){
-
+    PrefService prefService() {
+        return new PrefService(null, null,null, null) {
             @Override
             public String recall(){
-
                 return "";
             }
             @Override
-            public void remember(){}
+            public void remember() {
+            }
 
             @Override
-            public boolean getDarkModeState(){
+            public boolean getDarkModeState() {
                 return true;
             }
 
             @Override
-            public void saveDarkModeState(String string){
+            public void saveDarkModeState(String string) {
             }
-        };}
+
+            @Override
+            public Game getSavedGame() {
+                return null;
+            }
+        };
+    }
 
     @Provides
     @Singleton
     PioneersApiService pioneersApiService() {
-
         return new PioneersApiService() {
             @Override
             public Observable<Map> getMap(String gameId) {
@@ -378,7 +357,7 @@ public class TestModule {
                 tiles.add(new Tile(1,0,-1,"mountains",6));
                 tiles.add(new Tile(-1,0,1,"pasture",7));
 
-                /*tiles.add(new Tile(2,-1,-1,"pasture",2));
+                tiles.add(new Tile(2,-1,-1,"pasture",2));
                 tiles.add(new Tile(-2,1,1,"fields",3));
                 tiles.add(new Tile(-1,-1,2,"forest",4));
                 tiles.add(new Tile(1,1,-2,"hills",5));
@@ -389,33 +368,51 @@ public class TestModule {
                 tiles.add(new Tile(0,2,-2,"forest",4));
                 tiles.add(new Tile(0,-2,2,"hills",5));
                 tiles.add(new Tile(2,0,-2,"mountains",6));
-                tiles.add(new Tile(-2,0,2,"pasture",7));*/
+                tiles.add(new Tile(-2,0,2,"pasture",7));
 
-                //TODO: Add Harbors
-                return Observable.just(new Map("000", tiles, null));
+                List<Harbor> harbors = new ArrayList<>();
+                harbors.add(new Harbor(1, 0, -1, "grain", 1));
+                harbors.add(new Harbor(1, -1, 0, null, 3));
+                harbors.add(new Harbor(0, -1, 1, "wool", 5));
+                harbors.add(new Harbor(-1, 0, -1, "ore", 7));
+                harbors.add(new Harbor(-1, 1, 0, null, 9));
+                harbors.add(new Harbor(0, 1, -1, "lumber", 11));
+                return Observable.just(new Map("000", tiles, harbors));
             }
 
             @Override
             public Observable<List<Player>> getAllPlayers(String gameId) {
-
                 List<Player> players = new ArrayList<>();
 
-                players.add(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
-                players.add(new Player("000","001","#00ff00", true,2, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
-                players.add(new Player("000","002","#0000ff", true,3, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
-                players.add(new Player("000","003","#ffffff", true,4, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","001","#00ff00", true,2, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","002","#0000ff", true,3, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","003","#ffffff", true,4, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
 
                 return Observable.just(players);
             }
 
             @Override
             public Observable<Player> getPlayer(String gameId, String userId) {
-                return null;
+                Player player1 = new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
+                Player player2 = new Player("000","001","#00ff00", true,2, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
+                Player player3 = new Player("000","002","#0000ff", true,3, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
+                Player player4 = new Player("000","003","#ffffff", true,4, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
+
+                if(userId.equals(player1.userId())) {
+                    return Observable.just(player1);
+                } else if (userId.equals(player2.userId())) {
+                    return Observable.just(player2);
+                } else if (userId.equals(player3.userId())) {
+                    return Observable.just(player3);
+                } else {
+                    return Observable.just(player4);
+                }
+
             }
 
             @Override
             public Observable<State> getCurrentState(String gameId) {
-
                 ArrayList<String> players = new ArrayList<>();
                 players.add("000");
                 ArrayList<ExpectedMove> expectedMoves = new ArrayList<>();
@@ -426,7 +423,6 @@ public class TestModule {
 
             @Override
             public Observable<List<Building>> getAllBuildings(String gameId) {
-
                 return Observable.just(new ArrayList<>());
             }
 
@@ -437,17 +433,18 @@ public class TestModule {
 
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
-                return Observable.just(new Move("000","2022-06-09T15:11:51.795Z","000","000","founding-roll",1,"", null, null, null));
+                if(dto.building() != null) {
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner()));
+                } else {
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner()));
+                }
             }
 
             @Override
             public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
-                return  Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
+                return Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
             }
         };
-
-        }
-
-
+    }
 }
 

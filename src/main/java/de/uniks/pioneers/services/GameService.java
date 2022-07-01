@@ -128,9 +128,7 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(list -> {
                     list.forEach(player -> players.put(player.userId(), player));
-                    System.out.println(members);
                     members.addAll(lobbyMembers);
-                    System.out.println(members);
                     me = userService.getCurrentUser()._id();
                     }, Throwable::printStackTrace));
     }
