@@ -107,7 +107,6 @@ public class IngamePlayerListSpectatorController {
     }
 
     public void onKickButtonClicked() {
-        System.out.println(gameID + "   " + playerBox);
         disposable.add(newGameLobbyService.deleteMember(gameID, playerID)
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
