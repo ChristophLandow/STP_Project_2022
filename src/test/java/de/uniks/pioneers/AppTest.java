@@ -2,9 +2,6 @@ package de.uniks.pioneers;
 
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.model.*;
-import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.GameSettings;
-import de.uniks.pioneers.model.Member;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -22,7 +19,6 @@ import static org.testfx.api.FxAssert.verifyThat;
 
 @ExtendWith(MockitoExtension.class)
 class AppTest extends ApplicationTest {
-
     @Override
     public void start(Stage stage){
         final App app = new App(null);
