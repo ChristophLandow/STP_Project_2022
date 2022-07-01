@@ -223,10 +223,6 @@ public class BoardController {
         }
     }
 
-    public void stop(){
-        if(hextileRenderThread != null) this.hextileRenderThread.interrupt();
-    }
-
     public void drawCanvasHexagon(double[] xPoints, double[] yPoints, double layoutX, double layoutY, String type, int number){
         //Render Hex Tile image
         //See "Size and Spacing" in the Hexagonal Grids Doku
@@ -328,6 +324,7 @@ public class BoardController {
     }
 
     public void stop() {
+        if(hextileRenderThread != null) this.hextileRenderThread.interrupt();
         this.buildingControllers.clear();
         this.streetPointControllers.clear();
         this.tileControllers.clear();

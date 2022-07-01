@@ -52,7 +52,6 @@ public class IngameStateController {
     public void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
-        System.out.println(move);
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             switch (move.action()) {

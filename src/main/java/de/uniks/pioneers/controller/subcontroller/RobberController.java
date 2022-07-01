@@ -37,10 +37,11 @@ public class RobberController implements Controller {
         discard();
     }
 
-    public void callNext(int newValue){
-        if(newValue == GameConstants.ROBBER_STEAL){
+    public void callNext(int newValue) {
+        if (newValue == GameConstants.ROBBER_STEAL) {
             rob();
         }
+    }
 
     private void discard() {
         if(gameService.getRessourcesSize() >= 7) {
