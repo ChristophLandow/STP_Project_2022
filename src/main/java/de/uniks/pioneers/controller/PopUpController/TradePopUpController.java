@@ -170,9 +170,7 @@ public class TradePopUpController {
         spinnerBoxGet.getChildren().forEach(node -> setupSpinner((Spinner) node));
 
         // create EventHandler for trade with bank
-        EventHandler<MouseEvent> bankHandler = event -> {
-            ingameService.tradeWithBank();
-        };
+        EventHandler<MouseEvent> bankHandler = event -> ingameService.tradeWithBank();
 
         tradeWithBank.addEventHandler(MouseEvent.MOUSE_CLICKED, bankHandler);
     }
@@ -191,7 +189,7 @@ public class TradePopUpController {
         }
 
         String resourceTyp = id.substring(0,start);
-        String offerXorGet = id.substring(end-1,id.length());
+        String offerXorGet = id.substring(end-1);
         Pair<String, String> spinnerTyp = new Pair<>(offerXorGet, resourceTyp);
         TradeSpinnerFactory factory = new TradeSpinnerFactory(spinnerTyp, ingameService);
         factory.setValue(0);

@@ -54,4 +54,5 @@ public class GameConstants {
     public static final String SETTLEMENT = "settlement";
     public static final String CITY = "city";
     public static final String ROAD = "road";
+    public static final String BANK_ID = "684072366f72202b72406465";
 }
