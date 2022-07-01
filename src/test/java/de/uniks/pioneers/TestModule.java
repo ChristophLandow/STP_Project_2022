@@ -31,6 +31,7 @@ public class TestModule {
     public static PublishSubject<Event<Game>> gameSubject = PublishSubject.create();
     public static PublishSubject<Event<State>> gameStateSubject = PublishSubject.create();
     public static PublishSubject<Event<Building>> gameBuildingSubject = PublishSubject.create();
+    public static PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -107,7 +108,7 @@ public class TestModule {
         when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(gameBuildingSubject);
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(gameStateSubject);
-        when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(gameMoveSubject);
 
         return eventListener;
     }
@@ -356,7 +357,7 @@ public class TestModule {
                 tiles.add(new Tile(1,0,-1,"mountains",6));
                 tiles.add(new Tile(-1,0,1,"pasture",7));
 
-                /*tiles.add(new Tile(2,-1,-1,"pasture",2));
+                tiles.add(new Tile(2,-1,-1,"pasture",2));
                 tiles.add(new Tile(-2,1,1,"fields",3));
                 tiles.add(new Tile(-1,-1,2,"forest",4));
                 tiles.add(new Tile(1,1,-2,"hills",5));
@@ -367,7 +368,7 @@ public class TestModule {
                 tiles.add(new Tile(0,2,-2,"forest",4));
                 tiles.add(new Tile(0,-2,2,"hills",5));
                 tiles.add(new Tile(2,0,-2,"mountains",6));
-                tiles.add(new Tile(-2,0,2,"pasture",7));*/
+                tiles.add(new Tile(-2,0,2,"pasture",7));
 
                 //TODO: Add Harbors
                 return Observable.just(new Map("000", tiles, null));
@@ -427,8 +428,12 @@ public class TestModule {
 
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
-                System.out.println("postmove");
-                return Observable.just(new Move("000","2022-06-09T15:11:51.795Z","000","000","founding-roll",1,"", null, null, null));
+                System.out.println(dto);
+                if(dto.building() != null) {
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner()));
+                } else {
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner()));
+                }
             }
 
             @Override

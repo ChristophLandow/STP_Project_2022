@@ -29,7 +29,8 @@ class AppTest extends ApplicationTest {
     }
 
     @Test
-    public void test() throws InterruptedException {
+    public void
+    test() throws InterruptedException {
         //LoginScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("TestUser\t");
@@ -89,9 +90,7 @@ class AppTest extends ApplicationTest {
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","001", true, "#ffffff", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","002", true, "#000000", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","003", true, "#888888", false)));
-        write("\t");
-        type(KeyCode.DOWN);
-        write("\t\tHallo Test Test\t");
+        write("\t\t\tHallo Test Test\t");
         type(KeyCode.ENTER);
         write("\t");
         type(KeyCode.ENTER);
@@ -102,56 +101,124 @@ class AppTest extends ApplicationTest {
         write("\t\t\tHallo Test");
         type(KeyCode.ENTER);
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
+        clickOn("#rulesButton");
         clickOn("#leftDiceImageView");
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "0", "000", "000", "founding-roll", 4, null, null, null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove[]{new ExpectedMove("founding-roll", List.of(new String[]{"001", "002", "003"}))}), null)));
         WaitForAsyncUtils.waitForFxEvents();
+
+        WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "roll the dice"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "1", "000", "001", "founding-roll", 4, null, null, null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove[]{new ExpectedMove("founding-roll", List.of(new String[]{"002", "003"}))}), null)));
+
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_002:\n" + "roll the dice"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "2", "000", "002", "founding-roll", 4, null, null, null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove[]{new ExpectedMove("founding-roll", List.of(new String[]{"003"}))}), null)));
+
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "roll the dice"));
-
-        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-1", List.of("000")),
-                                                                                                                                                new ExpectedMove("founding-road-1", List.of("000")),
-                                                                                                                                                new ExpectedMove("founding-settlement-1", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-road-1", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-settlement-1", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-road-1", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-settlement-1", List.of("001")),
-                                                                                                                                                new ExpectedMove("founding-road-1", List.of("001")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("000")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("000")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("001")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("001")),
-                                                                                                                                                new ExpectedMove("roll", List.of("003"))), null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "3", "000", "003", "founding-roll", 4, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-1", List.of("000")), new ExpectedMove("founding-road-1", List.of("000")), new ExpectedMove("founding-settlement-1", List.of("002")), new ExpectedMove("founding-road-1", List.of("002")), new ExpectedMove("founding-settlement-1", List.of("003")), new ExpectedMove("founding-road-1", List.of("003")), new ExpectedMove("founding-settlement-1", List.of("001")), new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place settlement"));
-        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 1, -1, "settlement1", 0, "settlement", "000", "000")));
-        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-1", List.of("000")),
-                                                                                                                                                new ExpectedMove("founding-settlement-1", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-road-1", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-settlement-1", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-road-1", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-settlement-1", List.of("001")),
-                                                                                                                                                new ExpectedMove("founding-road-1", List.of("001")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("003")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("002")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("000")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("000")),
-                                                                                                                                                new ExpectedMove("founding-settlement-2", List.of("001")),
-                                                                                                                                                new ExpectedMove("founding-road-2", List.of("001")),
-                                                                                                                                                new ExpectedMove("roll", List.of("003"))), null)));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 0, 0, "1", 0, "settlement", "000", "000")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "4", "000", "000", "founding-settlement-1", 0, "1", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-1", List.of("000")), new ExpectedMove("founding-settlement-1", List.of("002")), new ExpectedMove("founding-road-1", List.of("002")), new ExpectedMove("founding-settlement-1", List.of("003")), new ExpectedMove("founding-road-1", List.of("003")), new ExpectedMove("founding-settlement-1", List.of("001")), new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place road"));
-        sleep(10000);
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(1, 0, -1, "2", 7, "road", "000", "000")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "5", "000", "000", "founding-road-1", 0, "2", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-1", List.of("002")), new ExpectedMove("founding-road-1", List.of("002")), new ExpectedMove("founding-settlement-1", List.of("003")), new ExpectedMove("founding-road-1", List.of("003")), new ExpectedMove("founding-settlement-1", List.of("001")), new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_002:\n" + "place settlement"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(-2, 1, 1, "3", 0, "settlement", "000", "002")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "6", "000", "002", "founding-settlement-1", 0, "3", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-1", List.of("002")), new ExpectedMove("founding-settlement-1", List.of("003")), new ExpectedMove("founding-road-1", List.of("003")), new ExpectedMove("founding-settlement-1", List.of("001")), new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_002:\n" + "place road"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(-1, 1, 0, "4", 7, "road", "000", "002")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "7", "000", "002", "founding-settlement-1", 0, "4", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-1", List.of("003")), new ExpectedMove("founding-road-1", List.of("003")), new ExpectedMove("founding-settlement-1", List.of("001")), new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "place settlement"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(2, -1, -1, "5", 6, "settlement", "000", "003")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "8", "000", "003", "founding-settlement-1", 0, "5", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-1", List.of("003")), new ExpectedMove("founding-settlement-1", List.of("001")), new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "place road"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(1, -1, 0, "6", 3, "road", "000", "003")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "9", "000", "003", "founding-settlement-1", 0, "6", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-1", List.of("001")), new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "place settlement"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, -1, 1, "7", 0, "settlement", "000", "001")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "10", "000", "001", "founding-settlement-1", 0, "7", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-1", List.of("001")), new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "place road"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, -1, 1, "8", 11, "road", "000", "001")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "11", "000", "001", "founding-settlement-1", 0, "8", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-2", List.of("003")), new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "place settlement"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 2, -2, "9", 6, "settlement", "000", "003")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "12", "000", "003", "founding-settlement-1", 0, "9", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-2", List.of("003")), new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "place road"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(-1, 2, -1, "10", 3, "road", "000", "003")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "13", "000", "003", "founding-settlement-1", 0, "10", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-2", List.of("002")), new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_002:\n" + "place settlement"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(-1, -1, 2, "11", 0, "settlement", "000", "002")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "14", "000", "002", "founding-settlement-1", 0, "11", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-2", List.of("002")), new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_002:\n" + "place road"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(-1, -1, 2, "12", 11, "road", "000", "002")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "15", "000", "002", "founding-settlement-1", 0, "12", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-2", List.of("000")), new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place settlement"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(2, 1, -3, "13", 6, "settlement", "000", "000")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "16", "000", "000", "founding-settlement-1", 0, "13", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-2", List.of("000")), new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place road"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(1, 1, -2, "14", 3, "road", "000", "000")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "17", "000", "000", "founding-settlement-1", 0, "14", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "place settlement"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(3, -1, -2, "15", 6, "settlement", "000", "001")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "18", "000", "001", "founding-settlement-1", 0, "15", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "place road"));
+        TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(2, -1, -1, "16", 3, "road", "000", "001")));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "19", "000", "001", "founding-settlement-1", 0, "16", null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "roll the dice"));
     }
 }
