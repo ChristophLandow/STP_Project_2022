@@ -287,6 +287,7 @@ public class IngameScreenController implements Controller {
     @Override
     public void stop() {
         gameChatController.stop();
+        this.popUpStage.close();
         settingsScreenControllerProvider.get().stop();
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
@@ -310,12 +311,18 @@ public class IngameScreenController implements Controller {
     }
 
     public void openTradePopUp() {
-        popUpStage = new Stage();
-        TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
-        Parent root = tradePopUpController.render();
-        tradePopUpController.init();
-        Scene scene = new Scene(root);
-        popUpStage.setScene(scene);
-        popUpStage.show();
+        if (this.popUpStage == null) {
+            popUpStage = new Stage();
+            TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
+            Parent root = tradePopUpController.render();
+            tradePopUpController.init();
+            Scene scene = new Scene(root);
+            popUpStage.setScene(scene);
+            popUpStage.show();
+        } else {
+            this.popUpStage.show();
+            this.popUpStage.toFront();
+        }
+
     }
 }
