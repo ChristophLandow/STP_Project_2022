@@ -94,7 +94,6 @@ public class TradePopUpController implements Controller {
         }
     }
 
-
     @Inject
     public TradePopUpController(IngameService ingameService, GameService gameService) {
         this.ingameService = ingameService;

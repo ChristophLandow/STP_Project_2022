@@ -141,14 +141,7 @@ public class IngamePlayerListElementController {
 
     private void setDataToElement(Player valueAdded) {
         Resources resources = valueAdded.resources();
-        int brick = resources.brick() == null ? 0 : resources.brick();
-        int grain = resources.grain() == null ? 0 : resources.grain();
-        int ore   = resources.ore()   == null ? 0 : resources.ore();
-        int lumber = resources.lumber() == null ? 0 : resources.lumber();
-        int wool = resources.wool()   == null ? 0 : resources.wool();
-        int unknown = resources.unknown() == null ? 0 : resources.unknown();
-
-        int resourceCount = brick + grain + ore + lumber + wool;
+        int resourceCount = resources.brick() + resources.grain() + resources.ore() + resources.lumber() + resources.wool();
 
         if (valueAdded.remainingBuildings().city()==0){
             cityCount.setTextFill(Color.RED);
@@ -160,10 +153,12 @@ public class IngamePlayerListElementController {
 
         if (resourceCount>=7){
             resourceCardsCount.setTextFill(Color.RED);
+        }else {
+            resourceCardsCount.setTextFill(Color.WHITE);
         }
 
         resourceCardsCount.setText(String.valueOf(resourceCount));
-        developmentCardsCount.setText(String.valueOf(unknown));
+        developmentCardsCount.setText(String.valueOf(resources.unknown()));
         cityCount.setText(String.valueOf(4 - valueAdded.remainingBuildings().city()));
         settlementCount.setText(String.valueOf(5 - valueAdded.remainingBuildings().settlement()));
     }

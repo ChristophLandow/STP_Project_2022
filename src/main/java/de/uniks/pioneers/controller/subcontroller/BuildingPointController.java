@@ -17,7 +17,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
+
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
@@ -56,7 +58,7 @@ public class BuildingPointController {
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
-        this.eventView.setRadius(gameStorage.getHexScale()/5);
+        this.eventView.setRadius(gameStorage.getHexScale() / 5);
         this.eventView.setOpacity(0);
     }
 
@@ -65,8 +67,14 @@ public class BuildingPointController {
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
     }
-    public void addEventArea() {this.fieldPane.getChildren().add(eventView);}
-    public HexTile getTile() {return this.tile;}
+
+    public void addEventArea() {
+        this.fieldPane.getChildren().add(eventView);
+    }
+
+    public HexTile getTile() {
+        return this.tile;
+    }
 
     public void build() {
         // post build move
@@ -93,12 +101,11 @@ public class BuildingPointController {
     public void placeBuilding(Building building) {
         // create new svg
         SVGPath buildingSVG = new SVGPath();
-        if(building.type().equals(SETTLEMENT)){
+        if (building.type().equals(SETTLEMENT)) {
             buildingSVG.setContent(GameConstants.SETTLEMENT_SVG);
             buildingSVG.setLayoutX(view.getLayoutX() - HOUSE_WIDTH);
             buildingSVG.setLayoutY(view.getLayoutY() - HOUSE_HEIGHT);
-        }
-        else{
+        } else {
             System.out.println("Build City");
             buildingSVG.setContent(CITY_SVG);
             buildingSVG.setLayoutX(view.getLayoutX() - CITY_WIDTH);
@@ -113,8 +120,8 @@ public class BuildingPointController {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(player -> buildingSVG.setStroke(Paint.valueOf(player.color()))));
 
-        buildingSVG.setScaleX(gameStorage.getHexScale()/BUILDING_SCALING);
-        buildingSVG.setScaleY(gameStorage.getHexScale()/BUILDING_SCALING);
+        buildingSVG.setScaleX(gameStorage.getHexScale() / BUILDING_SCALING);
+        buildingSVG.setScaleY(gameStorage.getHexScale() / BUILDING_SCALING);
 
         // set position on game field
         this.fieldPane.getChildren().remove(this.displayedBuilding);
@@ -129,30 +136,32 @@ public class BuildingPointController {
     }
 
     private void info(MouseEvent mouseEvent) {
-        boolean invalid = false;
-        if(gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkSettlement() && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
-            for (StreetPointController street : adjacentStreets) {
-                for (BuildingPointController building : street.getAdjacentBuildings()) {
-                    if (building != this) {
-                        if (building.building != null) {
-                            invalid = true;
+
+        if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
+            build();
+            gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+        } else {
+            if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
+                if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkResourcesSettlement()) {
+                    for (StreetPointController street : adjacentStreets) {
+                        for (BuildingPointController building : street.getAdjacentBuildings()) {
+                            if (building != this) {
+                                if (building.building != null) {
+                                    build();
+                                    gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+                                }
+                            }
                         }
                     }
                 }
+            } else {
+                if (gameStorage.remainingBuildings.get(CITY) > 0 && gameService.checkCity()) {
+                    if (this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())) {
+                        gameStorage.remainingBuildings.put(CITY, gameStorage.remainingBuildings.get(CITY) - 1);
+                        build();
+                    }
+                }
             }
-        }
-        if(gameStorage.remainingBuildings.get(CITY) > 0 && gameService.checkCity() && gameStorage.selectedBuilding.equals(CITY)) {
-            if(this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())){
-
-                invalid = true;
-            }
-
-        }
-        if(!invalid) {
-
-            if(gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")){gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) -1);}
-            if(gameStorage.selectedBuilding.equals(CITY)){gameStorage.remainingBuildings.put(CITY, gameStorage.remainingBuildings.get(CITY) -1);}
-            build();
         }
     }
 
@@ -163,9 +172,11 @@ public class BuildingPointController {
 
     private void undye(MouseEvent mouseEvent) {
         this.view.setFill(STANDARD_COLOR);
-        if(this.building != null){
-            this.view.setVisible(false);}
+        if (this.building != null) {
+            this.view.setVisible(false);
+        }
     }
+
     public void setAction(String action) {
         this.action = action;
     }
@@ -178,12 +189,11 @@ public class BuildingPointController {
         return building;
     }
 
-    public void setVisible(boolean isVisible){
-        if(this.displayedBuilding != null){
+    public void setVisible(boolean isVisible) {
+        if (this.displayedBuilding != null) {
             this.displayedBuilding.setVisible(isVisible);
             this.displayedBuilding.setDisable(!isVisible);
-        }
-        else{
+        } else {
             this.view.setVisible(isVisible);
             this.view.setDisable(!isVisible);
         }
