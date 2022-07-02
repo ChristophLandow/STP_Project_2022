@@ -4,9 +4,8 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
-import javafx.animation.AnimationTimer;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
+import javafx.animation.*;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -19,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -54,6 +54,7 @@ public class IngamePlayerResourcesController {
     private final GameService gameService;
     private Map<String, ImageView> imageMap;
     private Map<String, Label> labelMap;
+    private ChangeListener<Boolean> enoughResourcesListener;
 
     @Inject
     public IngamePlayerResourcesController(GameService gameService) {
@@ -62,6 +63,7 @@ public class IngamePlayerResourcesController {
 
     public void stop() {
         //remove listeners
+        gameService.notEnoughRessources.removeListener(enoughResourcesListener);
     }
 
     public void render() {
@@ -85,12 +87,15 @@ public class IngamePlayerResourcesController {
         if (me != null) {
             initDataToElement(me);
         }
+
+        // add listener to players to update resources
         addPlayerListener();
 
-
-        ChangeListener<Boolean> enoughResourcesListener = (observable, oldValue, newValue) -> {
+        // add listener to ingame enough resources
+        enoughResourcesListener = (observable, oldValue, newValue) -> {
             if (newValue.equals(true)) {
                 showMissingRessources();
+                gameService.notEnoughRessources.set(false);
             }
         };
 
@@ -101,41 +106,74 @@ public class IngamePlayerResourcesController {
     }
 
     private void showMissingRessources() {
+        System.out.println("show missing resources");
+
         Map<String, Integer> missingResources = gameService.missingResources;
-
-        AnimationTimer animationTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-
-            }
-        };
-
         missingResources.keySet().forEach(s -> {
-            ImageView node = imageMap.get(s);
-            if (resourcesHBox.getChildren().contains(node)) {
+            Integer delta = missingResources.get(s);
+            if (delta < 0) {
+                ImageView node = imageMap.get(s);
                 Label label = labelMap.get(s);
-                label.setText(String.valueOf(missingResources.get(s)));
+                String oldValue = label.getText();
+                ObjectProperty<Paint> color = label.textFillProperty();
                 label.setTextFill(Color.RED);
-            } else {
-                addFadingIn(node, resourcesHBox);
+                label.setLayoutX(node.getLayoutX());
+                label.setLayoutY(node.getLayoutY());
+                label.setText(String.valueOf(missingResources.get(s)));
+                if (!resourcesHBox.getChildren().contains(node)) {
+                    label.setTranslateX(-20);
+                    addFadingIn(node, resourcesHBox);
+                    resourcesHBox.getChildren().add(label);
+                    textFillAnimation(label, resourcesHBox, color.get());
+                } else {
+                    label.setTranslateX(-5);
+                    textFillAnimation(label, oldValue,color.get());
+                }
             }
         });
-
     }
 
-    public void addFadingIn(final Node node, final HBox parent) {
-        final FadeTransition transition = new FadeTransition(Duration.millis(2000), node);
+    public void textFillAnimation(Label label, String oldValue, Paint paint) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0)),
+                new KeyFrame(Duration.seconds(1.5))
+        );
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(1);
+        timeline.setOnFinished(e -> {
+            label.setText(oldValue);
+            label.setTextFill(paint);
+        });
+        timeline.play();
+    }
+
+
+    public void textFillAnimation(Label label, HBox parent, Paint paint) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0)),
+                new KeyFrame(Duration.seconds(1.5))
+        );
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(1);
+        timeline.setOnFinished(e -> {
+            parent.getChildren().remove(label);
+            label.setTextFill(paint);
+        });
+        timeline.play();
+    }
+
+    public void addFadingIn(Node node, HBox parent) {
+        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
+        parent.getChildren().add(node);
         transition.setFromValue(0);
         transition.setToValue(1);
         transition.setInterpolator(Interpolator.EASE_IN);
-        parent.getChildren().add(node);
         transition.setOnFinished(finish -> removeFadingOut(node, parent));
         transition.play();
     }
 
-    public void removeFadingOut(final Node node, final HBox parent) {
-
-        final FadeTransition transition = new FadeTransition(Duration.millis(2000), node);
+    public void removeFadingOut(Node node, HBox parent) {
+        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
         transition.setFromValue(1);
         transition.setToValue(0);
         transition.setInterpolator(Interpolator.EASE_BOTH);
@@ -143,18 +181,12 @@ public class IngamePlayerResourcesController {
             parent.getChildren().remove(node);
         });
         transition.play();
-
     }
-
 
     private void setImages() {
 
-        /*
-            iterate over subString from URL to setup imageViews
-            iterate over resourceStrings to create a map with resourceName -> resourceImage
-
-         */
-
+        //iterate over subString from URL to setup imageViews
+        //iterate over resourceStrings to create a map with resourceName -> resourceImage
         List<String> subStrings = List.of("fish", "ice", "polarbear", "carbon", "whale");
         Iterator<String> iter = subStrings.iterator();
         List<String> resStrings = List.of("lumber", "brick", "wool", "ore", "grain");
@@ -166,14 +198,12 @@ public class IngamePlayerResourcesController {
         resourcesHBox.getChildren().forEach(node -> {
             String id = node.getId();
             if (id.endsWith("Ressource")) {
-                System.out.println(id);
                 String url = String.format("images/card_%s.png", iter.next());
                 Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
                 ImageView view = (ImageView) node;
                 imageMap.put(resIter.next(), view);
                 view.setImage(img);
             } else {
-                System.out.println(id);
                 Label resouceCount = (Label) node;
                 labelMap.put(resIterLabels.next(), resouceCount);
             }
@@ -211,13 +241,6 @@ public class IngamePlayerResourcesController {
             fischCount.setLayoutX(fellResource.getLayoutX());
             fischCount.setLayoutY(fellResource.getLayoutY());
         }
-
-        /*  lumber = fisch
-            brick = packeis
-            wool = fell
-            grain = walknochen
-            ore = kohle
-         */
 
         if (grain > 0) {
             resourcesHBox.getChildren().add(walknochenResource);
