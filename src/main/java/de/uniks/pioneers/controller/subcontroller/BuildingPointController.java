@@ -32,7 +32,6 @@ public class BuildingPointController {
     private final IngameService ingameService;
     private final UserService userService;
     private final GameStorage gameStorage;
-    private final GameService gameService;
     private final String gameId;
     private String action;
     public HexTile tile;
@@ -49,7 +48,7 @@ public class BuildingPointController {
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, GameService gameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
-                                   UserService userService, GameService gameService) {
+                                   UserService userService) {
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;

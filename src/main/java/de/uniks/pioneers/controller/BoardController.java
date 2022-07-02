@@ -152,7 +152,7 @@ public class BoardController {
         circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
         circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
         this.fieldPane.getChildren().add(circ);
-        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService, this.gameService);
+        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
         this.buildingControllers.add(newbuildingPointController);
     }
 

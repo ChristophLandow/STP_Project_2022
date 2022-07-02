@@ -132,9 +132,7 @@ public class IngameScreenController implements Controller {
         this.gameService = gameService;
         this.timerService = timerService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService);
-        this.boardController = new BoardController(ingameService, userService, gameService, game, gameStorage, mapRenderService);
-        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
-        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService,  mapRenderService);
+        this.boardController = new BoardController(ingameService, userService,game, gameStorage, gameService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
             if(mapRenderService.isFinishedLoading().get()) initWhenMapFinishedRendering();
