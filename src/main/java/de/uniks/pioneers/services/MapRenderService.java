@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.controller.subcontroller.HexTileController;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -22,7 +23,7 @@ public class MapRenderService {
 
     private GraphicsContext gc;
 
-    private boolean finishedLoading = false;
+    private final SimpleBooleanProperty finishedLoading = new SimpleBooleanProperty(false);
 
     @Inject
     MapRenderService(GameStorage gameStorage){
@@ -34,7 +35,7 @@ public class MapRenderService {
     }
 
     public void setFinishedLoading(boolean finishedLoading) {
-        this.finishedLoading = finishedLoading;
+        this.finishedLoading.set(finishedLoading);
     }
 
     public void setMapCanvas(Canvas mapCanvas) {
@@ -45,12 +46,12 @@ public class MapRenderService {
         this.gc = gc;
     }
 
-    public boolean isFinishedLoading() {
+    public SimpleBooleanProperty isFinishedLoading() {
         return finishedLoading;
     }
 
-    public Canvas getMapCanvas() {
-        return mapCanvas;
+    public ArrayList<HexTileController> getTileControllers() {
+        return tileControllers;
     }
 
     public GraphicsContext getGc() {
@@ -82,6 +83,6 @@ public class MapRenderService {
 
     public void stop(){
         this.tileControllers.clear();
-        this.finishedLoading = false;
+        this.finishedLoading.set(false);
     }
 }

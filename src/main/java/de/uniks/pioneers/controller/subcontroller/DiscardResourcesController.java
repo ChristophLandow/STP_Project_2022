@@ -3,11 +3,11 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.IngameScreenController;
-import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.RobberService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,17 +21,18 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.BUILD;
-import static de.uniks.pioneers.GameConstants.DROP;
+import static de.uniks.pioneers.GameConstants.*;
 
 public class DiscardResourcesController implements Initializable, Controller {
 
@@ -55,6 +56,8 @@ public class DiscardResourcesController implements Initializable, Controller {
     GameService gameService;
     @Inject
     PrefService prefService;
+    @Inject
+    RobberService robberService;
     public Integer wale;
     public Integer ice;
     public Integer polarbear;
@@ -157,13 +160,13 @@ public class DiscardResourcesController implements Initializable, Controller {
 
     @Override
     public void stop() {
+        stage.close();
         spinnerLIst.clear();
+        disposable.dispose();
     }
 
     public void discardAndLeave(){
         chooseResources();
-        stop();
-        stage.close();
     }
 
     @Override
@@ -187,14 +190,22 @@ public class DiscardResourcesController implements Initializable, Controller {
         int fishDiscard = FishSpinner.getValue();
         int carbonDiscard = CarbonSpinner.getValue();
 
-//        final CreateMoveDto moveDto = new CreateMoveDto(DROP, null, null, null, null);
-//        disposable.add(ingameService.postMove(ingameController.game.get()._id(), moveDto)
-//                .observeOn(FX_SCHEDULER)
-//                .subscribe(move -> {
-//
-//                })
-//        );
+        disposable.add(robberService.dropRessources(new Resources(-walediscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarbearDeiscard))
+                .observeOn(FX_SCHEDULER).subscribe(move -> {
+                    robberService.getRobberState().set(ROBBER_MOVE);
+                    stop();
+                },this::handleHttpError));
+    }
 
+    private  void handleHttpError(Throwable exception) throws IOException {
+        String errorBody;
+        if (exception instanceof HttpException httpException) {
+            errorBody = Objects.requireNonNull(Objects.requireNonNull(httpException.response()).errorBody()).string();
+        } else {
+            return;
+        }
+
+        System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 
     public void show() {
