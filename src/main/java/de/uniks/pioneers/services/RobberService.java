@@ -50,6 +50,10 @@ public class RobberService {
         return robbingCandidates;
     }
 
+    public HexTileController getRobberTile() {
+        return robberTile;
+    }
+
     public void moveRobber(HexTileController newPosition){
         mapRenderService.getTileControllers().forEach(hexTileController -> hexTileController.setRobber(hexTileController == newPosition));
         this.robberTile = newPosition;

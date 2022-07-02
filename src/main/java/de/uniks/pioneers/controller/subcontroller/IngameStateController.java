@@ -35,6 +35,8 @@ public class IngameStateController {
     private final Game game;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    private Point3D robberPos;
+
     public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane,
                                  ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, MapRenderService mapRenderService) {
         this.userService = userService;
@@ -56,7 +58,6 @@ public class IngameStateController {
             // enable posting move
             switch (move.action()) {
                 case FOUNDING_ROLL, ROLL -> {
-                    this.enableHexagonPoints();
                     this.enableRoll(move.action());
                 }
                 case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
@@ -65,14 +66,17 @@ public class IngameStateController {
                     // set builder timer, in progress...
                     this.timerService.setBuildTimer(new Timer());
                     this.enableEndTurn();
-                    this.enableHexagonPoints();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
+                case ROB -> {
+                    this.enableHexagonPoints();
+                }
             }
         }
+
         this.setSituationLabel(move.players().get(0), move.action());
-        if(currentState.robber() != null) this.placeRobber(currentState.robber());
+        this.placeRobber(currentState.robber());
     }
 
     private void enableHexagonPoints(){
@@ -130,9 +134,17 @@ public class IngameStateController {
     }
 
     private void placeRobber(Point3D pos){
-        for(HexTileController hexTileController : mapRenderService.getTileControllers()){
-            HexTile tile = hexTileController.tile;
-            hexTileController.setRobber(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r);
+        if(pos != null) {
+            robberPos = pos;
+
+            for (HexTileController hexTileController : mapRenderService.getTileControllers()) {
+                HexTile tile = hexTileController.tile;
+                hexTileController.setRobber(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r);
+
+                if(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r){
+                    hexTileController.moveRobber();
+                }
+            }
         }
     }
 }

@@ -42,8 +42,6 @@ public class HexTileController {
         this.eventView.setOnMouseClicked(this::moveRobber);
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
-        this.eventView.setOpacity(0);
-        this.eventView.toFront();
     }
 
     public void findCorners(ArrayList<BuildingPointController> buildingPointControllers) {
@@ -195,22 +193,30 @@ public class HexTileController {
         }
     }
 
+    public void moveRobber(){
+        if(robberService != null && this.robberService.getRobberState().get() == GameConstants.ROBBER_MOVE) {
+            this.robberService.moveRobber(this);
+            this.robberService.getRobberState().set(GameConstants.ROBBER_STEAL);
+        }
+    }
+
     public void setRobber(boolean placeRobber){
         if(placeRobber && this.robber == null){
-            this.robber = new ImageView(new Image(Main.class.getResource("./controller/ingame/steine_3.png").toString()));
-            this.robber.setFitWidth(this.eventView.getRadius());
-            this.robber.setFitHeight(this.eventView.getRadius());
+            this.robber = new ImageView(new Image(Main.class.getResource("./controller/ingame/robber.png").toString()));
+            this.robber.setFitWidth((this.eventView.getRadius()*1.4)/2);
+            this.robber.setFitHeight(this.eventView.getRadius()*1.4);
             this.robber.setLayoutX(this.view.getLayoutX() - this.robber.getFitWidth()/2);
             this.robber.setLayoutY(this.view.getLayoutY() - this.robber.getFitHeight()/2);
 
             this.fieldPane.getChildren().add(this.robber);
-            this.eventView.setOpacity(0.2);
-
+            this.eventView.setOpacity(0.8);
         }
         else{
-            this.fieldPane.getChildren().remove(this.robber);
-            this.robber = null;
-            this.eventView.setOpacity(0);
+            if(robberService.getRobberTile() != this) {
+                this.fieldPane.getChildren().remove(this.robber);
+                this.robber = null;
+                this.eventView.setOpacity(0);
+            }
         }
     }
 
