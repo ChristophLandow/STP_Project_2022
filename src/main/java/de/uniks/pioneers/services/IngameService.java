@@ -1,6 +1,5 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
@@ -55,7 +54,10 @@ public class IngameService {
 
     public Observable<Map> getMap(String gameId) {
         return pioneersApiService.getMap(gameId)
-                .doOnNext(result -> gameStorage.setMap(result.tiles()));
+                .doOnNext(result -> {
+                    gameStorage.setMap(result.tiles());
+                    gameStorage.setHarbors(result.harbors());
+                });
     }
 
     public Observable<State> getCurrentState(String gameId) {
@@ -90,9 +92,7 @@ public class IngameService {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, bank))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> {
-                    trade = new HashMap<>();
-                })
+                .subscribe(move -> trade = new HashMap<>())
         );
     }
 

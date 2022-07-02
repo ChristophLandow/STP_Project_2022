@@ -26,6 +26,7 @@ public class GameConstants {
 
 
     public static final String DROP = "drop";
+    public static final String ROB = "rob";
 
     // action strings
     public static final String ROLL_DICE = "roll the dice";
@@ -57,4 +58,9 @@ public class GameConstants {
     public static final String SETTLEMENT = "settlement";
     public static final String CITY = "city";
     public static final String ROAD = "road";
+
+    //Robber States
+    public static final int ROBBER_DISCARD = 1;
+    public static final int ROBBER_MOVE = 2;
+    public static final int ROBBER_STEAL = 3;
 }

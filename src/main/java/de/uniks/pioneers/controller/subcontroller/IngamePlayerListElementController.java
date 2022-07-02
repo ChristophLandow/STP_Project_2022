@@ -79,6 +79,7 @@ public class IngamePlayerListElementController {
         disposable.add(userService.getUserById(toRender.userId())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
+                    this.gameService.getUsers().add(user);
                     if(!user.avatar().equals("")){
                     playerAvatar.setImage(new Image(user.avatar()));}
                     playerName.setText(user.name());

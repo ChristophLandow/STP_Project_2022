@@ -21,14 +21,10 @@ public class ZoomableScrollPane {
     private ScrollPane scrollPane;
     private AnchorPane anchorPane;
     private Canvas canvas;
-
     private Pane fieldPane;
-
     final private Scale fieldScale = new Scale();
-
     private final GameStorage gameStorage;
     private final MapRenderService mapRenderService;
-
     private double mapWidth;
     private double mapHeight;
 
@@ -133,15 +129,15 @@ public class ZoomableScrollPane {
 
     private void resizeMap(){
         double hexagonWidth = Math.sqrt(3) * gameStorage.getHexScale();
-        mapWidth = (2*gameStorage.getMapRadius() + 1) * hexagonWidth + MAP_PADDING_X;
+        mapWidth = (2*gameStorage.getMapRadius() + 1) * hexagonWidth + MAP_PADDING_X + gameStorage.getHexScale();
 
         double hexagonHeight = 2 * gameStorage.getHexScale();
 
         if(gameStorage.getMapRadius()%2 == 0){
-            mapHeight = (gameStorage.getMapRadius()+1)*hexagonHeight + gameStorage.getMapRadius()*gameStorage.getHexScale() + MAP_PADDING_Y;
+            mapHeight = (gameStorage.getMapRadius()+1)*hexagonHeight + gameStorage.getMapRadius()*gameStorage.getHexScale() + MAP_PADDING_Y + gameStorage.getHexScale();
         }
         else{
-            mapHeight = gameStorage.getMapRadius()*hexagonHeight + (gameStorage.getMapRadius()+1)*gameStorage.getHexScale() + gameStorage.getHexScale() + MAP_PADDING_Y;
+            mapHeight = gameStorage.getMapRadius()*hexagonHeight + (gameStorage.getMapRadius()+1)*gameStorage.getHexScale() + gameStorage.getHexScale() + MAP_PADDING_Y + gameStorage.getHexScale();
         }
 
         this.fieldPane.setPrefHeight(mapHeight);

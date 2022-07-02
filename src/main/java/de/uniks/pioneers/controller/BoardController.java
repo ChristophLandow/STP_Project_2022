@@ -7,6 +7,7 @@ import de.uniks.pioneers.services.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -21,11 +22,9 @@ import static de.uniks.pioneers.GameConstants.CITY;
 
 public class BoardController {
 
-
     public Pane fieldPane;
 
     public Provider<StreetPointController> streetPointControllerProvider;
-
     private final GameStorage gameStorage;
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
@@ -33,20 +32,21 @@ public class BoardController {
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
     private final IngameService ingameService;
+    private final GameService gameService;
     private final UserService userService;
     private final MapRenderService mapRenderService;
-    private final GameService gameService;
     public SimpleObjectProperty<Game> game;
 
-    public BoardController(IngameService ingameService, UserService userService, GameService gameService,
-                           SimpleObjectProperty<Game> game, GameStorage gameStorage, MapRenderService mapRenderService){
+    private  Thread hextileRenderThread;
 
+    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game,
+                           GameStorage gameStorage, GameService gameService, MapRenderService mapRenderService){
         this.ingameService = ingameService;
-        this.userService = userService;
         this.gameService = gameService;
-        this.game = game;
+        this.userService = userService;
         this.gameStorage = gameStorage;
         this.mapRenderService = mapRenderService;
+        this.game = game;
     }
 
 
@@ -55,9 +55,10 @@ public class BoardController {
         List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap(), this.gameStorage.getHexScale());
         List<HexTile> edges = generator.generateEdges(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
         List<HexTile> corners = generator.generateCorners(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
+        List<HexTile> harbors = generator.generateHarbors(this.gameStorage.getHarbors(), this.gameStorage.getHexScale());
 
         if(gameStorage.getMapRadius() > 4) {
-            Thread hextileRenderThread = new Thread(() -> {
+            this.hextileRenderThread = new Thread(() -> {
                 try {
                     for (HexTile hexTile : tiles) {
                         Platform.runLater(() -> loadHexagon(hexTile));
@@ -74,6 +75,11 @@ public class BoardController {
                         Thread.sleep(0,500000);
                     }
 
+                    for (HexTile harbor : harbors) {
+                        Platform.runLater(() -> loadHarbor(harbor));
+                        Thread.sleep(0,500000);
+                    }
+
                     Thread.sleep(1000);
                     linkTiles();
 
@@ -81,9 +87,8 @@ public class BoardController {
                     mapRenderService.setTileControllers(this.tileControllers);
                     loadSnowAnimation();
                     mapRenderService.setFinishedLoading(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+                catch (InterruptedException ignored){}
             });
 
             hextileRenderThread.setDaemon(true);
@@ -93,6 +98,7 @@ public class BoardController {
             tiles.forEach(this::loadHexagon);
             edges.forEach(this::loadEdge);
             corners.forEach(this::loadCorner);
+            harbors.forEach(this::loadHarbor);
             linkTiles();
             mapRenderService.setTileControllers(this.tileControllers);
             loadSnowAnimation();
@@ -111,13 +117,19 @@ public class BoardController {
                 hexTile.number
         );
 
-        Circle hexView = new Circle(0);
+        Circle hexView = new Circle(gameStorage.getHexScale()/8);
         hexView.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
         hexView.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
+        hexView.setVisible(false);
         this.fieldPane.getChildren().add(hexView);
 
-        HexTileController newHexTileController = new HexTileController(hexTile, hexView);
-        newHexTileController.setVisible(false);
+        Circle eventHexView = new Circle(gameStorage.getHexScale()/1.4);
+        eventHexView.setLayoutX(hexTile.x + this.fieldPane.getPrefWidth() / 2);
+        eventHexView.setLayoutY(-hexTile.y + this.fieldPane.getPrefHeight() / 2);
+        eventHexView.setFill(Color.gray(0,0.1));
+        this.fieldPane.getChildren().add(eventHexView);
+
+        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView);
         this.tileControllers.add(newHexTileController);
     }
 
@@ -144,6 +156,11 @@ public class BoardController {
         this.buildingControllers.add(newbuildingPointController);
     }
 
+    private void loadHarbor(HexTile harbor) {
+        ImageView imageV = getHarborImage(harbor.type);
+        this.fieldPane.getChildren().add(placeHarbor(harbor.x, harbor.y, imageV, harbor.number));
+    }
+
     private void linkTiles(){
         for (HexTileController tile : this.tileControllers) {
             tile.findEdges(this.streetPointControllers);
@@ -162,6 +179,8 @@ public class BoardController {
                     streetPoint.generateKeyString(),
                     streetPoint);
         }
+
+        mapRenderService.setTileControllers(this.tileControllers);
     }
 
     private void loadSnowAnimation() {new SnowAnimationControllor(fieldPane, buildingControllers, streetPointControllers);}
@@ -180,6 +199,12 @@ public class BoardController {
             if(!controller.alreadyPlacedStreet()) {
                 controller.renderRoad(building);
             }
+        }
+    }
+
+    public void enableHexagonPoints(){
+        for (HexTileController controller : tileControllers) {
+            controller.init();
         }
     }
 
@@ -228,5 +253,78 @@ public class BoardController {
 
         mapRenderService.getGc().setStroke(Color.BLACK);
         mapRenderService.getGc().strokePolygon(xPoints, yPoints, 6);
+    }
+
+    private ImageView getHarborImage(String type) {
+        if (type == null) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_general.png")).toString());
+        } else if (type.equals("ore")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_coal.png")).toString());
+        } else if (type.equals("brick")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_iceberg.png")).toString());
+        } else if (type.equals("wool")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_polar-bear.png")).toString());
+        } else if (type.equals("lumber")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_fish.png")).toString());
+        } else if (type.equals("grain")) {
+            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_whale.png")).toString());
+        } else {
+            return null;
+        }
+    }
+
+    private ImageView placeHarbor(double x, double y, ImageView image, Integer side) {
+        double width = this.fieldPane.getPrefWidth();
+        double height = this.fieldPane.getPrefHeight();
+        double scale = this.gameStorage.getHexScale();
+        double x_plus = x + width / 2 - scale / 2 + 0.75 * scale;
+        double x_minus = x + width / 2 - scale / 2 - 0.75 * scale;
+        double y_plus = -y + height / 2 - scale / 2 + 1.25 * scale;
+        double y_minus = -y + height / 2 - scale / 2 - 1.25 * scale;
+        if (side == 1) {
+            image.setLayoutX(x_plus);
+            image.setLayoutY(y_minus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(30);
+        } else if (side == 3) {
+            image.setLayoutX(x + width / 2 - scale / 2 + 1.5 * scale);
+            image.setLayoutY(-y + height / 2 - scale / 2);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(90);
+        } else if (side == 5) {
+            image.setLayoutX(x_plus);
+            image.setLayoutY(y_plus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(150);
+        } else if (side == 7) {
+            image.setLayoutX(x_minus);
+            image.setLayoutY(y_plus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(210);
+        } else if (side == 9) {
+            image.setLayoutX(x + width / 2 - scale / 2 - 1.5 * scale);
+            image.setLayoutY(-y + height / 2 - scale / 2);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(270);
+        } else if (side == 11) {
+            image.setLayoutX(x_minus);
+            image.setLayoutY(y_minus);
+            image.setFitHeight(scale);
+            image.setFitWidth(scale);
+            image.rotateProperty().set(330);
+        }
+        return image;
+    }
+
+    public void stop() {
+        if(hextileRenderThread != null) this.hextileRenderThread.interrupt();
+        this.buildingControllers.clear();
+        this.streetPointControllers.clear();
+        this.tileControllers.clear();
     }
 }
