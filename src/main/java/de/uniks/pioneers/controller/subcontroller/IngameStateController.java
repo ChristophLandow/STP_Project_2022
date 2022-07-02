@@ -35,8 +35,6 @@ public class IngameStateController {
     private final Game game;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    private Point3D robberPos;
-
     public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane,
                                  ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, MapRenderService mapRenderService) {
         this.userService = userService;
@@ -57,9 +55,7 @@ public class IngameStateController {
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             switch (move.action()) {
-                case FOUNDING_ROLL, ROLL -> {
-                    this.enableRoll(move.action());
-                }
+                case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
                 case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> this.enableBuildingPoints(move.action());
                 case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> this.enableStreetPoints(move.action());
                 case BUILD -> {
@@ -69,9 +65,7 @@ public class IngameStateController {
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
-                case ROB -> {
-                    this.enableHexagonPoints();
-                }
+                case ROB -> this.enableHexagonPoints();
             }
         }
 
@@ -135,8 +129,6 @@ public class IngameStateController {
 
     private void placeRobber(Point3D pos){
         if(pos != null) {
-            robberPos = pos;
-
             for (HexTileController hexTileController : mapRenderService.getTileControllers()) {
                 HexTile tile = hexTileController.tile;
                 hexTileController.setRobber(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r);

@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Move;
-import de.uniks.pioneers.model.Point3D;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
