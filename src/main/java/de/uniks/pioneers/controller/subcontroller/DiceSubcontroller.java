@@ -60,6 +60,7 @@ public class DiceSubcontroller {
 
                         if(move.roll() == 7){
                             RobberController robber = robberControllerProvider.get();
+                            robber.setCurrentUser(move.userId());
                             robber.init();
                         }
                     }

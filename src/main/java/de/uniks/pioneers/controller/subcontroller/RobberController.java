@@ -20,11 +20,10 @@ public class RobberController implements Controller {
     @Inject IngameService ingameService;
     @Inject RobberService robberService;
     @Inject MapRenderService mapRenderService;
-
     private DiscardResourcesController discardResourcesController;
     private RobPlayerController robPlayerController;
-
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private String currentUser;
 
     @Inject
     public RobberController(){
@@ -54,14 +53,16 @@ public class RobberController implements Controller {
     }
 
     public void rob(){
-        robberService.updateRobbingCandidates();
+        if(gameService.me.equals(currentUser)) {
+            robberService.updateRobbingCandidates();
 
-        if(robberService.getRobbingCandidates().size() != 0) {
-            robPlayerController = robPlayerControllerProvider.get();
-            robPlayerController.init();
-        }
-        else{
-            disposable.add(this.robberService.robPlayer(null).observeOn(FX_SCHEDULER).subscribe(move -> {}));
+            if (robberService.getRobbingCandidates().size() != 0) {
+                robPlayerController = robPlayerControllerProvider.get();
+                robPlayerController.init();
+            } else {
+                disposable.add(this.robberService.robPlayer(null).observeOn(FX_SCHEDULER).subscribe(move -> {
+                }));
+            }
         }
     }
 
@@ -80,5 +81,9 @@ public class RobberController implements Controller {
     @Override
     public Parent render() {
         return null;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
 }
