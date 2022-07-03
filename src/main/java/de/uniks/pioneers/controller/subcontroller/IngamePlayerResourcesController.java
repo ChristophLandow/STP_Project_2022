@@ -4,12 +4,10 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
-import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.util.Duration;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
@@ -41,6 +38,7 @@ public class IngamePlayerResourcesController {
     private Map<String, ImageView> imageMap;
     private Map<String, Label> labelMap;
     private ChangeListener<Boolean> enoughResourcesListener;
+    private ResourceAnimationController resourceAnimationController;
 
     @Inject
     public IngamePlayerResourcesController(GameService gameService) {
@@ -86,7 +84,7 @@ public class IngamePlayerResourcesController {
 
         this.fellCount.setTextFill(Color.BLACK);
         this.kohleCount.setTextFill(Color.BLACK);
-        new ResourceAnimationController(root, gameService, this);
+        this.resourceAnimationController = new ResourceAnimationController(root, gameService, this);
     }
 
     private void showMissingRessources() {
@@ -104,65 +102,15 @@ public class IngamePlayerResourcesController {
                 label.setText(String.valueOf(missingResources.get(s)));
                 if (!resourcesHBox.getChildren().contains(node)) {
                     label.setTranslateX(-20);
-                    addFadingIn(node, resourcesHBox);
+                    resourceAnimationController.addFadingIn(node, resourcesHBox);
                     resourcesHBox.getChildren().add(label);
-                    textFillAnimation(label, resourcesHBox, color.get());
+                    resourceAnimationController.textFillAnimation(label, resourcesHBox, color.get());
                 } else {
                     label.setTranslateX(-5);
-                    textFillAnimation(label, oldValue,color.get());
+                    resourceAnimationController.textFillAnimation(label, oldValue,color.get());
                 }
             }
         });
-    }
-
-    public void textFillAnimation(Label label, String oldValue, Paint paint) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0)),
-                new KeyFrame(Duration.seconds(1.5))
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(e -> {
-            label.setText(oldValue);
-            label.setTextFill(paint);
-        });
-        timeline.play();
-    }
-
-
-    public void textFillAnimation(Label label, HBox parent, Paint paint) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0)),
-                new KeyFrame(Duration.seconds(1.5))
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(e -> {
-            parent.getChildren().remove(label);
-            label.setTextFill(paint);
-        });
-        timeline.play();
-    }
-
-    public void addFadingIn(Node node, HBox parent) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        parent.getChildren().add(node);
-        transition.setFromValue(0);
-        transition.setToValue(1);
-        transition.setInterpolator(Interpolator.EASE_IN);
-        transition.setOnFinished(finish -> removeFadingOut(node, parent));
-        transition.play();
-    }
-
-    public void removeFadingOut(Node node, HBox parent) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        transition.setFromValue(1);
-        transition.setToValue(0);
-        transition.setInterpolator(Interpolator.EASE_BOTH);
-        transition.setOnFinished(finishHim -> {
-            parent.getChildren().remove(node);
-        });
-        transition.play();
     }
 
     private void setImages() {
