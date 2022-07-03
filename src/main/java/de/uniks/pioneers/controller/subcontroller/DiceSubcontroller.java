@@ -38,6 +38,7 @@ public class DiceSubcontroller {
     private final GameService gameService;
     private final TimerService timerService;
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private RobberController robberController;
     
     @Inject
     public DiceSubcontroller(Provider<RobberController> robberControllerProvider, IngameService ingameService, GameService gameService, PrefService prefService,
@@ -59,9 +60,9 @@ public class DiceSubcontroller {
                         showRolledNumber(move.action(), move.roll());
 
                         if(move.roll() == 7){
-                            RobberController robber = robberControllerProvider.get();
-                            robber.setCurrentUser(move.userId());
-                            robber.init();
+                            this.robberController = robberControllerProvider.get();
+                            this.robberController.setCurrentUser(move.userId());
+                            this.robberController.init();
                         }
                     }
                 });
@@ -88,6 +89,12 @@ public class DiceSubcontroller {
     private void reset() {
         this.leftDiceView.setOnMouseClicked(null);
         this.rightDiceView.setOnMouseClicked(null);
+    }
+
+    public void stop(){
+        if(this.robberController != null){
+            this.robberController.stop();
+        }
     }
 
     private void showRolledNumber(String action, int roll) {

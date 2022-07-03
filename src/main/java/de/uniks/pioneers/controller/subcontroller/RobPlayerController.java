@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.User;
@@ -96,6 +97,7 @@ public class RobPlayerController implements Controller {
 
     @Override
     public void stop() {
+        robberService.getRobberState().set(GameConstants.ROBBER_FINISHED);
         stage.close();
         disposable.dispose();
     }

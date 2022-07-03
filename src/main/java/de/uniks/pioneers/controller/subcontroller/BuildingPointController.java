@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.GameConstants;
-import de.uniks.pioneers.controller.BoardController;
 import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
@@ -21,7 +20,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
@@ -68,7 +66,7 @@ public class BuildingPointController {
     }
 
     public void init() {
-        this.eventView.setOnMouseClicked(this::info);
+        this.eventView.setOnMouseClicked(this::checkPosition);
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
     }
@@ -143,7 +141,7 @@ public class BuildingPointController {
         this.eventView.toFront();
     }
 
-    private void info(MouseEvent mouseEvent) {
+    private void checkPosition(MouseEvent mouseEvent) {
         boolean invalid = false;
         if(gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameStorage.selectedBuilding.equals(SETTLEMENT) || gameStorage.selectedBuilding.equals("")) {
             for (StreetPointController street : adjacentStreets) {

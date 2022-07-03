@@ -59,4 +59,5 @@ public class GameConstants {
     public static final int ROBBER_DISCARD = 1;
     public static final int ROBBER_MOVE = 2;
     public static final int ROBBER_STEAL = 3;
+    public static final int ROBBER_FINISHED = 4;
 }

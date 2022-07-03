@@ -191,7 +191,7 @@ public class DiscardResourcesController implements Initializable, Controller {
         int carbonDiscard = CarbonSpinner.getValue();
 
         disposable.add(robberService.dropRessources(new Resources(-walediscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarbearDeiscard))
-                .observeOn(FX_SCHEDULER).subscribe(move -> {
+                .observeOn(FX_SCHEDULER).take(1).subscribe(move -> {
                     robberService.getRobberState().set(ROBBER_MOVE);
                     stop();
                 },this::handleHttpError));

@@ -286,6 +286,7 @@ public class IngameScreenController implements Controller {
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
         this.boardController.stop();
+        this.diceSubcontroller.stop();
         timerService.reset();
         mapRenderService.stop();
         boardController.stop();

@@ -193,10 +193,9 @@ public class HexTileController {
         }
     }
 
-    public void moveRobber(){
+    public void moveRobberForOtherPlayers(){
         if(robberService != null && this.robberService.getRobberState().get() == GameConstants.ROBBER_MOVE) {
             this.robberService.moveRobber(this);
-            this.robberService.getRobberState().set(GameConstants.ROBBER_STEAL);
         }
     }
 
