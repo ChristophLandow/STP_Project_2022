@@ -2,10 +2,14 @@ package de.uniks.pioneers.controller.PopUpController;
 
 
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUpPlayerListElementController;
+import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -17,79 +21,45 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static de.uniks.pioneers.GameConstants.OFFER;
 
-public class TradePopUpController {
+
+public class TradePopUpController implements Controller {
+
+    @FXML public AnchorPane root;
+    @FXML public HBox subRoot;
+    @FXML public VBox tradeBox;
+    @FXML public HBox timerBox;
+    @FXML public Label timer;
+    @FXML public HBox offerBox;
+    @FXML public Label offer;
+    @FXML public HBox offerImages;
+    @FXML public HBox getBox;
+    @FXML public Label get;
+    @FXML public HBox tradeButtons;
+    @FXML public Button cancel;
+    @FXML public Button offerToPlayers;
+    @FXML public Button tradeWithBank;
+    @FXML public VBox playerListBox;
+    @FXML public ListView<Node> playerList;
+    @FXML public HBox spinnerBoxOffer;
+    @FXML public HBox spinnerBoxGet;
+    @FXML public HBox getImages;
 
     private final IngameService ingameService;
-    @FXML
-    public AnchorPane root;
-    @FXML
-    public HBox subRoot;
-    @FXML
-    public VBox tradeBox;
-    @FXML
-    public HBox timerBox;
-    @FXML
-    public Label timer;
-    @FXML
-    public HBox offerBox;
-    @FXML
-    public Label offer;
-    @FXML
-    public HBox offerImages;
-    @FXML
-    public ImageView packeisResource;
-    @FXML
-    public ImageView fellResource;
-    @FXML
-    public ImageView fischResource;
-    @FXML
-    public ImageView kohleResource;
-    @FXML
-    public ImageView walknochenResource;
+    private final GameService gameService;
 
-
-    @FXML
-    public HBox getBox;
-    @FXML
-    public Label get;
-    @FXML
-    public ImageView packeisResourceI;
-    @FXML
-    public ImageView fellResourceI;
-    @FXML
-    public ImageView fischResourceI;
-    @FXML
-    public ImageView kohleResourceI;
-    @FXML
-    public ImageView walknochenResourceI;
-
-
-    @FXML
-    public HBox tradeButtons;
-    @FXML
-    public Button cancel;
-    @FXML
-    public Button offerToPlayers;
-    @FXML
-    public Button tradeWithBank;
-    @FXML
-    public VBox playerListBox;
-    @FXML
-    public ListView playerList;
-
-    @FXML
-    public HBox spinnerBoxOffer;
-    @FXML
-    public HBox spinnerBoxGet;
-    @FXML
-    public HBox getImages;
-
+    @Inject
+    Provider <TradePopUpPlayerListElementController> elementControllerProvider;
+    private EventHandler<MouseEvent> bankHandler;
+    private EventHandler<MouseEvent> playerHandler;
+    private EventHandler<MouseEvent> cancelHandler;
 
     private class TradeSpinnerFactory extends SpinnerValueFactory<Integer> {
 
@@ -116,8 +86,7 @@ public class TradePopUpController {
         }
 
         private void updateTrade() {
-            if (types.getKey().equals("Offer")){
-                System.out.println(types.getValue());
+            if (types.getKey().equals(OFFER)){
                 ingameService.getOrCreateTrade(types.getValue(),-1);
             }else {
                 ingameService.getOrCreateTrade(types.getValue(),1);
@@ -125,13 +94,13 @@ public class TradePopUpController {
         }
     }
 
-
     @Inject
-    public TradePopUpController(IngameService ingameService) {
+    public TradePopUpController(IngameService ingameService, GameService gameService) {
         this.ingameService = ingameService;
+        this.gameService = gameService;
     }
 
-
+    @Override
     public Parent render() {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PopUps/TradePopUp.fxml"));
         loader.setControllerFactory(c -> this);
@@ -144,9 +113,23 @@ public class TradePopUpController {
         return node;
     }
 
+    @Override
     public void init() {
+        // init model
+
+
+        // set stylesheet for spinners
         root.getStylesheets().add("/de/uniks/pioneers/styles/SpinnerLowerArrowWidth.css");
 
+        // setup player list
+        gameService.players.values().forEach(player -> {
+            TradePopUpPlayerListElementController elementController = elementControllerProvider.get();
+            Parent node = elementController.render();
+            elementController.init(player.userId());
+            playerList.getItems().add(node);
+        });
+
+        // setup ImageViews
         List<String> subStrings = List.of("ice", "polarbear", "fish","carbon", "whale");
         Iterator<String> first = subStrings.iterator();
         Iterator<String> second = subStrings.iterator();
@@ -169,12 +152,33 @@ public class TradePopUpController {
         spinnerBoxOffer.getChildren().forEach(node -> setupSpinner((Spinner) node));
         spinnerBoxGet.getChildren().forEach(node -> setupSpinner((Spinner) node));
 
-        // create EventHandler for trade with bank
-        EventHandler<MouseEvent> bankHandler = event -> {
+        // setup EventHandler for trade with bank
+        bankHandler = event -> {
             ingameService.tradeWithBank();
         };
 
+        // setup EventHandler for trade with player
+        playerHandler = event -> {
+            ingameService.tradeWithPlayers();
+        };
+
+        // setup EventHandler for cancel and stage closed
+        cancelHandler = event -> {
+
+        };
+
+        // add event handler to buttons
         tradeWithBank.addEventHandler(MouseEvent.MOUSE_CLICKED, bankHandler);
+        offerToPlayers.addEventHandler(MouseEvent.MOUSE_CLICKED, playerHandler);
+        cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, cancelHandler);
+
+    }
+
+    @Override
+    public void stop() {
+        tradeWithBank.removeEventHandler(MouseEvent.MOUSE_CLICKED,bankHandler);
+        offerToPlayers.removeEventHandler(MouseEvent.MOUSE_CLICKED,playerHandler);
+        cancel.removeEventHandler(MouseEvent.MOUSE_CLICKED,cancelHandler);
     }
 
     private void setupSpinner(Spinner spinner) {
@@ -197,6 +201,5 @@ public class TradePopUpController {
         factory.setValue(0);
         spinner.setValueFactory(factory);
     }
-
 
 }
