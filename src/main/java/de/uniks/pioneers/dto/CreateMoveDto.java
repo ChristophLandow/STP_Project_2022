@@ -18,4 +18,7 @@ public record CreateMoveDto(
         this(action, null, null, null, building);
     }
 
+    public CreateMoveDto(String action, Resources resources) {
+        this(action, null, resources, null, null);
+    }
 }

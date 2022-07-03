@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,6 @@ public class BoardController {
     public Pane fieldPane;
 
     public Provider<StreetPointController> streetPointControllerProvider;
-
     private final GameStorage gameStorage;
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
     private final HashMap<String, BuildingPointController> buildingPointControllerHashMap = new HashMap<>();
@@ -154,7 +152,7 @@ public class BoardController {
         circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
         circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
         this.fieldPane.getChildren().add(circ);
-        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
+        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
         this.buildingControllers.add(newbuildingPointController);
     }
 
