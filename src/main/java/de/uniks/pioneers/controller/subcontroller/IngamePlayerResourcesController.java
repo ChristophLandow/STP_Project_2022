@@ -7,7 +7,6 @@ import de.uniks.pioneers.services.GameService;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,36 +19,23 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
 
 public class IngamePlayerResourcesController {
-    @FXML
-    public HBox resourcesHBox;
-    @FXML
-    public ImageView fischResource;
-    @FXML
-    public Label fischCount;
-    @FXML
-    public ImageView packeisResource;
-    @FXML
-    public Label packeisCount;
-    @FXML
-    public ImageView fellResource;
-    @FXML
-    public Label fellCount;
-    @FXML
-    public ImageView kohleResource;
-    @FXML
-    public Label kohleCount;
-    @FXML
-    public ImageView walknochenResource;
-    @FXML
-    public Label walknochenCount;
-    @FXML
-    public Pane root;
+    @FXML public HBox resourcesHBox;
+    @FXML public ImageView fischResource;
+    @FXML public Label fischCount;
+    @FXML public ImageView packeisResource;
+    @FXML public Label packeisCount;
+    @FXML public ImageView fellResource;
+    @FXML public Label fellCount;
+    @FXML public ImageView kohleResource;
+    @FXML public Label kohleCount;
+    @FXML public ImageView walknochenResource;
+    @FXML public Label walknochenCount;
+    @FXML public Pane root;
 
     private final GameService gameService;
     private Map<String, ImageView> imageMap;
@@ -104,8 +90,6 @@ public class IngamePlayerResourcesController {
     }
 
     private void showMissingRessources() {
-        System.out.println("show missing resources");
-
         Map<String, Integer> missingResources = gameService.missingResources;
         missingResources.keySet().forEach(s -> {
             Integer delta = missingResources.get(s);
@@ -182,7 +166,6 @@ public class IngamePlayerResourcesController {
     }
 
     private void setImages() {
-
         //iterate over subString from URL to setup imageViews
         //iterate over resourceStrings to create a map with resourceName -> resourceImage
         List<String> subStrings = List.of("fish", "ice", "polarbear", "carbon", "whale");

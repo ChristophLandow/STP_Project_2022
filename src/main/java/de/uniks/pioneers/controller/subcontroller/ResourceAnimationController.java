@@ -52,23 +52,23 @@ public class ResourceAnimationController {
         initCards();
 
         Resources resources = valueAdded.resources();
-        int ore = resources.ore() == null ? 0 : resources.ore();
-        int lumber = resources.lumber() == null ? 0 : resources.lumber();
-        int brick = resources.brick() == null ? 0 : resources.brick();
-        int wool = resources.wool() == null ? 0 : resources.wool();
-        int grain = resources.grain() == null ? 0 : resources.grain();
-        int unknown = resources.unknown() == null ? 0 : resources.unknown();
+        int brick = resources.brick();
+        int grain = resources.grain();
+        int ore = resources.ore();
+        int lumber = resources.lumber();
+        int wool = resources.wool();
+        int unknown = resources.unknown();
 
         resourceNewAnimationController.setResourceCounts(ore, lumber, brick, wool, grain);
         resourceRemovedAnimationController.setResourceCounts(ore, lumber, brick, wool, grain);
 
         resources = valueRemoved.resources();
-        int oldOre = resources.ore() == null ? 0 : resources.ore();
-        int oldLumber = resources.lumber() == null ? 0 : resources.lumber();
-        int oldBrick = resources.brick() == null ? 0 : resources.brick();
-        int oldWool = resources.wool() == null ? 0 : resources.wool();
-        int oldGrain = resources.grain() == null ? 0 : resources.grain();
-        int oldUnknown = resources.unknown() == null ? 0 : resources.unknown();
+        int oldBrick = resources.brick();
+        int oldGrain = resources.grain();
+        int oldOre = resources.ore();
+        int oldLumber = resources.lumber();
+        int oldWool = resources.wool();
+        int oldUnknown = resources.unknown();
 
         if(ore==0 && oldOre>0) {
             counter += 1;
