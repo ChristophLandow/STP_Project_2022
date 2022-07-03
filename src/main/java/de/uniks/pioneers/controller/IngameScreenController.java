@@ -287,7 +287,9 @@ public class IngameScreenController implements Controller {
     @Override
     public void stop() {
         gameChatController.stop();
-        this.popUpStage.close();
+        if (this.popUpStage != null) {
+            this.popUpStage.close();
+        }
         settingsScreenControllerProvider.get().stop();
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
