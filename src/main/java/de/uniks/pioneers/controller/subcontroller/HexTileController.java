@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.GameConstants;
-import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.RobberService;
 import javafx.scene.image.Image;
@@ -11,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static de.uniks.pioneers.GameConstants.HOVER_COLOR;
 import static de.uniks.pioneers.GameConstants.STANDARD_COLOR;
@@ -193,23 +193,22 @@ public class HexTileController {
         }
     }
 
-    public void moveRobber(){
+    public void moveRobberForOtherPlayers(){
         if(robberService != null && this.robberService.getRobberState().get() == GameConstants.ROBBER_MOVE) {
             this.robberService.moveRobber(this);
-            this.robberService.getRobberState().set(GameConstants.ROBBER_STEAL);
         }
     }
 
     public void setRobber(boolean placeRobber){
         if(placeRobber && this.robber == null){
-            this.robber = new ImageView(new Image(Main.class.getResource("./controller/ingame/robber.png").toString()));
-            this.robber.setFitWidth((this.eventView.getRadius()*1.4)/2);
+            this.robber = new ImageView(new Image(Objects.requireNonNull(getClass().getResource( "steine_3.png")).toString()));
+            this.robber.setFitWidth((this.eventView.getRadius()*1.4));
             this.robber.setFitHeight(this.eventView.getRadius()*1.4);
             this.robber.setLayoutX(this.view.getLayoutX() - this.robber.getFitWidth()/2);
             this.robber.setLayoutY(this.view.getLayoutY() - this.robber.getFitHeight()/2);
 
             this.fieldPane.getChildren().add(this.robber);
-            this.eventView.setOpacity(0.8);
+            this.eventView.setOpacity(0.9);
         }
         else{
             if(robberService.getRobberTile() != this) {
