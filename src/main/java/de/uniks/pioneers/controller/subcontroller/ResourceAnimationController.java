@@ -18,14 +18,12 @@ public class ResourceAnimationController {
     private final GameService gameService;
     private ImageView carbonView, fishView, iceView, polarbearView, whaleView;
     private int ore, lumber, brick, wool, grain;
-    private Player me;
     private final IngamePlayerResourcesController ingamePlayerResourcesController;
     private Player valueAdded;
     private Player valueRemoved;
 
     public ResourceAnimationController(Pane root, GameService gameService, IngamePlayerResourcesController ingamePlayerResourcesController) {
         this.gameService = gameService;
-        this.me = this.gameService.players.get(gameService.me);
         this.ingamePlayerResourcesController = ingamePlayerResourcesController;
         this.root = root;
 
@@ -76,6 +74,7 @@ public class ResourceAnimationController {
         int oldUnknown = resources.unknown() == null ? 0 : resources.unknown();
 
         if(ore==0 && oldOre>0) {
+            ingamePlayerResourcesController.setOreToElement(false);
         } else if(ore>0 && oldOre==0) {
             System.out.println("ore");
             counter += 1;
@@ -86,6 +85,7 @@ public class ResourceAnimationController {
         }
 
         if(lumber==0 && oldLumber>0) {
+            ingamePlayerResourcesController.setLumberToElement(false);
         } else if(lumber>0 && oldLumber==0) {
             System.out.println("lumber");
             counter += 1;
@@ -96,6 +96,7 @@ public class ResourceAnimationController {
         }
 
         if(brick==0 && oldBrick>0) {
+            ingamePlayerResourcesController.setBrickToElement(false);
         } else if(brick>0 && oldBrick==0) {
             System.out.println("brick");
             counter += 1;
@@ -106,6 +107,7 @@ public class ResourceAnimationController {
         }
 
         if(wool==0 && oldWool>0) {
+            ingamePlayerResourcesController.setWoolToElement(false);
         } else if(wool>0 && oldWool==0) {
             System.out.println("wool");
             counter += 1;
@@ -116,6 +118,7 @@ public class ResourceAnimationController {
         }
 
         if(grain==0 && oldGrain>0) {
+            ingamePlayerResourcesController.setGrainToElement(false);
         } else if(grain>0 && oldGrain==0) {
             System.out.println("grain");
             counter += 1;
@@ -124,9 +127,6 @@ public class ResourceAnimationController {
             counter += 1;
             firstResourceCardAnimation(whaleView, counter, 5, false);
         }
-
-        System.out.println(valueAdded.resources());
-        System.out.println(valueRemoved.resources());
     }
 
     public void firstResourceCardAnimation(ImageView card, int counter, int resNumber, boolean firstTime) {
@@ -135,7 +135,7 @@ public class ResourceAnimationController {
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter*1500)-1500);
+                Thread.sleep((counter * 1500L) - 1500);
                 Platform.runLater(() -> root.getChildren().add(card));
                 ScaleTransition st = new ScaleTransition(new Duration(500), card);
                 st.setFromX(0f);
@@ -164,9 +164,7 @@ public class ResourceAnimationController {
                 TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
                 tt.setToX(0);
                 tt.setToY(409);
-                tt.setOnFinished(t -> {
-                    afterAnimation(card, resNumber, firstTime);
-                });
+                tt.setOnFinished(t -> afterAnimation(card, resNumber, firstTime));
                 tt.play();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -178,15 +176,15 @@ public class ResourceAnimationController {
         root.getChildren().remove(card);
         if(firstTime) {
             if(resNumber == 1) {
-                ingamePlayerResourcesController.setOreToElement();
+                ingamePlayerResourcesController.setOreToElement(true);
             } else if(resNumber == 2) {
-                ingamePlayerResourcesController.setLumberToElement();
+                ingamePlayerResourcesController.setLumberToElement(true);
             } else if(resNumber == 3) {
-                ingamePlayerResourcesController.setBrickToElement();
+                ingamePlayerResourcesController.setBrickToElement(true);
             } else if(resNumber == 4) {
-                ingamePlayerResourcesController.setWoolToElement();
+                ingamePlayerResourcesController.setWoolToElement(true);
             } else if(resNumber == 5) {
-                ingamePlayerResourcesController.setGrainToElement();
+                ingamePlayerResourcesController.setGrainToElement(true);
             }
         }
         ingamePlayerResourcesController.setOreCount(ore);

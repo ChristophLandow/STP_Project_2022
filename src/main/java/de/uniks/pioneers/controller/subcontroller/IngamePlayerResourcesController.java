@@ -138,55 +138,80 @@ public class IngamePlayerResourcesController {
         walknochenCount.setText(String.valueOf(grain));
     }
 
-    public void setBrickToElement() {
-        resourcesHBox.getChildren().add(packeisResource);
-        resourcesHBox.getChildren().add(packeisCount);
-        packeisCount.setLayoutX(packeisCount.getLayoutX());
-        packeisCount.setLayoutY(packeisCount.getLayoutY());
+    public void setBrickToElement(boolean add) {
+        if(add) {
+            resourcesHBox.getChildren().add(packeisResource);
+            resourcesHBox.getChildren().add(packeisCount);
+            packeisCount.setLayoutX(packeisCount.getLayoutX());
+            packeisCount.setLayoutY(packeisCount.getLayoutY());
+        } else {
+            resourcesHBox.getChildren().remove(packeisResource);
+            resourcesHBox.getChildren().remove(packeisCount);
+        }
     }
 
     public void setBrickCount(int resCount) {
         packeisCount.setText(String.valueOf(resCount));
     }
 
-    public void setGrainToElement() {
-        resourcesHBox.getChildren().add(walknochenResource);
-        resourcesHBox.getChildren().add(walknochenCount);
-        walknochenCount.setLayoutX(walknochenResource.getLayoutX());
-        walknochenCount.setLayoutY(walknochenResource.getLayoutY());
+    public void setGrainToElement(boolean add) {
+        if(add) {
+            resourcesHBox.getChildren().add(walknochenResource);
+            resourcesHBox.getChildren().add(walknochenCount);
+            walknochenCount.setLayoutX(walknochenResource.getLayoutX());
+            walknochenCount.setLayoutY(walknochenResource.getLayoutY());
+        } else {
+            resourcesHBox.getChildren().remove(walknochenResource);
+            resourcesHBox.getChildren().remove(walknochenCount);
+        }
     }
 
     public void setGrainCount(int resCount) {
         walknochenCount.setText(String.valueOf(resCount));
     }
 
-    public void setOreToElement() {
-        resourcesHBox.getChildren().add(kohleResource);
-        resourcesHBox.getChildren().add(kohleCount);
-        kohleCount.setLayoutX(kohleResource.getLayoutX());
-        kohleCount.setLayoutY(kohleResource.getLayoutY());
+    public void setOreToElement(boolean add) {
+        if(add) {
+            resourcesHBox.getChildren().add(kohleResource);
+            resourcesHBox.getChildren().add(kohleCount);
+            kohleCount.setLayoutX(kohleResource.getLayoutX());
+            kohleCount.setLayoutY(kohleResource.getLayoutY());
+        } else {
+            resourcesHBox.getChildren().remove(kohleResource);
+            resourcesHBox.getChildren().remove(kohleCount);
+        }
     }
 
     public void setOreCount(int resCount) {
         kohleCount.setText(String.valueOf(resCount));
     }
 
-    public void setLumberToElement() {
-        resourcesHBox.getChildren().add(fischResource);
-        resourcesHBox.getChildren().add(fischCount);
-        fischCount.setLayoutX(fellResource.getLayoutX());
-        fischCount.setLayoutY(fellResource.getLayoutY());
+    public void setLumberToElement(boolean add) {
+        if(add) {
+            resourcesHBox.getChildren().add(fischResource);
+            resourcesHBox.getChildren().add(fischCount);
+            fischCount.setLayoutX(fellResource.getLayoutX());
+            fischCount.setLayoutY(fellResource.getLayoutY());
+        } else {
+            resourcesHBox.getChildren().remove(fischResource);
+            resourcesHBox.getChildren().remove(fischCount);
+        }
     }
 
     public void setLumberCount(int resCount) {
         fischCount.setText(String.valueOf(resCount));
     }
 
-    public void setWoolToElement() {
-        resourcesHBox.getChildren().add(fellResource);
-        resourcesHBox.getChildren().add(fellCount);
-        fellCount.setLayoutX(fellResource.getLayoutX());
-        fellCount.setLayoutY(fellResource.getLayoutY());
+    public void setWoolToElement(boolean add) {
+        if(add) {
+            resourcesHBox.getChildren().add(fellResource);
+            resourcesHBox.getChildren().add(fellCount);
+            fellCount.setLayoutX(fellResource.getLayoutX());
+            fellCount.setLayoutY(fellResource.getLayoutY());
+        } else {
+            resourcesHBox.getChildren().remove(fellResource);
+            resourcesHBox.getChildren().remove(fellCount);
+        }
     }
 
     public void setWoolCount(int resCount) {
