@@ -6,6 +6,8 @@ import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Harbor;
+import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
@@ -31,6 +33,8 @@ public class BuildingPointController {
     private final IngameService ingameService;
     private final UserService userService;
     private final GameStorage gameStorage;
+
+    private final GameService gameService;
     private final String gameId;
     private String action;
     public HexTile tile;
@@ -40,15 +44,18 @@ public class BuildingPointController {
     public ArrayList<StreetPointController> adjacentStreets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private Building building = null;
+
+    private User owner = null;
     private SVGPath displayedBuilding = null;
 
     public BuildingPointController(HexTile tile, Circle view,
-                                   IngameService ingameService, String gameId,
+                                   IngameService ingameService, GameService gameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
                                    UserService userService) {
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
+        this.gameService = gameService;
         this.userService = userService;
         this.gameStorage = gameStorage;
         this.gameId = gameId;
@@ -111,7 +118,15 @@ public class BuildingPointController {
         // set color of building
         disposable.add(ingameService.getPlayer(building.gameId(), building.owner())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(player -> buildingSVG.setStroke(Paint.valueOf(player.color()))));
+                .subscribe(player -> {
+                    buildingSVG.setStroke(Paint.valueOf(player.color()));
+
+                    for(User u : gameService.getUsers()){
+                        if(u._id().equals(player.userId())){
+                            owner = u;
+                        }
+                    }
+                }));
 
         buildingSVG.setScaleX(gameStorage.getHexScale()/BUILDING_SCALING);
         buildingSVG.setScaleY(gameStorage.getHexScale()/BUILDING_SCALING);
@@ -176,6 +191,10 @@ public class BuildingPointController {
 
     public Building getBuilding() {
         return building;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public void setVisible(boolean isVisible){

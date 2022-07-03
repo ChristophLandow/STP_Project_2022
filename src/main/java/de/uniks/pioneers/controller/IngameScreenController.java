@@ -10,6 +10,7 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -65,8 +66,6 @@ public class IngameScreenController implements Controller {
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
     @Inject Provider<SettingsScreenController> settingsScreenControllerProvider;
     @Inject EventListener eventListener;
-
-
     @Inject Provider<TradePopUpController> tradePopUpControllerProvider;
     private Stage popUpStage;
 
@@ -85,6 +84,8 @@ public class IngameScreenController implements Controller {
     private IngameStateController ingameStateController;
     private IngamePlayerController ingamePlayerController;
 
+    private final ChangeListener<Boolean> finishedMapRenderListener;
+
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
                                   GameService gameService, TimerService timerService, MapRenderService mapRenderService) {
@@ -96,7 +97,11 @@ public class IngameScreenController implements Controller {
         this.gameService = gameService;
         this.timerService = timerService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService,timerService);
-        this.boardController = new BoardController(ingameService, userService, game, gameStorage, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService,  mapRenderService);
+
+        finishedMapRenderListener = (observable, oldValue, newValue) -> {
+            if(mapRenderService.isFinishedLoading().get()) initWhenMapFinishedRendering();
+        };
     }
 
     @Override
@@ -110,6 +115,9 @@ public class IngameScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+
+
+        mapRenderService.setFinishedLoading(false);
         this.boardController.fieldPane = this.fieldPane;
         this.boardController.streetPointControllerProvider = this.streetPointControllerProvider;
 
@@ -149,21 +157,7 @@ public class IngameScreenController implements Controller {
         new IngameSelectController(gameStorage, roadFrame, settlementFrame, cityFrame, streetSVG, houseSVG, citySVG);
         leaveGameController.init(this, gameChatController);
 
-        Thread waitForMapLoadedThread = new Thread(() -> {
-            try{
-                while(!this.mapRenderService.isFinishedLoading()){
-                    Thread.sleep(300);
-                }
-
-                initWhenMapFinishedRendering();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        });
-
-        waitForMapLoadedThread.setDaemon(true);
-        waitForMapLoadedThread.start();
+        this.mapRenderService.isFinishedLoading().addListener(finishedMapRenderListener);
 
         // set timeLabel of timer
         this.timerService.setTimeLabel(this.timeLabel);
@@ -182,7 +176,7 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
 
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get());
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService);
 
         // init game attributes and event listeners
         gameService.initGame();
@@ -286,6 +280,7 @@ public class IngameScreenController implements Controller {
 
     @Override
     public void stop() {
+        this.mapRenderService.isFinishedLoading().removeListener(finishedMapRenderListener);
         gameChatController.stop();
         if (this.popUpStage != null) {
             this.popUpStage.close();
@@ -296,6 +291,7 @@ public class IngameScreenController implements Controller {
         this.boardController.stop();
         timerService.reset();
         mapRenderService.stop();
+        boardController.stop();
     }
 
     public void setUsers(List<User> users) {

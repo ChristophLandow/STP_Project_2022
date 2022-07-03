@@ -21,8 +21,8 @@ public class GameConstants {
     public static final String FOUNDING_ROAD_2 = "founding-road-2";
     public static final String ROLL = "roll";
     public static final String BUILD = "build";
-
     public static final String DROP = "drop";
+    public static final String ROB = "rob";
 
     // action strings
     public static final String ROLL_DICE = "roll the dice";
@@ -55,4 +55,9 @@ public class GameConstants {
     public static final String CITY = "city";
     public static final String ROAD = "road";
     public static final String BANK_ID = "684072366f72202b72406465";
+
+    //Robber States
+    public static final int ROBBER_DISCARD = 1;
+    public static final int ROBBER_MOVE = 2;
+    public static final int ROBBER_STEAL = 3;
 }

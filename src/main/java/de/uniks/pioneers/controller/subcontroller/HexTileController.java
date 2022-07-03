@@ -1,24 +1,47 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.GameConstants;
+import de.uniks.pioneers.Main;
+import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.RobberService;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+
 import java.util.ArrayList;
 
+import static de.uniks.pioneers.GameConstants.HOVER_COLOR;
+import static de.uniks.pioneers.GameConstants.STANDARD_COLOR;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class HexTileController {
-    //private final Circle view;
+    private final Pane fieldPane;
+    private final Circle eventView;
     private final Circle view;
-    //private final ImageView numberImage;
+    private ImageView robber;
     public HexTile tile;
     public BuildingPointController[] corners = new BuildingPointController[6];
     public StreetPointController[] edges = new StreetPointController[6];
 
-    public HexTileController(HexTile tile, Circle view) {
+    private RobberService robberService;
+
+    public HexTileController(Pane fieldPane, HexTile tile, Circle view, Circle eventView) {
+        this.fieldPane = fieldPane;
         this.tile = tile;
+        this.eventView = eventView;
         this.view = view;
-        this.view.setVisible(false);
-        this.view.setDisable(true);
+        this.robber = null;
+
+        this.eventView.setOpacity(0);
+    }
+
+    public void init(){
+        this.eventView.setOnMouseClicked(this::moveRobber);
+        this.eventView.setOnMouseEntered(this::dye);
+        this.eventView.setOnMouseExited(this::undye);
     }
 
     public void findCorners(ArrayList<BuildingPointController> buildingPointControllers) {
@@ -151,7 +174,71 @@ public class HexTileController {
         }
     }
 
+    private void dye(MouseEvent mouseEvent) {
+        if(this.robber == null && robberService != null && this.robberService.getRobberState().get() == GameConstants.ROBBER_MOVE) {
+            this.view.setFill(HOVER_COLOR);
+            this.view.setVisible(true);
+        }
+    }
+
+    private void undye(MouseEvent mouseEvent) {
+        this.view.setFill(STANDARD_COLOR);
+        this.view.setVisible(false);
+    }
+
+    private void moveRobber(MouseEvent event){
+        if(robberService != null && this.robberService.getRobberState().get() == GameConstants.ROBBER_MOVE) {
+            this.robberService.moveRobber(this);
+            this.robberService.getRobberState().set(GameConstants.ROBBER_STEAL);
+        }
+    }
+
+    public void moveRobber(){
+        if(robberService != null && this.robberService.getRobberState().get() == GameConstants.ROBBER_MOVE) {
+            this.robberService.moveRobber(this);
+            this.robberService.getRobberState().set(GameConstants.ROBBER_STEAL);
+        }
+    }
+
+    public void setRobber(boolean placeRobber){
+        if(placeRobber && this.robber == null){
+            this.robber = new ImageView(new Image(Main.class.getResource("./controller/ingame/robber.png").toString()));
+            this.robber.setFitWidth((this.eventView.getRadius()*1.4)/2);
+            this.robber.setFitHeight(this.eventView.getRadius()*1.4);
+            this.robber.setLayoutX(this.view.getLayoutX() - this.robber.getFitWidth()/2);
+            this.robber.setLayoutY(this.view.getLayoutY() - this.robber.getFitHeight()/2);
+
+            this.fieldPane.getChildren().add(this.robber);
+            this.eventView.setOpacity(0.8);
+        }
+        else{
+            if(robberService.getRobberTile() != this) {
+                this.fieldPane.getChildren().remove(this.robber);
+                this.robber = null;
+                this.eventView.setOpacity(0);
+            }
+        }
+    }
+
+    public ArrayList<User> getPlayersFromTile(){
+        ArrayList<User> result = new ArrayList<>();
+
+        for(BuildingPointController buildingPointController: corners){
+            User user = buildingPointController.getOwner();
+
+            if(user != null && !result.contains(user)){
+                result.add(user);
+            }
+        }
+
+        return result;
+    }
+
     public void setVisible(boolean isVisible){
+        if(this.robber != null){
+            this.robber.setVisible(isVisible);
+        }
+
         for(BuildingPointController buildingPointController: this.corners){
             if(buildingPointController != null) {
                 buildingPointController.setVisible(isVisible);
@@ -167,5 +254,9 @@ public class HexTileController {
 
     public Circle getView() {
         return view;
+    }
+
+    public void setRobberService(RobberService robberService) {
+        this.robberService = robberService;
     }
 }
