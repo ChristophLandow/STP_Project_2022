@@ -44,7 +44,6 @@ public class ResourceAnimationController {
             String key = c.getKey();
             if (key.equals(gameService.me)) {
                 if (c.wasRemoved() && c.wasAdded()) {
-                    System.out.println(" your ressources: "+ c.getValueAdded().resources());
                     this.valueAdded = c.getValueAdded();
                     this.valueRemoved = c.getValueRemoved();
                     this.handleResources();
@@ -76,7 +75,6 @@ public class ResourceAnimationController {
         if(ore==0 && oldOre>0) {
             ingamePlayerResourcesController.setOreToElement(false);
         } else if(ore>0 && oldOre==0) {
-            System.out.println("ore");
             counter += 1;
             firstResourceCardAnimation(carbonView, counter, 1, true);
         } else if(ore > oldOre) {
@@ -87,7 +85,6 @@ public class ResourceAnimationController {
         if(lumber==0 && oldLumber>0) {
             ingamePlayerResourcesController.setLumberToElement(false);
         } else if(lumber>0 && oldLumber==0) {
-            System.out.println("lumber");
             counter += 1;
             firstResourceCardAnimation(fishView, counter, 2, true);
         } else if(lumber > oldLumber) {
@@ -98,7 +95,6 @@ public class ResourceAnimationController {
         if(brick==0 && oldBrick>0) {
             ingamePlayerResourcesController.setBrickToElement(false);
         } else if(brick>0 && oldBrick==0) {
-            System.out.println("brick");
             counter += 1;
             firstResourceCardAnimation(iceView, counter, 3, true);
         } else if(brick > oldBrick) {
@@ -109,7 +105,6 @@ public class ResourceAnimationController {
         if(wool==0 && oldWool>0) {
             ingamePlayerResourcesController.setWoolToElement(false);
         } else if(wool>0 && oldWool==0) {
-            System.out.println("wool");
             counter += 1;
             firstResourceCardAnimation(polarbearView, counter, 4, true);
         } else if(wool > oldWool) {
@@ -120,7 +115,6 @@ public class ResourceAnimationController {
         if(grain==0 && oldGrain>0) {
             ingamePlayerResourcesController.setGrainToElement(false);
         } else if(grain>0 && oldGrain==0) {
-            System.out.println("grain");
             counter += 1;
             firstResourceCardAnimation(whaleView, counter, 5, true);
         } else if(grain > oldGrain) {
