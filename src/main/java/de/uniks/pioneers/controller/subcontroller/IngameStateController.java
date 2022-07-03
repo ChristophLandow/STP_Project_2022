@@ -53,6 +53,8 @@ public class IngameStateController {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            System.out.println("Its your turn ");
+            System.out.println("expected move : " + move);
             // enable posting move
             switch (move.action()) {
                 case FOUNDING_ROLL, ROLL -> this.enableRoll(move.action());
@@ -66,6 +68,10 @@ public class IngameStateController {
                     this.enableStreetPoints(move.action());
                 }
                 case ROB -> this.enableHexagonPoints();
+                case OFFER -> {
+                    System.out.println(currentState);
+                    ingameService.tradeIsOffered.set(true);
+                }
             }
         }
 
@@ -109,6 +115,8 @@ public class IngameStateController {
             case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
             case BUILD -> actionString = BUILD;
             case ROB -> actionString = "place robber";
+            case OFFER -> actionString = OFFER;
+            case ACCEPT -> actionString = ACCEPT;
         }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {
@@ -134,7 +142,7 @@ public class IngameStateController {
                 hexTileController.setRobber(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r);
 
                 if(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r){
-                    hexTileController.moveRobber();
+                    hexTileController.moveRobberForOtherPlayers();
                 }
             }
         }

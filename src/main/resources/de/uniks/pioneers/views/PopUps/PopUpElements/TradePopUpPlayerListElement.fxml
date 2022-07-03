@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<HBox fx:id="root" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUpPlayerListElementController">
+   <children>
+      <VBox fx:id="playerBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+         <children>
+            <Label fx:id="playerNameLabel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="60.0" text="alice">
+               <VBox.margin>
+                  <Insets top="-5.0" />
+               </VBox.margin></Label>
+            <ImageView fx:id="playerAvatar" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+         </children>
+         <HBox.margin>
+            <Insets left="-10.0" />
+         </HBox.margin>
+      </VBox>
+      <Circle fx:id="tradeSelector" fill="RED" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+         <HBox.margin>
+            <Insets left="40.0" />
+         </HBox.margin>
+      </Circle>
+   </children>
+</HBox>

@@ -11,6 +11,10 @@ public record Player(
         int victoryPoints,
         int longestRoad
 ) {
+
+    public Player normalize(Resources normalizedResources) {
+        return new Player(gameId, userId, color, active, foundingRoll, normalizedResources, remainingBuildings, victoryPoints, longestRoad);
+    }
 }
 
 

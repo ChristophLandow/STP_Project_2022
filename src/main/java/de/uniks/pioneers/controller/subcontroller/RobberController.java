@@ -31,6 +31,7 @@ public class RobberController implements Controller {
 
     @Override
     public void init() {
+        this.robberService.getRobberState().set(GameConstants.ROBBER_DISCARD);
         robberService.setup();
         this.robberService.getRobberState().addListener((observable, oldValue, newValue) -> callNext(newValue.intValue()));
         discard();
@@ -39,6 +40,9 @@ public class RobberController implements Controller {
     public void callNext(int newValue) {
         if (newValue == GameConstants.ROBBER_STEAL) {
             rob();
+        }
+        else if(newValue == GameConstants.ROBBER_FINISHED){
+            stop();
         }
     }
 
@@ -60,16 +64,13 @@ public class RobberController implements Controller {
                 robPlayerController = robPlayerControllerProvider.get();
                 robPlayerController.init();
             } else {
-                disposable.add(this.robberService.robPlayer(null).observeOn(FX_SCHEDULER).subscribe(move -> {
-                }));
+                disposable.add(this.robberService.robPlayer(null).observeOn(FX_SCHEDULER).subscribe(move -> robberService.getRobberState().set(GameConstants.ROBBER_FINISHED)));
             }
         }
     }
 
     @Override
     public void stop() {
-        this.robberService.getRobberState().set(GameConstants.ROBBER_DISCARD);
-
         if(discardResourcesController != null){
             discardResourcesController.stop();
         }
