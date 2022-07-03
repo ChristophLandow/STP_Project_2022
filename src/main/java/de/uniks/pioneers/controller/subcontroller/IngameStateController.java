@@ -4,8 +4,10 @@ import de.uniks.pioneers.controller.BoardController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.Point3D;
 import de.uniks.pioneers.model.State;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.MapRenderService;
 import de.uniks.pioneers.services.TimerService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -24,6 +26,7 @@ public class IngameStateController {
     private final UserService userService;
     private final IngameService ingameService;
     private final TimerService timerService;
+    private final MapRenderService mapRenderService;
     private final BoardController boardController;
     private final Pane turnPane;
     private final ImageView hourglassImageView;
@@ -33,10 +36,11 @@ public class IngameStateController {
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane,
-                                 ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game) {
+                                 ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, MapRenderService mapRenderService) {
         this.userService = userService;
         this.ingameService = ingameService;
         this.timerService = timerService;
+        this.mapRenderService = mapRenderService;
         this.boardController = boardController;
         this.turnPane = turnPane;
         this.hourglassImageView = hourglassImageView;
@@ -61,9 +65,16 @@ public class IngameStateController {
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());
                 }
+                case ROB -> this.enableHexagonPoints();
             }
         }
+
         this.setSituationLabel(move.players().get(0), move.action());
+        this.placeRobber(currentState.robber());
+    }
+
+    private void enableHexagonPoints(){
+        this.boardController.enableHexagonPoints();
     }
 
     private void enableStreetPoints(String action) {
@@ -97,6 +108,7 @@ public class IngameStateController {
             case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> actionString = "place road";
             case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
             case BUILD -> actionString = BUILD;
+            case ROB -> actionString = "place robber";
         }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {
@@ -113,5 +125,18 @@ public class IngameStateController {
         // init dice subcontroller
         this.diceSubcontroller.setAction(action);
         this.diceSubcontroller.activate();
+    }
+
+    private void placeRobber(Point3D pos){
+        if(pos != null) {
+            for (HexTileController hexTileController : mapRenderService.getTileControllers()) {
+                HexTile tile = hexTileController.tile;
+                hexTileController.setRobber(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r);
+
+                if(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r){
+                    hexTileController.moveRobber();
+                }
+            }
+        }
     }
 }
