@@ -117,9 +117,9 @@ public class IngamePlayerResourcesController {
                 String oldValue = label.getText();
                 ObjectProperty<Paint> color = label.textFillProperty();
                 label.setTextFill(Color.RED);
+                label.setText(String.valueOf(missingResources.get(s)));
                 label.setLayoutX(node.getLayoutX());
                 label.setLayoutY(node.getLayoutY());
-                label.setText(String.valueOf(missingResources.get(s)));
                 if (!resourcesHBox.getChildren().contains(node)) {
                     label.setTranslateX(-20);
                     addFadingIn(node, resourcesHBox);
@@ -146,7 +146,6 @@ public class IngamePlayerResourcesController {
         });
         timeline.play();
     }
-
 
     public void textFillAnimation(Label label, HBox parent, Paint paint) {
         Timeline timeline = new Timeline(
@@ -176,7 +175,7 @@ public class IngamePlayerResourcesController {
         FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
         transition.setFromValue(1);
         transition.setToValue(0);
-        transition.setInterpolator(Interpolator.EASE_BOTH);
+        transition.setInterpolator(Interpolator.EASE_OUT);
         transition.setOnFinished(finishHim -> {
             parent.getChildren().remove(node);
         });
