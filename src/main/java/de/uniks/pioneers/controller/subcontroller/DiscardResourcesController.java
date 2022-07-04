@@ -61,7 +61,7 @@ public class DiscardResourcesController implements Initializable, Controller {
     private final ArrayList<Spinner<Integer>> spinnerLIst = new ArrayList<>();
 
     @Inject
-    public DiscardResourcesController(Provider<IngameScreenController> ingameScreenControllerProvider, Provider<RobberController> robberControllerProvider, GameService gameService, PrefService prefService, IngameService ingameService) {
+    public DiscardResourcesController(Provider<IngameScreenController> ingameScreenControllerProvider, Provider<RobberController> robberControllerProvider) {
         this.robberControllerProvider = robberControllerProvider;
         this.ingameScreenControllerProvider = ingameScreenControllerProvider;
 
