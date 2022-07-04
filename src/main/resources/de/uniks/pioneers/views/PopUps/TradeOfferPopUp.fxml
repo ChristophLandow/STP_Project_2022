@@ -25,7 +25,7 @@
                </image>
             </ImageView>
             <HBox fx:id="resourcesHBoxOffer" alignment="CENTER" minWidth="50.0" spacing="5.0" translateY="10.0" />
-            <HBox fx:id="resourcesHBoxGet" alignment="CENTER" minWidth="50.0" spacing="5.0" />
+            <HBox fx:id="resourcesHBoxGet" alignment="CENTER" minWidth="50.0" nodeOrientation="RIGHT_TO_LEFT" spacing="5.0" />
             <ImageView fx:id="getArrow" fitHeight="20.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateY="10.0">
                <image>
                   <Image url="@../../../../../../../../../../../Desktop/tradeArrow.png" />
