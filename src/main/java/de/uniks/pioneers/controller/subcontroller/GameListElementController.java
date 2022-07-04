@@ -35,6 +35,7 @@ public class GameListElementController implements Controller {
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
     public SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+
     @Inject
     public GameListElementController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
