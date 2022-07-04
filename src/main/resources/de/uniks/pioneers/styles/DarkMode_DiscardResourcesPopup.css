@@ -1,8 +1,8 @@
-#DiscardResourcesAnchorPane {
+#anchorPane {
     -fx-background-color:  #424242;
 }
 
-#XfromSixText {
+#numeratorText {
     -fx-fill: rgb(255, 255, 255);
 }
 
@@ -10,7 +10,7 @@
     -fx-fill: rgb(255, 255, 255);
 }
 
-#SixText {
+#denominatorText {
     -fx-fill: rgb(255, 255, 255);
 }
 
