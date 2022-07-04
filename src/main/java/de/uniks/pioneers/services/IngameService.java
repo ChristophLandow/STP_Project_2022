@@ -8,16 +8,16 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
+import javafx.scene.control.Alert;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.BUILD;
-import static de.uniks.pioneers.GameConstants.OFFER;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameService {
@@ -87,14 +87,80 @@ public class IngameService {
 
         System.out.println(offer);
 
-        String bank = "684072366f72202b72406465";
-
-        disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, bank))
-                .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> trade = new HashMap<>())
-        );
+        if (checkTradeOptions(offer)) {
+            disposable.add(postMove(game.get()._id(),new CreateMoveDto(BUILD,offer,BANK_ID))
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(e -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
+                        alert.showAndWait();
+                    })
+                    .subscribe(move -> trade = new HashMap<>())
+            );
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
+            alert.showAndWait();
+        }
     }
+
+    private boolean checkTradeOptions(Resources resources) {
+        ArrayList<Integer> res = new ArrayList<>();
+        res.add(resources.brick());
+        res.add(resources.grain());
+        res.add(resources.lumber());
+        res.add(resources.ore());
+        res.add(resources.wool());
+        List<String> tradeOptions = gameStorage.getTradeOptions();
+        if (!onlyOneResourceTypeSet(res)) {
+            return false;
+        }
+        int numberOfTradeResources = checkNumberOfTradeResources(resources);
+        if (numberOfTradeResources == -1) {
+            return false;
+        } else if (numberOfTradeResources == 2) {
+            int index = res.indexOf(2);
+            return switch (index) {
+                case 0 -> tradeOptions.contains("brick");
+                case 1 -> tradeOptions.contains("grain");
+                case 2 -> tradeOptions.contains("lumber");
+                case 3 -> tradeOptions.contains("ore");
+                case 4 -> tradeOptions.contains("wool");
+                default -> false;
+            };
+        } else if (numberOfTradeResources == 3) {
+            return tradeOptions.contains(null);
+        } else return numberOfTradeResources == 4;
+    }
+
+    private boolean onlyOneResourceTypeSet(ArrayList<Integer> res) {
+        // checks that only one resource type is positive, one negative and the rest null
+        int nullCounter = 0;
+        int positiveCounter = 0;
+        int negativeCounter = 0;
+        for (Integer i : res) {
+            if (i == null) {
+                nullCounter += 1;
+            } else if (i > 0) {
+                positiveCounter += 1;
+            } else if (i < 0) {
+                negativeCounter += 1;
+            }
+        }
+        return nullCounter == 3 && positiveCounter == 1 && negativeCounter == 1;
+    }
+
+    private int checkNumberOfTradeResources(Resources resources) {
+        // returns the number of resources the player wants to trade away
+        if (resources.brick() == 4 || resources.grain() == 4 || resources.lumber() == 4 || resources.ore() == 4 || resources.wool() == 4) {
+            return 4;
+        } else if (resources.brick() == 3 || resources.grain() == 3 || resources.lumber() == 3 || resources.ore() == 3 || resources.wool() == 3) {
+            return 3;
+        } else if (resources.brick() == 2 || resources.grain() == 2 || resources.lumber() == 2 || resources.ore() == 2 || resources.wool() == 2) {
+            return 2;
+        } else {
+            return -1;
+        }
+    }
+
 
     public void tradeWithPlayers() {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
@@ -105,9 +171,7 @@ public class IngameService {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> {
-                    trade = new HashMap<>();
-                })
+                .subscribe(move -> trade = new HashMap<>())
         );
 
     }
