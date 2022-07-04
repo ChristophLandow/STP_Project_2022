@@ -1,6 +1,5 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
@@ -18,9 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.BANK_ID;
-import static de.uniks.pioneers.GameConstants.BUILD;
-import static de.uniks.pioneers.GameConstants.OFFER;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class IngameService {
@@ -174,9 +171,7 @@ public class IngameService {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> {
-                    trade = new HashMap<>();
-                })
+                .subscribe(move -> trade = new HashMap<>())
         );
 
     }
