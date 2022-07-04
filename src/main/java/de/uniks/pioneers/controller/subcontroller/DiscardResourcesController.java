@@ -132,7 +132,6 @@ public class DiscardResourcesController implements Initializable, Controller {
     @Override
     public void init(){
         //set stage
-        System.out.println(prefService.getDarkModeState());
         this.stage = new Stage();
         Parent node = render();
         this.stage.setTitle("Discard resource cards");
