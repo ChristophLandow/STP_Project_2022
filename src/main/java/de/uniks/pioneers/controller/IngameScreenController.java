@@ -12,8 +12,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -36,7 +34,7 @@ import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
@@ -132,10 +130,10 @@ public class IngameScreenController implements Controller {
         this.gameService = gameService;
         this.timerService = timerService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService);
-        this.boardController = new BoardController(ingameService, userService,game, gameStorage, gameService, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
-            if(mapRenderService.isFinishedLoading().get()) initWhenMapFinishedRendering();
+            if (mapRenderService.isFinishedLoading().get()) initWhenMapFinishedRendering();
         };
     }
 
@@ -286,9 +284,9 @@ public class IngameScreenController implements Controller {
 
         // init listener for incoming trade offer
         tradeOfferListener = ((observable, oldValue, newValue) -> {
-            if (oldValue.equals(false) && newValue.equals(true)){
+            if (oldValue.equals(false) && newValue.equals(true)) {
                 openTradeOfferPopUp();
-            }else if (oldValue.equals(true) && newValue.equals(false)){
+            } else if (oldValue.equals(true) && newValue.equals(false)) {
                 closePopUpStage();
             }
         });
@@ -305,6 +303,11 @@ public class IngameScreenController implements Controller {
 
     public App getApp() {
         return this.app;
+    }
+
+    private void closePopUpStage() {
+        popUpController.stop();
+        popUpStage.close();
     }
 
     public void setPlayerColor(String hexColor) {
@@ -336,6 +339,9 @@ public class IngameScreenController implements Controller {
     public void stop() {
         this.mapRenderService.isFinishedLoading().removeListener(finishedMapRenderListener);
         gameChatController.stop();
+        if (this.popUpStage != null) {
+            this.popUpStage.close();
+        }
         settingsScreenControllerProvider.get().stop();
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
@@ -364,13 +370,6 @@ public class IngameScreenController implements Controller {
 
     Controller popUpController;
 
-    public void openTradePopUp() {
-        popUpStage = new Stage();
-        popUpStage.setTitle("Pioneers - trade");
-        popUpController = tradePopUpControllerProvider.get();
-        showPopUpStage();
-    }
-
     private void openTradeOfferPopUp() {
         popUpStage = new Stage();
         popUpStage.setTitle("trade offer");
@@ -378,7 +377,7 @@ public class IngameScreenController implements Controller {
         showPopUpStage();
     }
 
-    private void showPopUpStage(){
+    private void showPopUpStage() {
         Parent root = popUpController.render();
         popUpController.init();
         Scene scene = new Scene(root);
@@ -386,8 +385,15 @@ public class IngameScreenController implements Controller {
         popUpStage.show();
     }
 
-    private void closePopUpStage() {
-        popUpController.stop();
-        popUpStage.close();
+    public void openTradePopUp() {
+        if (this.popUpStage == null) {
+            popUpStage = new Stage();
+            popUpStage.setTitle("Pioneers - trade");
+            popUpController = tradePopUpControllerProvider.get();
+            showPopUpStage();
+        } else {
+            this.popUpStage.show();
+            this.popUpStage.toFront();
+        }
     }
 }
