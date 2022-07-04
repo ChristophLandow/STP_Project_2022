@@ -117,18 +117,18 @@ public class IngamePlayerResourcesController {
                 Paint color = label.textFillProperty().get();
                 label.setTextFill(Color.RED);
                 label.setText(String.valueOf(missingResources.get(s)));
-                if (!resourcesHBox.getChildren().contains(node)) {
-                    textFillAnimation(label,oldValue, color);
-                    addFadingIn(node, label, resourcesHBox);
+                if (resourcesHBox.getChildren().contains(node)) {
+                    textFillAnimation(node,label, oldValue,color);
                 } else {
-                    textFillAnimation(label, oldValue,color);
+                    addFadingIn(node, label, resourcesHBox);
+                    textFillAnimation(node, label,oldValue, color);
                 }
             }
         });
     }
 
-    private void textFillAnimation(Label label, String oldValue, Paint color) {
-        label.setTranslateX(-19);
+    private void textFillAnimation(ImageView node, Label label, String oldValue, Paint color) {
+        label.setTranslateX(-20);
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0)),
                 new KeyFrame(Duration.seconds(1.5))
@@ -136,6 +136,10 @@ public class IngamePlayerResourcesController {
         timeline.setAutoReverse(true);
         timeline.setCycleCount(1);
         timeline.setOnFinished(e -> {
+            if (Integer.parseInt(oldValue)==0){
+                resourcesHBox.getChildren().remove(node);
+                resourcesHBox.getChildren().remove(label);
+            }
             label.setTranslateX(-14);
             label.setText(oldValue);
             label.setTextFill(color);
@@ -154,19 +158,15 @@ public class IngamePlayerResourcesController {
         transition.setFromValue(0);
         transition.setToValue(1);
         transition.setInterpolator(Interpolator.EASE_IN);
-        transition.setOnFinished(finish -> removeFadingOut(node, label, parent));
+        transition.setOnFinished(finish -> removeFadingOut(node));
         transition.play();
     }
 
-    public void removeFadingOut(Node node, Label label, HBox parent) {
+    public void removeFadingOut(Node node) {
         FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
         transition.setFromValue(1);
         transition.setToValue(0);
         transition.setInterpolator(Interpolator.EASE_OUT);
-        transition.setOnFinished(finishHim -> {
-            parent.getChildren().remove(node);
-            parent.getChildren().remove(label);
-        });
         transition.play();
     }
 
