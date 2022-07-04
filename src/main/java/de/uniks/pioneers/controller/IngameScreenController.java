@@ -382,6 +382,8 @@ public class IngameScreenController implements Controller {
         popUpController.init();
         Scene scene = new Scene(root);
         popUpStage.setScene(scene);
+        popUpStage.setX(300);
+        popUpStage.setY(300);
         popUpStage.show();
     }
 

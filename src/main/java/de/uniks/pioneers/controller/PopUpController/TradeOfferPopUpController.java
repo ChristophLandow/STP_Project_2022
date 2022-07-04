@@ -21,10 +21,7 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -101,6 +98,8 @@ public class TradeOfferPopUpController implements Controller {
 
         // create imageViews for different resource types
         List<String> subStrings = List.of("fish", "ice", "polarbear", "carbon", "whale");
+        List<String> resStrings = List.of("lumber", "brick", "wool", "ore", "grain");
+        Iterator<String> resIter = resStrings.iterator();
         imageMap = new HashMap<>();
         subStrings.forEach(s -> {
             String resourceURL = String.format("/de/uniks/pioneers/controller/subcontroller/images/card_%s.png",s);
@@ -109,18 +108,20 @@ public class TradeOfferPopUpController implements Controller {
             imageView.setFitWidth(30);
             imageView.setFitHeight(45);
             imageView.setImage(img);
-            imageMap.put(s,imageView);
+            imageMap.put(resIter.next(),imageView);
         });
 
         // add image view to offerBox xOr getBox according to resources from offer
         Resources trade = ingameService.tradeOffer.get().resources();
+        System.out.println("trade offer: " + trade);
         Map<String,Integer> resources = trade.createMap();
+        System.out.println("trad offer: "+ resources);
 
         // label x-14, y-18 font 14px bold color white xor black
         resources.keySet().forEach(s -> {
-            if (resources.get(s)>0){
+            if (resources.get(s) != null && resources.get(s)>0){
                 resourcesHBoxOffer.getChildren().add(imageMap.get(s));
-            }else if (resources.get(s)<0){
+            }else if (resources.get(s) != null && resources.get(s)<0){
                 resourcesHBoxGet.getChildren().add(imageMap.get(s));
             }
         });
