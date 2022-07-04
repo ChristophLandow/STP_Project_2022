@@ -75,21 +75,21 @@ public class TradePopUpController implements Controller {
         public void decrement(int steps) {
             if (getValue() > 0 ) {
                 setValue(getValue() - 1);
-                updateTrade();
+                updateTrade(-1);
             }
         }
 
         @Override
         public void increment(int steps) {
             setValue(getValue() + 1);
-            updateTrade();
+            updateTrade(1);
         }
 
-        private void updateTrade() {
+        private void updateTrade(int increment) {
             if (types.getKey().equals(OFFER)){
-                ingameService.getOrCreateTrade(types.getValue(),-1);
+                ingameService.getOrCreateTrade(types.getValue(),-increment);
             }else {
-                ingameService.getOrCreateTrade(types.getValue(),1);
+                ingameService.getOrCreateTrade(types.getValue(),increment);
             }
         }
     }

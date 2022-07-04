@@ -224,7 +224,6 @@ public class GameService {
         missingResources = new HashMap<>();
         int lumber = 0, brick = 0, grain = 0, wool = 0, ore = 0;
         if (type.equals(ROAD)) {
-
             lumber = resources.lumber() - 1;
             brick = resources.brick() - 1;
         } else if (type.equals(SETTLEMENT)) {
@@ -240,7 +239,7 @@ public class GameService {
         missingResources.put("brick", brick);
         missingResources.put("grain", grain);
         missingResources.put("wool", wool);
-        missingResources.put("ore",ore);
+        missingResources.put("ore", ore);
 
         System.out.println(missingResources);
     }
