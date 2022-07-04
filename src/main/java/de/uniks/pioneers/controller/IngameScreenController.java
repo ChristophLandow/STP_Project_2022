@@ -361,6 +361,7 @@ public class IngameScreenController implements Controller {
         this.boardController.buildBoardUI();
     }
 
+
     Controller popUpController;
 
     public void openTradePopUp() {

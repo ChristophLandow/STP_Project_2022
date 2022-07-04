@@ -5,7 +5,6 @@ import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import javafx.animation.*;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -115,25 +114,21 @@ public class IngamePlayerResourcesController {
                 ImageView node = imageMap.get(s);
                 Label label = labelMap.get(s);
                 String oldValue = label.getText();
-                ObjectProperty<Paint> color = label.textFillProperty();
+                Paint color = label.textFillProperty().get();
                 label.setTextFill(Color.RED);
                 label.setText(String.valueOf(missingResources.get(s)));
-                label.setLayoutX(node.getLayoutX());
-                label.setLayoutY(node.getLayoutY());
                 if (!resourcesHBox.getChildren().contains(node)) {
-                    label.setTranslateX(-20);
-                    addFadingIn(node, resourcesHBox);
-                    resourcesHBox.getChildren().add(label);
-                    textFillAnimation(label, resourcesHBox, color.get());
+                    textFillAnimation(label,oldValue, color);
+                    addFadingIn(node, label, resourcesHBox);
                 } else {
-                    label.setTranslateX(-5);
-                    textFillAnimation(label, oldValue,color.get());
+                    textFillAnimation(label, oldValue,color);
                 }
             }
         });
     }
 
-    public void textFillAnimation(Label label, String oldValue, Paint paint) {
+    private void textFillAnimation(Label label, String oldValue, Paint color) {
+        label.setTranslateX(-19);
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0)),
                 new KeyFrame(Duration.seconds(1.5))
@@ -141,43 +136,36 @@ public class IngamePlayerResourcesController {
         timeline.setAutoReverse(true);
         timeline.setCycleCount(1);
         timeline.setOnFinished(e -> {
+            label.setTranslateX(-14);
             label.setText(oldValue);
-            label.setTextFill(paint);
+            label.setTextFill(color);
         });
         timeline.play();
     }
 
-    public void textFillAnimation(Label label, HBox parent, Paint paint) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0)),
-                new KeyFrame(Duration.seconds(1.5))
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(e -> {
-            parent.getChildren().remove(label);
-            label.setTextFill(paint);
-        });
-        timeline.play();
-    }
-
-    public void addFadingIn(Node node, HBox parent) {
+    public void addFadingIn(Node node, Label label, HBox parent) {
         FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
         parent.getChildren().add(node);
+        parent.getChildren().add(label);
+        double x = node.getLayoutX();
+        double y = node.getLayoutY();
+        label.setLayoutX(x);
+        label.setLayoutY(y);
         transition.setFromValue(0);
         transition.setToValue(1);
         transition.setInterpolator(Interpolator.EASE_IN);
-        transition.setOnFinished(finish -> removeFadingOut(node, parent));
+        transition.setOnFinished(finish -> removeFadingOut(node, label, parent));
         transition.play();
     }
 
-    public void removeFadingOut(Node node, HBox parent) {
+    public void removeFadingOut(Node node, Label label, HBox parent) {
         FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
         transition.setFromValue(1);
         transition.setToValue(0);
         transition.setInterpolator(Interpolator.EASE_OUT);
         transition.setOnFinished(finishHim -> {
             parent.getChildren().remove(node);
+            parent.getChildren().remove(label);
         });
         transition.play();
     }
