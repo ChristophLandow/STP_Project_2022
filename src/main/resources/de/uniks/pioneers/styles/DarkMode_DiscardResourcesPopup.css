@@ -1,0 +1,20 @@
+#anchorPane {
+    -fx-background-color:  #424242;
+}
+
+#numeratorText {
+    -fx-fill: rgb(255, 255, 255);
+}
+
+#SlashText {
+    -fx-fill: rgb(255, 255, 255);
+}
+
+#denominatorText {
+    -fx-fill: rgb(255, 255, 255);
+}
+
+#DiscardResourcesOKButton {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}
