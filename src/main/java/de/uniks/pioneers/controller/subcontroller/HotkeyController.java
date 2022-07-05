@@ -45,19 +45,18 @@ public class HotkeyController implements Controller, Initializable {
 
     private final String[] hotkeyChoiceBoxElements = {"STRG", "ALT"};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
-    private final ArrayList<TextField> hotkeyTextFieldVariants = new ArrayList<>();
     private final Scene scene;
     public HBox hotkeyHBox;
-
 
     public HotkeyController(Scene scene) {
         this.scene = scene;
     }
 
     public void setKey(){
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<>() {
             final KeyCombination keyComb = new KeyCodeCombination(KeyCode.ESCAPE,
                     KeyCombination.CONTROL_DOWN);
+
             public void handle(KeyEvent ke) {
                 if (keyComb.match(ke)) {
                     System.out.println("Key Pressed: " + keyComb);
@@ -69,22 +68,19 @@ public class HotkeyController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //hotkeys
         Collections.addAll(hotkeyChoiceBoxVariants, tradingChoiceBox,endTurnChoiceBox,openRulesChoiceBox,openSettingsChoiceBox);
-        Collections.addAll(hotkeyTextFieldVariants, tradingTextField,endTurnTextField,openRulesTextField,openSettingsTextField);
         for (ChoiceBox<String> box : hotkeyChoiceBoxVariants){
             box.getItems().addAll(hotkeyChoiceBoxElements);
         }
+
     }
 
     @Override
     public void init() {
-
     }
 
     @Override
     public void stop() {
-
     }
 
     @Override
@@ -103,5 +99,70 @@ public class HotkeyController implements Controller, Initializable {
 
     public void setHBOx(HBox hotkeyHBox) {
         this.hotkeyHBox = hotkeyHBox;
+    }
+
+    public KeyCode stringToKeyCode(Character letter){
+        KeyCode key = switch (letter) {
+            case 'a' -> KeyCode.A;
+            case 'b' -> KeyCode.B;
+            case 'c' -> KeyCode.C;
+            case 'd' -> KeyCode.D;
+            case 'e' -> KeyCode.E;
+            case 'f' -> KeyCode.F;
+            case 'g' -> KeyCode.G;
+            case 'h' -> KeyCode.H;
+            case 'i' -> KeyCode.I;
+            case 'j' -> KeyCode.J;
+            case 'k' -> KeyCode.K;
+            case 'l' -> KeyCode.L;
+            case 'm' -> KeyCode.M;
+            case 'n' -> KeyCode.N;
+            case 'o' -> KeyCode.O;
+            case 'p' -> KeyCode.P;
+            case 'q' -> KeyCode.Q;
+            case 'r' -> KeyCode.R;
+            case 's' -> KeyCode.S;
+            case 't' -> KeyCode.T;
+            case 'u' -> KeyCode.U;
+            case 'v' -> KeyCode.V;
+            case 'w' -> KeyCode.W;
+            case 'x' -> KeyCode.X;
+            case 'y' -> KeyCode.Y;
+            case 'z' -> KeyCode.Z;
+            case '0' -> KeyCode.DIGIT0;
+            case '1' -> KeyCode.DIGIT1;
+            case '2' -> KeyCode.DIGIT2;
+            case '3' -> KeyCode.DIGIT3;
+            case '4' -> KeyCode.DIGIT4;
+            case '5' -> KeyCode.DIGIT5;
+            case '6' -> KeyCode.DIGIT6;
+            case '7' -> KeyCode.DIGIT7;
+            case '8' -> KeyCode.DIGIT8;
+            case '9' -> KeyCode.DIGIT9;
+            case '-' -> KeyCode.MINUS;
+            case ',' -> KeyCode.COMMA;
+            case '.' -> KeyCode.PERIOD;
+            case '+' -> KeyCode.PLUS;
+            case '#' -> KeyCode.NUMBER_SIGN;
+            case '<' -> KeyCode.LESS;
+            default -> throw new IllegalArgumentException("Cannot convert character :" + letter);
+        };
+        return null;
+    }
+
+    public void safeTradeHotkeys(){
+
+    }
+
+    public void safeEndTurnHotKeys(){
+
+    }
+
+    public void safeOpenSettingsHotKeys(){
+
+    }
+
+    public void safeOpenRulesHotkeys(){
+
     }
 }
