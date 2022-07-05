@@ -83,12 +83,12 @@
          <Font size="20.0" />
       </font>
    </Text>
-   <ChoiceBox fx:id="TradingChoiceBox" layoutX="260.0" layoutY="487.0" prefHeight="25.0" prefWidth="95.0" />
-   <ChoiceBox fx:id="EndTurnChoiceBox" layoutX="260.0" layoutY="530.0" prefHeight="25.0" prefWidth="95.0" />
-   <ChoiceBox fx:id="OpenRulesChoiceBox" layoutX="260.0" layoutY="576.0" prefHeight="25.0" prefWidth="95.0" />
-   <ChoiceBox fx:id="OpenSettingsChoiceBox" layoutX="260.0" layoutY="622.0" prefHeight="25.0" prefWidth="95.0" />
-   <TextField fx:id="TradingTextField" layoutX="376.0" layoutY="487.0" prefHeight="25.0" prefWidth="41.0" />
-   <TextField fx:id="EndTurnTextField" layoutX="376.0" layoutY="530.0" prefHeight="25.0" prefWidth="41.0" />
-   <TextField fx:id="OpenRulesTextField" layoutX="376.0" layoutY="576.0" prefHeight="25.0" prefWidth="41.0" />
-   <TextField fx:id="OpenSettingsTextField" layoutX="376.0" layoutY="622.0" prefHeight="25.0" prefWidth="41.0" />
+   <ChoiceBox fx:id="tradingChoiceBox" layoutX="260.0" layoutY="487.0" prefHeight="25.0" prefWidth="95.0" />
+   <ChoiceBox fx:id="endTurnChoiceBox" layoutX="260.0" layoutY="530.0" prefHeight="25.0" prefWidth="95.0" />
+   <ChoiceBox fx:id="openRulesChoiceBox" layoutX="260.0" layoutY="576.0" prefHeight="25.0" prefWidth="95.0" />
+   <ChoiceBox fx:id="openSettingsChoiceBox" layoutX="260.0" layoutY="622.0" prefHeight="25.0" prefWidth="95.0" />
+   <TextField fx:id="tradingTextField" layoutX="376.0" layoutY="487.0" prefHeight="25.0" prefWidth="41.0" />
+   <TextField fx:id="endTurnTextField" layoutX="376.0" layoutY="530.0" prefHeight="25.0" prefWidth="41.0" />
+   <TextField fx:id="openRulesTextField" layoutX="376.0" layoutY="576.0" prefHeight="25.0" prefWidth="41.0" />
+   <TextField fx:id="openSettingsTextField" layoutX="376.0" layoutY="622.0" prefHeight="25.0" prefWidth="41.0" />
 </AnchorPane>

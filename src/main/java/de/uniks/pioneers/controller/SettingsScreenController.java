@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.services.PrefService;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -35,13 +37,18 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML public RadioButton darkMode_RadioButton;
     @FXML public ChoiceBox<String> musicChoiceBox;
     @FXML public Slider volumeSlider;
-
+    @FXML public ChoiceBox<String> tradingChoiceBox;
+    @FXML public ChoiceBox<String> endTurnChoiceBox;
+    @FXML public ChoiceBox<String> openRulesChoiceBox;
+    @FXML public ChoiceBox<String> openSettingsChoiceBox;
     @Inject
     PrefService prefService;
 
     private final App app;
     private Stage stage;
     private final String[] songNameList = {"no music", "Hardbass", "Ambient"};
+    private final String[] hotkeyChoiceBoxElements = {"STRG", "ALT"};
+    private final ArrayList<ChoiceBox<String>> hotkeyVariants = new ArrayList<>();
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
     private final Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
@@ -143,6 +150,7 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //music
         musicChoiceBox.getItems().addAll(songNameList);
         musicChoiceBox.setOnAction(this::setMusic);
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -151,6 +159,12 @@ public class SettingsScreenController implements Controller, Initializable {
                 mediaPlayer.setVolume(musicVolume);
             }
         });
+        //hotkeys
+        Collections.addAll(hotkeyVariants, tradingChoiceBox,endTurnChoiceBox,openRulesChoiceBox,openSettingsChoiceBox);
+        for (ChoiceBox<String> box : hotkeyVariants){
+            box.getItems().addAll(hotkeyChoiceBoxElements);
+
+        }
     }
 
     private void setMusic(ActionEvent actionEvent) {
