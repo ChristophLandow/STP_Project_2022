@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -37,18 +38,14 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML public RadioButton darkMode_RadioButton;
     @FXML public ChoiceBox<String> musicChoiceBox;
     @FXML public Slider volumeSlider;
-    @FXML public ChoiceBox<String> tradingChoiceBox;
-    @FXML public ChoiceBox<String> endTurnChoiceBox;
-    @FXML public ChoiceBox<String> openRulesChoiceBox;
-    @FXML public ChoiceBox<String> openSettingsChoiceBox;
+    @FXML public Button saveButton;
+    @FXML public HBox hotkeyHBox;
     @Inject
     PrefService prefService;
 
     private final App app;
     private Stage stage;
     private final String[] songNameList = {"no music", "Hardbass", "Ambient"};
-    private final String[] hotkeyChoiceBoxElements = {"STRG", "ALT"};
-    private final ArrayList<ChoiceBox<String>> hotkeyVariants = new ArrayList<>();
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
     private final Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider;
     private final Provider<EditProfileController> editProfileControllerProvider;
@@ -145,6 +142,12 @@ public class SettingsScreenController implements Controller, Initializable {
             e.printStackTrace();
             return null;
         }
+        //hotkeys
+        HotkeyController hotkeyController = new HotkeyController(stage.getScene());
+        hotkeyController.setHBOx(this.hotkeyHBox);
+        Parent node =hotkeyController.render();
+        hotkeyController.init();
+        hotkeyHBox.getChildren().add(node);
         return settingsView;
     }
 
@@ -159,12 +162,6 @@ public class SettingsScreenController implements Controller, Initializable {
                 mediaPlayer.setVolume(musicVolume);
             }
         });
-        //hotkeys
-        Collections.addAll(hotkeyVariants, tradingChoiceBox,endTurnChoiceBox,openRulesChoiceBox,openSettingsChoiceBox);
-        for (ChoiceBox<String> box : hotkeyVariants){
-            box.getItems().addAll(hotkeyChoiceBoxElements);
-
-        }
     }
 
     private void setMusic(ActionEvent actionEvent) {
@@ -253,5 +250,9 @@ public class SettingsScreenController implements Controller, Initializable {
     }
     public App getApp() {
         return this.app;
+    }
+
+    public void safeHotkeys(){
+
     }
 }
