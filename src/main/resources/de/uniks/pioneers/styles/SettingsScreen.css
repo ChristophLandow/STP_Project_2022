@@ -2,6 +2,26 @@
 	-fx-background-color:  #F5F5F5;
 }
 
+#ShortcutsText {
+	-fx-fill: BLACK;
+}
+
+#tradingText {
+	-fx-fill: BLACK;
+}
+
+#endTurnText {
+	-fx-fill: BLACK;
+}
+
+#openRulesText {
+	-fx-fill: BLACK;
+}
+
+#openSettingsText {
+	-fx-fill: BLACK;
+}
+
 .label{
 	-fx-text-fill: rgb(0, 0, 0);
 }
