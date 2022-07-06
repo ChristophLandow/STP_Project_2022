@@ -5,6 +5,7 @@ import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -120,7 +121,7 @@ public class IngamePlayerResourcesController {
                 if (resourcesHBox.getChildren().contains(node)) {
                     textFillAnimation(node,label, oldValue,color);
                 } else {
-                    addFadingIn(node, label, resourcesHBox);
+                    Platform.runLater(()->addFadingIn(node, label, resourcesHBox));
                     textFillAnimation(node, label,oldValue, color);
                 }
             }
