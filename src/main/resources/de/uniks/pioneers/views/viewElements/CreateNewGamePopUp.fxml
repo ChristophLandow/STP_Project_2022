@@ -9,55 +9,50 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="popUpBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="350.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/18"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController">
+<VBox fx:id="popUpBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController">
    <padding>
-      <Insets top="30.0"/>
+      <Insets top="30.0" />
    </padding>
    <HBox fx:id="gameNameBox" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" spacing="40.0">
       <Label fx:id="gameNameLabel" text="name :">
          <HBox.margin>
-            <Insets/>
+            <Insets />
          </HBox.margin>
          <font>
-            <Font size="18.0"/>
+            <Font size="18.0" />
          </font>
       </Label>
       <TextField fx:id="gameNameTextField" promptText="&lt;your game name&gt;" scaleX="1.2" scaleY="1.2">
          <HBox.margin>
-            <Insets left="10.0"/>
+            <Insets left="10.0" />
          </HBox.margin>
       </TextField>
    </HBox>
    <Label fx:id="nameLen" text="Label" textFill="#dc0a0a" translateX="20.0" translateY="-5.0">
       <VBox.margin>
-         <Insets/>
+         <Insets />
       </VBox.margin>
    </Label>
    <HBox fx:id="passwordBox" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" spacing="40.0">
       <padding>
-         <Insets right="20.0"/>
+         <Insets right="20.0" />
       </padding>
       <VBox.margin>
-         <Insets top="20.0"/>
+         <Insets top="20.0" />
       </VBox.margin>
       <Label fx:id="passWordLabel" text="password :">
          <font>
-            <Font size="18.0"/>
+            <Font size="18.0" />
          </font>
       </Label>
-      <PasswordField fx:id="passwordTextField" promptText="&lt;select your password&gt;" scaleX="1.2" scaleY="1.2"/>
+      <PasswordField fx:id="passwordTextField" promptText="&lt;select your password&gt;" scaleX="1.2" scaleY="1.2" />
    </HBox>
-   <Label fx:id="passwordLen" text="Label" textFill="#dc0a0a" translateX="20.0" translateY="-5.0"/>
+   <Label fx:id="passwordLen" text="Label" textFill="#dc0a0a" translateX="20.0" translateY="-5.0" />
    <HBox fx:id="buttonBox" alignment="CENTER" prefHeight="40.0" prefWidth="400.0" spacing="100.0">
       <VBox.margin>
-         <Insets top="40.0"/>
+         <Insets top="40.0" />
       </VBox.margin>
-      <Button fx:id="cancelButton" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" text="cancel"
-              onAction="#closePopUp"/>
-      <Button fx:id="createGameButton" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" text="create game"
-              onAction="#createGame"/>
+      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#closePopUp" scaleX="1.5" scaleY="1.5" text="cancel" />
+      <Button fx:id="createGameButton" mnemonicParsing="false" onAction="#createGame" scaleX="1.5" scaleY="1.5" text="create game" />
    </HBox>
 </VBox>
