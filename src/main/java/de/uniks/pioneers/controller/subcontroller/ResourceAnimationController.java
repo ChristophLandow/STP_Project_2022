@@ -47,6 +47,7 @@ public class ResourceAnimationController {
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             String key = c.getKey();
             if (key.equals(gameService.me)) {
+                // @Tim, der Fall, dass im model zum ersten mal resourcen hizugefügt werden, wird im service behandelt
                 if (c.wasRemoved() && c.wasAdded()) {
                     this.valueAdded = c.getValueAdded();
                     this.valueRemoved = c.getValueRemoved();

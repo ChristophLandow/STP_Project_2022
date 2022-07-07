@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -156,6 +157,7 @@ public class GameService {
                     list.forEach(player -> players.put(player.userId(), normalizePlayer(player)));
                     members.addAll(lobbyMembers);
                     me = userService.getCurrentUser()._id();
+                    myResources = players.get(me).resources().createMap();
                 }, Throwable::printStackTrace));
     }
 
@@ -207,80 +209,59 @@ public class GameService {
                 || checkBuildingSpot(uploadCoords[0], uploadCoords[1] + 1, uploadCoords[2] - 1, 6);
     }
 
-
     public void updateResources(String type, int amount) {
-        if (myResources.containsKey(type)){
             myResources.replace(type,myResources.get(type),amount);
-        }else {
-            myResources.put(type,amount);
-        }
     }
 
-    private void calcMissingRessources(String type) {
-        Resources resources = players.get(me).resources();
+    private void calcMissingRessources(Map<String, Integer> cost) {
         missingResources = new HashMap<>();
-        int lumber = 0, brick = 0, grain = 0, wool = 0, ore = 0;
-        if (type.equals(ROAD)) {
-            lumber = resources.lumber() - 1;
-            brick = resources.brick() - 1;
-        } else if (type.equals(SETTLEMENT)) {
-            lumber = resources.lumber() - 1;
-            brick = resources.brick() - 1;
-            grain = resources.grain() - 1;
-            wool = resources.wool() - 1;
-        } else {
-            grain = resources.grain()-2;
-            ore = resources.ore()-3;
-        }
-        missingResources.put("lumber", lumber);
-        missingResources.put("brick", brick);
-        missingResources.put("grain", grain);
-        missingResources.put("wool", wool);
-        missingResources.put("ore", ore);
+        cost.keySet().forEach(s -> {
+            missingResources.put(s,myResources.get(s)-cost.get(s));
+        });
 
         System.out.println(missingResources);
     }
 
     public boolean checkRoad() {
-        Player mario = players.get(me);
-        boolean enoughRessources = mario.resources().lumber() >= 1 && mario.resources().brick() >= 1;
+        boolean enoughRessources = myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1;
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
             return true;
         } else {
-            calcMissingRessources(ROAD);
+            Map <String,Integer> cost = Map.of(BRICK,1,LUMBER,1);
+            calcMissingRessources(cost);
             notEnoughRessources.set(true);
             return false;
         }
     }
 
     public boolean checkResourcesSettlement() {
-        Player mario = players.get(me);
         System.out.println("checkingRessources");
-        boolean enoughRessources = mario.resources().lumber() >= 1 && mario.resources().brick() >= 1
-                && mario.resources().grain() >= 1 && mario.resources().wool() >= 1;
+        boolean enoughRessources = myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1
+                && myResources.get(GRAIN) >= 1 && myResources.get(WOOL) >= 1;
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
             return true;
         } else {
             System.out.println("not enough ressources");
-            calcMissingRessources(SETTLEMENT);
+            Map <String,Integer> cost = Map.of(BRICK,1,LUMBER,1,GRAIN,1,WOOL,1);
+            calcMissingRessources(cost);
             notEnoughRessources.set(true);
             return false;
         }
     }
 
     public boolean checkCity() {
-        Player mario = players.get(me);
-        boolean enoughRessources = mario.resources().ore() >= 3 && mario.resources().grain() >= 2;
+        boolean enoughRessources = myResources.get(ORE) >= 3 && myResources.get(GRAIN) >= 2;
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
             return true;
         } else {
-            calcMissingRessources(CITY);
+            Map <String,Integer> cost = Map.of(ORE,3,GRAIN,2);
+            calcMissingRessources(cost);
             notEnoughRessources.set(true);
             return false;
         }

@@ -1,5 +1,7 @@
 package de.uniks.pioneers.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
@@ -19,8 +21,8 @@ public record Resources(
         this(null, grain, brick, ore, lumber, wool);
     }
 
-    public Map<String,Integer> createMap(){
-        Map<String ,Integer> resources = new HashMap<>();
+    public ObservableMap<String,Integer> createMap(){
+        ObservableMap<String ,Integer> resources = FXCollections.observableHashMap();
         resources.put("grain",grain());
         resources.put("brick",brick());
         resources.put("ore",ore());

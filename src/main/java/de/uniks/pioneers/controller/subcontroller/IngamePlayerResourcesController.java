@@ -2,16 +2,12 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -30,18 +26,30 @@ import java.io.IOException;
 import java.util.*;
 
 public class IngamePlayerResourcesController {
-    @FXML public HBox resourcesHBox;
-    @FXML public ImageView fischResource;
-    @FXML public Label fischCount;
-    @FXML public ImageView packeisResource;
-    @FXML public Label packeisCount;
-    @FXML public ImageView fellResource;
-    @FXML public Label fellCount;
-    @FXML public ImageView kohleResource;
-    @FXML public Label kohleCount;
-    @FXML public ImageView walknochenResource;
-    @FXML public Label walknochenCount;
-    @FXML public Pane root;
+    @FXML
+    public HBox resourcesHBox;
+    @FXML
+    public ImageView fischResource;
+    @FXML
+    public Label fischCount;
+    @FXML
+    public ImageView packeisResource;
+    @FXML
+    public Label packeisCount;
+    @FXML
+    public ImageView fellResource;
+    @FXML
+    public Label fellCount;
+    @FXML
+    public ImageView kohleResource;
+    @FXML
+    public Label kohleCount;
+    @FXML
+    public ImageView walknochenResource;
+    @FXML
+    public Label walknochenCount;
+    @FXML
+    public Pane root;
 
     private final GameService gameService;
     private Map<String, ImageView> imageMap;
@@ -96,7 +104,7 @@ public class IngamePlayerResourcesController {
                     invokeElement(type, change.getValueAdded());
                 } else if (change.wasAdded() && change.wasRemoved()) {
                     if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
-                        invokeElement(type,change.getValueAdded());
+                        invokeElement(type, change.getValueAdded());
                     } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
                         revokeElement(type);
                     } else {
@@ -166,50 +174,50 @@ public class IngamePlayerResourcesController {
         System.out.println("show missing resources");
 
         Map<String, Integer> missingResources = gameService.missingResources;
+        ObservableMap<String, Integer> resources = gameService.myResources;
         missingResources.keySet().forEach(s -> {
             Integer delta = missingResources.get(s);
+            Integer oldValue = resources.getOrDefault(s, 0);
             if (delta < 0) {
                 ImageView node = imageMap.get(s);
                 Label label = labelMap.get(s);
-                String oldValue = label.getText();
                 Paint color = label.textFillProperty().get();
-                label.setTextFill(Color.RED);
                 label.setText(String.valueOf(missingResources.get(s)));
+                label.setTextFill(Color.RED);
                 if (resourcesHBox.getChildren().contains(node)) {
-                    textFillAnimation(node,label, oldValue,color);
+                    textFillAnimation(node, label, oldValue, color);
                 } else {
-                    Platform.runLater(()->addFadingIn(node, label, resourcesHBox));
-                    textFillAnimation(node, label,oldValue, color);
+                    Platform.runLater(() -> addFadingIn(node, label, resourcesHBox));
+                    textFillAnimation(node, label, oldValue, color);
                 }
             }
         });
     }
 
     public void addFadingIn(Node node, Label label, HBox parent) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        parent.getChildren().add(node);
-        parent.getChildren().add(label);
-        double x = node.getLayoutX();
-        double y = node.getLayoutY();
-        label.setLayoutX(x);
-        label.setLayoutY(y);
-        transition.setFromValue(0);
-        transition.setToValue(1);
-        transition.setInterpolator(Interpolator.EASE_IN);
-        transition.setOnFinished(finish -> removeFadingOut(node));
-        transition.play();
+                FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
+                parent.getChildren().add(node);
+                parent.getChildren().add(label);
+                double x = node.getLayoutX();
+                double y = node.getLayoutY();
+                label.setLayoutX(x);
+                label.setLayoutY(y);
+                transition.setFromValue(0);
+                transition.setToValue(1);
+                transition.setInterpolator(Interpolator.EASE_IN);
+                transition.setOnFinished(finish -> removeFadingOut(node));
     }
 
     public void removeFadingOut(Node node) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        transition.setFromValue(1);
-        transition.setToValue(0);
-        transition.setInterpolator(Interpolator.EASE_OUT);
-        transition.play();
+                FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
+                transition.setFromValue(1);
+                transition.setToValue(0);
+                transition.setInterpolator(Interpolator.EASE_OUT);
+                transition.play();
     }
 
-    private void textFillAnimation(ImageView node, Label label, String oldValue, Paint color) {
-        label.setTranslateX(-20);
+    private void textFillAnimation(ImageView node, Label label, Integer oldValue, Paint color) {
+        label.setTranslateX(-19);
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0)),
                 new KeyFrame(Duration.seconds(1.5))
@@ -217,13 +225,12 @@ public class IngamePlayerResourcesController {
         timeline.setAutoReverse(true);
         timeline.setCycleCount(1);
         timeline.setOnFinished(e -> {
-            if (Integer.parseInt(oldValue)==0){
-                System.out.println("old value is zero");
+            if (oldValue == 0) {
                 resourcesHBox.getChildren().remove(node);
                 resourcesHBox.getChildren().remove(label);
             }
             label.setTranslateX(-14);
-            label.setText(oldValue);
+            label.setText(String.valueOf(oldValue));
             label.setTextFill(color);
         });
         timeline.play();
