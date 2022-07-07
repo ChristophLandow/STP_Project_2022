@@ -229,14 +229,6 @@ public class IngameScreenController implements Controller {
                 })
         );
 
-        Platform.runLater(() -> {
-            // init controller for player resources box
-            IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
-            ingamePlayerResourcesController.root = this.root;
-            ingamePlayerResourcesController.render();
-            ingamePlayerResourcesController.init(gameService.players.get(gameService.me));
-        });
-
         ingamePlayerController = new IngamePlayerController(userService, leaveGameController, elementProvider, playerListView, spectatorProvider, game.get(), hammerImageView, streetCountLabel,
                 houseCountLabel, cityCountLabel, streetSVG, citySVG, houseSVG, tradeImageView, hourglassImageView, nextTurnImageView);
 
@@ -290,6 +282,13 @@ public class IngameScreenController implements Controller {
                 closePopUpStage();
             }
         });
+
+        // init controller for player resources box
+        IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
+        ingamePlayerResourcesController.root = this.root;
+        ingamePlayerResourcesController.render();
+        ingamePlayerResourcesController.init();
+
 
         ingameService.tradeIsOffered.addListener(tradeOfferListener);
     }

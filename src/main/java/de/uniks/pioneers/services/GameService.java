@@ -158,8 +158,10 @@ public class GameService {
                     list.forEach(player -> players.put(player.userId(), normalizePlayer(player)));
                     members.addAll(lobbyMembers);
                     me = userService.getCurrentUser()._id();
-                    myResources = players.get(me).resources().createMap();
-
+                    // observable maps do not seem to be normal java instances !
+                    // thats why myResourcs = players.get(me).resources.createMap leads to
+                    // horrible malfunction for every listener, even added after the appointment
+                    myResources.putAll(players.get(me).resources().createMap());
                 }, Throwable::printStackTrace));
     }
 
