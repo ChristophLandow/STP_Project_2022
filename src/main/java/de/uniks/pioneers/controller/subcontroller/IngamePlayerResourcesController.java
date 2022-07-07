@@ -4,10 +4,16 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -16,6 +22,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.util.Duration;
+
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
@@ -81,13 +89,13 @@ public class IngamePlayerResourcesController {
         };
 
         gameService.notEnoughRessources.addListener(enoughResourcesListener);
-
-        this.fellCount.setTextFill(Color.BLACK);
-        this.kohleCount.setTextFill(Color.BLACK);
         this.resourceAnimationController = new ResourceAnimationController(root, gameService, this);
     }
 
+
     private void showMissingRessources() {
+        System.out.println("show missing resources");
+
         Map<String, Integer> missingResources = gameService.missingResources;
         missingResources.keySet().forEach(s -> {
             Integer delta = missingResources.get(s);
@@ -95,22 +103,60 @@ public class IngamePlayerResourcesController {
                 ImageView node = imageMap.get(s);
                 Label label = labelMap.get(s);
                 String oldValue = label.getText();
-                ObjectProperty<Paint> color = label.textFillProperty();
+                Paint color = label.textFillProperty().get();
                 label.setTextFill(Color.RED);
-                label.setLayoutX(node.getLayoutX());
-                label.setLayoutY(node.getLayoutY());
                 label.setText(String.valueOf(missingResources.get(s)));
-                if (!resourcesHBox.getChildren().contains(node)) {
-                    label.setTranslateX(-20);
-                    resourceAnimationController.addFadingIn(node, resourcesHBox);
-                    resourcesHBox.getChildren().add(label);
-                    resourceAnimationController.textFillAnimation(label, resourcesHBox, color.get());
+                if (resourcesHBox.getChildren().contains(node)) {
+                    textFillAnimation(node,label, oldValue,color);
                 } else {
-                    label.setTranslateX(-5);
-                    resourceAnimationController.textFillAnimation(label, oldValue,color.get());
+                    Platform.runLater(()->addFadingIn(node, label, resourcesHBox));
+                    textFillAnimation(node, label,oldValue, color);
                 }
             }
         });
+    }
+
+    private void textFillAnimation(ImageView node, Label label, String oldValue, Paint color) {
+        label.setTranslateX(-20);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0)),
+                new KeyFrame(Duration.seconds(1.5))
+        );
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(1);
+        timeline.setOnFinished(e -> {
+            if (Integer.parseInt(oldValue)==0){
+                resourcesHBox.getChildren().remove(node);
+                resourcesHBox.getChildren().remove(label);
+            }
+            label.setTranslateX(-14);
+            label.setText(oldValue);
+            label.setTextFill(color);
+        });
+        timeline.play();
+    }
+
+    public void addFadingIn(Node node, Label label, HBox parent) {
+        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
+        parent.getChildren().add(node);
+        parent.getChildren().add(label);
+        double x = node.getLayoutX();
+        double y = node.getLayoutY();
+        label.setLayoutX(x);
+        label.setLayoutY(y);
+        transition.setFromValue(0);
+        transition.setToValue(1);
+        transition.setInterpolator(Interpolator.EASE_IN);
+        transition.setOnFinished(finish -> removeFadingOut(node));
+        transition.play();
+    }
+
+    public void removeFadingOut(Node node) {
+        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
+        transition.setFromValue(1);
+        transition.setToValue(0);
+        transition.setInterpolator(Interpolator.EASE_OUT);
+        transition.play();
     }
 
     private void setImages() {

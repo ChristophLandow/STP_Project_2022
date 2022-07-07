@@ -151,50 +151,5 @@ public class ResourceAnimationController {
     }
 
 
-    public void textFillAnimation(Label label, String oldValue, Paint paint) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0)),
-                new KeyFrame(Duration.seconds(1.5))
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(e -> {
-            label.setText(oldValue);
-            label.setTextFill(paint);
-        });
-        timeline.play();
-    }
 
-    public void textFillAnimation(Label label, HBox parent, Paint paint) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0)),
-                new KeyFrame(Duration.seconds(1.5))
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(e -> {
-            parent.getChildren().remove(label);
-            label.setTextFill(paint);
-        });
-        timeline.play();
-    }
-
-    public void addFadingIn(Node node, HBox parent) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        parent.getChildren().add(node);
-        transition.setFromValue(0);
-        transition.setToValue(1);
-        transition.setInterpolator(Interpolator.EASE_IN);
-        transition.setOnFinished(finish -> removeFadingOut(node, parent));
-        transition.play();
-    }
-
-    public void removeFadingOut(Node node, HBox parent) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        transition.setFromValue(1);
-        transition.setToValue(0);
-        transition.setInterpolator(Interpolator.EASE_BOTH);
-        transition.setOnFinished(finishHim -> parent.getChildren().remove(node));
-        transition.play();
-    }
 }
