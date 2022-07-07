@@ -65,4 +65,15 @@ public class GameConstants {
     public static final int ROBBER_MOVE = 2;
     public static final int ROBBER_STEAL = 3;
     public static final int ROBBER_FINISHED = 4;
+
+    //Audio constants
+    public static final String MALE = "male";
+    public static final String FEMALE = "female";
+    public static final String SPEECH_ROLL_DICE = "rolldice";
+    public static final String SPEECH_PLACE_IGLOO = "placeigloo";
+    public static final String SPEECH_PLACE_STREET = "placestreet";
+    public static final String SPEECH_BUILD = "build";
+    public static final String SPEECH_DROP_RESOURCES = "dropresources";
+    public static final String SPEECH_MOVE_ROBBER = "moverobber";
+    public static final String SPEECH_STEAL = "steal";
 }

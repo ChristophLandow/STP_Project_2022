@@ -110,18 +110,19 @@ public class IngameScreenController implements Controller {
     private final IngameService ingameService;
     private final UserService userService;
     private final TimerService timerService;
+    private final SpeechService speechService;
+    private final RobberService robberService;
     private final BoardController boardController;
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private IngameStateController ingameStateController;
     private IngamePlayerController ingamePlayerController;
     private ChangeListener<Boolean> tradeOfferListener;
-
     private final ChangeListener<Boolean> finishedMapRenderListener;
 
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
-                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService) {
+                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService) {
         this.app = app;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
@@ -129,7 +130,9 @@ public class IngameScreenController implements Controller {
         this.userService = userService;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService);
+        this.robberService = robberService;
+        this.speechService = speechService;
+        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
         this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
@@ -208,7 +211,7 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
 
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService);
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService, robberService, speechService);
 
         // init game attributes and event listeners
         gameService.initGame();

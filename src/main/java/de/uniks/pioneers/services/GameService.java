@@ -110,7 +110,6 @@ public class GameService {
         int wool = toNormalize.wool() == null ? 0 : toNormalize.wool();
         int unknown = toNormalize.unknown() == null ? 0 : toNormalize.unknown();
         toNormalize = new Resources(unknown, grain, brick, ore, lumber, wool);
-        System.out.println("your resources: " + toNormalize);
         return player.normalize(toNormalize);
     }
 
@@ -241,13 +240,10 @@ public class GameService {
         missingResources.put("grain", grain);
         missingResources.put("wool", wool);
         missingResources.put("ore",ore);
-
-        System.out.println(missingResources);
     }
 
     public boolean checkResourcesSettlement() {
         Player mario = players.get(me);
-        System.out.println("checkingRessources");
         boolean enoughRessources = mario.resources().lumber() >= 1 && mario.resources().brick() >= 1
                 && mario.resources().grain() >= 1 && mario.resources().wool() >= 1;
 
@@ -255,7 +251,6 @@ public class GameService {
             notEnoughRessources.set(false);
             return true;
         } else {
-            System.out.println("not enough ressources");
             calcMissingRessources(SETTLEMENT);
             notEnoughRessources.set(true);
             return false;
