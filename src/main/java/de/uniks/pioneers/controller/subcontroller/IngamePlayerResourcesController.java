@@ -101,13 +101,17 @@ public class IngamePlayerResourcesController {
             public void onChanged(Change<? extends String, ? extends Integer> change) {
                 String type = change.getKey();
                 if (change.wasAdded() && !change.wasRemoved()) {
+                    System.out.println("case 1");
                     invokeElement(type, change.getValueAdded());
                 } else if (change.wasAdded() && change.wasRemoved()) {
                     if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
+                        System.out.println("case 2");
                         invokeElement(type, change.getValueAdded());
                     } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
+                        System.out.println("case 3");
                         revokeElement(type);
                     } else {
+                        System.out.println("case 4");
                         mutateElement(type, change.getValueAdded());
                     }
                 }
