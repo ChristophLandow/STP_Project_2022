@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.services.GameService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -10,14 +11,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
+import static de.uniks.pioneers.GameConstants.*;
+
 public class ResourceRemovedAnimationController {
     private final Pane root;
     private final IngamePlayerResourcesController ingamePlayerResourcesController;
+    private final GameService gameService;
     private int ore, lumber, brick, wool, grain;
 
-    public ResourceRemovedAnimationController(Pane root, IngamePlayerResourcesController ingamePlayerResourcesController) {
+    public ResourceRemovedAnimationController(Pane root, IngamePlayerResourcesController ingamePlayerResourcesController, GameService gameService) {
         this.root = root;
         this.ingamePlayerResourcesController = ingamePlayerResourcesController;
+        this.gameService = gameService;
     }
 
     public void setResourceCounts(int ore, int lumber, int brick, int wool, int grain) {
@@ -100,34 +105,17 @@ public class ResourceRemovedAnimationController {
             root.getChildren().remove(card);
         });
 
-        if(remove) {
-            if(resNumber == 1) {
-                ingamePlayerResourcesController.setOreToElement(false);
-                ingamePlayerResourcesController.setOreCount(ore);
-            } else if(resNumber == 2) {
-                ingamePlayerResourcesController.setLumberToElement(false);
-                ingamePlayerResourcesController.setLumberCount(lumber);
-            } else if(resNumber == 3) {
-                ingamePlayerResourcesController.setBrickToElement(false);
-                ingamePlayerResourcesController.setBrickCount(brick);
-            } else if(resNumber == 4) {
-                ingamePlayerResourcesController.setWoolToElement(false);
-                ingamePlayerResourcesController.setWoolCount(wool);
-            } else if(resNumber == 5) {
-                ingamePlayerResourcesController.setGrainToElement(false);
-                ingamePlayerResourcesController.setGrainCount(grain);
-            }
-        } else {
+        if (remove) {
             if (resNumber == 1) {
-                ingamePlayerResourcesController.setOreCount(ore);
+                gameService.updateResources(ORE, ore);
             } else if (resNumber == 2) {
-                ingamePlayerResourcesController.setLumberCount(lumber);
+                gameService.updateResources(LUMBER, lumber);
             } else if (resNumber == 3) {
-                ingamePlayerResourcesController.setBrickCount(brick);
+                gameService.updateResources(BRICK, brick);
             } else if (resNumber == 4) {
-                ingamePlayerResourcesController.setWoolCount(wool);
+                gameService.updateResources(WOOL, wool);
             } else if (resNumber == 5) {
-                ingamePlayerResourcesController.setGrainCount(grain);
+                gameService.updateResources(GRAIN, grain);
             }
         }
     }

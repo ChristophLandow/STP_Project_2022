@@ -35,8 +35,10 @@ public class GameService {
     private final UserService userService;
     private final IngameService ingameService;
     private final NewGameLobbyService newGameLobbyService;
-    public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
+
+    public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
+    public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
 
 
     @Inject
@@ -205,17 +207,12 @@ public class GameService {
                 || checkBuildingSpot(uploadCoords[0], uploadCoords[1] + 1, uploadCoords[2] - 1, 6);
     }
 
-    public boolean checkRoad() {
-        Player mario = players.get(me);
-        boolean enoughRessources = mario.resources().lumber() >= 1 && mario.resources().brick() >= 1;
 
-        if (enoughRessources) {
-            notEnoughRessources.set(false);
-            return true;
-        } else {
-            calcMissingRessources(ROAD);
-            notEnoughRessources.set(true);
-            return false;
+    public void updateResources(String type, int amount) {
+        if (myResources.containsKey(type)){
+            myResources.replace(type,myResources.get(type),amount);
+        }else {
+            myResources.put(type,amount);
         }
     }
 
@@ -242,6 +239,20 @@ public class GameService {
         missingResources.put("ore", ore);
 
         System.out.println(missingResources);
+    }
+
+    public boolean checkRoad() {
+        Player mario = players.get(me);
+        boolean enoughRessources = mario.resources().lumber() >= 1 && mario.resources().brick() >= 1;
+
+        if (enoughRessources) {
+            notEnoughRessources.set(false);
+            return true;
+        } else {
+            calcMissingRessources(ROAD);
+            notEnoughRessources.set(true);
+            return false;
+        }
     }
 
     public boolean checkResourcesSettlement() {

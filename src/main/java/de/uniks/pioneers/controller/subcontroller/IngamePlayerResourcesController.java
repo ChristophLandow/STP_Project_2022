@@ -11,6 +11,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -46,6 +47,7 @@ public class IngamePlayerResourcesController {
     private Map<String, ImageView> imageMap;
     private Map<String, Label> labelMap;
     private ChangeListener<Boolean> enoughResourcesListener;
+    private MapChangeListener<String, Integer> mapChangeListener;
     private ResourceAnimationController resourceAnimationController;
 
     @Inject
@@ -55,6 +57,7 @@ public class IngamePlayerResourcesController {
 
     public void stop() {
         //remove listeners
+        gameService.myResources.removeListener(mapChangeListener);
         gameService.notEnoughRessources.removeListener(enoughResourcesListener);
     }
 
@@ -76,11 +79,8 @@ public class IngamePlayerResourcesController {
     public void init(Player me) {
         // set values to gui and setup listeners
         setImages();
-        if (me != null) {
-            initDataToElement(me);
-        }
 
-        // add listener to ingame enough resources
+        // add listener to model (myResources, enoughResources)
         enoughResourcesListener = (observable, oldValue, newValue) -> {
             if (newValue.equals(true)) {
                 showMissingRessources();
@@ -88,75 +88,27 @@ public class IngamePlayerResourcesController {
             }
         };
 
-        gameService.notEnoughRessources.addListener(enoughResourcesListener);
-        this.resourceAnimationController = new ResourceAnimationController(root, gameService, this);
-    }
-
-
-    private void showMissingRessources() {
-        System.out.println("show missing resources");
-
-        Map<String, Integer> missingResources = gameService.missingResources;
-        missingResources.keySet().forEach(s -> {
-            Integer delta = missingResources.get(s);
-            if (delta < 0) {
-                ImageView node = imageMap.get(s);
-                Label label = labelMap.get(s);
-                String oldValue = label.getText();
-                Paint color = label.textFillProperty().get();
-                label.setTextFill(Color.RED);
-                label.setText(String.valueOf(missingResources.get(s)));
-                if (resourcesHBox.getChildren().contains(node)) {
-                    textFillAnimation(node,label, oldValue,color);
-                } else {
-                    Platform.runLater(()->addFadingIn(node, label, resourcesHBox));
-                    textFillAnimation(node, label,oldValue, color);
+        mapChangeListener = new MapChangeListener<>() {
+            @Override
+            public void onChanged(Change<? extends String, ? extends Integer> change) {
+                String type = change.getKey();
+                if (change.wasAdded() && !change.wasRemoved()) {
+                    invokeElement(type, change.getValueAdded());
+                } else if (change.wasAdded() && change.wasRemoved()) {
+                    if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
+                        invokeElement(type,change.getValueAdded());
+                    } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
+                        revokeElement(type);
+                    } else {
+                        mutateElement(type, change.getValueAdded());
+                    }
                 }
             }
-        });
-    }
+        };
 
-    private void textFillAnimation(ImageView node, Label label, String oldValue, Paint color) {
-        label.setTranslateX(-20);
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0)),
-                new KeyFrame(Duration.seconds(1.5))
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(e -> {
-            if (Integer.parseInt(oldValue)==0){
-                resourcesHBox.getChildren().remove(node);
-                resourcesHBox.getChildren().remove(label);
-            }
-            label.setTranslateX(-14);
-            label.setText(oldValue);
-            label.setTextFill(color);
-        });
-        timeline.play();
-    }
-
-    public void addFadingIn(Node node, Label label, HBox parent) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        parent.getChildren().add(node);
-        parent.getChildren().add(label);
-        double x = node.getLayoutX();
-        double y = node.getLayoutY();
-        label.setLayoutX(x);
-        label.setLayoutY(y);
-        transition.setFromValue(0);
-        transition.setToValue(1);
-        transition.setInterpolator(Interpolator.EASE_IN);
-        transition.setOnFinished(finish -> removeFadingOut(node));
-        transition.play();
-    }
-
-    public void removeFadingOut(Node node) {
-        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-        transition.setFromValue(1);
-        transition.setToValue(0);
-        transition.setInterpolator(Interpolator.EASE_OUT);
-        transition.play();
+        gameService.myResources.addListener(mapChangeListener);
+        gameService.notEnoughRessources.addListener(enoughResourcesListener);
+        this.resourceAnimationController = new ResourceAnimationController(root, gameService, this);
     }
 
     private void setImages() {
@@ -183,141 +135,99 @@ public class IngamePlayerResourcesController {
                 labelMap.put(resIterLabels.next(), resouceCount);
             }
         });
-
         resourcesHBox.getChildren().clear();
     }
 
-    public void initDataToElement(Player me) {
-        resourcesHBox.getChildren().clear();
-        Resources resources = me.resources();
-
-        int brick = resources.brick();
-        int grain = resources.grain();
-        int ore = resources.ore();
-        int lumber = resources.lumber();
-        int wool = resources.wool();
-        int unknown = resources.unknown();
-
-        if (lumber > 0) {
-            resourcesHBox.getChildren().add(fischResource);
-            resourcesHBox.getChildren().add(fischCount);
-            fischCount.setLayoutX(fellResource.getLayoutX());
-            fischCount.setLayoutY(fellResource.getLayoutY());
-        }
-
-        if (grain > 0) {
-            resourcesHBox.getChildren().add(walknochenResource);
-            resourcesHBox.getChildren().add(walknochenCount);
-            walknochenCount.setLayoutX(walknochenResource.getLayoutX());
-            walknochenCount.setLayoutY(walknochenResource.getLayoutY());
-        }
-
-        if (wool > 0) {
-            resourcesHBox.getChildren().add(fellResource);
-            resourcesHBox.getChildren().add(fellCount);
-            fellCount.setLayoutX(fellResource.getLayoutX());
-            fellCount.setLayoutY(fellResource.getLayoutY());
-        }
-
-        if (brick > 0) {
-            resourcesHBox.getChildren().add(packeisResource);
-            resourcesHBox.getChildren().add(packeisCount);
-            packeisCount.setLayoutX(packeisCount.getLayoutX());
-            packeisCount.setLayoutY(packeisCount.getLayoutY());
-        }
-
-        if (ore > 0) {
-            resourcesHBox.getChildren().add(kohleResource);
-            resourcesHBox.getChildren().add(kohleCount);
-            kohleCount.setLayoutX(kohleResource.getLayoutX());
-            kohleCount.setLayoutY(kohleResource.getLayoutY());
-        }
-
-        fischCount.setText(String.valueOf(lumber));
-        packeisCount.setText(String.valueOf(brick));
-        fellCount.setText(String.valueOf(wool));
-        kohleCount.setText(String.valueOf(ore));
-        walknochenCount.setText(String.valueOf(grain));
+    private void invokeElement(String type, Integer valueAdded) {
+        ImageView img = imageMap.get(type);
+        Label lbl = labelMap.get(type);
+        resourcesHBox.getChildren().add(img);
+        resourcesHBox.getChildren().add(lbl);
+        double x = img.getLayoutX();
+        double y = img.getLayoutY();
+        lbl.setLayoutX(x);
+        lbl.setLayoutY(y);
+        lbl.setText(String.valueOf(valueAdded));
     }
 
-    public void setBrickToElement(boolean add) {
-        if(add) {
-            resourcesHBox.getChildren().add(packeisResource);
-            resourcesHBox.getChildren().add(packeisCount);
-            packeisCount.setLayoutX(packeisCount.getLayoutX());
-            packeisCount.setLayoutY(packeisCount.getLayoutY());
-        } else {
-            resourcesHBox.getChildren().remove(packeisResource);
-            resourcesHBox.getChildren().remove(packeisCount);
-        }
+    private void revokeElement(String type) {
+        ImageView img = imageMap.get(type);
+        Label lbl = labelMap.get(type);
+        resourcesHBox.getChildren().remove(img);
+        resourcesHBox.getChildren().remove(lbl);
     }
 
-    public void setBrickCount(int resCount) {
-        packeisCount.setText(String.valueOf(resCount));
+    private void mutateElement(String type, Integer valueAdded) {
+        Label lbl = labelMap.get(type);
+        lbl.setText(String.valueOf(valueAdded));
+
     }
 
-    public void setGrainToElement(boolean add) {
-        if(add) {
-            resourcesHBox.getChildren().add(walknochenResource);
-            resourcesHBox.getChildren().add(walknochenCount);
-            walknochenCount.setLayoutX(walknochenResource.getLayoutX());
-            walknochenCount.setLayoutY(walknochenResource.getLayoutY());
-        } else {
-            resourcesHBox.getChildren().remove(walknochenResource);
-            resourcesHBox.getChildren().remove(walknochenCount);
-        }
+    private void showMissingRessources() {
+        System.out.println("show missing resources");
+
+        Map<String, Integer> missingResources = gameService.missingResources;
+        missingResources.keySet().forEach(s -> {
+            Integer delta = missingResources.get(s);
+            if (delta < 0) {
+                ImageView node = imageMap.get(s);
+                Label label = labelMap.get(s);
+                String oldValue = label.getText();
+                Paint color = label.textFillProperty().get();
+                label.setTextFill(Color.RED);
+                label.setText(String.valueOf(missingResources.get(s)));
+                if (resourcesHBox.getChildren().contains(node)) {
+                    textFillAnimation(node,label, oldValue,color);
+                } else {
+                    Platform.runLater(()->addFadingIn(node, label, resourcesHBox));
+                    textFillAnimation(node, label,oldValue, color);
+                }
+            }
+        });
     }
 
-    public void setGrainCount(int resCount) {
-        walknochenCount.setText(String.valueOf(resCount));
+    public void addFadingIn(Node node, Label label, HBox parent) {
+        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
+        parent.getChildren().add(node);
+        parent.getChildren().add(label);
+        double x = node.getLayoutX();
+        double y = node.getLayoutY();
+        label.setLayoutX(x);
+        label.setLayoutY(y);
+        transition.setFromValue(0);
+        transition.setToValue(1);
+        transition.setInterpolator(Interpolator.EASE_IN);
+        transition.setOnFinished(finish -> removeFadingOut(node));
+        transition.play();
     }
 
-    public void setOreToElement(boolean add) {
-        if(add) {
-            resourcesHBox.getChildren().add(kohleResource);
-            resourcesHBox.getChildren().add(kohleCount);
-            kohleCount.setLayoutX(kohleResource.getLayoutX());
-            kohleCount.setLayoutY(kohleResource.getLayoutY());
-        } else {
-            resourcesHBox.getChildren().remove(kohleResource);
-            resourcesHBox.getChildren().remove(kohleCount);
-        }
+    public void removeFadingOut(Node node) {
+        FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
+        transition.setFromValue(1);
+        transition.setToValue(0);
+        transition.setInterpolator(Interpolator.EASE_OUT);
+        transition.play();
     }
 
-    public void setOreCount(int resCount) {
-        kohleCount.setText(String.valueOf(resCount));
-    }
-
-    public void setLumberToElement(boolean add) {
-        if(add) {
-            resourcesHBox.getChildren().add(fischResource);
-            resourcesHBox.getChildren().add(fischCount);
-            fischCount.setLayoutX(fellResource.getLayoutX());
-            fischCount.setLayoutY(fellResource.getLayoutY());
-        } else {
-            resourcesHBox.getChildren().remove(fischResource);
-            resourcesHBox.getChildren().remove(fischCount);
-        }
-    }
-
-    public void setLumberCount(int resCount) {
-        fischCount.setText(String.valueOf(resCount));
-    }
-
-    public void setWoolToElement(boolean add) {
-        if(add) {
-            resourcesHBox.getChildren().add(fellResource);
-            resourcesHBox.getChildren().add(fellCount);
-            fellCount.setLayoutX(fellResource.getLayoutX());
-            fellCount.setLayoutY(fellResource.getLayoutY());
-        } else {
-            resourcesHBox.getChildren().remove(fellResource);
-            resourcesHBox.getChildren().remove(fellCount);
-        }
-    }
-
-    public void setWoolCount(int resCount) {
-        fellCount.setText(String.valueOf(resCount));
+    private void textFillAnimation(ImageView node, Label label, String oldValue, Paint color) {
+        label.setTranslateX(-20);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0)),
+                new KeyFrame(Duration.seconds(1.5))
+        );
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(1);
+        timeline.setOnFinished(e -> {
+            if (Integer.parseInt(oldValue)==0){
+                System.out.println("old value is zero");
+                resourcesHBox.getChildren().remove(node);
+                resourcesHBox.getChildren().remove(label);
+            }
+            label.setTranslateX(-14);
+            label.setText(oldValue);
+            label.setTextFill(color);
+        });
+        timeline.play();
     }
 }
 

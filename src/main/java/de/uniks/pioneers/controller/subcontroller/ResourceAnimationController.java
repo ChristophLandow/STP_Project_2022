@@ -28,8 +28,8 @@ public class ResourceAnimationController {
 
     public ResourceAnimationController(Pane root, GameService gameService, IngamePlayerResourcesController ingamePlayerResourcesController) {
         this.gameService = gameService;
-        this.resourceNewAnimationController = new ResourceNewAnimationController(root, ingamePlayerResourcesController);
-        this.resourceRemovedAnimationController = new ResourceRemovedAnimationController(root, ingamePlayerResourcesController);
+        this.resourceNewAnimationController = new ResourceNewAnimationController(root, ingamePlayerResourcesController,gameService);
+        this.resourceRemovedAnimationController = new ResourceRemovedAnimationController(root, ingamePlayerResourcesController,gameService);
 
         this.addPlayerListener();
     }
