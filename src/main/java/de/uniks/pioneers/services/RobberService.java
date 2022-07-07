@@ -6,6 +6,7 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.Resources;
+import de.uniks.pioneers.model.State;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -22,8 +23,7 @@ public class RobberService {
     @Inject MapRenderService mapRenderService;
     private HexTileController robberTile;
     private ArrayList<User> robbingCandidates = new ArrayList<>();
-
-    SimpleIntegerProperty robberState = new SimpleIntegerProperty(GameConstants.ROBBER_DISCARD);
+    SimpleIntegerProperty robberState = new SimpleIntegerProperty(-1);
 
     @Inject
     public RobberService(PioneersApiService pioneersApiService, GameService gameService) {

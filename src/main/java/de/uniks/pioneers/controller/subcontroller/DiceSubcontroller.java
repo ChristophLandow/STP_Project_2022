@@ -2,10 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Move;
-import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.TimerService;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -37,17 +34,19 @@ public class DiceSubcontroller {
     private final IngameService ingameService;
     private final GameService gameService;
     private final TimerService timerService;
+    private final RobberService robberService;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private RobberController robberController;
     
     @Inject
     public DiceSubcontroller(Provider<RobberController> robberControllerProvider, IngameService ingameService, GameService gameService, PrefService prefService,
-                             TimerService timerService) {
+                             TimerService timerService, RobberService robberService) {
         this.robberControllerProvider = robberControllerProvider;
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.timerService = timerService;
         this.prefService = prefService;
+        this.robberService = robberService;
     }
     
     public void init() {
@@ -60,8 +59,12 @@ public class DiceSubcontroller {
                         showRolledNumber(move.action(), move.roll());
 
                         if(move.roll() == 7){
+                            if(this.robberController != null) {
+                                this.robberController.stop();
+                            }
                             this.robberController = robberControllerProvider.get();
                             this.robberController.setCurrentUser(move.userId());
+                            this.robberController.setRobberService(robberService);
                             this.robberController.init();
                         }
                     }
