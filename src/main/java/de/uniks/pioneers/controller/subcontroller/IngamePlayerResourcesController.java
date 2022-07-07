@@ -160,7 +160,6 @@ public class IngamePlayerResourcesController {
     private void mutateElement(String type, Integer valueAdded) {
         Label lbl = labelMap.get(type);
         lbl.setText(String.valueOf(valueAdded));
-
     }
 
     private void showMissingRessources() {

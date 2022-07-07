@@ -16,7 +16,6 @@ public class ResourceNewAnimationController {
     private final GameService gameService;
     private int ore, lumber, brick, wool, grain;
 
-
     public ResourceNewAnimationController(Pane root, IngamePlayerResourcesController ingamePlayerResourcesController, GameService gameService) {
         this.root = root;
         this.ingamePlayerResourcesController = ingamePlayerResourcesController;
