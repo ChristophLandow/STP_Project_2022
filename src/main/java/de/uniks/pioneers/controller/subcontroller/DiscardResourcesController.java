@@ -9,8 +9,6 @@ import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,7 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import retrofit2.HttpException;
@@ -35,11 +32,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class DiscardResourcesController implements Initializable, Controller {
-
-
-    @FXML private AnchorPane anchorPane;
     @FXML private Text numeratorText;
-    @FXML private Text SlashText;
     @FXML private Text denominatorText;
     @FXML private Spinner<Integer> CarbonSpinner;
     @FXML private Spinner<Integer> FishSpinner;
@@ -65,10 +58,10 @@ public class DiscardResourcesController implements Initializable, Controller {
     public Integer carbon;
     private Stage stage;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private ArrayList<Spinner<Integer>> spinnerLIst = new ArrayList<>();
+    private final ArrayList<Spinner<Integer>> spinnerLIst = new ArrayList<>();
 
     @Inject
-    public DiscardResourcesController(Provider<IngameScreenController> ingameScreenControllerProvider, Provider<RobberController> robberControllerProvider, GameService gameService, PrefService prefService, IngameService ingameService) {
+    public DiscardResourcesController(Provider<IngameScreenController> ingameScreenControllerProvider, Provider<RobberController> robberControllerProvider) {
         this.robberControllerProvider = robberControllerProvider;
         this.ingameScreenControllerProvider = ingameScreenControllerProvider;
 
@@ -126,15 +119,12 @@ public class DiscardResourcesController implements Initializable, Controller {
         numeratorText.setText(Integer.toString(0));
         denominatorText.setText(Integer.toString((fish+wale+polarbear+ice+carbon)/2));
         for(Spinner<Integer> spinner : spinnerLIst){
-            spinner.valueProperty().addListener(new ChangeListener<Integer>() {
-                @Override
-                public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-                    int newNumerator = 0;
-                    for(Spinner<Integer> spinner : spinnerLIst){
-                        newNumerator += spinner.getValue();
-                    }
-                    numeratorText.setText(Integer.toString(newNumerator));
+            spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+                int newNumerator = 0;
+                for(Spinner<Integer> spinner1 : spinnerLIst){
+                    newNumerator += spinner1.getValue();
                 }
+                numeratorText.setText(Integer.toString(newNumerator));
             });
         }
     }
@@ -142,7 +132,6 @@ public class DiscardResourcesController implements Initializable, Controller {
     @Override
     public void init(){
         //set stage
-
         this.stage = new Stage();
         Parent node = render();
         this.stage.setTitle("Discard resource cards");
@@ -191,7 +180,7 @@ public class DiscardResourcesController implements Initializable, Controller {
         int carbonDiscard = CarbonSpinner.getValue();
 
         disposable.add(robberService.dropRessources(new Resources(-walediscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarbearDeiscard))
-                .observeOn(FX_SCHEDULER).subscribe(move -> {
+                .observeOn(FX_SCHEDULER).take(1).subscribe(move -> {
                     robberService.getRobberState().set(ROBBER_MOVE);
                     stop();
                 },this::handleHttpError));

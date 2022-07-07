@@ -142,7 +142,7 @@ public class IngameStateController {
                 hexTileController.setRobber(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r);
 
                 if(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r){
-                    hexTileController.moveRobber();
+                    hexTileController.moveRobberForOtherPlayers();
                 }
             }
         }

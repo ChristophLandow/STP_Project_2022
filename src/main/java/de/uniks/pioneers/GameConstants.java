@@ -58,9 +58,11 @@ public class GameConstants {
     public static final String SETTLEMENT = "settlement";
     public static final String CITY = "city";
     public static final String ROAD = "road";
+    public static final String BANK_ID = "684072366f72202b72406465";
 
     //Robber States
     public static final int ROBBER_DISCARD = 1;
     public static final int ROBBER_MOVE = 2;
     public static final int ROBBER_STEAL = 3;
+    public static final int ROBBER_FINISHED = 4;
 }

@@ -65,7 +65,7 @@ public class BuildingPointController {
     }
 
     public void init() {
-        this.eventView.setOnMouseClicked(this::info);
+        this.eventView.setOnMouseClicked(this::checkPosition);
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
     }
@@ -145,8 +145,8 @@ public class BuildingPointController {
         this.view.setVisible(false);
         this.eventView.toFront();
     }
-
-    private void info(MouseEvent mouseEvent) {
+    
+    private void checkPosition(MouseEvent mouseEvent) {
 
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
             build();
