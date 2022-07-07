@@ -16,7 +16,7 @@ public class GameStorage {
     @Inject EventListener eventListener;
     private List<Tile> map;
     private List<Harbor> harbors;
-    private final List<String> tradeOptions = new ArrayList<>();
+    public List<String> tradeOptions = new ArrayList<>();
     private int mapRadius;
     private  double hexScale = 75;
     private double hexRadiusFactor = 3;
@@ -99,11 +99,11 @@ public class GameStorage {
     }
 
     public List<String> getTradeOptions() {
-        return tradeOptions;
+        return this.tradeOptions;
     }
 
     public void addToTradeOptions(String tradeOption) {
-        if (!tradeOptions.contains(tradeOption)) {
+        if (!this.tradeOptions.contains(tradeOption)) {
             this.tradeOptions.add(tradeOption);
         }
     }

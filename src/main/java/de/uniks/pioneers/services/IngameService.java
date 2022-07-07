@@ -102,14 +102,14 @@ public class IngameService {
         }
     }
 
-    private boolean checkTradeOptions(Resources resources) {
+    protected boolean checkTradeOptions(Resources resources) {
         ArrayList<Integer> res = new ArrayList<>();
         res.add(resources.brick());
         res.add(resources.grain());
         res.add(resources.lumber());
         res.add(resources.ore());
         res.add(resources.wool());
-        List<String> tradeOptions = gameStorage.getTradeOptions();
+        List<String> tradeOptions = gameStorage.tradeOptions;
         if (!onlyOneResourceTypeSet(res)) {
             return false;
         }
@@ -117,7 +117,7 @@ public class IngameService {
         if (numberOfTradeResources == -1) {
             return false;
         } else if (numberOfTradeResources == 2) {
-            int index = res.indexOf(2);
+            int index = res.indexOf(-2);
             return switch (index) {
                 case 0 -> tradeOptions.contains("brick");
                 case 1 -> tradeOptions.contains("grain");
@@ -137,11 +137,11 @@ public class IngameService {
         int positiveCounter = 0;
         int negativeCounter = 0;
         for (Integer i : res) {
-            if (i == null) {
+            if (i == 0) {
                 nullCounter += 1;
             } else if (i > 0) {
                 positiveCounter += 1;
-            } else if (i < 0) {
+            } else {
                 negativeCounter += 1;
             }
         }
@@ -150,11 +150,11 @@ public class IngameService {
 
     private int checkNumberOfTradeResources(Resources resources) {
         // returns the number of resources the player wants to trade away
-        if (resources.brick() == 4 || resources.grain() == 4 || resources.lumber() == 4 || resources.ore() == 4 || resources.wool() == 4) {
+        if (resources.brick() == -4 || resources.grain() == -4 || resources.lumber() == -4 || resources.ore() == -4 || resources.wool() == -4) {
             return 4;
-        } else if (resources.brick() == 3 || resources.grain() == 3 || resources.lumber() == 3 || resources.ore() == 3 || resources.wool() == 3) {
+        } else if (resources.brick() == -3 || resources.grain() == -3 || resources.lumber() == -3 || resources.ore() == -3 || resources.wool() == -3) {
             return 3;
-        } else if (resources.brick() == 2 || resources.grain() == 2 || resources.lumber() == 2 || resources.ore() == 2 || resources.wool() == 2) {
+        } else if (resources.brick() == -2 || resources.grain() == -2 || resources.lumber() == -2 || resources.ore() == -2 || resources.wool() == -2) {
             return 2;
         } else {
             return -1;
