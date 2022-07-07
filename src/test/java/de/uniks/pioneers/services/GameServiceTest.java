@@ -28,11 +28,10 @@ class GameServiceTest {
     void deleteGame() {
         Game testGame = new Game("yesterday", "now", "123", "TestGame", "Me", 1, false, new GameSettings(2, 10));
         when(gameApiService.delete("123")).thenReturn(Observable.just(testGame));
-        String result = gameApiService.delete("123").blockingFirst()._id();
+        String result = gameService.deleteGame("123").blockingFirst()._id();
         assertEquals("123", result);
         verify(gameApiService).delete("123");
     }
-
 
     @Test
     void checkRoadSpot() {
