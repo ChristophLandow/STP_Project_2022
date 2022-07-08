@@ -73,19 +73,22 @@ public class IngameService {
     }
 
     public void getOrCreateTrade(String value, int i) {
+        System.out.println(i);
         if (trade.containsKey(value)) {
             int oldValue = trade.get(value);
             trade.replace(value, oldValue + i);
         } else {
             trade.put(value, i);
         }
+
+        System.out.println(trade);
     }
 
     public void tradeWithBank() {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
-        System.out.println(offer);
+        System.out.println("offer" + offer);
 
         if (checkTradeOptions(offer)) {
             disposable.add(postMove(game.get()._id(),new CreateMoveDto(BUILD,offer,BANK_ID))

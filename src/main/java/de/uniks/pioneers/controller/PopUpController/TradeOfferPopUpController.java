@@ -115,7 +115,7 @@ public class TradeOfferPopUpController implements Controller {
         Resources trade = ingameService.tradeOffer.get().resources();
         System.out.println("trade offer: " + trade);
         Map<String,Integer> resources = trade.createMap();
-        System.out.println("trad offer: "+ resources);
+        System.out.println("trade offer: "+ resources);
 
         // label x-14, y-18 font 14px bold color white xor black
         resources.keySet().forEach(s -> {
