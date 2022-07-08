@@ -38,6 +38,7 @@ public class GameService {
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
     public int victoryPoints;
+    public boolean wonGame;
 
     @Inject
     EventListener eventListener;
@@ -55,6 +56,7 @@ public class GameService {
     }
 
     public void initGame() {
+        wonGame = false;
         ingameService.game.set(game.get());
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())

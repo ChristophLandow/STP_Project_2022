@@ -36,7 +36,6 @@ public class VictoryPointController {
     private Stage stage;
     private Pane root;
     private LeaveGameController leaveGameController;
-    private boolean wonGame;
 
     @Inject
     public VictoryPointController(GameService gameService) {
@@ -67,7 +66,6 @@ public class VictoryPointController {
         this.leaveGameController = leaveGameController;
         this.root = root;
         this.users = users;
-        this.wonGame = false;
         if(gameService.victoryPoints > 0) {
             this.victoryPoints = gameService.victoryPoints;
         } else {
@@ -80,9 +78,9 @@ public class VictoryPointController {
     private void addPlayerListener() {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
-            if(!wonGame) {
+            if(!gameService.wonGame) {
                 if(c.getValueAdded() != null && c.getValueAdded().victoryPoints() == victoryPoints) {
-                    wonGame = true;
+                    gameService.wonGame = true;
                     winnerID = c.getKey();
                     winnerPoints = c.getValueAdded().victoryPoints();
                     showVictoryPopUp(users.stream().filter(p -> p._id().equals(winnerID)).findFirst().orElseThrow().name());
