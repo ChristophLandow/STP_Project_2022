@@ -153,7 +153,7 @@ public class BuildingPointController {
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkResourcesSettlement()) {
-                    boolean valid = false;
+                    boolean valid = true;
                     for (StreetPointController street : adjacentStreets) {
                         for (BuildingPointController building : street.getAdjacentBuildings()) {
                             if (building != this) {
@@ -178,8 +178,6 @@ public class BuildingPointController {
                 }
             }
         }
-
-        System.out.println(gameStorage.remainingBuildings.get(SETTLEMENT));
     }
 
     private void dye(MouseEvent mouseEvent) {
