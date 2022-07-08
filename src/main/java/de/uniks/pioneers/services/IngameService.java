@@ -161,7 +161,6 @@ public class IngameService {
         }
     }
 
-
     public void tradeWithPlayers() {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
@@ -173,9 +172,7 @@ public class IngameService {
                 .doOnError(Throwable::printStackTrace)
                 .subscribe(move -> trade = new HashMap<>())
         );
-
     }
-
 
     public void acceptOffer() {
         Resources offer = tradeOffer.get().resources();

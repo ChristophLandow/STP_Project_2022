@@ -41,7 +41,6 @@ public class GameService {
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
 
-
     @Inject
     EventListener eventListener;
 
@@ -106,14 +105,7 @@ public class GameService {
 
     private Player normalizePlayer(Player player) {
         Resources toNormalize = player.resources();
-        System.out.println("toNormalize: " +toNormalize);
-        int brick = toNormalize.brick() == null ? 0 : toNormalize.brick();
-        int grain = toNormalize.grain() == null ? 0 : toNormalize.grain();
-        int ore = toNormalize.ore() == null ? 0 : toNormalize.ore();
-        int lumber = toNormalize.lumber() == null ? 0 : toNormalize.lumber();
-        int wool = toNormalize.wool() == null ? 0 : toNormalize.wool();
-        int unknown = toNormalize.unknown() == null ? 0 : toNormalize.unknown();
-        toNormalize = new Resources(unknown, grain, brick, ore, lumber, wool);
+        toNormalize = toNormalize.normalize();
         System.out.println("your resources: " + toNormalize);
         return player.normalize(toNormalize);
     }

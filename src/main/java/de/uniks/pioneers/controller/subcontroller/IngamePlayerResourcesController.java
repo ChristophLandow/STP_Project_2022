@@ -118,7 +118,7 @@ public class IngamePlayerResourcesController {
     }
 
     private void setImages() {
-        //iterate over subString from URL to setup imageViews
+        //iterate over subStrings from URL to setup imageViews
         //iterate over resourceStrings to create a map with resourceName -> resourceImage
         List<String> subStrings = List.of("fish", "ice", "polarbear", "carbon", "whale");
         Iterator<String> iter = subStrings.iterator();
