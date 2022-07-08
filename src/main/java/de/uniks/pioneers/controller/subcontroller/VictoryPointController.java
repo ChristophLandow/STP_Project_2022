@@ -79,7 +79,7 @@ public class VictoryPointController {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if(!gameService.wonGame) {
-                if(c.getValueAdded() != null && c.getValueAdded().victoryPoints() == 2) {
+                if(c.getValueAdded() != null && c.getValueAdded().victoryPoints() == victoryPoints) {
                     gameService.wonGame = true;
                     winnerID = c.getKey();
                     winnerPoints = c.getValueAdded().victoryPoints();
