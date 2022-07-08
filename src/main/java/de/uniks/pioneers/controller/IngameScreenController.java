@@ -41,67 +41,39 @@ import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-    @FXML
-    public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane;
-    @FXML
-    public AnchorPane scrollAnchorPane;
-    @FXML
-    public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
-    @FXML
-    public SVGPath streetSVG, houseSVG, citySVG;
-    @FXML
-    public Button rulesButton, leaveButton, settingsButton;
-    @FXML
-    public VBox messageVBox;
-    @FXML
-    public TextField sendMessageField;
-    @FXML
-    public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
-    @FXML
-    public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
-    @FXML
-    public ListView<Node> playerListView;
-    @FXML
-    public Rectangle downRectangle, upRectangle;
-    @FXML
-    public Canvas mapCanvas;
+    @FXML public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane;
+    @FXML public AnchorPane scrollAnchorPane;
+    @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
+    @FXML public SVGPath streetSVG, houseSVG, citySVG;
+    @FXML public Button rulesButton, leaveButton, settingsButton;
+    @FXML public VBox messageVBox;
+    @FXML public TextField sendMessageField;
+    @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
+    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
+    @FXML public ListView<Node> playerListView;
+    @FXML public Rectangle downRectangle, upRectangle;
+    @FXML public Canvas mapCanvas;
+
+    @Inject GameChatController gameChatController;
+    @Inject PrefService prefService;
+    @Inject Provider<IngamePlayerListElementController> elementProvider;
+    @Inject Provider<IngamePlayerListSpectatorController> spectatorProvider;
+    @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
+    @Inject Provider<StreetPointController> streetPointControllerProvider;
+    @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
+    @Inject Provider<RobberController> robberControllerProvider;
+    @Inject LeaveGameController leaveGameController;
+    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject Provider<SettingsScreenController> settingsScreenControllerProvider;
+    @Inject Provider<TradePopUpController> tradePopUpControllerProvider;
+    @Inject Provider<TradeOfferPopUpController> tradeOfferPopUpControllerProvider;
+    @Inject EventListener eventListener;
+    @Inject VictoryPointController victoryPointController;
 
     public ZoomableScrollPane zoomableScrollPane;
-    @Inject
-    GameChatController gameChatController;
-    @Inject
-    PrefService prefService;
-    @Inject
-    Provider<IngamePlayerListElementController> elementProvider;
-    @Inject
-    Provider<IngamePlayerListSpectatorController> spectatorProvider;
-    @Inject
-    Provider<IngamePlayerResourcesController> resourcesControllerProvider;
-    @Inject
-    Provider<StreetPointController> streetPointControllerProvider;
-    @Inject
-    Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
-    @Inject
-    Provider<RobberController> robberControllerProvider;
-    @Inject
-    LeaveGameController leaveGameController;
-    @Inject
-    Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    @Inject
-    Provider<RulesScreenController> rulesScreenControllerProvider;
-    @Inject
-    Provider<SettingsScreenController> settingsScreenControllerProvider;
-    @Inject
-    Provider<TradePopUpController> tradePopUpControllerProvider;
-    @Inject
-    Provider<TradeOfferPopUpController> tradeOfferPopUpControllerProvider;
-    @Inject
-    EventListener eventListener;
-
-
     private final App app;
     private Stage popUpStage;
-
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private List<User> users;
@@ -210,7 +182,6 @@ public class IngameScreenController implements Controller {
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
-
         this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService, robberService, speechService);
 
         // init game attributes and event listeners
@@ -251,8 +222,8 @@ public class IngameScreenController implements Controller {
                 ingamePlayerController.renderPlayer(c.getValueAdded());
             }
         });
+        victoryPointController.init(users, root, leaveGameController);
 
-        //this.loadSpectators();
         gameService.members.addListener((ListChangeListener<? super Member>) c -> {
             c.next();
             if (c.wasAdded()) {

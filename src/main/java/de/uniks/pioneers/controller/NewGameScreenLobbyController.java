@@ -164,7 +164,7 @@ public class NewGameScreenLobbyController implements Controller {
         boardSizeSpinner.editorProperty().get().setAlignment(Pos.CENTER);
         boardSizeSpinner.getValueFactory().setValue(2);
 
-        victoryPointSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,15,10));
+        victoryPointSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3,15,10));
         victoryPointSpinner.editorProperty().get().setAlignment(Pos.CENTER);
 
         if(!currentUser._id().equals(game.get().owner())){

@@ -121,6 +121,24 @@ public class LeaveGameController {
         }
     }
 
+    public void leaveAfterVictory() {
+        LobbyScreenController newLobbyController = lobbyScreenControllerProvider.get();
+        if(gameService.getGame().owner().equals(userService.getCurrentUser()._id())) {
+            disposable.add(gameService.deleteGame(gameService.getGame()._id())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        ingameScreenController.stop();
+                        disposable.dispose();
+                        app.show(newLobbyController);
+                    }, Throwable::printStackTrace));
+        } else {
+            ingameScreenController.stop();
+            timerService.reset();
+            disposable.dispose();
+            app.show(newLobbyController);
+        }
+    }
+
     public void setKicked(boolean kicked) {
         this.kicked = kicked;
     }

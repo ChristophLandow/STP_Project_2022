@@ -167,7 +167,7 @@ public class BuildingPointController {
                 }
             } else {
                 if (gameStorage.remainingBuildings.get(CITY) > 0 && gameService.checkCity()) {
-                    if (this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())) {
+                    if (this.building != null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())) {
                         gameStorage.remainingBuildings.put(CITY, gameStorage.remainingBuildings.get(CITY) - 1);
                         build();
                     }
