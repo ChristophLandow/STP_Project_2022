@@ -210,7 +210,13 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void toIngame(Game game, List<User> users, String myColor) {
+    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin) {
+        if(!rejoin) {
+            gameStorage.resetRemainingBuildings();
+        }
+        if(game.owner().equals(currentUser._id())) {
+            gameService.victoryPoints = victoryPointSpinner.getValue();
+        }
         gameStorage.calcZoom(boardSizeSpinner.getValue());
         gameService.setMembers(newGameLobbyService.getMembers());
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();

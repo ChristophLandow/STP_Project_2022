@@ -30,7 +30,7 @@ public class VictoryPointController {
     @FXML ImageView firstImageView, secondImageView, thirdImageView;
     @FXML Circle firstColorCircle, secondColorCircle, thirdColorCircle;
     private final GameService gameService;
-    private int winnerPoints, secondPoints, thirdPoints;
+    private int victoryPoints, winnerPoints, secondPoints, thirdPoints;
     private List<User> users;
     private String winnerID, secondID, thirdID;
     private Stage stage;
@@ -68,6 +68,11 @@ public class VictoryPointController {
         this.root = root;
         this.users = users;
         this.wonGame = false;
+        if(gameService.victoryPoints > 0) {
+            this.victoryPoints = gameService.victoryPoints;
+        } else {
+            this.victoryPoints = gameService.getGame().settings().victoryPoints();
+        }
 
         addPlayerListener();
     }
@@ -76,7 +81,7 @@ public class VictoryPointController {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if(!wonGame) {
-                if(c.getValueAdded() != null && c.getValueAdded().victoryPoints() == gameService.getGame().settings().victoryPoints()) {
+                if(c.getValueAdded() != null && c.getValueAdded().victoryPoints() == victoryPoints) {
                     wonGame = true;
                     winnerID = c.getKey();
                     winnerPoints = c.getValueAdded().victoryPoints();

@@ -145,24 +145,28 @@ public class BuildingPointController {
         this.view.setVisible(false);
         this.eventView.toFront();
     }
-    
-    private void checkPosition(MouseEvent mouseEvent) {
 
+    private void checkPosition(MouseEvent mouseEvent) {
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
             build();
             gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkResourcesSettlement()) {
+                    boolean valid = false;
                     for (StreetPointController street : adjacentStreets) {
                         for (BuildingPointController building : street.getAdjacentBuildings()) {
                             if (building != this) {
                                 if (building.building != null) {
-                                    build();
-                                    gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+                                    valid = false;
                                 }
                             }
                         }
+                    }
+                    if(valid){
+                        build();
+                        gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+
                     }
                 }
             } else {
@@ -174,6 +178,8 @@ public class BuildingPointController {
                 }
             }
         }
+
+        System.out.println(gameStorage.remainingBuildings.get(SETTLEMENT));
     }
 
     private void dye(MouseEvent mouseEvent) {

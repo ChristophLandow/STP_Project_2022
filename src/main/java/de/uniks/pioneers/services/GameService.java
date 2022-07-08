@@ -37,7 +37,7 @@ public class GameService {
     private final NewGameLobbyService newGameLobbyService;
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
-
+    public int victoryPoints;
 
     @Inject
     EventListener eventListener;

@@ -70,7 +70,7 @@ public class LeaveGameController {
     public void loadLeavedGame(Game leavedGame) {
         if(leavedGame != null) {
             if(leavedWithButton) {
-                toIngameScreen(leavedGame, myColor);
+                toIngameScreen(leavedGame, myColor, true);
             } else {
                 disposable.add(newGameLobbyService.getAll(leavedGame._id())
                         .observeOn(FX_SCHEDULER)
@@ -82,14 +82,14 @@ public class LeaveGameController {
                                 }
                                 users.add(userService.getUserById(member.userId()).blockingFirst());
                             }
-                            toIngameScreen(leavedGame, myColor);
+                            toIngameScreen(leavedGame, myColor, true);
                         }, Throwable::printStackTrace));
             }
         }
     }
 
-    private void toIngameScreen(Game leavedGame, String myColor) {
-        newGameScreenLobbyController.toIngame(leavedGame, users, myColor);
+    private void toIngameScreen(Game leavedGame, String myColor, boolean rejoin) {
+        newGameScreenLobbyController.toIngame(leavedGame, users, myColor, rejoin);
     }
 
     public void leave() {
