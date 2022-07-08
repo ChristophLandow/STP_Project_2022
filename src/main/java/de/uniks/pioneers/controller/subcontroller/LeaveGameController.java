@@ -70,7 +70,7 @@ public class LeaveGameController {
     public void loadLeavedGame(Game leavedGame) {
         if(leavedGame != null) {
             if(leavedWithButton) {
-                toIngameScreen(leavedGame, myColor);
+                toIngameScreen(leavedGame, myColor, true);
             } else {
                 disposable.add(newGameLobbyService.getAll(leavedGame._id())
                         .observeOn(FX_SCHEDULER)
@@ -82,14 +82,14 @@ public class LeaveGameController {
                                 }
                                 users.add(userService.getUserById(member.userId()).blockingFirst());
                             }
-                            toIngameScreen(leavedGame, myColor);
+                            toIngameScreen(leavedGame, myColor, true);
                         }, Throwable::printStackTrace));
             }
         }
     }
 
-    private void toIngameScreen(Game leavedGame, String myColor) {
-        newGameScreenLobbyController.toIngame(leavedGame, users, myColor);
+    private void toIngameScreen(Game leavedGame, String myColor, boolean rejoin) {
+        newGameScreenLobbyController.toIngame(leavedGame, users, myColor, rejoin);
     }
 
     public void leave() {
@@ -118,6 +118,24 @@ public class LeaveGameController {
             if(!onClose) {
                 app.show(newLobbyController);
             }
+        }
+    }
+
+    public void leaveAfterVictory() {
+        LobbyScreenController newLobbyController = lobbyScreenControllerProvider.get();
+        if(gameService.getGame().owner().equals(userService.getCurrentUser()._id())) {
+            disposable.add(gameService.deleteGame(gameService.getGame()._id())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        ingameScreenController.stop();
+                        disposable.dispose();
+                        app.show(newLobbyController);
+                    }, Throwable::printStackTrace));
+        } else {
+            ingameScreenController.stop();
+            timerService.reset();
+            disposable.dispose();
+            app.show(newLobbyController);
         }
     }
 
