@@ -5,6 +5,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
@@ -13,7 +14,15 @@
 
 <HBox fx:id="playerBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="230.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerListElementController">
    <children>
-      <Circle fx:id="playerColor" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
+      <VBox alignment="TOP_CENTER" minWidth="20.0" prefHeight="200.0" prefWidth="20.0">
+         <children>
+            <Label fx:id="victoryPointsLabel" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="15">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font></Label>
+            <Circle fx:id="playerColor" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </VBox>
       <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateY="5.0">
          <HBox.margin>
             <Insets left="-10.0" />
@@ -75,6 +84,6 @@
          </font></Label>
    </children>
    <padding>
-      <Insets left="5.0" />
+      <Insets left="2.0" />
    </padding>
 </HBox>
