@@ -14,14 +14,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -30,6 +33,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -289,7 +293,6 @@ public class IngameScreenController implements Controller {
         ingamePlayerResourcesController.render();
         ingamePlayerResourcesController.init();
 
-
         ingameService.tradeIsOffered.addListener(tradeOfferListener);
     }
 
@@ -302,11 +305,6 @@ public class IngameScreenController implements Controller {
 
     public App getApp() {
         return this.app;
-    }
-
-    private void closePopUpStage() {
-        popUpController.stop();
-        popUpStage.close();
     }
 
     public void setPlayerColor(String hexColor) {
@@ -370,32 +368,38 @@ public class IngameScreenController implements Controller {
 
     Controller popUpController;
 
-    private void openTradeOfferPopUp() {
-        popUpStage = new Stage();
-        popUpStage.setTitle("trade offer");
-        popUpController = tradeOfferPopUpControllerProvider.get();
-        showPopUpStage();
+    private void closePopUpStage() {
+        popUpController.stop();
+        popUpStage.close();
     }
 
-    private void showPopUpStage() {
+    private void showPopUpStage(double x,double y) {
         Parent root = popUpController.render();
         popUpController.init();
         Scene scene = new Scene(root);
         popUpStage.setScene(scene);
-        popUpStage.setX(300);
-        popUpStage.setY(300);
+        popUpStage.setX(x);
+        popUpStage.setY(y);
         popUpStage.show();
     }
 
+    private void openTradeOfferPopUp() {
+        popUpStage = new Stage();
+        popUpStage.setTitle("trade offer");
+        popUpController = tradeOfferPopUpControllerProvider.get();
+        Scene scene = app.getStage().getScene();
+        Node node = scene.lookup("#situationPane");
+        double x = app.getStage().getX()+node.getLayoutX()-50;
+        double y = app.getStage().getY()+node.getLayoutY()-20;
+        showPopUpStage(x,y);
+    }
+
     public void openTradePopUp() {
-        if (this.popUpStage == null) {
             popUpStage = new Stage();
             popUpStage.setTitle("Pioneers - trade");
+            double x = app.getStage().getX();
+            double y = app.getStage().getY();
             popUpController = tradePopUpControllerProvider.get();
-            showPopUpStage();
-        } else {
-            this.popUpStage.show();
-            this.popUpStage.toFront();
-        }
+            showPopUpStage(x+250,y+200);
     }
 }

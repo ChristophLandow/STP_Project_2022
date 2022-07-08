@@ -16,13 +16,10 @@
 <?import javafx.scene.shape.SVGPath?>
 
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.IngameScreenController">
-   <ScrollPane fx:id="fieldScrollPane" hbarPolicy="NEVER" layoutX="18.0" layoutY="15.0" pannable="true"
-               prefHeight="631.0" prefWidth="715.0"
-               style="-fx-border-color: black; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 1; -fx-background: #1968bd;"
-               vbarPolicy="NEVER">
+   <ScrollPane fx:id="fieldScrollPane" hbarPolicy="NEVER" layoutX="18.0" layoutY="15.0" pannable="true" prefHeight="631.0" prefWidth="715.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 1; -fx-background: #1968bd;" vbarPolicy="NEVER">
       <AnchorPane fx:id="scrollAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="637.0" prefWidth="715.0">
          <Pane fx:id="fieldPane" prefHeight="637.0" prefWidth="715.0">
-            <Canvas fx:id="mapCanvas" height="696.0" width="715.0"/>
+            <Canvas fx:id="mapCanvas" height="696.0" width="715.0" />
          </Pane>
       </AnchorPane>
    </ScrollPane>
@@ -71,7 +68,7 @@
    </Pane>
    <Label fx:id="timeLabel" alignment="CENTER" layoutX="671.0" layoutY="671.0" prefHeight="19.0" prefWidth="60.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" />
    <Label fx:id="currentSituationLabel" alignment="CENTER" layoutX="751.0" layoutY="671.0" prefHeight="19.0" prefWidth="140.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" text="Current Playing Situation" />
-   <Pane fx:id="situationPane" layoutX="751.0" layoutY="693.0" prefHeight="60.0" prefWidth="258.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
+   <Pane id="situationPane" fx:id="situationPane" layoutX="751.0" layoutY="693.0" prefHeight="60.0" prefWidth="258.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
       <Label fx:id="situationLabel" layoutX="6.0" layoutY="6.0" prefHeight="49.0" prefWidth="130.0" text="Kristian: rolls the dice" />
       <ImageView fx:id="leftDiceImageView" fitHeight="200.0" fitWidth="200.0" layoutX="74.0" layoutY="-70.0" scaleX="0.25" scaleY="0.25" scaleZ="0.25">
          <Image url="@../controller/subcontroller/1.png" />
