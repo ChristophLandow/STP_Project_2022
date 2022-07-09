@@ -27,12 +27,9 @@ public class IngameService {
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
-
     public SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
     public SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
-
-    private java.util.Map<String, Integer> offer = new HashMap<>();
-    private java.util.Map<String, Integer> accept = new HashMap<>();
+    public SimpleBooleanProperty offersTrade = new SimpleBooleanProperty(false);
 
     @Inject
     public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
@@ -94,7 +91,7 @@ public class IngameService {
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
                         alert.showAndWait();
                     })
-                    .subscribe(move -> trade = new HashMap<>())
+                    .subscribe()
             );
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
@@ -170,7 +167,7 @@ public class IngameService {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> trade = new HashMap<>())
+                .subscribe()
         );
     }
 
@@ -198,5 +195,9 @@ public class IngameService {
                 .doOnError(Throwable::printStackTrace)
                 .subscribe()
         );
+    }
+
+    public void initTrade() {
+        trade = new HashMap<>();
     }
 }

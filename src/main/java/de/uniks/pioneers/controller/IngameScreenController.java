@@ -34,6 +34,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -104,8 +105,6 @@ public class IngameScreenController implements Controller {
 
 
     private final App app;
-    private Stage popUpStage;
-
     private final GameService gameService;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private List<User> users;
@@ -119,9 +118,9 @@ public class IngameScreenController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private IngameStateController ingameStateController;
     private IngamePlayerController ingamePlayerController;
-    private ChangeListener<Boolean> tradeOfferListener;
-
     private final ChangeListener<Boolean> finishedMapRenderListener;
+    private TradeOfferPopUpController tradeOfferPopUpController;
+
 
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
@@ -278,7 +277,20 @@ public class IngameScreenController implements Controller {
             }
         });
 
-        // init listener for incoming trade offer
+        // init controller for player resources box
+        IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
+        ingamePlayerResourcesController.root = this.root;
+        ingamePlayerResourcesController.render();
+        ingamePlayerResourcesController.init();
+
+        // create controllers for trade and tradeOffer popUp
+        tradePopUpController = tradePopUpControllerProvider.get();
+        tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
+        // init controllers for trade and tradeOffer popUp
+        tradePopUpController.init();
+        tradeOfferPopUpController.init();
+
+        // create listener for incoming trade offer
         tradeOfferListener = ((observable, oldValue, newValue) -> {
             if (oldValue.equals(false) && newValue.equals(true)) {
                 openTradeOfferPopUp();
@@ -287,12 +299,7 @@ public class IngameScreenController implements Controller {
             }
         });
 
-        // init controller for player resources box
-        IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
-        ingamePlayerResourcesController.root = this.root;
-        ingamePlayerResourcesController.render();
-        ingamePlayerResourcesController.init();
-
+        // add listeners for trading
         ingameService.tradeIsOffered.addListener(tradeOfferListener);
     }
 
@@ -336,9 +343,8 @@ public class IngameScreenController implements Controller {
     public void stop() {
         this.mapRenderService.isFinishedLoading().removeListener(finishedMapRenderListener);
         gameChatController.stop();
-        if (this.popUpStage != null) {
-            this.popUpStage.close();
-        }
+
+
         settingsScreenControllerProvider.get().stop();
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
@@ -346,7 +352,6 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.stop();
         timerService.reset();
         mapRenderService.stop();
-        ingameService.tradeIsOffered.removeListener(tradeOfferListener);
         boardController.stop();
     }
 
@@ -365,22 +370,9 @@ public class IngameScreenController implements Controller {
         this.boardController.buildBoardUI();
     }
 
-
-    Controller popUpController;
-
-    private void closePopUpStage() {
-        popUpController.stop();
-        popUpStage.close();
-    }
-
-    private void showPopUpStage(double x,double y) {
-        Parent root = popUpController.render();
-        popUpController.init();
-        Scene scene = new Scene(root);
-        popUpStage.setScene(scene);
-        popUpStage.setX(x);
-        popUpStage.setY(y);
-        popUpStage.show();
+    public void openTradePopUp(){
+        TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
+        tradePopUpController.show();
     }
 
     private void openTradeOfferPopUp() {
@@ -394,12 +386,5 @@ public class IngameScreenController implements Controller {
         showPopUpStage(x,y);
     }
 
-    public void openTradePopUp() {
-            popUpStage = new Stage();
-            popUpStage.setTitle("Pioneers - trade");
-            double x = app.getStage().getX();
-            double y = app.getStage().getY();
-            popUpController = tradePopUpControllerProvider.get();
-            showPopUpStage(x+250,y+200);
-    }
+
 }

@@ -3,11 +3,11 @@ package de.uniks.pioneers.controller.PopUpController;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.Resources;
-import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,9 +15,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -65,6 +68,10 @@ public class TradeOfferPopUpController implements Controller {
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private Map<String, ImageView> imageMap;
+    private EventHandler<MouseEvent> acceptHandler;
+    private EventHandler<MouseEvent> declineHandler;
+    private Stage popUpStage;
+
 
     @Inject
     public TradeOfferPopUpController(IngameService ingameService, GameService gameService, UserService userService) {
@@ -125,11 +132,21 @@ public class TradeOfferPopUpController implements Controller {
                 resourcesHBoxGet.getChildren().add(imageMap.get(s));
             }
         });
+
+        // invoke event handlers for accept and decline trade offer
+        acceptHandler = e -> ingameService.acceptOffer();
+        declineHandler = event -> ingameService.tradeIsOffered.set(false);
+
+        // set handlers to buttons
+        accept.addEventHandler(MouseEvent.MOUSE_CLICKED,acceptHandler);
+        decline.addEventHandler(MouseEvent.MOUSE_CLICKED,declineHandler);
     }
 
     @Override
     public void stop() {
         disposable.dispose();
+        accept.removeEventHandler(MouseEvent.MOUSE_CLICKED,acceptHandler);
+        decline.removeEventHandler(MouseEvent.MOUSE_CLICKED,declineHandler);
     }
 
     @Override
