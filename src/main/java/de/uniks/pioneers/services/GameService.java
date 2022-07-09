@@ -76,6 +76,7 @@ public class GameService {
         disposable.add(eventListener.listen(patternToObserveMoves, Move.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(moveEvent -> {
+                    System.out.println("move " + moveEvent);
                     final Move move = moveEvent.data();
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
