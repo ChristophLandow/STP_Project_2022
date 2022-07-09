@@ -102,6 +102,7 @@ class AppTest extends ApplicationTest {
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
         clickOn("#rulesButton");
         clickOn("#settingsButton");
+        type(KeyCode.LEFT);
         type(KeyCode.SPACE);
         write("\t\t\t\t\t\t");
         type(KeyCode.SPACE);
@@ -137,6 +138,7 @@ class AppTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place settlement"));
+        clickOn("#0,0,0,0");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 0, 0, "1", 0, "settlement", "000", "000")));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "4", "000", "000", "founding-settlement-1", 0, "1", null, null, null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,0,0,0,0,0), new RemainingBuildings(4,4,15), 1, 0)));
@@ -144,6 +146,7 @@ class AppTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place road"));
+        clickOn("#1,0,-1,7");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(1, 0, -1, "2", 7, "road", "000", "000")));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "5", "000", "000", "founding-road-1", 0, "2", null, null, null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,0,0,0,0,0), new RemainingBuildings(4,4,14), 1, 0)));
@@ -221,6 +224,7 @@ class AppTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place settlement"));
+        clickOn("#2,1,-3,6");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(2, 1, -3, "13", 6, "settlement", "000", "000")));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "16", "000", "000", "founding-settlement-2", 0, "13", null, null, null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,1,1,1,1,1), new RemainingBuildings(3,4,14), 2, 0)));
@@ -229,6 +233,7 @@ class AppTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place road"));
+        clickOn("#1,1,-2,3");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(1, 1, -2, "14", 3, "road", "000", "000")));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "17", "000", "000", "founding-road-2", 0, "14", null, null, null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,1,1,1,1,1), new RemainingBuildings(3,4,13), 2, 0)));
