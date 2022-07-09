@@ -101,6 +101,9 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
         clickOn("#rulesButton");
+        clickOn("#settingsButton");
+        clickOn("#lightMode_RadioButton");
+        clickOn("#saveButton");
         clickOn("#leftDiceImageView");
 
         WaitForAsyncUtils.waitForFxEvents();
