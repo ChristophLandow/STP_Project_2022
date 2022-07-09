@@ -73,15 +73,12 @@ public class IngameService {
     }
 
     public void getOrCreateTrade(String value, int i) {
-        System.out.println(i);
         if (trade.containsKey(value)) {
             int oldValue = trade.get(value);
             trade.replace(value, oldValue + i);
         } else {
             trade.put(value, i);
         }
-
-        System.out.println(trade);
     }
 
     public void tradeWithBank() {
