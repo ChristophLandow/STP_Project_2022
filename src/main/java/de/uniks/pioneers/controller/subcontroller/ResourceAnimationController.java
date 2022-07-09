@@ -45,6 +45,7 @@ public class ResourceAnimationController {
     private void addPlayerListener() {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
+            System.out.println("testplayer");
             if(!gameService.wonGame) {
                 String key = c.getKey();
                 if (key.equals(gameService.me)) {
