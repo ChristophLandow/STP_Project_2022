@@ -32,6 +32,7 @@ public class TestModule {
     public static PublishSubject<Event<State>> gameStateSubject = PublishSubject.create();
     public static PublishSubject<Event<Building>> gameBuildingSubject = PublishSubject.create();
     public static PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
+    public static PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -105,7 +106,7 @@ public class TestModule {
         when(eventListener.listen("users.003.updated", User.class)).thenReturn(PublishSubject.create());
 
         when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
-        when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(gamePlayerSubject);
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(gameBuildingSubject);
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(gameStateSubject);
         when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(gameMoveSubject);
@@ -384,20 +385,20 @@ public class TestModule {
             public Observable<List<Player>> getAllPlayers(String gameId) {
                 List<Player> players = new ArrayList<>();
 
-                players.add(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
-                players.add(new Player("000","001","#00ff00", true,2, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
-                players.add(new Player("000","002","#0000ff", true,3, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
-                players.add(new Player("000","003","#ffffff", true,4, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0));
+                players.add(new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
+                players.add(new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
+                players.add(new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
+                players.add(new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
 
                 return Observable.just(players);
             }
 
             @Override
             public Observable<Player> getPlayer(String gameId, String userId) {
-                Player player1 = new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
-                Player player2 = new Player("000","001","#00ff00", true,2, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
-                Player player3 = new Player("000","002","#0000ff", true,3, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
-                Player player4 = new Player("000","003","#ffffff", true,4, new Resources(0,0,0,0,0,0), new RemainingBuildings(1,1,1), 0, 0);
+                Player player1 = new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
+                Player player2 = new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
+                Player player3 = new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
+                Player player4 = new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
 
                 if(userId.equals(player1.userId())) {
                     return Observable.just(player1);

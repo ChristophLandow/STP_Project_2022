@@ -120,6 +120,7 @@ public class DiceSubcontroller {
             this.rightDiceView.setImage(rightDiceImage);
         }
         animateDice();
+        System.out.println("testdice");
         leftDiceImage = new Image(Objects.requireNonNull(getClass().getResource(leftDice + ".png")).toString());
         this.leftDiceView.setImage(leftDiceImage);
 
