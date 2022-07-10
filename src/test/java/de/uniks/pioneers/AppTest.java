@@ -248,7 +248,7 @@ class AppTest extends ApplicationTest {
         clickOn("#1,1,-2,3");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(1, 1, -2, "14", 3, "road", "000", "000")));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "17", "000", "000", "founding-road-2", 0, "14", null, null, null)));
-        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,1,1,1,1,1), new RemainingBuildings(3,4,13), 2, 0)));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,2,2,2,2,2), new RemainingBuildings(3,4,13), 2, 0)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("founding-settlement-2", List.of("001")), new ExpectedMove("founding-road-2", List.of("001")), new ExpectedMove("roll", List.of("003"))), null)));
 
         WaitForAsyncUtils.waitForFxEvents();
@@ -272,19 +272,63 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "build"));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "21", "000", "003", "build", 0, null, null, null, null)));
-        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("roll", List.of("001"))), null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("roll", List.of("000"))), null)));
 
         WaitForAsyncUtils.waitForFxEvents();
-        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "roll the dice"));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "22", "000", "001", "roll", 7, null, null, null, null)));
-        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("rob", List.of("001")), new ExpectedMove("build", List.of("001"))), null)));
+        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "22", "000", "000", "roll", 7, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("drop", List.of("000")), new ExpectedMove("rob", List.of("000")), new ExpectedMove("build", List.of("000"))), null)));
         WaitForAsyncUtils.waitForFxEvents();
-        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "place robber"));
-        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("build", List.of("001"))), new Point3D(1, -1, 0))));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "23", "000", "001", "rob", 0, null, new RobDto(1, -1, 0, "000"), null, null)));
+        type(KeyCode.UP);
+        write("\t");
+        type(KeyCode.UP);
+        write("\t");
+        type(KeyCode.UP);
+        write("\t");
+        type(KeyCode.UP);
+        write("\t");
+        type(KeyCode.UP);
+        write("\t");
+        type(KeyCode.SPACE);
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "22", "000", "000", "drop", 0, null, null, new Resources(null, -1, -1, -1, -1, -1), null)));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,1,1,1,1,1), new RemainingBuildings(3,4,13), 2, 0)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("rob", List.of("000")), new ExpectedMove("build", List.of("000"))), null)));
         WaitForAsyncUtils.waitForFxEvents();
-        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "build"));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "24", "000", "001", "build", 0, null, null, null, null)));
+        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "place robber"));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("rob", List.of("000")), new ExpectedMove("build", List.of("000"))), new Point3D(1, 0, -1))));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("build", List.of("000"))), new Point3D(1, 0, -1))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "23", "000", "000", "rob", 0, null, new RobDto(1, 0, -1, "001"), null, null)));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","001","#00ff00", true,3, new Resources(0,1,1,0,1,1), new RemainingBuildings(3,4,13), 2, 0)));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,1,1,2,1,1), new RemainingBuildings(3,4,13), 2, 0)));
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "build"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "24", "000", "000", "build", 0, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("roll", List.of("002"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_002:\n" + "roll the dice"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "22", "000", "002", "roll", 11, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("build", List.of("002"))), null)));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,2,2,3,2,2), new RemainingBuildings(3,4,13), 2, 0)));
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_002:\n" + "build"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "24", "000", "002", "build", 0, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("roll", List.of("003"))), null)));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "roll the dice"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "22", "000", "003", "roll", 7, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("rob", List.of("003")), new ExpectedMove("build", List.of("003"))), new Point3D(1, 0, -1))));
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "place robber"));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("rob", List.of("003")), new ExpectedMove("build", List.of("003"))), new Point3D(2, 0, -1))));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("build", List.of("003"))), new Point3D(2, 0, -1))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "23", "000", "003", "rob", 0, null, new RobDto(2, 0, -1, "001"), null, null)));
+        //TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","001","#00ff00", true,3, new Resources(0,1,1,0,1,1), new RemainingBuildings(3,4,13), 2, 0)));
+        //TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","003","#ffffff", true,3, new Resources(0,1,1,2,1,1), new RemainingBuildings(3,4,13), 2, 0)));
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_003:\n" + "build"));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "24", "000", "003", "build", 0, null, null, null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("roll", List.of("001"))), null)));
     }
 }
