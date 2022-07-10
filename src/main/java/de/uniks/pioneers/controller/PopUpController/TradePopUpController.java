@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 
 public class TradePopUpController implements Controller {
 
+    private final Node tradePane;
     @FXML
     public AnchorPane root;
     @FXML
@@ -93,16 +94,21 @@ public class TradePopUpController implements Controller {
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.app = app;
+
+        // setup stages
+        tradeStage = new Stage();
+        primaryStage = app.getStage();
+        // init trade pane
+        Scene ingameView = primaryStage.getScene();
+        tradePane = ingameView.lookup("#tradePane");
     }
 
     @Override
     public void init() {
-        // setup stages
-        tradeStage = new Stage();
-        primaryStage = app.getStage();
-
         // init model
         ingameService.initTrade();
+        // disable trade pane
+        tradePane.disableProperty().set(true);
 
         // set stylesheet for spinners
         root.getStylesheets().add("/de/uniks/pioneers/styles/SpinnerLowerArrowWidth.css");
@@ -176,6 +182,7 @@ public class TradePopUpController implements Controller {
         tradeWithBank.removeEventHandler(MouseEvent.MOUSE_CLICKED, bankHandler);
         offerToPlayers.removeEventHandler(MouseEvent.MOUSE_CLICKED, playerHandler);
         cancel.removeEventHandler(MouseEvent.MOUSE_CLICKED,cancelHandler);
+        tradePane.disableProperty().set(false);
     }
 
     public void show() {

@@ -105,18 +105,17 @@ public class ResourceRemovedAnimationController {
             root.getChildren().remove(card);
         });
 
-        if (remove) {
-            if (resNumber == 1) {
-                gameService.updateResources(ORE, ore);
-            } else if (resNumber == 2) {
-                gameService.updateResources(LUMBER, lumber);
-            } else if (resNumber == 3) {
-                gameService.updateResources(BRICK, brick);
-            } else if (resNumber == 4) {
-                gameService.updateResources(WOOL, wool);
-            } else if (resNumber == 5) {
-                gameService.updateResources(GRAIN, grain);
-            }
+        if (resNumber == 1) {
+            gameService.updateResources(ORE, ore);
+        } else if (resNumber == 2) {
+            gameService.updateResources(LUMBER, lumber);
+        } else if (resNumber == 3) {
+            gameService.updateResources(BRICK, brick);
+        } else if (resNumber == 4) {
+            gameService.updateResources(WOOL, wool);
+        } else if (resNumber == 5) {
+            gameService.updateResources(GRAIN, grain);
         }
+
     }
 }

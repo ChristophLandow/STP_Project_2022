@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.PopUpController;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.Resources;
@@ -7,10 +8,14 @@ import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -67,21 +72,63 @@ public class TradeOfferPopUpController implements Controller {
     private final UserService userService;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    private final App app;
+    private Stage primaryStage;
+    private Stage popUpStage;
     private Map<String, ImageView> imageMap;
     private EventHandler<MouseEvent> acceptHandler;
     private EventHandler<MouseEvent> declineHandler;
-    private Stage popUpStage;
+    private ChangeListener<Boolean> tradeOfferListener;
+    private EventHandler<WindowEvent> closeStageHandler;
 
 
     @Inject
-    public TradeOfferPopUpController(IngameService ingameService, GameService gameService, UserService userService) {
+    public TradeOfferPopUpController(IngameService ingameService, GameService gameService, UserService userService, App app) {
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.userService = userService;
+        this.app = app;
     }
 
     @Override
     public void init() {
+        // init stages
+        primaryStage = app.getStage();
+        popUpStage = new Stage();
+        popUpStage.setTitle("trade offer");
+
+        // create listener for trade offer
+        tradeOfferListener = ((observable, oldValue, newValue) -> {
+            if (oldValue.equals(false) && newValue.equals(true)) {
+                show();
+            } else if (oldValue.equals(true) && newValue.equals(false)) {
+                accept.removeEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
+                decline.removeEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);
+                popUpStage.removeEventHandler(WindowEvent.ANY, closeStageHandler);
+                popUpStage.close();
+            }
+        });
+
+        // add listeners for trade is offered
+        ingameService.tradeIsOffered.addListener(tradeOfferListener);
+    }
+
+    private void show() {
+        Scene scene = app.getStage().getScene();
+        Node node = scene.lookup("#situationPane");
+        double x = primaryStage.getX() + node.getLayoutX() - 50;
+        double y = primaryStage.getY() + node.getLayoutY() - 20;
+        Parent view = render();
+        build();
+        Scene tradeOfferScene = new Scene(view);
+        popUpStage.setX(x);
+        popUpStage.setY(y);
+        popUpStage.setScene(tradeOfferScene);
+        popUpStage.show();
+        popUpStage.toFront();
+    }
+
+    public void build() {
         // init me player view elements
         disposable.add(userService.getUserById(gameService.me)
                 .observeOn(FX_SCHEDULER)
@@ -109,44 +156,57 @@ public class TradeOfferPopUpController implements Controller {
         Iterator<String> resIter = resStrings.iterator();
         imageMap = new HashMap<>();
         subStrings.forEach(s -> {
-            String resourceURL = String.format("/de/uniks/pioneers/controller/subcontroller/images/card_%s.png",s);
+            String resourceURL = String.format("/de/uniks/pioneers/controller/subcontroller/images/card_%s.png", s);
             Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
             ImageView imageView = new ImageView();
             imageView.setFitWidth(30);
             imageView.setFitHeight(45);
             imageView.setImage(img);
-            imageMap.put(resIter.next(),imageView);
+            imageMap.put(resIter.next(), imageView);
         });
 
         // add image view to offerBox xOr getBox according to resources from offer
-        Resources trade = ingameService.tradeOffer.get().resources();
+        Resources trade = ingameService.tradeOffer.get().resources().normalize();
         System.out.println("trade offer: " + trade);
-        Map<String,Integer> resources = trade.createMap();
-        System.out.println("trade offer: "+ resources);
+        Map<String, Integer> resources = trade.createMap();
+        System.out.println("trade offer: " + resources);
 
         // label x-14, y-18 font 14px bold color white xor black
         resources.keySet().forEach(s -> {
-            if (resources.get(s) != null && resources.get(s)>0){
+            if (resources.get(s) > 0) {
                 resourcesHBoxOffer.getChildren().add(imageMap.get(s));
-            }else if (resources.get(s) != null && resources.get(s)<0){
+            } else if (resources.get(s) < 0) {
                 resourcesHBoxGet.getChildren().add(imageMap.get(s));
             }
         });
 
         // invoke event handlers for accept and decline trade offer
         acceptHandler = e -> ingameService.acceptOffer();
-        declineHandler = event -> ingameService.tradeIsOffered.set(false);
+        declineHandler = e -> ingameService.tradeIsOffered.set(false);
+        closeStageHandler = e -> ingameService.tradeIsOffered.set(false);
 
-        // set handlers to buttons
-        accept.addEventHandler(MouseEvent.MOUSE_CLICKED,acceptHandler);
-        decline.addEventHandler(MouseEvent.MOUSE_CLICKED,declineHandler);
+
+        // set handlers to buttons and stage
+        accept.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
+        decline.addEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);
+        popUpStage.setOnCloseRequest(closeStageHandler);
     }
 
     @Override
     public void stop() {
-        disposable.dispose();
-        accept.removeEventHandler(MouseEvent.MOUSE_CLICKED,acceptHandler);
-        decline.removeEventHandler(MouseEvent.MOUSE_CLICKED,declineHandler);
+        if (popUpStage.isShowing()) {
+            popUpStage.close();
+        }
+
+        try {
+            disposable.dispose();
+            accept.removeEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
+            decline.removeEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);
+            popUpStage.removeEventHandler(WindowEvent.ANY, closeStageHandler);
+            ingameService.tradeIsOffered.removeListener(tradeOfferListener);
+        }catch (NullPointerException ignored){
+
+        }
     }
 
     @Override

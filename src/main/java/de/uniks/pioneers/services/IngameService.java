@@ -76,27 +76,24 @@ public class IngameService {
         } else {
             trade.put(value, i);
         }
+
+        System.out.println(trade);
     }
 
     public void tradeWithBank() {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
+        offer = offer.normalize();
         System.out.println("offer" + offer);
 
-        if (checkTradeOptions(offer)) {
-            disposable.add(postMove(game.get()._id(),new CreateMoveDto(BUILD,offer,BANK_ID))
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(e -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
-                        alert.showAndWait();
-                    })
-                    .subscribe()
-            );
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
-            alert.showAndWait();
-        }
+        disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(e -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
+                    alert.showAndWait();
+                })
+                .subscribe());
     }
 
     private boolean checkTradeOptions(Resources resources) {

@@ -283,24 +283,9 @@ public class IngameScreenController implements Controller {
         ingamePlayerResourcesController.render();
         ingamePlayerResourcesController.init();
 
-        // create controllers for trade and tradeOffer popUp
-        tradePopUpController = tradePopUpControllerProvider.get();
+        // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
-        // init controllers for trade and tradeOffer popUp
-        tradePopUpController.init();
         tradeOfferPopUpController.init();
-
-        // create listener for incoming trade offer
-        tradeOfferListener = ((observable, oldValue, newValue) -> {
-            if (oldValue.equals(false) && newValue.equals(true)) {
-                openTradeOfferPopUp();
-            } else if (oldValue.equals(true) && newValue.equals(false)) {
-                closePopUpStage();
-            }
-        });
-
-        // add listeners for trading
-        ingameService.tradeIsOffered.addListener(tradeOfferListener);
     }
 
     private void renderBuilding(Building building) {
@@ -343,8 +328,7 @@ public class IngameScreenController implements Controller {
     public void stop() {
         this.mapRenderService.isFinishedLoading().removeListener(finishedMapRenderListener);
         gameChatController.stop();
-
-
+        tradeOfferPopUpController.stop();
         settingsScreenControllerProvider.get().stop();
         this.fieldPane.getChildren().clear();
         this.mapRenderService.stop();
@@ -374,17 +358,4 @@ public class IngameScreenController implements Controller {
         TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
         tradePopUpController.show();
     }
-
-    private void openTradeOfferPopUp() {
-        popUpStage = new Stage();
-        popUpStage.setTitle("trade offer");
-        popUpController = tradeOfferPopUpControllerProvider.get();
-        Scene scene = app.getStage().getScene();
-        Node node = scene.lookup("#situationPane");
-        double x = app.getStage().getX()+node.getLayoutX()-50;
-        double y = app.getStage().getY()+node.getLayoutY()-20;
-        showPopUpStage(x,y);
-    }
-
-
 }
