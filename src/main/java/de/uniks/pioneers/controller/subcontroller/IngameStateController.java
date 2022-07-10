@@ -72,6 +72,10 @@ public class IngameStateController {
                     System.out.println(currentState);
                     ingameService.tradeIsOffered.set(true);
                 }
+                case ACCEPT -> {
+
+                }
+
             }
         }
 

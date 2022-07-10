@@ -80,7 +80,11 @@ public class GameService {
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
                         if (move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
+                            System.out.println("new trade offer ! ");
                             ingameService.tradeOffer.set(move);
+                        }else if (move.action().equals(OFFER) ){
+                            ingameService.tradeAccepted.add(move);
+                            System.out.println("trade accepted :" + ingameService.tradeAccepted);
                         }
                     }
                 })
@@ -106,7 +110,7 @@ public class GameService {
     private Player normalizePlayer(Player player) {
         Resources toNormalize = player.resources();
         toNormalize = toNormalize.normalize();
-        System.out.println("your resources: " + toNormalize);
+        System.out.println("player resources " + player.userId() + " " + toNormalize);
         return player.normalize(toNormalize);
     }
 
