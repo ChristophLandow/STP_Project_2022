@@ -3,19 +3,11 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.collections.MapChangeListener;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Paint;
-import javafx.util.Duration;
+
 import java.util.Objects;
 
 public class ResourceAnimationController {
@@ -45,13 +37,14 @@ public class ResourceAnimationController {
     private void addPlayerListener() {
         // add listener for observable players list
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
-            String key = c.getKey();
-            if (key.equals(gameService.me)) {
-                // @Tim, der Fall, dass im model zum ersten mal resourcen hizugefügt werden, wird im service behandelt
-                if (c.wasRemoved() && c.wasAdded()) {
-                    this.valueAdded = c.getValueAdded();
-                    this.valueRemoved = c.getValueRemoved();
-                    this.handleResources();
+            if(!gameService.wonGame) {
+                String key = c.getKey();
+                if (key.equals(gameService.me)) {
+                    if (c.wasRemoved() && c.wasAdded()) {
+                        this.valueAdded = c.getValueAdded();
+                        this.valueRemoved = c.getValueRemoved();
+                        this.handleResources();
+                    }
                 }
             }
         });
@@ -150,7 +143,5 @@ public class ResourceAnimationController {
             resourceRemovedAnimationController.removedResourceCardAnimationOne(whaleView, counter, 5, false);
         }
     }
-
-
 
 }

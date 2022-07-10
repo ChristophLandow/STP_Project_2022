@@ -71,6 +71,8 @@ public class BuildingPointController {
     }
 
     public void addEventArea() {
+        this.eventView.setId(uploadCoords[0] + "," + uploadCoords[1] + "," + uploadCoords[2] + "," + uploadCoords[3]);
+        System.out.println(eventView.getId());
         this.fieldPane.getChildren().add(eventView);
     }
 
@@ -145,29 +147,34 @@ public class BuildingPointController {
         this.view.setVisible(false);
         this.eventView.toFront();
     }
-    
-    private void checkPosition(MouseEvent mouseEvent) {
 
+    private void checkPosition(MouseEvent mouseEvent) {
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
             build();
+            System.out.println("checkposition");
             gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkResourcesSettlement()) {
+                    boolean valid = true;
                     for (StreetPointController street : adjacentStreets) {
                         for (BuildingPointController building : street.getAdjacentBuildings()) {
                             if (building != this) {
                                 if (building.building != null) {
-                                    build();
-                                    gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+                                    valid = false;
                                 }
                             }
                         }
                     }
+                    if(valid){
+                        build();
+                        gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+
+                    }
                 }
             } else {
                 if (gameStorage.remainingBuildings.get(CITY) > 0 && gameService.checkCity()) {
-                    if (this.building == null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())) {
+                    if (this.building != null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())) {
                         gameStorage.remainingBuildings.put(CITY, gameStorage.remainingBuildings.get(CITY) - 1);
                         build();
                     }

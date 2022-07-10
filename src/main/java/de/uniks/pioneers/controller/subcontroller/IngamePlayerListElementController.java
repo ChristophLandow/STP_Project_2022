@@ -44,6 +44,7 @@ public class IngamePlayerListElementController {
     @FXML public Label playerName;
     @FXML private Player toRender;
     @FXML public ListView<Node> nodeListView;
+    @FXML public Label victoryPointsLabel;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameService gameService;
@@ -161,6 +162,8 @@ public class IngamePlayerListElementController {
             settlementCount.setVisible(true);
             settlementCount.setText(String.valueOf(valueAdded.longestRoad()));
         }
+
+        victoryPointsLabel.setText("" + valueAdded.victoryPoints());
 
         resourceCardsCount.setText(String.valueOf(resourceCount));
         developmentCardsCount.setText(String.valueOf(resources.unknown()));

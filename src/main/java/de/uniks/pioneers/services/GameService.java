@@ -40,6 +40,8 @@ public class GameService {
     public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
+    public int victoryPoints;
+    public boolean wonGame;
 
     @Inject
     EventListener eventListener;
@@ -57,6 +59,7 @@ public class GameService {
     }
 
     public void initGame() {
+        wonGame = false;
         ingameService.game.set(game.get());
         // REST - get buildings from server
         disposable.add(ingameService.getAllBuildings(game.get()._id())

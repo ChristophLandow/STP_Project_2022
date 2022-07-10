@@ -9,9 +9,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -118,6 +121,9 @@ public class SettingsScreenController implements Controller, Initializable {
         if(songFiles != null){
             songs.addAll(Arrays.asList(songFiles));
         }
+
+        setEventHandler(lightMode_RadioButton);
+        setEventHandler(darkMode_RadioButton);
     }
 
     @Override
@@ -231,12 +237,23 @@ public class SettingsScreenController implements Controller, Initializable {
             stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
         }
     }
+
+    private void setEventHandler(Node node) {
+        node.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.SPACE)) {
+                setApperenceMode();
+                event.consume();
+            }
+        });
+    }
+
     public void leave() {
         if(mediaPlayer != null) {
             mediaPlayer.stop();
         }
         stage.close();
     }
+
     public App getApp() {
         return this.app;
     }
