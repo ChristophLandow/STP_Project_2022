@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.VictoryPointController">
+   <children>
+      <VBox fx:id="placeVBox" alignment="TOP_CENTER" prefHeight="245.0" prefWidth="300.0" spacing="20.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-border-radius: 10;">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <children>
+            <Pane prefHeight="55.0" prefWidth="258.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-border-radius: 10; -fx-background-color: #FFDA68; -fx-background-radius: 10;">
+               <children>
+                  <Label fx:id="firstPlaceLabel" alignment="CENTER_RIGHT" layoutX="7.0" layoutY="1.0" prefHeight="53.0" prefWidth="35.0" text="1.">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="firstImageView" fitHeight="30.0" fitWidth="30.0" layoutX="77.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="firstLabel" alignment="CENTER" layoutX="66.0" layoutY="2.0" prefHeight="17.0" prefWidth="52.0" text="Player">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Circle fx:id="firstColorCircle" fill="DODGERBLUE" layoutX="136.0" layoutY="28.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="firstPointsLabel" alignment="CENTER" layoutX="201.0" layoutY="12.0" prefHeight="30.0" prefWidth="30.0" text="10">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane fx:id="secondPlacePane" prefHeight="55.0" prefWidth="258.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-border-radius: 10; -fx-background-radius: 10;">
+               <children>
+                  <Label fx:id="secondPlaceLabel" alignment="CENTER_RIGHT" layoutX="7.0" layoutY="2.0" prefHeight="53.0" prefWidth="35.0" text="2.">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="secondImageView" fitHeight="30.0" fitWidth="30.0" layoutX="77.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="secondLabel" alignment="CENTER" layoutX="66.0" layoutY="2.0" prefHeight="17.0" prefWidth="52.0" text="Player">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Circle fx:id="secondColorCircle" fill="DODGERBLUE" layoutX="136.0" layoutY="28.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="secondPointsLabel" alignment="CENTER" layoutX="201.0" layoutY="12.0" prefHeight="30.0" prefWidth="30.0" text="9">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane fx:id="thirdPlacePane" prefHeight="55.0" prefWidth="258.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-border-radius: 10; -fx-background-radius: 10;">
+               <children>
+                  <Label fx:id="thirdPlaceLabel" alignment="CENTER_RIGHT" layoutX="7.0" layoutY="2.0" prefHeight="53.0" prefWidth="35.0" text="3.">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="thirdImageView" fitHeight="30.0" fitWidth="30.0" layoutX="77.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="thirdLabel" alignment="CENTER" layoutX="66.0" layoutY="2.0" prefHeight="17.0" prefWidth="52.0" text="Player">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Circle fx:id="thirdColorCircle" fill="DODGERBLUE" layoutX="136.0" layoutY="28.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="thirdPointsLabel" alignment="CENTER" layoutX="201.0" layoutY="12.0" prefHeight="30.0" prefWidth="30.0" text="8">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <Button mnemonicParsing="false" onMouseClicked="#onContinueClicked" text="Continue">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

@@ -66,6 +66,7 @@ public class StreetPointController {
     }
 
     public void addEventArea() {
+        this.eventView.setId(uploadCoords[0] + "," + uploadCoords[1] + "," + uploadCoords[2] + "," + uploadCoords[3]);
         this.fieldPane.getChildren().add(eventView);
     }
 

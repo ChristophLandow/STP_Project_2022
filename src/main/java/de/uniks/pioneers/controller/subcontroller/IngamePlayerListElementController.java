@@ -44,6 +44,7 @@ public class IngamePlayerListElementController {
     @FXML public Label playerName;
     @FXML private Player toRender;
     @FXML public ListView<Node> nodeListView;
+    @FXML public Label victoryPointsLabel;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameService gameService;
@@ -86,7 +87,7 @@ public class IngamePlayerListElementController {
                     addUserListener(user._id());
                 })
         );
-
+        settlementCount.setVisible(false);
         setDataToElement(toRender);
         setImages();
         addPlayerListener();
@@ -154,14 +155,20 @@ public class IngamePlayerListElementController {
 
         if (resourceCount>=7){
             resourceCardsCount.setTextFill(Color.RED);
-        }else {
+        } else {
             resourceCardsCount.setTextFill(Color.WHITE);
         }
+
+        if (valueAdded.longestRoad() > 0) {
+            settlementCount.setVisible(true);
+            settlementCount.setText(String.valueOf(valueAdded.longestRoad()));
+        }
+
+        victoryPointsLabel.setText("" + valueAdded.victoryPoints());
 
         resourceCardsCount.setText(String.valueOf(resourceCount));
         developmentCardsCount.setText(String.valueOf(resources.unknown()));
         cityCount.setText(String.valueOf(4 - valueAdded.remainingBuildings().city()));
-        settlementCount.setText(String.valueOf(5 - valueAdded.remainingBuildings().settlement()));
     }
 }
 

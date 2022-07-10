@@ -80,12 +80,12 @@ public class CreateNewGamePopUpController implements Controller {
         createGameButton.disableProperty().bind(invalid);
 
         passwordLen.textProperty().bind(Bindings
-                .when(passwordLength.greaterThan(7)).then("")
-                .otherwise("password must be at least eight characters long"));
+                .when(passwordLength.greaterThan(0)).then("")
+                .otherwise("password must be at least one characters long"));
 
         nameLen.textProperty().bind(Bindings
-                .when(gameNameLength.greaterThan(3)).then("")
-                .otherwise("game name must be at least three characters long"));
+                .when(gameNameLength.greaterThan(0)).then("")
+                .otherwise("game name must be at least one characters long"));
 
         // create stage and set window on close request
         stage = (Stage) popUpBox.getScene().getWindow();
@@ -109,9 +109,7 @@ public class CreateNewGamePopUpController implements Controller {
         String password = passwordTextField.getText();
         disposable.add(lobbyServiceProvider.get().createGame(name,false, password)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(game -> {
-                    lobbyScreenController.showNewGameLobby(game, password, getRandomColor());
-                })
+                .subscribe(game -> lobbyScreenController.showNewGameLobby(game, password, getRandomColor()))
         );
     }
 
