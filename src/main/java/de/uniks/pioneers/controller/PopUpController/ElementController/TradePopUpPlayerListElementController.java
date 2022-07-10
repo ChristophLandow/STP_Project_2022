@@ -4,6 +4,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +17,7 @@ import javafx.scene.shape.Circle;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -68,8 +70,16 @@ public class TradePopUpPlayerListElementController {
     }
 
     public void displayAcceptedMark() {
+        System.out.println("adding mark");
         final String resourceURL = "/de/uniks/pioneers/controller/subcontroller/images/trade_accepted.png";
         final Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
         acceptedMark.setImage(img);
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

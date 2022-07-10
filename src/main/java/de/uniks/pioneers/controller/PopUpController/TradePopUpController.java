@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -183,6 +184,7 @@ public class TradePopUpController implements Controller {
                     TradePopUpPlayerListElementController playerAccepted = playerElements.get(s.userId());
                     playerAccepted.displayAcceptedMark();
                     ingameService.confirmTrade(s.userId());
+                    stop();
                 });
             }
         };
