@@ -3,13 +3,14 @@ package de.uniks.pioneers.controller.PopUpController;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +25,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -78,8 +81,9 @@ public class TradeOfferPopUpController implements Controller {
     private Map<String, ImageView> imageMap;
     private EventHandler<MouseEvent> acceptHandler;
     private EventHandler<MouseEvent> declineHandler;
-    private ChangeListener<Boolean> tradeOfferListener;
     private EventHandler<WindowEvent> closeStageHandler;
+    private ChangeListener<Boolean> tradeOfferListener;
+    private ListChangeListener<Move> tradeAcceptedListener;
 
 
     @Inject
@@ -109,14 +113,25 @@ public class TradeOfferPopUpController implements Controller {
             }
         });
 
-        // add listeners for trade is offered
+        tradeAcceptedListener = new ListChangeListener<Move>() {
+            @Override
+            public void onChanged(Change<? extends Move> c) {
+                c.next();
+                if (c.wasAdded()){
+                    stop();
+                }
+            }
+        };
+
+        // add listeners for trade is offered and trade is accepted
         ingameService.tradeIsOffered.addListener(tradeOfferListener);
+        ingameService.tradeAccepted.addListener(tradeAcceptedListener);
     }
 
     private void show() {
         Scene scene = app.getStage().getScene();
         Node node = scene.lookup("#situationPane");
-        double x = primaryStage.getX() + node.getLayoutX() - 50;
+        double x = primaryStage.getX() + node.getLayoutX() - 120;
         double y = primaryStage.getY() + node.getLayoutY() - 20;
         Parent view = render();
         build();
@@ -171,12 +186,19 @@ public class TradeOfferPopUpController implements Controller {
         Map<String, Integer> resources = trade.createMap();
         System.out.println("trade offer: " + resources);
 
-        // label x-14, y-18 font 14px bold color white xor black
+        // add resources images and labels to offer or get box
         resources.keySet().forEach(s -> {
+            Label resCount = new Label(String.valueOf(resources.get(s)));
+            resCount.setFont(Font.font ("System", FontWeight.BOLD, 14));
+            resCount.setTranslateX(-14);
+            resCount.setTranslateY(-22);
+
             if (resources.get(s) > 0) {
                 resourcesHBoxOffer.getChildren().add(imageMap.get(s));
+                resourcesHBoxOffer.getChildren().add(resCount);
             } else if (resources.get(s) < 0) {
                 resourcesHBoxGet.getChildren().add(imageMap.get(s));
+                resourcesHBoxGet.getChildren().add(resCount);
             }
         });
 
@@ -203,6 +225,7 @@ public class TradeOfferPopUpController implements Controller {
             decline.removeEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);
             popUpStage.removeEventHandler(WindowEvent.ANY, closeStageHandler);
             ingameService.tradeIsOffered.removeListener(tradeOfferListener);
+            ingameService.tradeAccepted.removeListener(tradeAcceptedListener);
         }catch (NullPointerException ignored){
 
         }

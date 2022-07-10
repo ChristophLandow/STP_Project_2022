@@ -40,6 +40,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
@@ -70,6 +71,8 @@ public class IngameScreenController implements Controller {
     public Rectangle downRectangle, upRectangle;
     @FXML
     public Canvas mapCanvas;
+    @FXML
+    public Pane tradePane;
 
     public ZoomableScrollPane zoomableScrollPane;
     @Inject
@@ -211,7 +214,8 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
 
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService);
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController,
+                turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService);
 
         // init game attributes and event listeners
         gameService.initGame();
@@ -355,7 +359,10 @@ public class IngameScreenController implements Controller {
     }
 
     public void openTradePopUp(){
-        TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
-        tradePopUpController.show();
+        ExpectedMove expectedMove = ingameService.currentExpectedMove.get();
+        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)){
+            TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
+            tradePopUpController.show();
+        }
     }
 }

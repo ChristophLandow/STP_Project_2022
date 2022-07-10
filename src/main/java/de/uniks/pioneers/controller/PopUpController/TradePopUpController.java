@@ -8,6 +8,7 @@ import de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUp
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -183,8 +184,10 @@ public class TradePopUpController implements Controller {
                     System.out.println(" player who accepted trade " + s);
                     TradePopUpPlayerListElementController playerAccepted = playerElements.get(s.userId());
                     playerAccepted.displayAcceptedMark();
-                    ingameService.confirmTrade(s.userId());
-                    stop();
+                    Platform.runLater(() -> {
+                        ingameService.confirmTrade(s.userId());
+                        stop();
+                    });
                 });
             }
         };

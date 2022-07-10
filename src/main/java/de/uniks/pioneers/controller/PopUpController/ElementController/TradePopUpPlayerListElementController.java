@@ -11,8 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -74,12 +72,13 @@ public class TradePopUpPlayerListElementController {
         final String resourceURL = "/de/uniks/pioneers/controller/subcontroller/images/trade_accepted.png";
         final Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
         acceptedMark.setImage(img);
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        System.out.println("kappa");
+        Platform.runLater(() ->{
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

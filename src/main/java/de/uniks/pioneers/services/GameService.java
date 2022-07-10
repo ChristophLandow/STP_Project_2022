@@ -37,6 +37,7 @@ public class GameService {
     private final IngameService ingameService;
     private final NewGameLobbyService newGameLobbyService;
 
+
     public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
@@ -82,7 +83,7 @@ public class GameService {
                         if (move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
                             System.out.println("new trade offer ! ");
                             ingameService.tradeOffer.set(move);
-                        }else if (move.action().equals(OFFER) ){
+                        }else if (move.action().equals(OFFER) && !Objects.equals(move.userId(),me)){
                             ingameService.tradeAccepted.add(move);
                             System.out.println("trade accepted :" + ingameService.tradeAccepted);
                         }
