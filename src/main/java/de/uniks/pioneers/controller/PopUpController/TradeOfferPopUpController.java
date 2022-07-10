@@ -185,7 +185,6 @@ public class TradeOfferPopUpController implements Controller {
         declineHandler = e -> ingameService.tradeIsOffered.set(false);
         closeStageHandler = e -> ingameService.tradeIsOffered.set(false);
 
-
         // set handlers to buttons and stage
         accept.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
         decline.addEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);

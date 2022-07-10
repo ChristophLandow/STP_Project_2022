@@ -171,6 +171,7 @@ public class IngameService {
     public void acceptOffer() {
         Resources offer = tradeOffer.get().resources();
 
+        System.out.println("accepting offer");
         /*
             lumber = fisch
             brick = packeis
@@ -190,7 +191,7 @@ public class IngameService {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(OFFER, accept, tradeOffer.get().userId()))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe()
+                .subscribe(move -> System.out.println(" trade offer sent "))
         );
     }
 
