@@ -33,6 +33,7 @@ public class TestModule {
     public static PublishSubject<Event<Building>> gameBuildingSubject = PublishSubject.create();
     public static PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
     public static PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
+    public static PublishSubject<Event<MessageDto>> gameChatSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -98,14 +99,14 @@ public class TestModule {
         when(eventListener.listen("games.*.*", Game.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("games.000.members.*.*", Member.class)).thenReturn(gameMemberSubject);
         when(eventListener.listen("games.000.*", Game.class)).thenReturn(gameSubject);
-        when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(gameChatSubject);
 
         when(eventListener.listen("users.000.updated", User.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("users.001.updated", User.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("users.002.updated", User.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("users.003.updated", User.class)).thenReturn(PublishSubject.create());
 
-        when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(gameChatSubject);
         when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(gamePlayerSubject);
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(gameBuildingSubject);
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(gameStateSubject);

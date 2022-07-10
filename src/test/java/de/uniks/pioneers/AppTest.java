@@ -1,6 +1,7 @@
 package de.uniks.pioneers;
 
 import de.uniks.pioneers.dto.Event;
+import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.*;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -91,6 +92,7 @@ class AppTest extends ApplicationTest {
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","003", true, "#888888", false)));
         write("\t\t\tHallo Test Test\t");
         type(KeyCode.ENTER);
+        TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","003","A","Hallo Test Test")));
         write("\t");
         type(KeyCode.ENTER);
         type(KeyCode.ENTER);
@@ -99,6 +101,7 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         write("\t\t\tHallo Test");
         type(KeyCode.ENTER);
+        TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","004","A","Hallo Test Test")));
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
         clickOn("#rulesButton");
         clickOn("#settingsButton");
