@@ -84,6 +84,8 @@ public class VictoryPointController {
                     gameService.wonGame = true;
                     winnerID = c.getKey();
                     winnerPoints = c.getValueAdded().victoryPoints();
+                    System.out.println(users);
+                    System.out.println(winnerID);
                     showVictoryPopUp(users.stream().filter(p -> p._id().equals(winnerID)).findFirst().orElseThrow().name());
                     checkSecondThird();
                 }
