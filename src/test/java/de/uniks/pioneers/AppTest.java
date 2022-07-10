@@ -347,9 +347,9 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "build"));
         clickOn("#houseSVG");
-        clickOn("#1,0,0,0");
+        clickOn("#0,0,0,0");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 0, 0, "17", 0, "settlement", "000", "000")));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "000", "build", 0, "17", null, null, null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "33", "000", "000", "build", 0, "17", null, null, null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","001","#ff0000", true,3, new Resources(0,1,1,3,1,1), new RemainingBuildings(2,4,14), 3, 0)));
         WaitForAsyncUtils.waitForFxEvents();
     }
