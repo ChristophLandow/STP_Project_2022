@@ -373,12 +373,16 @@ public class TestModule {
                 tiles.add(new Tile(-2,0,2,"pasture",7));
 
                 List<Harbor> harbors = new ArrayList<>();
-                harbors.add(new Harbor(1, 0, -1, "grain", 1));
-                harbors.add(new Harbor(1, -1, 0, null, 3));
-                harbors.add(new Harbor(0, -1, 1, "wool", 5));
-                harbors.add(new Harbor(-1, 0, -1, "ore", 7));
-                harbors.add(new Harbor(-1, 1, 0, null, 9));
-                harbors.add(new Harbor(0, 1, -1, "lumber", 11));
+                harbors.add(new Harbor(-1, -1, 2, "ore", 7));
+                harbors.add(new Harbor(0, -2, 2, null, 5));
+                harbors.add(new Harbor(1, -2, 1, "wool", 5));
+                harbors.add(new Harbor(2, -1, -1, null, 3));
+                harbors.add(new Harbor(2, 0, -2, "lumber", 1));
+                harbors.add(new Harbor(1, 1, -2, null, 1));
+                harbors.add(new Harbor(-1, 2, -1, "brick", 11));
+                harbors.add(new Harbor(-2, 2, 0, null, 9));
+                harbors.add(new Harbor(-2, 1, 1, "grain", 9));
+
                 return Observable.just(new Map("000", tiles, harbors));
             }
 
