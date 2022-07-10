@@ -37,7 +37,6 @@ public class GameService {
     private final IngameService ingameService;
     private final NewGameLobbyService newGameLobbyService;
 
-
     public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
@@ -81,11 +80,9 @@ public class GameService {
                     if (moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
                         if (move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
-                            System.out.println("new trade offer ! ");
                             ingameService.tradeOffer.set(move);
                         }else if (move.action().equals(OFFER) && !Objects.equals(move.userId(),me)){
                             ingameService.tradeAccepted.add(move);
-                            System.out.println("trade accepted :" + ingameService.tradeAccepted);
                         }
                     }
                 })
@@ -111,7 +108,6 @@ public class GameService {
     private Player normalizePlayer(Player player) {
         Resources toNormalize = player.resources();
         toNormalize = toNormalize.normalize();
-        System.out.println("player resources " + player.userId() + " " + toNormalize);
         return player.normalize(toNormalize);
     }
 
@@ -211,9 +207,7 @@ public class GameService {
     }
 
     public void updateResources(String type, int amount) {
-        System.out.println("my resources are : " + myResources);
         myResources.replace(type, myResources.get(type), amount);
-        System.out.println("my resources are after update : " + myResources);
     }
 
     private void calcMissingRessources(Map<String, Integer> cost) {
@@ -221,8 +215,6 @@ public class GameService {
         cost.keySet().forEach(s -> {
             missingResources.put(s, myResources.get(s) - cost.get(s));
         });
-
-        System.out.println(missingResources);
     }
 
     public boolean checkRoad() {
@@ -240,7 +232,6 @@ public class GameService {
     }
 
     public boolean checkResourcesSettlement() {
-        System.out.println("checkingRessources");
         boolean enoughRessources = myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1
                 && myResources.get(GRAIN) >= 1 && myResources.get(WOOL) >= 1;
 
@@ -248,7 +239,6 @@ public class GameService {
             notEnoughRessources.set(false);
             return true;
         } else {
-            System.out.println("not enough ressources");
             Map<String, Integer> cost = Map.of(BRICK, 1, LUMBER, 1, GRAIN, 1, WOOL, 1);
             calcMissingRessources(cost);
             notEnoughRessources.set(true);

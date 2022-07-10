@@ -81,8 +81,6 @@ public class IngameService {
         } else {
             trade.put(value, i);
         }
-
-        System.out.println(trade);
     }
 
     public void tradeWithBank() {
@@ -90,8 +88,6 @@ public class IngameService {
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
         offer = offer.normalize();
-        System.out.println("offer" + offer);
-
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(e -> {
@@ -104,8 +100,6 @@ public class IngameService {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
-        System.out.println(offer);
-
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
@@ -115,16 +109,6 @@ public class IngameService {
 
     public void acceptOffer() {
         Resources offer = tradeOffer.get().resources();
-
-        System.out.println("accepting offer");
-
-        /*
-            lumber = fisch
-            brick = packeis
-            wool = fell
-            grain = walknochen
-            ore = kohle
-         */
 
         int lumber = offer.lumber() == null ? 0 : offer.lumber() * -1;
         int brick = offer.brick() == null ? 0 : offer.brick() * -1;
@@ -147,12 +131,10 @@ public class IngameService {
 
 
     public void confirmTrade(String playerId) {
-        System.out.println("confirming trade" + playerId);
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
                 .subscribe(move -> {
-                    System.out.println(" trade offer confirmed ");
                     tradeAccepted = FXCollections.emptyObservableList();
                 })
         );

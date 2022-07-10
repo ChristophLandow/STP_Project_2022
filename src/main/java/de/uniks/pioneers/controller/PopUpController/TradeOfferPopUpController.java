@@ -131,7 +131,7 @@ public class TradeOfferPopUpController implements Controller {
     private void show() {
         Scene scene = app.getStage().getScene();
         Node node = scene.lookup("#situationPane");
-        double x = primaryStage.getX() + node.getLayoutX() - 120;
+        double x = primaryStage.getX() + node.getLayoutX() - 155;
         double y = primaryStage.getY() + node.getLayoutY() - 20;
         Parent view = render();
         build();
@@ -182,23 +182,23 @@ public class TradeOfferPopUpController implements Controller {
 
         // add image view to offerBox xOr getBox according to resources from offer
         Resources trade = ingameService.tradeOffer.get().resources().normalize();
-        System.out.println("trade offer: " + trade);
         Map<String, Integer> resources = trade.createMap();
-        System.out.println("trade offer: " + resources);
 
         // add resources images and labels to offer or get box
         resources.keySet().forEach(s -> {
-            Label resCount = new Label(String.valueOf(resources.get(s)));
+            int count = resources.get(s)>0 ? resources.get(s) : resources.get(s)*-1;
+            Label resCount = new Label(String.valueOf(count));
             resCount.setFont(Font.font ("System", FontWeight.BOLD, 14));
-            resCount.setTranslateX(-14);
-            resCount.setTranslateY(-22);
 
+            resCount.setTranslateY(-32);
             if (resources.get(s) > 0) {
                 resourcesHBoxOffer.getChildren().add(imageMap.get(s));
                 resourcesHBoxOffer.getChildren().add(resCount);
+                resCount.setTranslateX(-21);
             } else if (resources.get(s) < 0) {
                 resourcesHBoxGet.getChildren().add(imageMap.get(s));
                 resourcesHBoxGet.getChildren().add(resCount);
+                resCount.setTranslateX(-21);
             }
         });
 

@@ -21,7 +21,6 @@ public record Resources(
         this(null, grain, brick, ore, lumber, wool);
     }
 
-
     public Resources normalize (){
         int brick = brick() == null ? 0 : brick();
         int grain = grain() == null ? 0 : grain();

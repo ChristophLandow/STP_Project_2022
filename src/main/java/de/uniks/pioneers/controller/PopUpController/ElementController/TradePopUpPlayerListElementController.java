@@ -37,7 +37,6 @@ public class TradePopUpPlayerListElementController {
         this.userService = userService;
     }
 
-
     public Parent render() {
         Parent node = null;
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PopUps/PopUpElements/TradePopUpPlayerListElement.fxml"));
@@ -49,7 +48,6 @@ public class TradePopUpPlayerListElementController {
         }
         return node;
     }
-
 
     public void init(String userId) {
         disposable.add(userService.getUserById(userId)
@@ -68,14 +66,12 @@ public class TradePopUpPlayerListElementController {
     }
 
     public void displayAcceptedMark() {
-        System.out.println("adding mark");
         final String resourceURL = "/de/uniks/pioneers/controller/subcontroller/images/trade_accepted.png";
         final Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
         acceptedMark.setImage(img);
-        System.out.println("kappa");
         Platform.runLater(() ->{
             try {
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

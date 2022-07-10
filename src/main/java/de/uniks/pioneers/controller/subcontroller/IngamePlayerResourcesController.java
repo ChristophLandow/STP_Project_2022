@@ -169,7 +169,6 @@ public class IngamePlayerResourcesController {
     }
 
     private void showMissingRessources() {
-        System.out.println("show missing resources");
 
         Map<String, Integer> missingResources = gameService.missingResources;
         ObservableMap<String, Integer> resources = gameService.myResources;
