@@ -32,7 +32,6 @@ public class BoardGenerator {
             HexTile newHexTile = new HexTile(harbor.x(), harbor.z(), harbor.y(), hexScale, true);
             newHexTile.setGameInfo(harbor.type(), harbor.side());
             harbors.add(newHexTile);
-            System.out.println(harbor.x() + ", " + harbor.z() + ", " +harbor.y() + ", " +harbor.type() + ", " + harbor.side());
         }
         return this.harbors;
     }

@@ -198,7 +198,6 @@ public class IngameScreenController implements Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
                     if (gameEvent.event().endsWith(".updated")) {
-                        System.out.println("state " + gameEvent);
                         ingameStateController.handleGameState(gameEvent.data());
                     }
                 })

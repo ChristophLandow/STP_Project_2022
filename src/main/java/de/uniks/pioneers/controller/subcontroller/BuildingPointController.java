@@ -72,7 +72,6 @@ public class BuildingPointController {
 
     public void addEventArea() {
         this.eventView.setId(uploadCoords[0] + "," + uploadCoords[1] + "," + uploadCoords[2] + "," + uploadCoords[3]);
-        System.out.println(eventView.getId());
         this.fieldPane.getChildren().add(eventView);
     }
 
