@@ -129,7 +129,6 @@ public class IngameService {
         trade = new HashMap<>();
     }
 
-
     public void confirmTrade(String playerId) {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
                 .observeOn(FX_SCHEDULER)
