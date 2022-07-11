@@ -151,45 +151,65 @@ public class HotkeyController implements Controller, Initializable {
         return null;
     }
 
-    private void setHotkey(KeyCode StrgOrAlt, KeyCode letter){
+    private void setStrHotkey(KeyCode letter){
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination keyComb = new KeyCodeCombination(letter,
+                    KeyCombination.CONTROL_DOWN);
+            public void handle(KeyEvent ke) {
+                if (keyComb.match(ke)) {
+                    System.out.println("Key Pressed: " + keyComb);
+                    ke.consume(); // <-- stops passing the event to next node
+                }
+            }
+        });
+    }
 
+    private void setAltHotkey(KeyCode letter){
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination keyComb = new KeyCodeCombination(letter,
+                    KeyCombination.ALT_DOWN);
+            public void handle(KeyEvent ke) {
+                if (keyComb.match(ke)) {
+                    System.out.println("Key Pressed: " + keyComb);
+                    ke.consume();
+                }
+            }
+        });
     }
 
     private void safeTradeHotkeys(){
         Character tradeChar = tradingTextField.getText().charAt(0);
-        if(tradingChoiceBox.getValue().equals(STRG)){
-            setHotkey(KeyCode.CONTROL,stringToKeyCode(tradeChar));
+        if(endTurnChoiceBox.getValue().equals(STRG)){
+            setStrHotkey(stringToKeyCode(tradeChar));
         } else {
-            setHotkey(KeyCode.ALT, stringToKeyCode(tradeChar));
+            setAltHotkey(stringToKeyCode(tradeChar));
         }
     }
-
-
 
     public void safeEndTurnHotKeys(){
         Character endChar = endTurnTextField.getText().charAt(0);
         if(endTurnChoiceBox.getValue().equals(STRG)){
-            setHotkey(KeyCode.CONTROL,stringToKeyCode(endChar));
+            setStrHotkey(stringToKeyCode(endChar));
         } else {
-            setHotkey(KeyCode.ALT, stringToKeyCode(endChar));
+            setAltHotkey(stringToKeyCode(endChar));
         }
     }
 
     public void safeOpenSettingsHotKeys(){
         Character settingsChar = openSettingsTextField.getText().charAt(0);
         if(openSettingsChoiceBox.getValue().equals(STRG)){
-            setHotkey(KeyCode.CONTROL,stringToKeyCode(settingsChar));
+            setStrHotkey(stringToKeyCode(settingsChar));
         } else {
-            setHotkey(KeyCode.ALT, stringToKeyCode(settingsChar));
+            setAltHotkey(stringToKeyCode(settingsChar));
         }
     }
 
     public void safeOpenRulesHotkeys(){
         Character rulesChar = openRulesTextField.getText().charAt(0);
         if(openRulesChoiceBox.getValue().equals(STRG)){
-            setHotkey(KeyCode.CONTROL,stringToKeyCode(rulesChar));
+            setStrHotkey(stringToKeyCode(rulesChar));
         } else {
-            setHotkey(KeyCode.ALT, stringToKeyCode(rulesChar));
+            setAltHotkey(stringToKeyCode(rulesChar));
         }
     }
 

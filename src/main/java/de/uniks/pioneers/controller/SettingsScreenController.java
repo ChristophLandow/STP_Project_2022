@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -39,6 +40,7 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML public RadioButton darkMode_RadioButton;
     @FXML public ChoiceBox<String> musicChoiceBox;
     @FXML public Slider volumeSlider;
+    @FXML public HBox hotkeyHBox;
 
     @Inject
     PrefService prefService;
@@ -125,7 +127,6 @@ public class SettingsScreenController implements Controller, Initializable {
         }
         setEventHandler(lightMode_RadioButton);
         setEventHandler(darkMode_RadioButton);
-        hotkeyController = new HotkeyController(stage.getScene());
     }
 
     @Override
@@ -146,6 +147,10 @@ public class SettingsScreenController implements Controller, Initializable {
             e.printStackTrace();
             return null;
         }
+        hotkeyController = new HotkeyController(stage.getScene());
+        hotkeyController.setHBOx(this.hotkeyHBox);
+        hotkeyController.render();
+        hotkeyController.init();
         return settingsView;
     }
 
