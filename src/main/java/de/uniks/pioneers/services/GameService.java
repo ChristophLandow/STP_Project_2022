@@ -158,7 +158,7 @@ public class GameService {
                     // observable maps do not seem to be normal java instances !
                     // thats why myResourcs = players.get(me).resources.createMap leads to
                     // horrible malfunction for every listener, even added after the appointment
-                    myResources.putAll(players.get(me).resources().createObservableMap());
+                    myResources.putAll(players.get(me).resources().normalize().createObservableMap());
                 }, Throwable::printStackTrace));
     }
 
@@ -216,13 +216,11 @@ public class GameService {
 
     private void calcMissingRessources(Map<String, Integer> cost) {
         missingResources = new HashMap<>();
-        cost.keySet().forEach(s -> {
-            missingResources.put(s, myResources.get(s) - cost.get(s));
-        });
+        cost.keySet().forEach(s -> missingResources.put(s, myResources.get(s) - cost.get(s)));
     }
 
     public boolean checkRoad() {
-        boolean enoughRessources = myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1;
+        boolean enoughRessources = (myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1);
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
@@ -236,8 +234,8 @@ public class GameService {
     }
 
     public boolean checkResourcesSettlement() {
-        boolean enoughRessources = myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1
-                && myResources.get(GRAIN) >= 1 && myResources.get(WOOL) >= 1;
+        boolean enoughRessources = (myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1
+                && myResources.get(GRAIN) >= 1 && myResources.get(WOOL) >= 1);
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
@@ -251,7 +249,7 @@ public class GameService {
     }
 
     public boolean checkCity() {
-        boolean enoughRessources = myResources.get(ORE) >= 3 && myResources.get(GRAIN) >= 2;
+        boolean enoughRessources = (myResources.get(ORE) >= 3 && myResources.get(GRAIN) >= 2);
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
