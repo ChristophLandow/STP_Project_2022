@@ -107,4 +107,12 @@ public class GameStorage {
             this.tradeOptions.add(tradeOption);
         }
     }
+
+    public void resetRemainingBuildings() {
+        remainingBuildings = FXCollections.observableHashMap();
+
+        remainingBuildings.put(ROAD, 15);
+        remainingBuildings.put(SETTLEMENT, 5);
+        remainingBuildings.put(CITY, 4);
+    }
 }
