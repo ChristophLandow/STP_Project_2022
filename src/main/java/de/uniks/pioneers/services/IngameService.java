@@ -88,13 +88,18 @@ public class IngameService {
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
         offer = offer.normalize();
-        disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
-                .observeOn(FX_SCHEDULER)
-                .doOnError(e -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
-                    alert.showAndWait();
-                })
-                .subscribe());
+        if (checkTradeOptions(offer)) {
+            disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(e -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
+                        alert.showAndWait();
+                    })
+                    .subscribe());
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
+            alert.showAndWait();
+        }
     }
     public void tradeWithPlayers() {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
@@ -133,9 +138,7 @@ public class IngameService {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> {
-                    tradeAccepted = FXCollections.emptyObservableList();
-                })
+                .subscribe(move -> tradeAccepted = FXCollections.emptyObservableList())
         );
     }
 
