@@ -149,7 +149,7 @@ public class SettingsScreenController implements Controller, Initializable {
         }
         hotkeyController = new HotkeyController(stage.getScene());
         hotkeyController.setHBOx(this.hotkeyHBox);
-        hotkeyController.render();
+        hotkeyHBox.getChildren().add(hotkeyController.render());
         hotkeyController.init();
         return settingsView;
     }
