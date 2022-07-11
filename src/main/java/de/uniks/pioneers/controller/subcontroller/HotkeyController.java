@@ -47,24 +47,9 @@ public class HotkeyController implements Controller, Initializable {
     private final String[] hotkeyChoiceBoxElements = {"STRG", "ALT"};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
     private final Scene scene;
-    public HBox hotkeyHBox;
 
     public HotkeyController(Scene scene) {
         this.scene = scene;
-    }
-
-    public void setKey(){
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<>() {
-            final KeyCombination keyComb = new KeyCodeCombination(KeyCode.ESCAPE,
-                    KeyCombination.CONTROL_DOWN);
-
-            public void handle(KeyEvent ke) {
-                if (keyComb.match(ke)) {
-                    System.out.println("Key Pressed: " + keyComb);
-                    ke.consume(); // <-- stops passing the event to next node
-                }
-            }
-        });
     }
 
     @Override
@@ -96,10 +81,6 @@ public class HotkeyController implements Controller, Initializable {
 
         }
         return parent;
-    }
-
-    public void setHBOx(HBox hotkeyHBox) {
-        this.hotkeyHBox = hotkeyHBox;
     }
 
     public KeyCode stringToKeyCode(Character letter){
@@ -148,26 +129,25 @@ public class HotkeyController implements Controller, Initializable {
             case '<' -> KeyCode.LESS;
             default -> throw new IllegalArgumentException("Cannot convert character :" + letter);
         };
-        return null;
+        return key;
     }
 
     private void setStrHotkey(KeyCode letter){
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            final KeyCombination keyComb = new KeyCodeCombination(letter,
-                    KeyCombination.CONTROL_DOWN);
-            public void handle(KeyEvent ke) {
-                if (keyComb.match(ke)) {
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<>() {
+            final KeyCombination keyComb = new KeyCodeCombination(letter, KeyCombination.CONTROL_DOWN);
+
+            public void handle(KeyEvent key) {
+                if (keyComb.match(key)) {
                     System.out.println("Key Pressed: " + keyComb);
-                    ke.consume(); // <-- stops passing the event to next node
+                    key.consume();
                 }
             }
         });
     }
 
     private void setAltHotkey(KeyCode letter){
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            final KeyCombination keyComb = new KeyCodeCombination(letter,
-                    KeyCombination.ALT_DOWN);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<>() {
+            final KeyCombination keyComb = new KeyCodeCombination(letter, KeyCombination.ALT_DOWN);
             public void handle(KeyEvent ke) {
                 if (keyComb.match(ke)) {
                     System.out.println("Key Pressed: " + keyComb);
@@ -178,38 +158,46 @@ public class HotkeyController implements Controller, Initializable {
     }
 
     private void safeTradeHotkeys(){
-        Character tradeChar = tradingTextField.getText().charAt(0);
-        if(endTurnChoiceBox.getValue().equals(STRG)){
-            setStrHotkey(stringToKeyCode(tradeChar));
-        } else {
-            setAltHotkey(stringToKeyCode(tradeChar));
+        if(tradingTextField.getText() != null && tradingChoiceBox.getValue() != null){
+            Character tradeChar = tradingTextField.getText().charAt(0);
+            if(tradingChoiceBox.getValue().equals(STRG)){
+                setStrHotkey(stringToKeyCode(tradeChar));
+            } else {
+                setAltHotkey(stringToKeyCode(tradeChar));
+            }
         }
     }
 
     public void safeEndTurnHotKeys(){
-        Character endChar = endTurnTextField.getText().charAt(0);
-        if(endTurnChoiceBox.getValue().equals(STRG)){
-            setStrHotkey(stringToKeyCode(endChar));
-        } else {
-            setAltHotkey(stringToKeyCode(endChar));
+        if(endTurnTextField.getText() != null && endTurnChoiceBox.getValue() != null){
+            Character endChar = endTurnTextField.getText().charAt(0);
+            if(endTurnChoiceBox.getValue().equals(STRG)){
+                setStrHotkey(stringToKeyCode(endChar));
+            } else {
+                setAltHotkey(stringToKeyCode(endChar));
+            }
         }
     }
 
     public void safeOpenSettingsHotKeys(){
-        Character settingsChar = openSettingsTextField.getText().charAt(0);
-        if(openSettingsChoiceBox.getValue().equals(STRG)){
-            setStrHotkey(stringToKeyCode(settingsChar));
-        } else {
-            setAltHotkey(stringToKeyCode(settingsChar));
+        if(openSettingsTextField.getText() != null && openSettingsChoiceBox.getValue() != null){
+            Character settingsChar = openSettingsTextField.getText().charAt(0);
+            if(openSettingsChoiceBox.getValue().equals(STRG)){
+                setStrHotkey(stringToKeyCode(settingsChar));
+            } else {
+                setAltHotkey(stringToKeyCode(settingsChar));
+            }
         }
     }
 
     public void safeOpenRulesHotkeys(){
-        Character rulesChar = openRulesTextField.getText().charAt(0);
-        if(openRulesChoiceBox.getValue().equals(STRG)){
-            setStrHotkey(stringToKeyCode(rulesChar));
-        } else {
-            setAltHotkey(stringToKeyCode(rulesChar));
+        if(openRulesTextField.getText() != null && openRulesChoiceBox.getValue() != null){
+            Character rulesChar = openRulesTextField.getText().charAt(0);
+            if(openRulesChoiceBox.getValue().equals(STRG)){
+                setStrHotkey(stringToKeyCode(rulesChar));
+            } else {
+                setAltHotkey(stringToKeyCode(rulesChar));
+            }
         }
     }
 
