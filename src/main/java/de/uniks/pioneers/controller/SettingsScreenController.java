@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.services.PrefService;
@@ -57,6 +58,7 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
+    private HotkeyController hotkeyController;
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
@@ -118,12 +120,12 @@ public class SettingsScreenController implements Controller, Initializable {
         songs = new ArrayList<>();
         File songDirectory = new File("src/main/resources/de/uniks/pioneers/music");
         File[] songFiles = songDirectory.listFiles();
-        if(songFiles != null){
+        if(songFiles != null) {
             songs.addAll(Arrays.asList(songFiles));
         }
-
         setEventHandler(lightMode_RadioButton);
         setEventHandler(darkMode_RadioButton);
+        hotkeyController = new HotkeyController(stage.getScene());
     }
 
     @Override
@@ -255,5 +257,9 @@ public class SettingsScreenController implements Controller, Initializable {
     }
     public App getApp() {
         return this.app;
+    }
+
+    public void safeHotkeys() {
+        hotkeyController.safeHotkeys();
     }
 }

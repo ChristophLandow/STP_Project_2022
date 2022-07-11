@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
+import static de.uniks.pioneers.Constants.*;
 
 public class HotkeyController implements Controller, Initializable {
     @FXML
@@ -150,19 +151,52 @@ public class HotkeyController implements Controller, Initializable {
         return null;
     }
 
-    public void safeTradeHotkeys(){
+    private void setHotkey(KeyCode StrgOrAlt, KeyCode letter){
 
     }
 
-    public void safeEndTurnHotKeys(){
+    private void safeTradeHotkeys(){
+        Character tradeChar = tradingTextField.getText().charAt(0);
+        if(tradingChoiceBox.getValue().equals(STRG)){
+            setHotkey(KeyCode.CONTROL,stringToKeyCode(tradeChar));
+        } else {
+            setHotkey(KeyCode.ALT, stringToKeyCode(tradeChar));
+        }
+    }
 
+
+
+    public void safeEndTurnHotKeys(){
+        Character endChar = endTurnTextField.getText().charAt(0);
+        if(endTurnChoiceBox.getValue().equals(STRG)){
+            setHotkey(KeyCode.CONTROL,stringToKeyCode(endChar));
+        } else {
+            setHotkey(KeyCode.ALT, stringToKeyCode(endChar));
+        }
     }
 
     public void safeOpenSettingsHotKeys(){
-
+        Character settingsChar = openSettingsTextField.getText().charAt(0);
+        if(openSettingsChoiceBox.getValue().equals(STRG)){
+            setHotkey(KeyCode.CONTROL,stringToKeyCode(settingsChar));
+        } else {
+            setHotkey(KeyCode.ALT, stringToKeyCode(settingsChar));
+        }
     }
 
     public void safeOpenRulesHotkeys(){
+        Character rulesChar = openRulesTextField.getText().charAt(0);
+        if(openRulesChoiceBox.getValue().equals(STRG)){
+            setHotkey(KeyCode.CONTROL,stringToKeyCode(rulesChar));
+        } else {
+            setHotkey(KeyCode.ALT, stringToKeyCode(rulesChar));
+        }
+    }
 
+    public void safeHotkeys() {
+        safeTradeHotkeys();
+        safeEndTurnHotKeys();
+        safeOpenRulesHotkeys();
+        safeOpenSettingsHotKeys();
     }
 }

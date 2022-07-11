@@ -61,4 +61,6 @@ public class Constants {
     public static final String DARKMODE_TRUE = "TRUE";
 
     public static final String DARKMODE_FALSE = "FALSE";
+
+    public static final String STRG = "Strg";
 }
