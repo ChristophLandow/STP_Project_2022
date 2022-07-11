@@ -7,17 +7,16 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -35,13 +34,13 @@ public class GameService {
     public String me;
     private final UserService userService;
     private final IngameService ingameService;
-    private final NewGameLobbyService newGameLobbyService;
 
     public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
     public int victoryPoints;
     public boolean wonGame;
+    public SimpleStringProperty moveAction;
 
     @Inject
     EventListener eventListener;
@@ -51,7 +50,6 @@ public class GameService {
         this.gameApiService = gameApiService;
         this.userService = userService;
         this.ingameService = ingameService;
-        this.newGameLobbyService = newGameLobbyService;
     }
 
     public Observable<Game> deleteGame(String gameId) {
@@ -59,6 +57,7 @@ public class GameService {
     }
 
     public void initGame() {
+        moveAction = new SimpleStringProperty();
         wonGame = false;
         ingameService.game.set(game.get());
         // REST - get buildings from server
@@ -80,13 +79,15 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(moveEvent -> {
                     final Move move = moveEvent.data();
-                    if (moveEvent.event().endsWith(".created")) {
+                    if(moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
-                        if (move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
+                        if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
                             ingameService.tradeOffer.set(move);
-                        }else if (move.action().equals(OFFER) && !Objects.equals(move.userId(),me)){
+                        } else if(move.action().equals(OFFER) && !Objects.equals(move.userId(), me)) {
                             ingameService.tradeAccepted.add(move);
                         }
+
+                        moveAction.set(move.action());
                     }
                 })
         );
@@ -157,7 +158,7 @@ public class GameService {
                     // observable maps do not seem to be normal java instances !
                     // thats why myResourcs = players.get(me).resources.createMap leads to
                     // horrible malfunction for every listener, even added after the appointment
-                    myResources.putAll(players.get(me).resources().normalize().createMap());
+                    myResources.putAll(players.get(me).resources().normalize().createObservableMap());
                 }, Throwable::printStackTrace));
     }
 

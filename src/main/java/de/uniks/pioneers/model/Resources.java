@@ -2,10 +2,8 @@ package de.uniks.pioneers.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public record Resources(
         Integer unknown,
@@ -21,7 +19,7 @@ public record Resources(
         this(null, grain, brick, ore, lumber, wool);
     }
 
-    public Resources normalize (){
+    public Resources normalize() {
         int brick = brick() == null ? 0 : brick();
         int grain = grain() == null ? 0 : grain();
         int ore = ore() == null ? 0 : ore();
@@ -31,7 +29,7 @@ public record Resources(
         return new Resources(unknown, grain, brick, ore, lumber, wool);
     }
 
-    public ObservableMap<String,Integer> createMap(){
+    public ObservableMap<String,Integer> createObservableMap() {
         ObservableMap<String ,Integer> resources = FXCollections.observableHashMap();
         resources.put("grain",grain());
         resources.put("brick",brick());

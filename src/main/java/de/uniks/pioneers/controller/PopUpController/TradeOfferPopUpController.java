@@ -182,7 +182,7 @@ public class TradeOfferPopUpController implements Controller {
 
         // add image view to offerBox xOr getBox according to resources from offer
         Resources trade = ingameService.tradeOffer.get().resources().normalize();
-        Map<String, Integer> resources = trade.createMap();
+        Map<String, Integer> resources = trade.createObservableMap();
 
         // add resources images and labels to offer or get box
         resources.keySet().forEach(s -> {
