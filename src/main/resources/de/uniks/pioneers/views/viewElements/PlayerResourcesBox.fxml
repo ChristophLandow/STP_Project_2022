@@ -14,7 +14,7 @@
             <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_fish.png" />
          </image>
          <HBox.margin>
-            <Insets left="11.0" />
+            <Insets />
          </HBox.margin>
       </ImageView>
       <Label id="fischCount" fx:id="fischCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
@@ -58,4 +58,7 @@
             <Font name="System Bold" size="14.0" />
          </font></Label>
    </children>
+   <padding>
+      <Insets left="15.0" />
+   </padding>
 </HBox>
