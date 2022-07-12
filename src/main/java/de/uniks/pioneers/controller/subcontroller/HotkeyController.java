@@ -55,7 +55,6 @@ public class HotkeyController implements Controller, Initializable {
         for (ChoiceBox<String> box : hotkeyChoiceBoxVariants){
             box.getItems().addAll(hotkeyChoiceBoxElements);
         }
-
     }
 
     @Override
