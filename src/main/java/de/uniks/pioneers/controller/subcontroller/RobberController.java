@@ -3,12 +3,14 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.services.*;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class RobberController implements Controller {
     @Inject Provider<DiscardResourcesController> discardResourcesControllerProvider;
@@ -21,7 +23,8 @@ public class RobberController implements Controller {
     private DiscardResourcesController discardResourcesController;
     private RobPlayerController robPlayerController;
     private final ChangeListener<Number> changeListener = (observable, oldValue, newValue) -> callNext(newValue.intValue());
-    private String currentUser;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     public RobberController(){
@@ -58,13 +61,12 @@ public class RobberController implements Controller {
     }
 
     public void rob(){
-        if(gameService.me.equals(currentUser)) {
-            robberService.updateRobbingCandidates();
-
-            if (robberService.getRobbingCandidates().size() != 0) {
-                robPlayerController = robPlayerControllerProvider.get();
-                robPlayerController.init();
-            }
+        if (robberService.getRobbingCandidates().size() != 0) {
+            robPlayerController = robPlayerControllerProvider.get();
+            robPlayerController.init();
+        }
+        else{
+            disposable.add(this.robberService.robPlayer(null).observeOn(FX_SCHEDULER).subscribe(move -> stop()));
         }
     }
 
@@ -83,9 +85,5 @@ public class RobberController implements Controller {
     @Override
     public Parent render() {
         return null;
-    }
-
-    public void setCurrentUser(String currentUser) {
-        this.currentUser = currentUser;
     }
 }

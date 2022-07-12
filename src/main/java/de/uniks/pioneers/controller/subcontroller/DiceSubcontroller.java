@@ -63,7 +63,6 @@ public class DiceSubcontroller {
                                 this.robberController.stop();
                             }
                             this.robberController = robberControllerProvider.get();
-                            this.robberController.setCurrentUser(move.userId());
                             this.robberController.setRobberService(robberService);
                             this.robberController.init();
                         }
