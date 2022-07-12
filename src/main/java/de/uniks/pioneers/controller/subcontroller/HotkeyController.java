@@ -180,9 +180,9 @@ public class HotkeyController implements Controller, Initializable {
             HotkeyEventController rulesHotkeyController = new HotkeyEventController(scene,ingameScreenControllerProvider);
             hotkeyControllers.add(rulesHotkeyController);
             if(openRulesChoiceBox.getValue().equals(STRG)){
-                rulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),ALT, RULES);
-            } else {
                 rulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),STRG, RULES);
+            } else {
+                rulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),ALT, RULES);
             }
         }
     }
