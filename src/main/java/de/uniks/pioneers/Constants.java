@@ -62,6 +62,12 @@ public class Constants {
 
     public static final String DARKMODE_FALSE = "FALSE";
 
+    //Hotkeys
     public static final String STRG = "Strg";
     public static final String ALT = "Alt";
+
+    public static final String TRADE = "trade";
+    public static final String END = "end";
+    public static final String SETTINGS = "settings";
+    public static final String RULES = "rules";
 }

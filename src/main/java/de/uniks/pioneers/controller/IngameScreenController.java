@@ -93,10 +93,6 @@ public class IngameScreenController implements Controller {
     private IngamePlayerController ingamePlayerController;
     private ChangeListener<Boolean> tradeOfferListener;
     private final ChangeListener<Boolean> finishedMapRenderListener;
-    public EventHandler<KeyEvent> tradeHotkeyHandler;
-    public EventHandler<KeyEvent> endHotkeyHandler;
-    public EventHandler<KeyEvent> settingsHotkeyHandler;
-    public EventHandler<KeyEvent> rulesHotkeyHandler;
 
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,

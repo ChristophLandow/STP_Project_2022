@@ -147,7 +147,7 @@ public class SettingsScreenController implements Controller, Initializable {
             e.printStackTrace();
             return null;
         }
-        hotkeyController = new HotkeyController(ingameScreenControllerProvider.get().getApp().getStage().getScene());
+        hotkeyController = new HotkeyController(ingameScreenControllerProvider.get().getApp().getStage().getScene(), ingameScreenControllerProvider);
         hotkeyHBox.getChildren().add(hotkeyController.render());
         hotkeyController.init();
         return settingsView;
