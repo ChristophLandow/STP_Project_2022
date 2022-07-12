@@ -71,6 +71,7 @@ public class BuildingPointController {
     }
 
     public void addEventArea() {
+        this.eventView.setId(uploadCoords[0] + "," + uploadCoords[1] + "," + uploadCoords[2] + "," + uploadCoords[3]);
         this.fieldPane.getChildren().add(eventView);
     }
 
@@ -149,6 +150,7 @@ public class BuildingPointController {
     private void checkPosition(MouseEvent mouseEvent) {
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
             build();
+            System.out.println("checkposition");
             gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {

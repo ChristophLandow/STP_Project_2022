@@ -5,7 +5,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 
 <HBox fx:id="root" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUpPlayerListElementController">
    <children>
@@ -25,10 +24,10 @@
             <Insets left="-10.0" />
          </HBox.margin>
       </VBox>
-      <Circle fx:id="tradeSelector" fill="RED" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+      <ImageView fx:id="acceptedMark" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
          <HBox.margin>
-            <Insets left="40.0" />
+            <Insets left="35.0" />
          </HBox.margin>
-      </Circle>
+      </ImageView>
    </children>
 </HBox>

@@ -8,7 +8,10 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.util.Callback;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,14 +28,13 @@ public class IngameService {
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
 
-    public SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
     public SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
-
-    private java.util.Map<String, Integer> offer = new HashMap<>();
-    private java.util.Map<String, Integer> accept = new HashMap<>();
+    public SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
+    public ObservableList<Move> tradeAccepted = FXCollections.observableArrayList();
 
     @Inject
     public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
@@ -85,31 +87,72 @@ public class IngameService {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
-        System.out.println(offer);
-
+        offer = offer.normalize();
         if (checkTradeOptions(offer)) {
-            disposable.add(postMove(game.get()._id(),new CreateMoveDto(BUILD,offer,BANK_ID))
+            disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
                     .observeOn(FX_SCHEDULER)
                     .doOnError(e -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
                         alert.showAndWait();
                     })
-                    .subscribe(move -> trade = new HashMap<>())
-            );
+                    .subscribe());
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
             alert.showAndWait();
         }
     }
+    public void tradeWithPlayers() {
+        System.out.println("tradeWithPlayers");
+        Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
+                trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
-    private boolean checkTradeOptions(Resources resources) {
+        disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe()
+        );
+    }
+
+    public void acceptOffer() {
+        System.out.println("acceptOffer");
+        Resources offer = tradeOffer.get().resources();
+
+        int lumber = offer.lumber() == null ? 0 : offer.lumber() * -1;
+        int brick = offer.brick() == null ? 0 : offer.brick() * -1;
+        int wool = offer.wool() == null ? 0 : offer.wool() * -1;
+        int grain = offer.grain() == null ? 0 : offer.grain() * -1;
+        int ore = offer.ore() == null ? 0 : offer.ore() * -1;
+
+        Resources accept = new Resources(grain, brick, ore, lumber, wool);
+
+        disposable.add(postMove(game.get()._id(), new CreateMoveDto(OFFER, accept, tradeOffer.get().userId()))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe(move -> tradeIsOffered.set(false))
+        );
+    }
+
+    public void initTrade() {
+        trade = new HashMap<>();
+    }
+
+    public void confirmTrade(String playerId) {
+        System.out.println("confirmTrade");
+        disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe(move -> tradeAccepted = FXCollections.emptyObservableList())
+        );
+    }
+
+    protected boolean checkTradeOptions(Resources resources) {
         ArrayList<Integer> res = new ArrayList<>();
         res.add(resources.brick());
         res.add(resources.grain());
         res.add(resources.lumber());
         res.add(resources.ore());
         res.add(resources.wool());
-        List<String> tradeOptions = gameStorage.getTradeOptions();
+        List<String> tradeOptions = gameStorage.tradeOptions;
         if (!onlyOneResourceTypeSet(res)) {
             return false;
         }
@@ -117,7 +160,7 @@ public class IngameService {
         if (numberOfTradeResources == -1) {
             return false;
         } else if (numberOfTradeResources == 2) {
-            int index = res.indexOf(2);
+            int index = res.indexOf(-2);
             return switch (index) {
                 case 0 -> tradeOptions.contains("brick");
                 case 1 -> tradeOptions.contains("grain");
@@ -137,11 +180,11 @@ public class IngameService {
         int positiveCounter = 0;
         int negativeCounter = 0;
         for (Integer i : res) {
-            if (i == null) {
+            if (i == 0) {
                 nullCounter += 1;
             } else if (i > 0) {
                 positiveCounter += 1;
-            } else if (i < 0) {
+            } else {
                 negativeCounter += 1;
             }
         }
@@ -150,56 +193,15 @@ public class IngameService {
 
     private int checkNumberOfTradeResources(Resources resources) {
         // returns the number of resources the player wants to trade away
-        if (resources.brick() == 4 || resources.grain() == 4 || resources.lumber() == 4 || resources.ore() == 4 || resources.wool() == 4) {
+        if (resources.brick() == -4 || resources.grain() == -4 || resources.lumber() == -4 || resources.ore() == -4 || resources.wool() == -4) {
             return 4;
-        } else if (resources.brick() == 3 || resources.grain() == 3 || resources.lumber() == 3 || resources.ore() == 3 || resources.wool() == 3) {
+        } else if (resources.brick() == -3 || resources.grain() == -3 || resources.lumber() == -3 || resources.ore() == -3 || resources.wool() == -3) {
             return 3;
-        } else if (resources.brick() == 2 || resources.grain() == 2 || resources.lumber() == 2 || resources.ore() == 2 || resources.wool() == 2) {
+        } else if (resources.brick() == -2 || resources.grain() == -2 || resources.lumber() == -2 || resources.ore() == -2 || resources.wool() == -2) {
             return 2;
         } else {
             return -1;
         }
     }
 
-
-    public void tradeWithPlayers() {
-        Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
-                trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
-
-        System.out.println(offer);
-
-        disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
-                .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> trade = new HashMap<>())
-        );
-
-    }
-
-
-    public void acceptOffer() {
-        Resources offer = tradeOffer.get().resources();
-
-        /*
-            lumber = fisch
-            brick = packeis
-            wool = fell
-            grain = walknochen
-            ore = kohle
-         */
-
-        int lumber = offer.lumber() == null ? 0 : offer.lumber() * -1;
-        int brick = offer.brick() == null ? 0 : offer.brick() * -1;
-        int wool = offer.wool() == null ? 0 : offer.wool() * -1;
-        int grain = offer.grain() == null ? 0 : offer.grain() * -1;
-        int ore = offer.ore() == null ? 0 : offer.ore() * -1;
-
-        Resources accept = new Resources(grain, brick, ore, lumber, wool);
-
-        disposable.add(postMove(game.get()._id(), new CreateMoveDto(OFFER, accept, tradeOffer.get().userId()))
-                .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe()
-        );
-    }
 }
