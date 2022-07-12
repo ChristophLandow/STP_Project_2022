@@ -48,6 +48,7 @@ public class HotkeyController implements Controller, Initializable {
 
     private final String[] hotkeyChoiceBoxElements = {STRG, ALT};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
+    private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
     private final Scene scene;
 
     public HotkeyController(Scene scene, Provider<IngameScreenController> ingameScreenControllerProvider) {
@@ -81,7 +82,6 @@ public class HotkeyController implements Controller, Initializable {
             parent = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
-
         }
         return parent;
     }
@@ -135,52 +135,15 @@ public class HotkeyController implements Controller, Initializable {
         return key;
     }
 
-    private void setStrHotkey(KeyCode letter, String kind ){
-
-        EventHandler<KeyEvent> eventHandler = new EventHandler<>() {
-            final KeyCombination keyComb = new KeyCodeCombination(letter, KeyCombination.CONTROL_DOWN);
-            public void handle(KeyEvent ke) {
-                if (keyComb.match(ke)) {
-                    switch (kind){
-                        case TRADE -> ingameScreenControllerProvider.get().openTradePopUp();
-                        case END -> ingameScreenControllerProvider.get().leave();
-                        case RULES -> ingameScreenControllerProvider.get().toRules();
-                        case SETTINGS -> ingameScreenControllerProvider.get().toSettings();
-                    }
-                    ke.consume();
-                }
-            }
-        };
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
-    }
-
-    private void setAltHotkey(KeyCode letter, String kind){
-        EventHandler<KeyEvent> eventHandler = new EventHandler<>() {
-            final KeyCombination keyComb = new KeyCodeCombination(letter, KeyCombination.ALT_DOWN);
-            public void handle(KeyEvent ke) {
-                if (keyComb.match(ke)) {
-                    switch (kind){
-                        case TRADE -> ingameScreenControllerProvider.get().openTradePopUp();
-                        case END -> ingameScreenControllerProvider.get().leave();
-                        case RULES -> ingameScreenControllerProvider.get().toRules();
-                        case SETTINGS -> ingameScreenControllerProvider.get().toSettings();
-                    }
-                    ke.consume();
-                }
-            }
-        };
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
-    }
-
     private void safeTradeHotkeys(){
         if(tradingTextField.getText() != null && tradingChoiceBox.getValue() != null){
             Character tradeChar = tradingTextField.getText().charAt(0);
+            HotkeyEventController tradeHotkeyController = new HotkeyEventController(scene,ingameScreenControllerProvider);
+            hotkeyControllers.add(tradeHotkeyController);
             if(tradingChoiceBox.getValue().equals(STRG)){
-                setStrHotkey(stringToKeyCode(tradeChar), TRADE);
+                tradeHotkeyController.setHotkey(stringToKeyCode(tradeChar),STRG, TRADE);
             } else {
-                setAltHotkey(stringToKeyCode(tradeChar), TRADE);
+                tradeHotkeyController.setHotkey(stringToKeyCode(tradeChar),ALT, TRADE);
             }
         }
     }
@@ -188,10 +151,12 @@ public class HotkeyController implements Controller, Initializable {
     public void safeEndTurnHotKeys(){
         if(endTurnTextField.getText() != null && endTurnChoiceBox.getValue() != null){
             Character endChar = endTurnTextField.getText().charAt(0);
+            HotkeyEventController endHotkeyController = new HotkeyEventController(scene,ingameScreenControllerProvider);
+            hotkeyControllers.add(endHotkeyController);
             if(endTurnChoiceBox.getValue().equals(STRG)){
-                setStrHotkey(stringToKeyCode(endChar), END);
+                endHotkeyController.setHotkey(stringToKeyCode(endChar),STRG, END);
             } else {
-                setAltHotkey(stringToKeyCode(endChar), END);
+                endHotkeyController.setHotkey(stringToKeyCode(endChar),ALT, END);
             }
         }
     }
@@ -199,10 +164,12 @@ public class HotkeyController implements Controller, Initializable {
     public void safeOpenSettingsHotKeys(){
         if(openSettingsTextField.getText() != null && openSettingsChoiceBox.getValue() != null){
             Character settingsChar = openSettingsTextField.getText().charAt(0);
+            HotkeyEventController settingsHotkeyController = new HotkeyEventController(scene,ingameScreenControllerProvider);
+            hotkeyControllers.add(settingsHotkeyController);
             if(openSettingsChoiceBox.getValue().equals(STRG)){
-                setStrHotkey(stringToKeyCode(settingsChar), SETTINGS);
+                settingsHotkeyController.setHotkey(stringToKeyCode(settingsChar),STRG, SETTINGS);
             } else {
-                setAltHotkey(stringToKeyCode(settingsChar), SETTINGS);
+                settingsHotkeyController.setHotkey(stringToKeyCode(settingsChar),ALT, SETTINGS);
             }
         }
     }
@@ -210,16 +177,21 @@ public class HotkeyController implements Controller, Initializable {
     public void safeOpenRulesHotkeys(){
         if(openRulesTextField.getText() != null && openRulesChoiceBox.getValue() != null){
             Character rulesChar = openRulesTextField.getText().charAt(0);
+            HotkeyEventController rulesHotkeyController = new HotkeyEventController(scene,ingameScreenControllerProvider);
+            hotkeyControllers.add(rulesHotkeyController);
             if(openRulesChoiceBox.getValue().equals(STRG)){
-                setStrHotkey(stringToKeyCode(rulesChar), RULES);
+                rulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),ALT, RULES);
             } else {
-                setAltHotkey(stringToKeyCode(rulesChar), RULES);
+                rulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),STRG, RULES);
             }
         }
     }
 
     public void safeHotkeys() {
-
+        for(HotkeyEventController controller : hotkeyControllers){
+            controller.stop();
+        }
+        hotkeyControllers.clear();
         safeTradeHotkeys();
         safeEndTurnHotKeys();
         safeOpenRulesHotkeys();
