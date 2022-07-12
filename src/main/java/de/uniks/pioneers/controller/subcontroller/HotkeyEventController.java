@@ -1,12 +1,10 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.controller.IngameScreenController;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 
 import javax.inject.Provider;
 
@@ -39,7 +37,7 @@ public class HotkeyEventController {
                 if (keyComb.match(ke)) {
                     switch (kind) {
                         case TRADE -> ingameScreenControllerProvider.get().openTradePopUp();
-                        case END -> ingameScreenControllerProvider.get().leave();
+                        case END -> System.out.println("toDo");
                         case RULES -> ingameScreenControllerProvider.get().toRules();
                         case SETTINGS -> ingameScreenControllerProvider.get().toSettings();
                     }
