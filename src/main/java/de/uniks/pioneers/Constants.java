@@ -63,4 +63,5 @@ public class Constants {
     public static final String DARKMODE_FALSE = "FALSE";
 
     public static final String STRG = "Strg";
+    public static final String ALT = "Alt";
 }

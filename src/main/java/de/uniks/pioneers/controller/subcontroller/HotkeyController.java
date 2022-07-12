@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.services.PrefService;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -9,16 +10,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,10 +43,9 @@ public class HotkeyController implements Controller, Initializable {
     @FXML public Text endTurnText;
     @FXML public Text openSettingsText;
     @FXML public Text openRulesText;
-    @Inject
-    PrefService prefService;
+    @FXML public Button safeButton;
 
-    private final String[] hotkeyChoiceBoxElements = {"STRG", "ALT"};
+    private final String[] hotkeyChoiceBoxElements = {STRG, ALT};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
     private final Scene scene;
 
@@ -132,21 +133,23 @@ public class HotkeyController implements Controller, Initializable {
         return key;
     }
 
-    private void setStrHotkey(KeyCode letter){
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<>() {
-            final KeyCombination keyComb = new KeyCodeCombination(letter, KeyCombination.CONTROL_DOWN);
+    private void setStrHotkey(KeyCode letter ){
 
-            public void handle(KeyEvent key) {
-                if (keyComb.match(key)) {
+        EventHandler<KeyEvent> eventHandler = new EventHandler<>() {
+            final KeyCombination keyComb = new KeyCodeCombination(letter, KeyCombination.CONTROL_DOWN);
+            public void handle(KeyEvent ke) {
+                if (keyComb.match(ke)) {
                     System.out.println("Key Pressed: " + keyComb);
-                    key.consume();
+                    ke.consume();
                 }
             }
-        });
+        };
+        scene.removeEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
     }
 
     private void setAltHotkey(KeyCode letter){
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<>() {
+        EventHandler<KeyEvent> eventHandler = new EventHandler<>() {
             final KeyCombination keyComb = new KeyCodeCombination(letter, KeyCombination.ALT_DOWN);
             public void handle(KeyEvent ke) {
                 if (keyComb.match(ke)) {
@@ -154,7 +157,9 @@ public class HotkeyController implements Controller, Initializable {
                     ke.consume();
                 }
             }
-        });
+        };
+        scene.removeEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
     }
 
     private void safeTradeHotkeys(){
@@ -202,6 +207,7 @@ public class HotkeyController implements Controller, Initializable {
     }
 
     public void safeHotkeys() {
+
         safeTradeHotkeys();
         safeEndTurnHotKeys();
         safeOpenRulesHotkeys();

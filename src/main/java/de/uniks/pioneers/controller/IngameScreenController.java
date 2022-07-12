@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -91,6 +93,10 @@ public class IngameScreenController implements Controller {
     private IngamePlayerController ingamePlayerController;
     private ChangeListener<Boolean> tradeOfferListener;
     private final ChangeListener<Boolean> finishedMapRenderListener;
+    public EventHandler<KeyEvent> tradeHotkeyHandler;
+    public EventHandler<KeyEvent> endHotkeyHandler;
+    public EventHandler<KeyEvent> settingsHotkeyHandler;
+    public EventHandler<KeyEvent> rulesHotkeyHandler;
 
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
