@@ -55,6 +55,9 @@ public class IngameStateController {
     public void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
+        ingameService.currentExpectedMove.set(move);
+
+        assert move.players().get(0)!=null;
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
             // enable posting move
             switch (move.action()) {
@@ -80,12 +83,10 @@ public class IngameStateController {
                     speechService.play(SPEECH_BUILD);
                 }
                 case DROP -> {
-                    System.out.println("---Discard---");
                     robberService.getRobberState().set(ROBBER_DISCARD);
                     speechService.play(SPEECH_DROP_RESOURCES);
                 }
                 case ROB -> {
-                    System.out.println("---Rob---");
                     this.enableHexagonPoints();
 
                     if(robberService.getRobberState().get() != ROBBER_STEAL){
@@ -95,6 +96,10 @@ public class IngameStateController {
                     speechService.play(SPEECH_MOVE_ROBBER);
                 }
                 case OFFER -> ingameService.tradeIsOffered.set(true);
+                case ACCEPT -> {
+
+                }
+
             }
         }
 

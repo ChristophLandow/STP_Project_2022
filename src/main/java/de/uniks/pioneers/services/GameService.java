@@ -7,16 +7,16 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -34,11 +34,13 @@ public class GameService {
     public String me;
     private final UserService userService;
     private final IngameService ingameService;
-    private final NewGameLobbyService newGameLobbyService;
-    public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
+
+    public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
+    public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
     public int victoryPoints;
     public boolean wonGame;
+    public SimpleStringProperty moveAction;
 
     @Inject
     EventListener eventListener;
@@ -48,7 +50,6 @@ public class GameService {
         this.gameApiService = gameApiService;
         this.userService = userService;
         this.ingameService = ingameService;
-        this.newGameLobbyService = newGameLobbyService;
     }
 
     public Observable<Game> deleteGame(String gameId) {
@@ -56,6 +57,7 @@ public class GameService {
     }
 
     public void initGame() {
+        moveAction = new SimpleStringProperty();
         wonGame = false;
         ingameService.game.set(game.get());
         // REST - get buildings from server
@@ -76,13 +78,16 @@ public class GameService {
         disposable.add(eventListener.listen(patternToObserveMoves, Move.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(moveEvent -> {
-                    System.out.println("move " + moveEvent);
                     final Move move = moveEvent.data();
-                    if (moveEvent.event().endsWith(".created")) {
+                    if(moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
-                        if (move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
+                        if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
                             ingameService.tradeOffer.set(move);
+                        } else if(move.action().equals(OFFER) && !Objects.equals(move.userId(), me)) {
+                            ingameService.tradeAccepted.add(move);
                         }
+
+                        moveAction.set(move.action());
                     }
                 })
         );
@@ -106,13 +111,7 @@ public class GameService {
 
     private Player normalizePlayer(Player player) {
         Resources toNormalize = player.resources();
-        int brick = toNormalize.brick() == null ? 0 : toNormalize.brick();
-        int grain = toNormalize.grain() == null ? 0 : toNormalize.grain();
-        int ore = toNormalize.ore() == null ? 0 : toNormalize.ore();
-        int lumber = toNormalize.lumber() == null ? 0 : toNormalize.lumber();
-        int wool = toNormalize.wool() == null ? 0 : toNormalize.wool();
-        int unknown = toNormalize.unknown() == null ? 0 : toNormalize.unknown();
-        toNormalize = new Resources(unknown, grain, brick, ore, lumber, wool);
+        toNormalize = toNormalize.normalize();
         return player.normalize(toNormalize);
     }
 
@@ -156,6 +155,10 @@ public class GameService {
                     list.forEach(player -> players.put(player.userId(), normalizePlayer(player)));
                     members.addAll(lobbyMembers);
                     me = userService.getCurrentUser()._id();
+                    // observable maps do not seem to be normal java instances !
+                    // thats why myResourcs = players.get(me).resources.createMap leads to
+                    // horrible malfunction for every listener, even added after the appointment
+                    myResources.putAll(players.get(me).resources().normalize().createObservableMap());
                 }, Throwable::printStackTrace));
     }
 
@@ -207,94 +210,79 @@ public class GameService {
                 || checkBuildingSpot(uploadCoords[0], uploadCoords[1] + 1, uploadCoords[2] - 1, 6);
     }
 
+    public void updateResources(String type, int amount) {
+        myResources.replace(type, myResources.get(type), amount);
+    }
+
+    private void calcMissingRessources(Map<String, Integer> cost) {
+        missingResources = new HashMap<>();
+        cost.keySet().forEach(s -> missingResources.put(s, myResources.get(s) - cost.get(s)));
+    }
+
     public boolean checkRoad() {
-        Player mario = players.get(me);
-        boolean enoughRessources = mario.resources().lumber() >= 1 && mario.resources().brick() >= 1;
+        boolean enoughRessources = (myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1);
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
             return true;
         } else {
-            calcMissingRessources(ROAD);
+            Map<String, Integer> cost = Map.of(BRICK, 1, LUMBER, 1);
+            calcMissingRessources(cost);
             notEnoughRessources.set(true);
             return false;
         }
     }
 
-    private void calcMissingRessources(String type) {
-        Resources resources = players.get(me).resources();
-        missingResources = new HashMap<>();
-        int lumber = 0, brick = 0, grain = 0, wool = 0, ore = 0;
-        if (type.equals(ROAD)) {
-
-            lumber = resources.lumber() - 1;
-            brick = resources.brick() - 1;
-        } else if (type.equals(SETTLEMENT)) {
-            lumber = resources.lumber() - 1;
-            brick = resources.brick() - 1;
-            grain = resources.grain() - 1;
-            wool = resources.wool() - 1;
-        } else {
-            grain = resources.grain()-2;
-            ore = resources.ore()-3;
-        }
-        missingResources.put("lumber", lumber);
-        missingResources.put("brick", brick);
-        missingResources.put("grain", grain);
-        missingResources.put("wool", wool);
-        missingResources.put("ore",ore);
-    }
-
     public boolean checkResourcesSettlement() {
-        Player mario = players.get(me);
-        boolean enoughRessources = mario.resources().lumber() >= 1 && mario.resources().brick() >= 1
-                && mario.resources().grain() >= 1 && mario.resources().wool() >= 1;
+        boolean enoughRessources = (myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1
+                && myResources.get(GRAIN) >= 1 && myResources.get(WOOL) >= 1);
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
             return true;
         } else {
-            calcMissingRessources(SETTLEMENT);
+            Map<String, Integer> cost = Map.of(BRICK, 1, LUMBER, 1, GRAIN, 1, WOOL, 1);
+            calcMissingRessources(cost);
             notEnoughRessources.set(true);
             return false;
         }
     }
 
     public boolean checkCity() {
-        Player mario = players.get(me);
-        boolean enoughRessources = mario.resources().ore() >= 3 && mario.resources().grain() >= 2;
+        boolean enoughRessources = (myResources.get(ORE) >= 3 && myResources.get(GRAIN) >= 2);
 
         if (enoughRessources) {
             notEnoughRessources.set(false);
             return true;
         } else {
-            calcMissingRessources(CITY);
+            Map<String, Integer> cost = Map.of(ORE, 3, GRAIN, 2);
+            calcMissingRessources(cost);
             notEnoughRessources.set(true);
             return false;
         }
     }
 
-    public int getRessourcesSize(){
+    public int getRessourcesSize() {
         Resources ingameResources = players.get(me).resources();
         int result = 0;
 
-        if(ingameResources.grain() != null){
+        if (ingameResources.grain() != null) {
             result += ingameResources.grain();
         }
 
-        if(ingameResources.brick() != null){
+        if (ingameResources.brick() != null) {
             result += ingameResources.brick();
         }
 
-        if(ingameResources.ore() != null){
+        if (ingameResources.ore() != null) {
             result += ingameResources.ore();
         }
 
-        if(ingameResources.lumber() != null){
+        if (ingameResources.lumber() != null) {
             result += ingameResources.lumber();
         }
 
-        if(ingameResources.wool() != null){
+        if (ingameResources.wool() != null) {
             result += ingameResources.wool();
         }
 

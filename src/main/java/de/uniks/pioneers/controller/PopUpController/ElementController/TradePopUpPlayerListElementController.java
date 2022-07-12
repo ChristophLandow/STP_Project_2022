@@ -4,39 +4,38 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 
-public class TradePopUpPlayerListElementController  {
-
+public class TradePopUpPlayerListElementController {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final UserService userService;
-    private final GameService gameService;
 
-    @FXML public Label playerNameLabel;
-    @FXML public ImageView playerAvatar;
-    @FXML public Circle tradeSelector;
-
+    @FXML
+    public Label playerNameLabel;
+    @FXML
+    public ImageView playerAvatar;
+    @FXML
+    public ImageView acceptedMark;
 
     @Inject
     public TradePopUpPlayerListElementController(UserService userService, GameService gameService) {
         this.userService = userService;
-        this.gameService = gameService;
     }
-
 
     public Parent render() {
         Parent node = null;
@@ -50,7 +49,6 @@ public class TradePopUpPlayerListElementController  {
         return node;
     }
 
-
     public void init(String userId) {
         disposable.add(userService.getUserById(userId)
                 .observeOn(FX_SCHEDULER)
@@ -61,12 +59,22 @@ public class TradePopUpPlayerListElementController  {
                     playerNameLabel.setText(user.name());
                 })
         );
-
     }
 
     public void stop() {
-
+        disposable.dispose();
     }
 
-
+    public void displayAcceptedMark() {
+        final String resourceURL = "/de/uniks/pioneers/controller/subcontroller/images/trade_accepted.png";
+        final Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
+        acceptedMark.setImage(img);
+        Platform.runLater(() ->{
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }
