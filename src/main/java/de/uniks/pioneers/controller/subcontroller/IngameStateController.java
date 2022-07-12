@@ -80,12 +80,10 @@ public class IngameStateController {
                     speechService.play(SPEECH_BUILD);
                 }
                 case DROP -> {
-                    System.out.println("---Discard---");
                     robberService.getRobberState().set(ROBBER_DISCARD);
                     speechService.play(SPEECH_DROP_RESOURCES);
                 }
                 case ROB -> {
-                    System.out.println("---Rob---");
                     this.enableHexagonPoints();
 
                     if(robberService.getRobberState().get() != ROBBER_STEAL){

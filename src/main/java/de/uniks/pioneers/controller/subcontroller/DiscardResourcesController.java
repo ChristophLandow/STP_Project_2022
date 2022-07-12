@@ -29,7 +29,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.*;
 
 public class DiscardResourcesController implements Initializable, Controller {
     @FXML private Text numeratorText;
@@ -179,7 +178,7 @@ public class DiscardResourcesController implements Initializable, Controller {
         int fishDiscard = FishSpinner.getValue();
         int carbonDiscard = CarbonSpinner.getValue();
 
-        disposable.add(robberService.dropRessources(new Resources(-walediscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarbearDeiscard))
+        disposable.add(robberService.dropResources(new Resources(-walediscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarbearDeiscard))
                 .observeOn(FX_SCHEDULER).take(1).subscribe(move -> stop(),this::handleHttpError));
     }
 

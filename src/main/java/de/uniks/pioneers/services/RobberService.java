@@ -6,7 +6,6 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.Resources;
-import de.uniks.pioneers.model.State;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -75,8 +74,8 @@ public class RobberService {
         return pioneersApiService.postMove(gameService.getGame()._id(), robMove);
     }
 
-    public Observable<Move> dropRessources(Resources drop){
-        CreateMoveDto robMove = new CreateMoveDto(
+    public Observable<Move> dropResources(Resources drop){
+        CreateMoveDto dropMove = new CreateMoveDto(
                 GameConstants.DROP,
                 null,
                 drop,
@@ -84,6 +83,6 @@ public class RobberService {
                 null
         );
 
-        return pioneersApiService.postMove(gameService.getGame()._id(), robMove);
+        return pioneersApiService.postMove(gameService.getGame()._id(), dropMove);
     }
 }
