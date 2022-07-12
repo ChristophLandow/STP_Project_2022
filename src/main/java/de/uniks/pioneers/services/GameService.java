@@ -13,10 +13,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.Map;
-import java.util.Objects;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -24,7 +23,7 @@ import static de.uniks.pioneers.GameConstants.*;
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
     public ObservableList<Member> members = FXCollections.observableArrayList();
-    private final ArrayList<User> users = new ArrayList<>();
+    private ArrayList<User> users = new ArrayList<>();
     public ObservableList<Member> lobbyMembers;
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
@@ -46,7 +45,7 @@ public class GameService {
     EventListener eventListener;
 
     @Inject
-    public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService, NewGameLobbyService newGameLobbyService) {
+    public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService) {
         this.gameApiService = gameApiService;
         this.userService = userService;
         this.ingameService = ingameService;
@@ -291,6 +290,10 @@ public class GameService {
 
     public void setMembers(ObservableList<Member> lobbyMembers) {
         this.lobbyMembers = lobbyMembers;
+    }
+
+    public void setUsers(ArrayList<User> users){
+        this.users = users;
     }
 
     public ArrayList<User> getUsers() {

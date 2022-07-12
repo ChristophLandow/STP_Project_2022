@@ -13,7 +13,7 @@ public class SpeechService {
     }
 
     public void play(String file){
-        playAudio(GameConstants.FEMALE, file);
+        //playAudio(GameConstants.FEMALE, file);
     }
 
     private void playAudio(String gender, String file){

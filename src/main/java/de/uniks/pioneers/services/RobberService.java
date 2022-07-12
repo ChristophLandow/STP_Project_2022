@@ -59,10 +59,6 @@ public class RobberService {
     }
 
     public Observable<Move> robPlayer(String target){
-        return robberMove(target);
-    }
-
-    private Observable<Move> robberMove(String target){
         CreateMoveDto robMove = new CreateMoveDto(
                 GameConstants.ROB,
                 new RobDto(robberTile.tile.q,robberTile.tile.s,robberTile.tile.r, target),

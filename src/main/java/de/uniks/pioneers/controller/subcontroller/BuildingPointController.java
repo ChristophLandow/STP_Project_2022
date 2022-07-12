@@ -20,6 +20,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 import java.util.ArrayList;
+import java.util.logging.SocketHandler;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
@@ -110,7 +111,6 @@ public class BuildingPointController {
             buildingSVG.setLayoutX(view.getLayoutX() - HOUSE_WIDTH);
             buildingSVG.setLayoutY(view.getLayoutY() - HOUSE_HEIGHT);
         } else {
-            System.out.println("Build City");
             buildingSVG.setContent(CITY_SVG);
             buildingSVG.setLayoutX(view.getLayoutX() - CITY_WIDTH);
             buildingSVG.setLayoutY(view.getLayoutY() - CITY_HEIGHT);
@@ -150,7 +150,6 @@ public class BuildingPointController {
     private void checkPosition(MouseEvent mouseEvent) {
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
             build();
-            System.out.println("checkposition");
             gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
