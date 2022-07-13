@@ -13,6 +13,7 @@ import java.util.List;
 public class UserService {
     private final UserApiService userApiService;
     private User currentUser;
+    private boolean isSpectator;
 
     @Inject
     public UserService(UserApiService userApiService) {
@@ -41,6 +42,14 @@ public class UserService {
 
     public Observable<List<User>> findAll() {
         return this.userApiService.findAll();
+    }
+
+    public Boolean isSpectator() {
+        return isSpectator;
+    }
+
+    public void setSpectator(boolean isSpectator) {
+        this.isSpectator = isSpectator;
     }
 }
 
