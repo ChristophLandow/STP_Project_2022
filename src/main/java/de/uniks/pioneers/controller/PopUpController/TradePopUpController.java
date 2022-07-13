@@ -172,7 +172,7 @@ public class TradePopUpController implements Controller {
                     if(playerAccepted != null) {
                         playerAccepted.displayAcceptedMark();
                     }
-                    //ingameService.confirmTrade(s.userId());
+                    ingameService.confirmTrade(s.userId());
                     Platform.runLater(this::stop);
                 });
             }
