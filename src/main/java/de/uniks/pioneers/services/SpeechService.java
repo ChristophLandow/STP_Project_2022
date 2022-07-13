@@ -10,7 +10,6 @@ public class SpeechService {
     @Inject PrefService prefService;
     @Inject
     public SpeechService() {
-
     }
 
     public void play(String file){
