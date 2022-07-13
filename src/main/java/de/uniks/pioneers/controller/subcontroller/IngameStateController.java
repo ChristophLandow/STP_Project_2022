@@ -97,9 +97,7 @@ public class IngameStateController {
                 }
                 case OFFER -> ingameService.tradeIsOffered.set(true);
                 case ACCEPT -> {
-
                 }
-
             }
         }
 

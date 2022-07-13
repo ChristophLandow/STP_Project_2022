@@ -6,13 +6,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.SettingsScreenController">
    <Label layoutX="56.0" layoutY="75.0" text="Appearance-Mode : ">
@@ -43,9 +42,8 @@
    <ImageView fitHeight="51.0" fitWidth="48.0" layoutX="532.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../Speaker_Icon.png" />
    </ImageView>
-   <ImageView fitHeight="114.0" fitWidth="120.0" layoutX="56.0" layoutY="179.0" pickOnBounds="true"
-              preserveRatio="true">
-      <Image url="@../Note.png"/>
+   <ImageView fitHeight="114.0" fitWidth="120.0" layoutX="56.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../Note.png" />
    </ImageView>
    <CheckBox fx:id="VoiceOutputCheckBox" layoutX="741.0" layoutY="76.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="173.0" text="Voice Output">
       <font>
@@ -53,42 +51,10 @@
       </font>
    </CheckBox>
    <ChoiceBox fx:id="VoiceOutputChoiceBox" layoutX="741.0" layoutY="142.0" prefWidth="150.0" />
-   <Button fx:id="saveButton" layoutX="741.0" layoutY="589.0" mnemonicParsing="false" onAction="#leave" text="Save">
+   <Button fx:id="saveButton" layoutX="741.0" layoutY="589.0" mnemonicParsing="false" onAction="#safeHotkeys" text="Save">
       <font>
          <Font size="24.0" />
       </font>
    </Button>
-   <Text fx:id="ShortcutsText" layoutX="56.0" layoutY="464.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shortcuts">
-      <font>
-         <Font size="33.0" />
-      </font>
-   </Text>
-   <Text fx:id="TradingText" layoutX="56.0" layoutY="508.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Trading">
-      <font>
-         <Font size="20.0" />
-      </font>
-   </Text>
-   <Text fx:id="EndTurnText" layoutX="56.0" layoutY="551.0" strokeType="OUTSIDE" strokeWidth="0.0" text="End Turn">
-      <font>
-         <Font size="20.0" />
-      </font>
-   </Text>
-   <Text fx:id="OpenRulesText" layoutX="56.0" layoutY="597.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Rules">
-      <font>
-         <Font size="20.0" />
-      </font>
-   </Text>
-   <Text fx:id="OpenSettingsText" layoutX="56.0" layoutY="643.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Settings">
-      <font>
-         <Font size="20.0" />
-      </font>
-   </Text>
-   <ChoiceBox fx:id="TradingChoiceBox" layoutX="260.0" layoutY="487.0" prefHeight="25.0" prefWidth="95.0" />
-   <ChoiceBox fx:id="EndTurnChoiceBox" layoutX="260.0" layoutY="530.0" prefHeight="25.0" prefWidth="95.0" />
-   <ChoiceBox fx:id="OpenRulesChoiceBox" layoutX="260.0" layoutY="576.0" prefHeight="25.0" prefWidth="95.0" />
-   <ChoiceBox fx:id="OpenSettingsChoiceBox" layoutX="260.0" layoutY="622.0" prefHeight="25.0" prefWidth="95.0" />
-   <TextField fx:id="TradingTextField" layoutX="376.0" layoutY="487.0" prefHeight="25.0" prefWidth="41.0" />
-   <TextField fx:id="EndTurnTextField" layoutX="376.0" layoutY="530.0" prefHeight="25.0" prefWidth="41.0" />
-   <TextField fx:id="OpenRulesTextField" layoutX="376.0" layoutY="576.0" prefHeight="25.0" prefWidth="41.0" />
-   <TextField fx:id="OpenSettingsTextField" layoutX="376.0" layoutY="622.0" prefHeight="25.0" prefWidth="41.0" />
+   <HBox fx:id="hotkeyHBox" layoutX="69.0" layoutY="400.0" prefHeight="350.0" prefWidth="500.0" />
 </AnchorPane>
