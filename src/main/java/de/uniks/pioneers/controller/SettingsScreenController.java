@@ -5,6 +5,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
+import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.PrefService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,8 +39,9 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML public Button leaveButton;
     @FXML public RadioButton lightMode_RadioButton;
     @FXML public RadioButton darkMode_RadioButton;
-    @FXML public ChoiceBox<String> musicChoiceBox;
+    @FXML public ChoiceBox<String> musicChoiceBox, genderChoiceBox;
     @FXML public Slider volumeSlider;
+    @FXML public CheckBox voiceOutputCheckBox;
     @FXML public HBox hotkeyHBox;
 
     @Inject
@@ -58,9 +60,12 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
 
     private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
+
+    @Inject Provider<SpeechSettingsController> speechSettingsControllerProvider;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
     private HotkeyController hotkeyController;
+    private SpeechSettingsController speechSettingsController;
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
@@ -134,6 +139,10 @@ public class SettingsScreenController implements Controller, Initializable {
         if(mediaPlayer != null) {
             mediaPlayer.stop();
         }
+
+        if(speechSettingsController != null){
+            speechSettingsController.stop();
+        }
     }
 
     @Override
@@ -150,6 +159,11 @@ public class SettingsScreenController implements Controller, Initializable {
         hotkeyController = new HotkeyController(ingameScreenControllerProvider.get().getApp().getStage().getScene(), ingameScreenControllerProvider);
         hotkeyHBox.getChildren().add(hotkeyController.render());
         hotkeyController.init();
+
+        speechSettingsController = speechSettingsControllerProvider.get();
+        speechSettingsController.setVoiceOutputCheckBox(this.voiceOutputCheckBox);
+        speechSettingsController.setGenderChoiceBox(this.genderChoiceBox);
+        speechSettingsController.init();
         return settingsView;
     }
 
@@ -263,7 +277,8 @@ public class SettingsScreenController implements Controller, Initializable {
         return this.app;
     }
 
-    public void safeHotkeys() {
+    public void safe() {
         hotkeyController.safeHotkeys();
+        speechSettingsController.saveSettings();
     }
 }
