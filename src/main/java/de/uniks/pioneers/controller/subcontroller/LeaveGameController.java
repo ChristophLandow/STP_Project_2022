@@ -53,6 +53,7 @@ public class LeaveGameController {
         this.members = FXCollections.observableArrayList();
         this.leavedWithButton = false;
         this.myColor = "";
+        this.kicked = false;
     }
 
     public void init(IngameScreenController ingameScreenController, GameChatController gameChatController) {
@@ -112,6 +113,7 @@ public class LeaveGameController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Kicked by Host");
                 alert.show();
             }
+            userService.setSpectator(false);
             ingameScreenController.stop();
             timerService.reset();
             disposable.dispose();
@@ -132,6 +134,7 @@ public class LeaveGameController {
                         app.show(newLobbyController);
                     }, Throwable::printStackTrace));
         } else {
+            userService.setSpectator(false);
             ingameScreenController.stop();
             timerService.reset();
             disposable.dispose();

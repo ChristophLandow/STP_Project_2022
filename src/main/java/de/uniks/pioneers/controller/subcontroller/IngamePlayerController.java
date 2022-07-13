@@ -12,14 +12,14 @@ import javafx.scene.shape.SVGPath;
 import javax.inject.Provider;
 
 public class IngamePlayerController {
-    private UserService userService;
-    private LeaveGameController leaveGameController;
-    private Provider<IngamePlayerListElementController> elementProvider;
-    private ListView<Node> playerListView;
-    private Provider<IngamePlayerListSpectatorController> spectatorProvider;
-    private Game game;
-    private ImageView hammerImageView;
-    private Label streetCountLabel;
+    private final UserService userService;
+    private final LeaveGameController leaveGameController;
+    private final Provider<IngamePlayerListElementController> elementProvider;
+    private final ListView<Node> playerListView;
+    private final Provider<IngamePlayerListSpectatorController> spectatorProvider;
+    private final Game game;
+    private final ImageView hammerImageView;
+    private final Label streetCountLabel;
     private final Label houseCountLabel;
     private final Label cityCountLabel;
     private final SVGPath streetSVG;
@@ -60,7 +60,7 @@ public class IngamePlayerController {
         Node removal = playerListView.getItems().stream().filter(node -> node.getId().equals(member.userId())).findAny().orElse(null);
         playerListView.getItems().remove(removal);
 
-        if(member.userId().equals(userService.getCurrentUser()._id())) {
+        if(member.userId().equals(userService.getCurrentUser()._id()) && userService.isSpectator()) {
             leaveGameController.setKicked(true);
             leaveGameController.leave();
         }
