@@ -173,4 +173,8 @@ public class IngameStateController {
             }
         }
     }
+
+    public Pane getTurnPane(){
+        return this.turnPane;
+    }
 }

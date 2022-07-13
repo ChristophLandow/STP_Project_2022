@@ -188,7 +188,7 @@ public class HotkeyController implements Controller, Initializable {
                 if(field.equals(field2)){
                     continue;
                 }
-                if(field.getText().equals(field2.getText())){
+                if((field.getText().equals(field2.getText())) && !(field.getText().isEmpty() && field2.getText().isEmpty())){
                     equalHotkeys = true;
                 }
             }

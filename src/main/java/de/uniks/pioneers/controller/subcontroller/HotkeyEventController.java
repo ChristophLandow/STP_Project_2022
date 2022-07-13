@@ -53,9 +53,9 @@ public class HotkeyEventController {
     }
 
     private void fireEndHotkey(){
-        //Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
-        //        1, false, false, false, false, false, false, false, false, true, false, null);
-        //ingameScreenControllerProvider.get().getTurnPane().fireEvent(rightClick);
+        Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
+                1, false, false, false, false, false, false, false, false, true, false, null);
+        ingameScreenControllerProvider.get().getIngameStateController().getTurnPane().fireEvent(rightClick);
         System.out.println("toDo");
     }
 
