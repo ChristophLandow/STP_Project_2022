@@ -19,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -174,7 +176,9 @@ public class TradePopUpController implements Controller {
             if (c.wasAdded()) {
                 c.getList().forEach(s -> {
                     TradePopUpPlayerListElementController playerAccepted = playerElements.get(s.userId());
-                    playerAccepted.displayAcceptedMark();
+                    if(playerAccepted != null) {
+                        playerAccepted.displayAcceptedMark();
+                    }
                     Platform.runLater(() -> {
                         ingameService.confirmTrade(s.userId());
                         stop();
