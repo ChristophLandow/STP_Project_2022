@@ -149,13 +149,12 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(newGameLobbyService.getMembers()::setAll, Throwable::printStackTrace));
 
         // init game chat controller
-        gameChatController
-                .setChatScrollPane(this.chatScrollPane)
-                .setMessageText(this.messageText)
-                .setMessageBox(this.messageBox)
-                .setSendButton(this.sendButton)
-                .setGame(this.game.get())
-                .setUsers(newGameLobbyService.getUsers().values().stream().toList());
+        gameChatController.setChatScrollPane(this.chatScrollPane);
+        gameChatController.setMessageText(this.messageText);
+        gameChatController.setMessageBox(this.messageBox);
+        gameChatController.setSendButton(this.sendButton);
+        gameChatController.setGame(this.game.get());
+        gameChatController.setUsers(newGameLobbyService.getUsers().values().stream().toList());
         gameChatController.render();
         gameChatController.init();
 
