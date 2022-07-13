@@ -157,7 +157,9 @@ public class GameService {
                     // observable maps do not seem to be normal java instances !
                     // thats why myResourcs = players.get(me).resources.createMap leads to
                     // horrible malfunction for every listener, even added after the appointment
-                    myResources.putAll(players.get(me).resources().normalize().createObservableMap());
+                    if(!userService.isSpectator()) {
+                        myResources.putAll(players.get(me).resources().normalize().createObservableMap());
+                    }
                 }, Throwable::printStackTrace));
     }
 

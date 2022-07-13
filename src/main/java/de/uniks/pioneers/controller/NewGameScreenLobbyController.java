@@ -56,7 +56,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    @Inject Provider<GameChatController> gameChatControllerProvider;
+    @Inject GameChatController gameChatController;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
     @Inject Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject ColorPickerController colorPickerController;
@@ -75,7 +75,6 @@ public class NewGameScreenLobbyController implements Controller {
     private User currentUser;
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private GameChatController gameChatController;
     private NewGameLobbyReadyController newGameLobbyReadyController;
     private NewGameLobbyUserController newGameLobbyUserController;
 
@@ -150,13 +149,12 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(newGameLobbyService.getMembers()::setAll, Throwable::printStackTrace));
 
         // init game chat controller
-        gameChatController = gameChatControllerProvider.get()
-                .setChatScrollPane(this.chatScrollPane)
-                .setMessageText(this.messageText)
-                .setMessageBox(this.messageBox)
-                .setSendButton(this.sendButton)
-                .setGame(this.game.get())
-                .setUsers(newGameLobbyService.getUsers().values().stream().toList());
+        gameChatController.setChatScrollPane(this.chatScrollPane);
+        gameChatController.setMessageText(this.messageText);
+        gameChatController.setMessageBox(this.messageBox);
+        gameChatController.setSendButton(this.sendButton);
+        gameChatController.setGame(this.game.get());
+        gameChatController.setUsers(newGameLobbyService.getUsers().values().stream().toList());
         gameChatController.render();
         gameChatController.init();
 
@@ -292,6 +290,7 @@ public class NewGameScreenLobbyController implements Controller {
         houseSVG.setVisible(!spectatorCheckBox.isSelected());
         spectatorImageView.setVisible(spectatorCheckBox.isSelected());
         colorPicker.setDisable(spectatorCheckBox.isSelected());
+        userService.setSpectator(spectatorCheckBox.isSelected());
     }
 
     public String getPassword() {

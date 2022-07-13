@@ -67,10 +67,7 @@ class AsOwner extends ApplicationTest {
     @Spy
     App app = new App(null);
 
-    @Mock(name = "gameChatControllerProvider")
-    Provider<GameChatController> gameChatControllerProvider;
-
-    @InjectMocks
+    @Mock(name = "gameChatController")
     GameChatController gameChatController;
 
     @InjectMocks
@@ -109,8 +106,6 @@ class AsOwner extends ApplicationTest {
 
         when(app.getStage()).thenReturn(stage);
 
-        //when(newGameLobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
-
         when(userService.getCurrentUser()).thenReturn(owner);
 
         when(eventListener.listen(patternToObserveUserOwner, User.class)).thenReturn(Observable.just(new Event<>("users.1.updated", owner)));
@@ -124,14 +119,7 @@ class AsOwner extends ApplicationTest {
         when(userService.getUserById("3")).thenReturn(Observable.just(userJoining)).thenReturn(Observable.just(userJoining));
 
         when(eventListener.listen(patternToObserveGameMembers, Member.class)).thenReturn(Observable.just(new Event<>("games.3.member.3.created", nowMember)));
-
         when(eventListener.listen(patternToObserveGame, Game.class)).thenReturn(Observable.just(new Event<>("games.3.updated", testGame)));
-
-        when(gameChatControllerProvider.get()).thenReturn(gameChatController);
-        when(newGameLobbyService.getMessages(testGame._id())).thenReturn(Observable.just(List.of(message01, message02)));
-        when(eventListener.listen("games." + testGame._id() + ".messages.*.*", MessageDto.class))
-                .thenReturn(Observable.just(new Event<>("games.3.messages.1.created", message01)))
-                .thenReturn(Observable.just(new Event<>("games.3.messages.2.created", message02)));
         when(newGameLobbyService.getMembers()).thenReturn(FXCollections.observableArrayList());
 
         newGameScreenLobbyController.setPassword("12345678");
@@ -170,16 +158,15 @@ class AsOwner extends ApplicationTest {
 
         verify(newGameLobbyService).getAll("3");
         //verify(newGameLobbyService).logout();
-        verify(userService,times(2)).getUserById("1");
-        verify(userService,times(2)).getUserById("2");
+        verify(userService,times(1)).getUserById("1");
+        verify(userService,times(1)).getUserById("2");
         verify(userService).getUserById("3");
         verify(eventListener).listen(patternToObserveUserOwner, User.class);
         verify(eventListener).listen(patternToObserveUserUser02, User.class);
         verify(eventListener).listen(patternToObserveUserJoining, User.class);
         verify(eventListener).listen(patternToObserveGameMembers, Member.class);
-        verify(gameChatControllerProvider).get();
-        verify(newGameLobbyService).getMessages(testGame._id());
-        verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
+        //verify(newGameLobbyService).getMessages(testGame._id());
+        //verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
 
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));
