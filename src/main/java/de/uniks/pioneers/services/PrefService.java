@@ -46,6 +46,10 @@ public class PrefService {
         preferences.put(LEAVE_GAME, id);
     }
 
+    public void saveMapRadiusOnLeave(int mapRadius) {
+        preferences.put("MapRadius", mapRadius + "");
+    }
+
     public Game getSavedGame() {
         String leavedGameID = preferences.get(LEAVE_GAME, "");
         Game leavedGame = null;
@@ -61,8 +65,20 @@ public class PrefService {
         return leavedGame;
     }
 
+    public int getSavedMapRadius() {
+        String mapRadius = preferences.get("MapRadius", "");
+
+        if(!mapRadius.equals("")) {
+            return Integer.parseInt(mapRadius);
+        } else {
+            return -1;
+        }
+
+    }
+
     private void forgetSavedGame() {
         preferences.put(LEAVE_GAME, "");
+        preferences.put("MapRadius", "");
     }
 
     public void saveDarkModeState(String state){
