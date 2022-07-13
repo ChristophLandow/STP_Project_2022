@@ -182,8 +182,12 @@ public class NewGameScreenLobbyController implements Controller {
     public void stop() {
         gameChatController.stop();
         disposable.dispose();
-        newGameLobbyUserController.stop();
-        newGameLobbyReadyController.stop();
+        if(newGameLobbyUserController != null) {
+            newGameLobbyUserController.stop();
+        }
+        if(newGameLobbyReadyController != null) {
+            newGameLobbyReadyController.stop();
+        }
     }
 
     @Override
@@ -208,14 +212,16 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin) {
+    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius) {
         if(!rejoin) {
             gameStorage.resetRemainingBuildings();
+            gameStorage.calcZoom(boardSizeSpinner.getValue());
+        } else {
+            gameStorage.calcZoom(mapRadius);
         }
-        if(game.owner().equals(currentUser._id())) {
+        if(game.owner().equals(userService.getCurrentUser()._id())) {
             gameService.victoryPoints = victoryPointSpinner.getValue();
         }
-        gameStorage.calcZoom(boardSizeSpinner.getValue());
         gameService.setMembers(newGameLobbyService.getMembers());
         IngameScreenController ingameScreenController = ingameScreenControllerProvider.get();
         ingameScreenController.game.set(game);
