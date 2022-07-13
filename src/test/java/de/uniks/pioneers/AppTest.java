@@ -351,8 +351,8 @@ class AppTest extends ApplicationTest {
         write("\t\t\t\t\t");
         type(KeyCode.UP);
         write("\t\t\t\t\t\t");
-        type(KeyCode.UP);
-
+        type(KeyCode.SPACE);
+        WaitForAsyncUtils.waitForFxEvents();
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "000", "build", 0, null, null, new Resources(null,-1,1,0,0,0), null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("offer", List.of("002")), new ExpectedMove("accept", List.of("000")), new ExpectedMove("build", List.of("000"))), null)));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "002", "offer", 0, null, null, new Resources(null,1,-1,0,0,0), "000")));
