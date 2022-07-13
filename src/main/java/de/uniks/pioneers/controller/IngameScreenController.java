@@ -333,8 +333,4 @@ public class IngameScreenController implements Controller {
             tradePopUpController.show();
         }
     }
-
-    public Pane getTurnPane(){
-        return this.turnPane;
-    }
 }
