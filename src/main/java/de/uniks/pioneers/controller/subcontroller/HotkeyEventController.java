@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.controller.IngameScreenController;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
@@ -35,15 +36,34 @@ public class HotkeyEventController {
             public void handle(KeyEvent ke) {
                 if (keyComb.match(ke)) {
                     switch (kind) {
-                        case TRADE -> ingameScreenControllerProvider.get().openTradePopUp();
-                        case END -> System.out.println("toDo");
-                        case RULES -> ingameScreenControllerProvider.get().toRules();
-                        case SETTINGS -> ingameScreenControllerProvider.get().toSettings();
+                        case TRADE -> fireTradeHotkey();
+                        case END -> fireEndHotkey();
+                        case RULES -> fireRulesHotkey();
+                        case SETTINGS -> fireSettingsHotkey();
                     }
                     ke.consume();
                 }
             }
         };
         scene.addEventFilter(KeyEvent.KEY_PRESSED, actualEventHandler);
+    }
+
+    private void fireTradeHotkey(){
+        ingameScreenControllerProvider.get().openTradePopUp();
+    }
+
+    private void fireEndHotkey(){
+        //Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
+        //        1, false, false, false, false, false, false, false, false, true, false, null);
+        //ingameScreenControllerProvider.get().getTurnPane().fireEvent(rightClick);
+        System.out.println("toDo");
+    }
+
+    private void fireSettingsHotkey(){
+        ingameScreenControllerProvider.get().toSettings();
+    }
+
+    private void fireRulesHotkey(){
+        ingameScreenControllerProvider.get().toRules();
     }
 }

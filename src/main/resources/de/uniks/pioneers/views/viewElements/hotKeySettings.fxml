@@ -6,7 +6,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.HotkeyController">
    <children>
       <Text fx:id="ShortcutsText" layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shortcuts">
@@ -21,26 +20,31 @@
       </Text>
       <ChoiceBox fx:id="tradingChoiceBox" layoutX="230.0" layoutY="83.0" prefHeight="25.0" prefWidth="95.0" />
       <TextField fx:id="tradingTextField" layoutX="342.0" layoutY="83.0" prefHeight="25.0" prefWidth="41.0" />
-      <Text fx:id="endTurnText" layoutX="14.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="End Turn">
+      <Text fx:id="endTurnText" layoutX="14.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="End Turn">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <ChoiceBox fx:id="endTurnChoiceBox" layoutX="230.0" layoutY="136.0" prefHeight="25.0" prefWidth="95.0" />
-      <TextField fx:id="endTurnTextField" layoutX="342.0" layoutY="136.0" prefHeight="25.0" prefWidth="41.0" />
-      <Text fx:id="openRulesText" layoutX="14.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Rules">
+      <ChoiceBox fx:id="endTurnChoiceBox" layoutX="230.0" layoutY="151.0" prefHeight="25.0" prefWidth="95.0" />
+      <TextField fx:id="endTurnTextField" layoutX="342.0" layoutY="150.0" prefHeight="25.0" prefWidth="41.0" />
+      <Text fx:id="openRulesText" layoutX="14.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Rules">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <ChoiceBox fx:id="openRulesChoiceBox" layoutX="230.0" layoutY="192.0" prefHeight="25.0" prefWidth="95.0" />
-      <TextField fx:id="openRulesTextField" layoutX="342.0" layoutY="192.0" prefHeight="25.0" prefWidth="41.0" />
-      <Text fx:id="openSettingsText" layoutX="14.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Settings">
+      <ChoiceBox fx:id="openRulesChoiceBox" layoutX="230.0" layoutY="218.0" prefHeight="25.0" prefWidth="95.0" />
+      <TextField fx:id="openRulesTextField" layoutX="342.0" layoutY="218.0" prefHeight="25.0" prefWidth="41.0" />
+      <Text fx:id="openSettingsText" layoutX="14.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Settings">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <ChoiceBox fx:id="openSettingsChoiceBox" layoutX="230.0" layoutY="253.0" prefHeight="25.0" prefWidth="95.0" />
-      <TextField fx:id="openSettingsTextField" layoutX="342.0" layoutY="253.0" prefHeight="25.0" prefWidth="41.0" />
+      <ChoiceBox fx:id="openSettingsChoiceBox" layoutX="230.0" layoutY="292.0" prefHeight="25.0" prefWidth="95.0" />
+      <TextField fx:id="openSettingsTextField" layoutX="342.0" layoutY="292.0" prefHeight="25.0" prefWidth="41.0" />
+      <Text fx:id="identicText" fill="RED" layoutX="176.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="298.89453125">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

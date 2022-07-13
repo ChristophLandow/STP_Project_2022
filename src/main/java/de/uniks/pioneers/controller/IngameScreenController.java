@@ -14,18 +14,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -33,9 +28,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -314,7 +306,6 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.stop();
         timerService.reset();
         mapRenderService.stop();
-        ingameService.tradeIsOffered.removeListener(tradeOfferListener);
         boardController.stop();
     }
 
@@ -339,5 +330,9 @@ public class IngameScreenController implements Controller {
             TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
             tradePopUpController.show();
         }
+    }
+
+    public Pane getTurnPane(){
+        return this.turnPane;
     }
 }

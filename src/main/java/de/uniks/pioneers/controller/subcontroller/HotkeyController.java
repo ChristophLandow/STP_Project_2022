@@ -38,9 +38,11 @@ public class HotkeyController implements Controller, Initializable {
     @FXML public Text openSettingsText;
     @FXML public Text openRulesText;
     @FXML public Button safeButton;
+    @FXML public Text identicText;
 
     private final String[] hotkeyChoiceBoxElements = {STRG, ALT};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
+    private final ArrayList<TextField> hotkeyTextfieldVariants = new ArrayList<>();
     private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
     private final Scene scene;
 
@@ -52,6 +54,7 @@ public class HotkeyController implements Controller, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Collections.addAll(hotkeyChoiceBoxVariants, tradingChoiceBox,endTurnChoiceBox,openRulesChoiceBox,openSettingsChoiceBox);
+        Collections.addAll(hotkeyTextfieldVariants, tradingTextField,endTurnTextField,openSettingsTextField,openRulesTextField);
         for (ChoiceBox<String> box : hotkeyChoiceBoxVariants){
             box.getItems().addAll(hotkeyChoiceBoxElements);
         }
@@ -179,13 +182,29 @@ public class HotkeyController implements Controller, Initializable {
     }
 
     public void safeHotkeys() {
-        for(HotkeyEventController controller : hotkeyControllers){
-            controller.stop();
+        boolean equalHotkeys = false;
+        for(TextField field : hotkeyTextfieldVariants){
+            for(TextField field2 : hotkeyTextfieldVariants){
+                if(field.equals(field2)){
+                    continue;
+                }
+                if(field.getText().equals(field2.getText())){
+                    equalHotkeys = true;
+                }
+            }
         }
-        hotkeyControllers.clear();
-        safeTradeHotkeys();
-        safeEndTurnHotKeys();
-        safeOpenRulesHotkeys();
-        safeOpenSettingsHotKeys();
+        if(equalHotkeys){
+            identicText.setText("Identical shortcuts exist!");
+        } else {
+            for(HotkeyEventController controller : hotkeyControllers){
+                controller.stop();
+            }
+            identicText.setText("");
+            hotkeyControllers.clear();
+            safeTradeHotkeys();
+            safeEndTurnHotKeys();
+            safeOpenRulesHotkeys();
+            safeOpenSettingsHotKeys();
+        }
     }
 }
