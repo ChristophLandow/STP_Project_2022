@@ -7,10 +7,10 @@ import javax.inject.Inject;
 import java.util.Objects;
 
 public class SpeechService {
-    final PrefService prefService;
+    @Inject PrefService prefService;
     @Inject
-    public SpeechService(PrefService prefService) {
-        this.prefService = prefService;
+    public SpeechService() {
+
     }
 
     public void play(String file){
