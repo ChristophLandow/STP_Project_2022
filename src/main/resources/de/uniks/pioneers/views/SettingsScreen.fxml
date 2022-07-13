@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.SettingsScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.SettingsScreenController">
    <Label layoutX="56.0" layoutY="75.0" text="Appearance-Mode : ">
       <font>
          <Font size="33.0" />
@@ -45,13 +45,13 @@
    <ImageView fitHeight="114.0" fitWidth="120.0" layoutX="56.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../Note.png" />
    </ImageView>
-   <CheckBox fx:id="VoiceOutputCheckBox" layoutX="741.0" layoutY="76.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="173.0" text="Voice Output">
+   <CheckBox fx:id="voiceOutputCheckBox" layoutX="741.0" layoutY="76.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="173.0" text="Voice Output">
       <font>
          <Font size="22.0" />
       </font>
    </CheckBox>
-   <ChoiceBox fx:id="VoiceOutputChoiceBox" layoutX="741.0" layoutY="142.0" prefWidth="150.0" />
-   <Button fx:id="saveButton" layoutX="741.0" layoutY="589.0" mnemonicParsing="false" onAction="#safeHotkeys" text="Save">
+   <ChoiceBox fx:id="genderChoiceBox" layoutX="741.0" layoutY="142.0" prefWidth="150.0" value="female voice" />
+   <Button layoutX="741.0" layoutY="589.0" mnemonicParsing="false" onAction="#safe" text="Save">
       <font>
          <Font size="24.0" />
       </font>
