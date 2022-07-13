@@ -102,7 +102,7 @@ public class IngameStateController {
         }
 
         this.setSituationLabel(move.players().get(0), move.action());
-        this.placeRobber(currentState.robber());
+        this.placeRobber(currentState.robber(), move.action());
     }
 
     private void enableHexagonPoints(){
@@ -161,8 +161,8 @@ public class IngameStateController {
         this.diceSubcontroller.activate();
     }
 
-    private void placeRobber(Point3D pos){
-        if(pos != null) {
+    private void placeRobber(Point3D pos, String action){
+        if(pos != null && !action.equals(ROB)) {
             for (HexTileController hexTileController : mapRenderService.getTileControllers()) {
                 HexTile tile = hexTileController.tile;
                 hexTileController.setRobber(pos.x() == tile.q && pos.y() == tile.s && pos.z() == tile.r);

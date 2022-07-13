@@ -32,6 +32,7 @@ import javafx.scene.shape.SVGPath;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -311,6 +312,7 @@ public class IngameScreenController implements Controller {
 
     public void setUsers(List<User> users) {
         this.users = users;
+        this.gameService.setUsers(new ArrayList<>(users));
     }
 
     public void loadMap() {

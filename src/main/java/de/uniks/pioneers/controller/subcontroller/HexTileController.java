@@ -3,7 +3,6 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.RobberService;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -13,7 +12,6 @@ import javafx.scene.shape.Circle;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.HOVER_COLOR;
 import static de.uniks.pioneers.GameConstants.STANDARD_COLOR;
 import static java.lang.Math.abs;
@@ -28,8 +26,6 @@ public class HexTileController {
     public BuildingPointController[] corners = new BuildingPointController[6];
     public StreetPointController[] edges = new StreetPointController[6];
     private RobberService robberService;
-
-    private final CompositeDisposable disposable = new CompositeDisposable();
 
     public HexTileController(Pane fieldPane, HexTile tile, Circle view, Circle eventView) {
         this.fieldPane = fieldPane;
@@ -192,7 +188,7 @@ public class HexTileController {
     private void moveRobber(MouseEvent event){
         if(robberService != null && this.robberService.getRobberState().get() == GameConstants.ROBBER_MOVE) {
             this.robberService.moveRobber(this);
-            disposable.add(this.robberService.robPlayer(null).observeOn(FX_SCHEDULER).subscribe(move -> {}));
+            this.robberService.updateRobbingCandidates();
             this.robberService.getRobberState().set(GameConstants.ROBBER_STEAL);
         }
     }
@@ -222,7 +218,6 @@ public class HexTileController {
 
         for(BuildingPointController buildingPointController: corners){
             User user = buildingPointController.getOwner();
-
             if(user != null && !result.contains(user)){
                 result.add(user);
             }
