@@ -4,7 +4,6 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.NewGameLobbyService;
-import de.uniks.pioneers.services.PrefService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -14,8 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import retrofit2.HttpException;
 
-import javax.inject.Inject;
 import java.util.Random;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -53,8 +52,12 @@ public class JoinGamePopUpController{
                     lobbyScreenController.showNewGameLobby(game, password, randomColor);
                     closePopUp();
                 }, throwable -> {
-                    this.wrongPasswordLabel.visibleProperty().set(true);
-                    throwable.printStackTrace();
+                    if (throwable instanceof HttpException) {
+                        this.wrongPasswordLabel.visibleProperty().set(true);
+                    }
+                    else{
+                        throwable.printStackTrace();
+                    }
                 }));
     }
 
