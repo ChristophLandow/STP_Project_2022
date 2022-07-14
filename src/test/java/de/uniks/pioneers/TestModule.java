@@ -339,6 +339,25 @@ public class TestModule {
             public Game getSavedGame() {
                 return null;
             }
+
+            @Override
+            public void saveVoiceOutputActive(boolean isVoiceOutputActive) {
+
+            }
+
+            @Override
+            public boolean getVoiceOutputActive() {
+                return false;
+            }
+
+            @Override
+            public void saveGenderVoice(String gender) {
+
+            }
+
+            public String getGenderVoice() {
+                return "female";
+            }
         };
     }
 

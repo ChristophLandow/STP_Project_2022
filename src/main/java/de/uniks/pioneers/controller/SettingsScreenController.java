@@ -2,8 +2,10 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
+import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.PrefService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -36,8 +39,10 @@ public class SettingsScreenController implements Controller, Initializable {
     @FXML public Button leaveButton;
     @FXML public RadioButton lightMode_RadioButton;
     @FXML public RadioButton darkMode_RadioButton;
-    @FXML public ChoiceBox<String> musicChoiceBox;
+    @FXML public ChoiceBox<String> musicChoiceBox, genderChoiceBox;
     @FXML public Slider volumeSlider;
+    @FXML public CheckBox voiceOutputCheckBox;
+    @FXML public HBox hotkeyHBox;
 
     @Inject
     PrefService prefService;
@@ -55,8 +60,12 @@ public class SettingsScreenController implements Controller, Initializable {
     private final Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
 
     private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
+
+    @Inject Provider<SpeechSettingsController> speechSettingsControllerProvider;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
+    private HotkeyController hotkeyController;
+    private SpeechSettingsController speechSettingsController;
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
@@ -118,10 +127,9 @@ public class SettingsScreenController implements Controller, Initializable {
         songs = new ArrayList<>();
         File songDirectory = new File("src/main/resources/de/uniks/pioneers/music");
         File[] songFiles = songDirectory.listFiles();
-        if(songFiles != null){
+        if(songFiles != null) {
             songs.addAll(Arrays.asList(songFiles));
         }
-
         setEventHandler(lightMode_RadioButton);
         setEventHandler(darkMode_RadioButton);
     }
@@ -130,6 +138,10 @@ public class SettingsScreenController implements Controller, Initializable {
     public void stop() {
         if(mediaPlayer != null) {
             mediaPlayer.stop();
+        }
+
+        if(speechSettingsController != null){
+            speechSettingsController.stop();
         }
     }
 
@@ -144,6 +156,14 @@ public class SettingsScreenController implements Controller, Initializable {
             e.printStackTrace();
             return null;
         }
+        hotkeyController = new HotkeyController(ingameScreenControllerProvider.get().getApp().getStage().getScene(), ingameScreenControllerProvider);
+        hotkeyHBox.getChildren().add(hotkeyController.render());
+        hotkeyController.init();
+
+        speechSettingsController = speechSettingsControllerProvider.get();
+        speechSettingsController.setVoiceOutputCheckBox(this.voiceOutputCheckBox);
+        speechSettingsController.setGenderChoiceBox(this.genderChoiceBox);
+        speechSettingsController.init();
         return settingsView;
     }
 
@@ -253,8 +273,12 @@ public class SettingsScreenController implements Controller, Initializable {
         }
         stage.close();
     }
-
     public App getApp() {
         return this.app;
+    }
+
+    public void safe() {
+        hotkeyController.safeHotkeys();
+        speechSettingsController.saveSettings();
     }
 }

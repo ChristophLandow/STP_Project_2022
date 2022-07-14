@@ -13,7 +13,6 @@ public class Constants {
     public static final String CHAT_SCREEN_TITLE = "Pioneers - Chat";
     public static final String RULES_SCREEN_TITLE = "Pioneers - Rules";
     public static final String NOOP = "noop";
-    public static final String REMEMBER_ME = "RememberMe";
     public static final String HOST_LEFT_GAME_ALERT = "The game is not active anymore, because the host left.";
 
     // network
@@ -61,4 +60,20 @@ public class Constants {
     public static final String DARKMODE_TRUE = "TRUE";
 
     public static final String DARKMODE_FALSE = "FALSE";
+
+    //Hotkeys
+    public static final String STRG = "Strg";
+    public static final String ALT = "Alt";
+
+    public static final String TRADE = "trade";
+    public static final String END = "end";
+    public static final String SETTINGS = "settings";
+    public static final String RULES = "rules";
+
+    //Preferences
+    public static final String REMEMBER_ME = "RememberMe";
+    public static final String LEAVE_GAME = "leavedGame";
+    public static final String DARK_MODE = "darkMode";
+    public static final String VOICE_OUTPUT_ACTIVE = "voiceOutputActive";
+    public static final String GENDER_VOICE = "genderVoice";
 }

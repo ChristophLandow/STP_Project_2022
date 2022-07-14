@@ -123,7 +123,7 @@ public class NewGameLobbyReadyController {
                     .doOnError(Throwable::printStackTrace)
                     .subscribe(response -> {
                         screenController.setGame(response);
-                        screenController.toIngame(this.game, newGameLobbyService.getUsers().values().stream().toList(), colorPickerController.getColor(), false);
+                        screenController.toIngame(this.game, newGameLobbyService.getUsers().values().stream().toList(), colorPickerController.getColor(), false, -1);
                     }, Throwable::printStackTrace));
         }
     }
