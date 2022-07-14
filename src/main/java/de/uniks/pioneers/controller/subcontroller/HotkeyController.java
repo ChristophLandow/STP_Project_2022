@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.IngameScreenController;
+import de.uniks.pioneers.services.PrefService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,6 +14,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +25,6 @@ import java.util.ResourceBundle;
 import static de.uniks.pioneers.Constants.*;
 
 public class HotkeyController implements Controller, Initializable {
-    private final Provider<IngameScreenController> ingameScreenControllerProvider;
     @FXML
     public TextField tradingTextField;
     @FXML public TextField endTurnTextField;
@@ -40,7 +42,11 @@ public class HotkeyController implements Controller, Initializable {
     @FXML public Button safeButton;
     @FXML public Text identicText;
 
+    @Inject
+    private PrefService prefService;
+
     private final String[] hotkeyChoiceBoxElements = {STRG, ALT};
+    private final Provider<IngameScreenController> ingameScreenControllerProvider;
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
     private final ArrayList<TextField> hotkeyTextfieldVariants = new ArrayList<>();
     private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
@@ -71,7 +77,7 @@ public class HotkeyController implements Controller, Initializable {
     @Override
     public Parent render() {
         Parent parent = null;
-        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/hotkeySettings.fxml"));
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/hotKeySettings.fxml"));
         loader.setControllerFactory(c -> this);
         try {
             parent = loader.load();
