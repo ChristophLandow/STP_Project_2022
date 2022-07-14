@@ -66,12 +66,11 @@ public class HotkeyController implements Controller, Initializable {
         endTurnChoiceBox.setValue(prefService.getEndChoiceBox());
         openRulesChoiceBox.setValue(prefService.getRulesChoiceBox());
         openSettingsChoiceBox.setValue(prefService.getSettingsChoiceBox());
-
         tradingTextField.setText(prefService.getTradeTextField().toString());
         endTurnTextField.setText(prefService.getEndTextField().toString());
         openRulesTextField.setText(prefService.getRulesTextField().toString());
         openSettingsTextField.setText(prefService.getSettingsTextField().toString());
-
+        safeHotkeys();
     }
 
     @Override
@@ -144,6 +143,11 @@ public class HotkeyController implements Controller, Initializable {
     }
 
     private void safeTradeHotkeys(){
+        if(tradingTextField.getText().equals("") || tradingChoiceBox.getValue().equals("")){
+            tradingChoiceBox.setValue("");
+            tradingTextField.setText("");
+            prefService.deleteTradeHotkey();
+        }
         if(!tradingTextField.getText().equals("") && !tradingChoiceBox.getValue().equals("")){
             Character tradeChar = prefService.saveTradeTextInput(tradingTextField.getText()).charAt(0);
             HotkeyEventController tradeHotkeyController = new HotkeyEventController(scene,ingameController);
@@ -157,6 +161,11 @@ public class HotkeyController implements Controller, Initializable {
     }
 
     public void safeEndTurnHotKeys(){
+        if(endTurnTextField.getText().equals("") || endTurnChoiceBox.getValue().equals("")){
+            endTurnTextField.setText("");
+            endTurnChoiceBox.setValue("");
+            prefService.deleteEndHotkey();
+        }
         if(!endTurnTextField.getText().equals("") && !endTurnChoiceBox.getValue().equals("")){
             Character endChar = prefService.saveEndTextInput(endTurnTextField.getText()).charAt(0);
             HotkeyEventController endHotkeyController = new HotkeyEventController(scene,ingameController);
@@ -170,6 +179,11 @@ public class HotkeyController implements Controller, Initializable {
     }
 
     public void safeOpenSettingsHotKeys(){
+        if(openSettingsTextField.getText().equals("") || openSettingsChoiceBox.getValue().equals("")){
+            openSettingsTextField.setText("");
+            openSettingsChoiceBox.setValue("");
+            prefService.deleteSettingsHotkey();
+        }
         if(!openSettingsTextField.getText().equals("") && !openSettingsChoiceBox.getValue().equals("")){
             Character settingsChar = prefService.saveSettingsTextInput(openSettingsTextField.getText()).charAt(0);
             HotkeyEventController settingsHotkeyController = new HotkeyEventController(scene,ingameController);
@@ -183,6 +197,11 @@ public class HotkeyController implements Controller, Initializable {
     }
 
     public void safeOpenRulesHotkeys(){
+        if(openRulesTextField.getText().equals("") || openRulesChoiceBox.getValue().equals("")){
+            openRulesChoiceBox.setValue("");
+            openRulesTextField.setText("");
+            prefService.deleteRulesHotkey();
+        }
         if(!openRulesTextField.getText().equals("") && !openRulesChoiceBox.getValue().equals("")){
             Character rulesChar = prefService.saveRulesTextInput(openRulesTextField.getText()).charAt(0);
             HotkeyEventController rulesHotkeyController = new HotkeyEventController(scene,ingameController);

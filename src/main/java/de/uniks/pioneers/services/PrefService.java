@@ -161,4 +161,24 @@ public class PrefService {
             return preferences.get("rulesTextField", "").charAt(0);
         }
     }
+
+    public void deleteTradeHotkey(){
+        preferences.put("tradeTextField", "");
+        preferences.put("tradeChoiceBox", "");
+    }
+
+    public void deleteEndHotkey(){
+        preferences.put("endTextField", "");
+        preferences.put("endChoiceBox", "");
+    }
+
+    public void deleteSettingsHotkey(){
+        preferences.put("settingsTextField", "");
+        preferences.put("settingsChoiceBox", "");
+    }
+
+    public void deleteRulesHotkey(){
+        preferences.put("rulesTextField", "");
+        preferences.put("rulesChoiceBox", "");
+    }
 }
