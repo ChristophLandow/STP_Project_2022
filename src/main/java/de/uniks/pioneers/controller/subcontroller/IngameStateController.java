@@ -76,7 +76,7 @@ public class IngameStateController {
                 case BUILD -> {
                     // set builder timer, in progress...
                     robberService.getRobberState().set(ROBBER_FINISHED);
-                    this.timerService.setBuildTimer(new Timer());
+                    this.timerService.setBuildTimer(new Timer(), 120);
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());

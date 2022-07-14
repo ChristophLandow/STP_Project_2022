@@ -7,6 +7,7 @@ import de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUp
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.TimerService;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
@@ -26,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -75,6 +77,7 @@ public class TradePopUpController implements Controller {
 
     private final IngameService ingameService;
     private final GameService gameService;
+    private final TimerService timerService;
     private EventHandler<MouseEvent> bankHandler;
     private EventHandler<MouseEvent> playerHandler;
     private EventHandler<MouseEvent> cancelHandler;
@@ -89,9 +92,10 @@ public class TradePopUpController implements Controller {
     Provider<TradePopUpPlayerListElementController> elementControllerProvider;
 
     @Inject
-    public TradePopUpController(IngameService ingameService, GameService gameService, App app) {
+    public TradePopUpController(IngameService ingameService, GameService gameService, TimerService timerService, App app) {
         this.ingameService = ingameService;
         this.gameService = gameService;
+        this.timerService = timerService;
 
         // setup stages
         tradeStage = new Stage();
@@ -179,6 +183,16 @@ public class TradePopUpController implements Controller {
         };
 
         ingameService.tradeAccepted.addListener(acceptedTradeListener);
+
+        // init timerService
+        this.timerService.setTradeTimer(new Timer());
+        this.timerService.setTradeTimeLabel(this.timer);
+        this.timer.setText("30");
+        this.timer.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Integer.parseInt(newValue) <= 0) {
+                stop();
+            }
+        });
     }
 
     @Override
@@ -201,6 +215,8 @@ public class TradePopUpController implements Controller {
         cancel.removeEventHandler(MouseEvent.MOUSE_CLICKED, cancelHandler);
         tradePane.disableProperty().set(false);
         ingameService.tradeAccepted.removeListener(acceptedTradeListener);
+        this.timerService.stopTradeTimers();
+        this.timerService.getTradeTimerTask().run();
         //playerElements.values().forEach(c -> stop());
         tradeStage.close();
     }
