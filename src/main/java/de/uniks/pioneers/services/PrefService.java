@@ -118,7 +118,11 @@ public class PrefService {
     }
 
     public Character getTradeTextField(){
-        return preferences.get("tradeTextField", "").charAt(0);
+        if(preferences.get("tradeTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("tradeTextField", "").charAt(0);
+        }
     }
 
     public String getEndChoiceBox(){
@@ -126,7 +130,11 @@ public class PrefService {
     }
 
     public Character getEndTextField(){
-        return preferences.get("endTextField", "").charAt(0);
+        if(preferences.get("endTextField", "").equals("")){
+           return Character.MIN_VALUE;
+        } else {
+            return preferences.get("endTextField", "").charAt(0);
+        }
     }
 
     public String getSettingsChoiceBox(){
@@ -134,7 +142,12 @@ public class PrefService {
     }
 
     public Character getSettingsTextField(){
-        return preferences.get("settingsTextField", "").charAt(0);
+        if(preferences.get("settingsTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("settingsTextField", "").charAt(0);
+        }
+
     }
 
     public String getRulesChoiceBox(){
@@ -142,6 +155,10 @@ public class PrefService {
     }
 
     public Character getRulesTextField(){
-        return preferences.get("rulesTextField", "").charAt(0);
+        if(preferences.get("rulesTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("rulesTextField", "").charAt(0);
+        }
     }
 }

@@ -67,10 +67,10 @@ public class HotkeyController implements Controller, Initializable {
         openRulesChoiceBox.setValue(prefService.getRulesChoiceBox());
         openSettingsChoiceBox.setValue(prefService.getSettingsChoiceBox());
 
-        //tradingTextField.setText(prefService.getTradeTextField().toString());
-        //endTurnTextField.setText(prefService.getEndTextField().toString());
-        //openRulesTextField.setText(prefService.getRulesTextField().toString());
-        //openSettingsTextField.setText(prefService.getSettingsTextField().toString());
+        tradingTextField.setText(prefService.getTradeTextField().toString());
+        endTurnTextField.setText(prefService.getEndTextField().toString());
+        openRulesTextField.setText(prefService.getRulesTextField().toString());
+        openSettingsTextField.setText(prefService.getSettingsTextField().toString());
 
     }
 
