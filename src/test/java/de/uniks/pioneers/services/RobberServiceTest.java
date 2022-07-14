@@ -8,6 +8,7 @@ import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.Resources;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.shape.Circle;
@@ -16,6 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,19 +34,48 @@ class RobberServiceTest {
     RobberService robberService;
 
     @Mock
+    HexTileController hexTileController;
+
+    @Mock
     PioneersApiService pioneersApiService;
 
     @Test
     void updateRobbingCandidates() {
-    }
+        gameService.me = "me";
+        this.robberService.mapRenderService = mapRenderService;
 
-    @Test
-    void getRobberTile() {
+        when(mapRenderService.getTileControllers()).thenReturn(new ArrayList<>());
+
+        robberService.moveRobber(hexTileController);
+
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User("me","me","",""));
+        users.add(new User("id1","user1","",""));
+        users.add(new User("id2","user2","",""));
+
+        when(hexTileController.getPlayersFromTile()).thenReturn(users);
+
+        robberService.updateRobbingCandidates();
+
+        assertEquals(robberService.getRobbingCandidates().size(), 2);
+        assertFalse(robberService.getRobbingCandidates().contains(users.get(0)));
+        assertEquals(robberService.getRobbingCandidates().get(0), users.get(1));
+        assertEquals(robberService.getRobbingCandidates().get(1), users.get(2));
     }
 
     @Test
     void moveRobber() {
+        this.robberService.mapRenderService = mapRenderService;
 
+        HexTileController newRobberTile = new HexTileController(null,
+                new HexTile(0,0,0,0,false),
+                null , new Circle());
+
+        when(mapRenderService.getTileControllers()).thenReturn(new ArrayList<>());
+
+        robberService.moveRobber(newRobberTile);
+
+        assertEquals(robberService.getRobberTile(), newRobberTile);
     }
 
     @Test
