@@ -105,10 +105,6 @@ class IngameScreenControllerTest extends ApplicationTest {
         when(mapRenderService.isFinishedLoading()).thenReturn(new SimpleBooleanProperty());
         when(settingsScreenControllerProvider.get()).thenReturn(settingsScreenController);
         when(rulesScreenControllerProvider.get()).thenReturn(rulesController);
-        when(ingameService.getExpectedMove()).thenReturn(new ExpectedMove("build", List.of("000", "001")));
-        when(tradePopUpControllerProvider.get()).thenReturn(tradePopUpController);
-        gameService.me = "000";
-        userService.setCurrentUser(new User("000", "test", "online", ""));
 
         app.start(stage);
         app.show(ingameScreenController);
@@ -126,27 +122,5 @@ class IngameScreenControllerTest extends ApplicationTest {
         write("\t");
         type(KeyCode.SPACE);
         verify(settingsScreenController).init();
-
-        Pane roadFrame = lookup("#roadFrame").query();
-        Pane settlementFrame = lookup("#settlementFrame").query();
-        Pane cityFrame = lookup("#cityFrame").query();
-
-        clickOn("#streetSVG");
-        assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
-        assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-
-        clickOn("#houseSVG");
-        assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
-        assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-
-        clickOn("#citySVG");
-        assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
-
-        clickOn("#tradePane");
-        verify(tradePopUpController).show();
     }
 }
