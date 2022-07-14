@@ -1,12 +1,9 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.controller.IngameScreenController;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
-
-import javax.inject.Provider;
 
 import static de.uniks.pioneers.Constants.*;
 

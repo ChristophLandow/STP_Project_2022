@@ -14,9 +14,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;

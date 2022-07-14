@@ -2,8 +2,6 @@ package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.rest.GameApiService;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
