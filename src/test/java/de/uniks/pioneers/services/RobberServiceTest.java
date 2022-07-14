@@ -53,7 +53,6 @@ class RobberServiceTest {
         gameService.me = "me";
         gameService.players = players;
         this.robberService.mapRenderService = mapRenderService;
-
         when(mapRenderService.getTileControllers()).thenReturn(new ArrayList<>());
 
         robberService.moveRobber(hexTileController);
