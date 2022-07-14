@@ -5,12 +5,11 @@ import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.RobDto;
-import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.Move;
-import de.uniks.pioneers.model.Resources;
-import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.shape.Circle;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +40,18 @@ class RobberServiceTest {
 
     @Test
     void updateRobbingCandidates() {
+        ObservableMap<String, Player> players = FXCollections.observableHashMap();
+        players.put("me", new Player("","me","",true,
+                0,new Resources(10,0,0,0,0,0),null,0,0));
+
+        players.put("id1", new Player("","id1","",true,
+                0,new Resources(3,0,0,0,0,0),null,0,0));
+
+        players.put("id2", new Player("","id2","",true,
+                0,new Resources(0,0,0,0,0,0),null,0,0));
+
         gameService.me = "me";
+        gameService.players = players;
         this.robberService.mapRenderService = mapRenderService;
 
         when(mapRenderService.getTileControllers()).thenReturn(new ArrayList<>());
@@ -57,10 +67,10 @@ class RobberServiceTest {
 
         robberService.updateRobbingCandidates();
 
-        assertEquals(robberService.getRobbingCandidates().size(), 2);
+        assertEquals(robberService.getRobbingCandidates().size(), 1);
         assertFalse(robberService.getRobbingCandidates().contains(users.get(0)));
+        assertFalse(robberService.getRobbingCandidates().contains(users.get(2)));
         assertEquals(robberService.getRobbingCandidates().get(0), users.get(1));
-        assertEquals(robberService.getRobbingCandidates().get(1), users.get(2));
     }
 
     @Test
