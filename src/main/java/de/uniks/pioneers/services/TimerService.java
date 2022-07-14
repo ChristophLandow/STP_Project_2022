@@ -88,7 +88,7 @@ public class TimerService {
     }
 
     public void setTradeTimer(Timer timer) {
-        int tradeTime = 10;
+        int tradeTime = 30;
         this.tradeTimer = timer;
         long remainingTurnTime = this.remainingTime;
         countdownTimerTask.cancel();
