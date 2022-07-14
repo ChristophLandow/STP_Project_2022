@@ -43,7 +43,7 @@ public class HotkeyController implements Controller, Initializable {
     @FXML public Text identicText;
 
     @Inject
-    private PrefService prefService;
+    PrefService prefService;
 
     private final String[] hotkeyChoiceBoxElements = {STRG, ALT};
     private final Provider<IngameScreenController> ingameScreenControllerProvider;
