@@ -1,5 +1,4 @@
 package de.uniks.pioneers.controller.subcontroller;
-
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.controller.LobbyScreenController;
@@ -20,13 +19,14 @@ import java.util.List;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class LeaveGameController {
-    private App app;
+    private final App app;
     private final NewGameScreenLobbyController newGameScreenLobbyController;
     private final NewGameLobbyService newGameLobbyService;
     private final UserService userService;
     private final PrefService prefService;
-    private GameService gameService;
-    private TimerService timerService;
+    private final GameService gameService;
+    private final TimerService timerService;
+    private final GameStorage gameStorage;
     private List<User> users;
     private final ObservableList<Member> members;
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -41,7 +41,7 @@ public class LeaveGameController {
 
     @Inject
     public LeaveGameController(App app, NewGameScreenLobbyController newGameScreenLobbyController, NewGameLobbyService newGameLobbyService,
-                               UserService userService, PrefService prefService, GameService gameService, TimerService timerService) {
+                               UserService userService, PrefService prefService, GameService gameService, TimerService timerService, GameStorage gameStorage) {
         this.app = app;
         this.newGameScreenLobbyController = newGameScreenLobbyController;
         this.newGameLobbyService = newGameLobbyService;
@@ -49,10 +49,12 @@ public class LeaveGameController {
         this.prefService = prefService;
         this.gameService = gameService;
         this.timerService = timerService;
+        this.gameStorage = gameStorage;
         this.users = new ArrayList<>();
         this.members = FXCollections.observableArrayList();
         this.leavedWithButton = false;
         this.myColor = "";
+        this.kicked = false;
     }
 
     public void init(IngameScreenController ingameScreenController, GameChatController gameChatController) {
@@ -60,8 +62,9 @@ public class LeaveGameController {
         this.gameChatController = gameChatController;
     }
 
-    public void saveLeavedGame(String gameID, List<User> users, String myColor) {
+    public void saveLeavedGame(String gameID, int mapRadius, List<User> users, String myColor) {
         prefService.saveGameOnLeave(gameID);
+        prefService.saveMapRadiusOnLeave(mapRadius);
         this.leavedWithButton = true;
         this.users = users;
         this.myColor = myColor;
@@ -69,8 +72,9 @@ public class LeaveGameController {
 
     public void loadLeavedGame(Game leavedGame) {
         if(leavedGame != null) {
+            int mapRadius = prefService.getSavedMapRadius();
             if(leavedWithButton) {
-                toIngameScreen(leavedGame, myColor, true);
+                toIngameScreen(leavedGame, myColor, true, mapRadius);
             } else {
                 disposable.add(newGameLobbyService.getAll(leavedGame._id())
                         .observeOn(FX_SCHEDULER)
@@ -82,14 +86,15 @@ public class LeaveGameController {
                                 }
                                 users.add(userService.getUserById(member.userId()).blockingFirst());
                             }
-                            toIngameScreen(leavedGame, myColor, true);
+                            toIngameScreen(leavedGame, myColor, true, mapRadius);
                         }, Throwable::printStackTrace));
             }
         }
     }
 
-    private void toIngameScreen(Game leavedGame, String myColor, boolean rejoin) {
-        newGameScreenLobbyController.toIngame(leavedGame, users, myColor, rejoin);
+    private void toIngameScreen(Game leavedGame, String myColor, boolean rejoin, int mapRadius) {
+        timerService.reset();
+        newGameScreenLobbyController.toIngame(leavedGame, users, myColor, rejoin, mapRadius);
     }
 
     public void leave() {
@@ -107,11 +112,12 @@ public class LeaveGameController {
                     }, Throwable::printStackTrace));
         } else {
             if(!kicked) {
-                this.saveLeavedGame(gameService.getGame()._id(), users, myColor);
+                this.saveLeavedGame(gameService.getGame()._id(), gameStorage.getMapRadius(), users, myColor);
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Kicked by Host");
                 alert.show();
             }
+            userService.setSpectator(false);
             ingameScreenController.stop();
             timerService.reset();
             disposable.dispose();
@@ -132,6 +138,7 @@ public class LeaveGameController {
                         app.show(newLobbyController);
                     }, Throwable::printStackTrace));
         } else {
+            userService.setSpectator(false);
             ingameScreenController.stop();
             timerService.reset();
             disposable.dispose();

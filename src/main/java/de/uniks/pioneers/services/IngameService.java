@@ -11,14 +11,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import javafx.util.Callback;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -28,7 +25,7 @@ public class IngameService {
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    public SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
 
@@ -102,7 +99,6 @@ public class IngameService {
         }
     }
     public void tradeWithPlayers() {
-        System.out.println("tradeWithPlayers");
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
@@ -114,7 +110,6 @@ public class IngameService {
     }
 
     public void acceptOffer() {
-        System.out.println("acceptOffer");
         Resources offer = tradeOffer.get().resources();
 
         int lumber = offer.lumber() == null ? 0 : offer.lumber() * -1;
@@ -137,7 +132,6 @@ public class IngameService {
     }
 
     public void confirmTrade(String playerId) {
-        System.out.println("confirmTrade");
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
@@ -204,4 +198,11 @@ public class IngameService {
         }
     }
 
+    public ExpectedMove getExpectedMove() {
+        return currentExpectedMove.get();
+    }
+
+    public void setExpectedMove(ExpectedMove expectedMove) {
+        currentExpectedMove.set(expectedMove);
+    }
 }

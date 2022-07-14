@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.rest.GameApiService;
 
@@ -42,11 +43,15 @@ public class PrefService {
     }
 
     public void saveGameOnLeave(String id) {
-        preferences.put("leavedGame", id);
+        preferences.put(LEAVE_GAME, id);
+    }
+
+    public void saveMapRadiusOnLeave(int mapRadius) {
+        preferences.put("MapRadius", mapRadius + "");
     }
 
     public Game getSavedGame() {
-        String leavedGameID = preferences.get("leavedGame", "");
+        String leavedGameID = preferences.get(LEAVE_GAME, "");
         Game leavedGame = null;
 
         if(!leavedGameID.equals("")) {
@@ -60,16 +65,54 @@ public class PrefService {
         return leavedGame;
     }
 
+    public int getSavedMapRadius() {
+        String mapRadius = preferences.get("MapRadius", "");
+
+        if(!mapRadius.equals("")) {
+            return Integer.parseInt(mapRadius);
+        } else {
+            return -1;
+        }
+
+    }
+
     private void forgetSavedGame() {
-        preferences.put("leavedGame", "");
+        preferences.put(LEAVE_GAME, "");
+        preferences.put("MapRadius", "");
     }
 
     public void saveDarkModeState(String state){
-        preferences.put("darkMode", state);
+        preferences.put(DARK_MODE, state);
     }
 
     public boolean getDarkModeState(){
-        return preferences.get("darkMode", "").equals(DARKMODE_TRUE);
+        return preferences.get(DARK_MODE, "").equals(DARKMODE_TRUE);
+    }
+
+    public void saveVoiceOutputActive(boolean isVoiceOutputActive) {
+        preferences.put(VOICE_OUTPUT_ACTIVE, String.valueOf(isVoiceOutputActive));
+    }
+
+    public boolean getVoiceOutputActive() {
+        //Set default value, if the preference is not set
+        if(preferences.get(VOICE_OUTPUT_ACTIVE, "").equals("")){
+            saveVoiceOutputActive(true);
+        }
+
+        return Boolean.parseBoolean(preferences.get(VOICE_OUTPUT_ACTIVE, ""));
+    }
+
+    public void saveGenderVoice(String gender){
+        preferences.put(GENDER_VOICE, gender);
+    }
+
+    public String getGenderVoice(){
+        //Set default value, if the preference is not set
+        if(preferences.get(GENDER_VOICE, "").equals("")){
+            saveGenderVoice(GameConstants.FEMALE);
+        }
+
+        return preferences.get(GENDER_VOICE, "");
     }
     public String saveTradeChoiceBox(String choice){
         preferences.put("tradeChoiceBox", choice);

@@ -5,17 +5,20 @@ import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.RobDto;
-import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.Move;
-import de.uniks.pioneers.model.Resources;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.PioneersApiService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.shape.Circle;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,19 +33,58 @@ class RobberServiceTest {
     RobberService robberService;
 
     @Mock
+    HexTileController hexTileController;
+
+    @Mock
     PioneersApiService pioneersApiService;
 
     @Test
     void updateRobbingCandidates() {
-    }
+        ObservableMap<String, Player> players = FXCollections.observableHashMap();
+        players.put("me", new Player("","me","",true,
+                0,new Resources(10,0,0,0,0,0),null,0,0));
 
-    @Test
-    void getRobberTile() {
+        players.put("id1", new Player("","id1","",true,
+                0,new Resources(3,0,0,0,0,0),null,0,0));
+
+        players.put("id2", new Player("","id2","",true,
+                0,new Resources(0,0,0,0,0,0),null,0,0));
+
+        gameService.me = "me";
+        gameService.players = players;
+        this.robberService.mapRenderService = mapRenderService;
+        when(mapRenderService.getTileControllers()).thenReturn(new ArrayList<>());
+
+        robberService.moveRobber(hexTileController);
+
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User("me","me","",""));
+        users.add(new User("id1","user1","",""));
+        users.add(new User("id2","user2","",""));
+
+        when(hexTileController.getPlayersFromTile()).thenReturn(users);
+
+        robberService.updateRobbingCandidates();
+
+        assertEquals(robberService.getRobbingCandidates().size(), 1);
+        assertFalse(robberService.getRobbingCandidates().contains(users.get(0)));
+        assertFalse(robberService.getRobbingCandidates().contains(users.get(2)));
+        assertEquals(robberService.getRobbingCandidates().get(0), users.get(1));
     }
 
     @Test
     void moveRobber() {
+        this.robberService.mapRenderService = mapRenderService;
 
+        HexTileController newRobberTile = new HexTileController(null,
+                new HexTile(0,0,0,0,false),
+                null , new Circle());
+
+        when(mapRenderService.getTileControllers()).thenReturn(new ArrayList<>());
+
+        robberService.moveRobber(newRobberTile);
+
+        assertEquals(robberService.getRobberTile(), newRobberTile);
     }
 
     @Test

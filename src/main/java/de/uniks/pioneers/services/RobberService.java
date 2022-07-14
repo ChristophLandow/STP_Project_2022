@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.Move;
+import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.PioneersApiService;
@@ -30,7 +31,7 @@ public class RobberService {
         this.gameService = gameService;
     }
 
-    public void setup(){
+    public void setup() {
         for(HexTileController hexTileController : mapRenderService.getTileControllers()) {
             hexTileController.setRobberService(this);
         }
@@ -40,9 +41,12 @@ public class RobberService {
         return robberState;
     }
 
-    public void updateRobbingCandidates(){
+    public void updateRobbingCandidates() {
         this.robbingCandidates = new ArrayList<>(robberTile.getPlayersFromTile());
         this.robbingCandidates.removeIf(user -> user._id().equals(gameService.me));
+
+        //Check player resources
+        this.robbingCandidates.removeIf(user -> gameService.players.get(user._id()).resources().unknown() == 0);
     }
 
     public ArrayList<User> getRobbingCandidates() {
@@ -58,7 +62,7 @@ public class RobberService {
         this.robberTile = newPosition;
     }
 
-    public Observable<Move> robPlayer(String target){
+    public Observable<Move> robPlayer(String target) {
         CreateMoveDto robMove = new CreateMoveDto(
                 GameConstants.ROB,
                 new RobDto(robberTile.tile.q,robberTile.tile.s,robberTile.tile.r, target),
@@ -70,7 +74,7 @@ public class RobberService {
         return pioneersApiService.postMove(gameService.getGame()._id(), robMove);
     }
 
-    public Observable<Move> dropResources(Resources drop){
+    public Observable<Move> dropResources(Resources drop) {
         CreateMoveDto dropMove = new CreateMoveDto(
                 GameConstants.DROP,
                 null,

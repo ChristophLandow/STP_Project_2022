@@ -95,7 +95,9 @@ public class TimerService {
         if (this.timer != null) {
             this.timer.cancel();
         }
-        this.timeLabel.setText("");
+        if(timeLabel != null) {
+            this.timeLabel.setText("");
+        }
         if (this.countdownTimer != null) {
             this.countdownTimer.cancel();
         }

@@ -1,6 +1,5 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.GameConstants;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -8,12 +7,16 @@ import javax.inject.Inject;
 import java.util.Objects;
 
 public class SpeechService {
+    @Inject PrefService prefService;
     @Inject
     public SpeechService() {
+
     }
 
     public void play(String file){
-        //playAudio(GameConstants.FEMALE, file);
+        if(prefService.getVoiceOutputActive()){
+            playAudio(prefService.getGenderVoice(), file);
+        }
     }
 
     private void playAudio(String gender, String file){

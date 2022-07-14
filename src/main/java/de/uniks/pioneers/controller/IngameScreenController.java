@@ -151,13 +151,12 @@ public class IngameScreenController implements Controller {
         gameService.game.set(game.get());
 
         // init game chat controller
-        gameChatController
-                .setChatScrollPane(this.chatScrollPane)
-                .setMessageText(this.sendMessageField)
-                .setMessageBox(this.messageVBox)
-                .setGame(this.game.get())
-                .setUsers(this.users)
-                .setIngameScreenController(this);
+        gameChatController.setChatScrollPane(this.chatScrollPane);
+        gameChatController.setMessageText(this.sendMessageField);
+        gameChatController.setMessageBox(this.messageVBox);
+        gameChatController.setGame(this.game.get());
+        gameChatController.setUsers(this.users);
+        gameChatController.setIngameScreenController(this);
         gameChatController.render();
         gameChatController.init();
 
@@ -327,7 +326,7 @@ public class IngameScreenController implements Controller {
     }
 
     public void openTradePopUp(){
-        ExpectedMove expectedMove = ingameService.currentExpectedMove.get();
+        ExpectedMove expectedMove = ingameService.getExpectedMove();
         if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)){
             TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
             tradePopUpController.show();
