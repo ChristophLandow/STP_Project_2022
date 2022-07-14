@@ -13,12 +13,12 @@ import static de.uniks.pioneers.Constants.*;
 public class HotkeyEventController {
 
     private final Scene scene;
-    private final Provider<IngameScreenController> ingameScreenControllerProvider;
+    private final IngameScreenController ingameController;
     private EventHandler<KeyEvent> actualEventHandler;
 
-    public HotkeyEventController(Scene scene, Provider<IngameScreenController> ingameScreenControllerProvider) {
+    public HotkeyEventController(Scene scene, IngameScreenController ingameController) {
         this.scene = scene;
-        this.ingameScreenControllerProvider = ingameScreenControllerProvider;
+        this.ingameController = ingameController;
     }
 
     public void stop(){
@@ -49,21 +49,21 @@ public class HotkeyEventController {
     }
 
     private void fireTradeHotkey(){
-        ingameScreenControllerProvider.get().openTradePopUp();
+        ingameController.openTradePopUp();
     }
 
     private void fireEndHotkey(){
-        Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
-                1, false, false, false, false, false, false, false, false, true, false, null);
-        System.out.println(ingameScreenControllerProvider.get().getIngameStateController());
+        //Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
+        //       1, false, false, false, false, false, false, false, false, true, false, null);
+        //ingameController.turnPane.fireEvent(rightClick);
         System.out.println("toDo");
     }
 
     private void fireSettingsHotkey(){
-        ingameScreenControllerProvider.get().toSettings();
+        ingameController.toSettings();
     }
 
     private void fireRulesHotkey(){
-        ingameScreenControllerProvider.get().toRules();
+        ingameController.toRules();
     }
 }

@@ -70,4 +70,6 @@ public class Constants {
     public static final String END = "end";
     public static final String SETTINGS = "settings";
     public static final String RULES = "rules";
+
+    public static final String NOHOTKEY = "";
 }
