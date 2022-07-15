@@ -219,9 +219,11 @@ public class HotkeyController implements Controller, Initializable {
         Collections.addAll(hotkeyVariants, tradeKeycomb,endKeycomb,rulesKeycomb,settingsKeyComb);
         for(String variant : hotkeyVariants){
             for(String varaint2 : hotkeyVariants){
+                //is used to check the location and not the content
                 if((variant == varaint2) || ((variant.equals("")) && (varaint2.equals("")))){
                     continue;
                 }
+                //....as intended
                 if(variant.equals(varaint2)){
                     equalHotkeys = true;
                 }
