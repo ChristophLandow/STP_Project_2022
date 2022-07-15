@@ -23,7 +23,7 @@ public class EventListener {
     private final TokenStorage tokenStorage;
     private final ObjectMapper mapper;
     public ClientEndpoint endpoint;
-    SimpleStringProperty toUri = new SimpleStringProperty();
+    final SimpleStringProperty toUri = new SimpleStringProperty();
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.CITY;
 
 public class BoardController {
 
@@ -35,7 +34,7 @@ public class BoardController {
     private final GameService gameService;
     private final UserService userService;
     private final MapRenderService mapRenderService;
-    public SimpleObjectProperty<Game> game;
+    public final SimpleObjectProperty<Game> game;
 
     private  Thread hextileRenderThread;
 

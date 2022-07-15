@@ -1,13 +1,3 @@
-.grid{
-    -fx-background-color:  #F5F5F5;
-    -fx-text-fill: black;
-}
-
-.vBox {
-    -fx-background-color: #F5F5F5;
-    -fx-text-fill: black;
-}
-
 #NameLabel{
     -fx-text-fill: BLACK;
 }

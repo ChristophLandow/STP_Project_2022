@@ -7,58 +7,62 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="resourcesHBox" alignment="CENTER" prefHeight="60.0" prefWidth="296.0" spacing="5.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
-   <children>
-      <ImageView id="fischRessource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_fish.png" />
-         </image>
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-      </ImageView>
-      <Label id="fischCount" fx:id="fischCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font></Label>
-      <ImageView id="packeisRessource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_ice.png" />
-         </image>
-      </ImageView>
-      <Label id="packeisCount" fx:id="packeisCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font></Label>
-      <ImageView id="fellRessource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_polarbear.png" />
-         </image>
-      </ImageView>
-      <Label id="fellCount" fx:id="fellCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font></Label>
-      <ImageView id="kohleRessource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_carbon.png" />
-         </image>
-      </ImageView>
-      <Label id="kohleCount" fx:id="kohleCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font></Label>
-      <ImageView id="walknochenRessource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_whale.png" />
-         </image>
-      </ImageView>
-      <Label id="walknochenCount" fx:id="walknochenCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font></Label>
-   </children>
-   <padding>
-      <Insets left="15.0" />
-   </padding>
+<HBox fx:id="resourcesHBox" alignment="CENTER" prefHeight="60.0" prefWidth="296.0" spacing="5.0"
+      style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
+    <padding>
+        <Insets left="15.0"/>
+    </padding>
+    <ImageView id="fischRessource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
+               preserveRatio="true">
+        <HBox.margin>
+            <Insets/>
+        </HBox.margin>
+        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_fish.png"/>
+    </ImageView>
+    <Label id="fischCount" fx:id="fischCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0"
+           translateY="-18.0">
+        <font>
+          <Font name="System Bold" size="14.0"/>
+        </font>
+    </Label>
+    <ImageView id="packeisRessource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
+               preserveRatio="true">
+        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_ice.png"/>
+    </ImageView>
+    <Label id="packeisCount" fx:id="packeisCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0"
+           translateY="-18.0">
+        <font>
+          <Font name="System Bold" size="14.0"/>
+        </font>
+    </Label>
+    <ImageView id="fellRessource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
+               preserveRatio="true">
+        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_polarbear.png"/>
+    </ImageView>
+    <Label id="fellCount" fx:id="fellCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
+        <font>
+          <Font name="System Bold" size="14.0"/>
+        </font>
+    </Label>
+    <ImageView id="kohleRessource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
+               preserveRatio="true">
+        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_carbon.png"/>
+    </ImageView>
+    <Label id="kohleCount" fx:id="kohleCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
+        <font>
+          <Font name="System Bold" size="14.0"/>
+        </font>
+    </Label>
+    <ImageView id="walknochenRessource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0"
+               pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_whale.png"/>
+    </ImageView>
+    <Label id="walknochenCount" fx:id="walknochenCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0"
+           translateY="-18.0">
+        <font>
+          <Font name="System Bold" size="14.0"/>
+        </font>
+    </Label>
 </HBox>

@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
-    private Map<Integer, Pair<Image,String>> images = new LinkedHashMap<>();
+    private final Map<Integer, Pair<Image,String>> images = new LinkedHashMap<>();
     protected ImageView avatarImageView;
-    public Consumer<String> changeAvatar;
+    public final Consumer<String> changeAvatar;
 
     public AvatarSpinnerController(Consumer<String> changeAvatar) {
         this.changeAvatar=changeAvatar;

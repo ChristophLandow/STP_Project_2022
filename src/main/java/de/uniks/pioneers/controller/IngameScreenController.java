@@ -75,7 +75,7 @@ public class IngameScreenController implements Controller {
     public ZoomableScrollPane zoomableScrollPane;
     private final App app;
     private final GameService gameService;
-    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private List<User> users;
     private final GameStorage gameStorage;
     private final MapRenderService mapRenderService;

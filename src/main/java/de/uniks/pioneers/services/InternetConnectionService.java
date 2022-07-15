@@ -9,7 +9,7 @@ import java.util.TimerTask;
 public class InternetConnectionService {
     private boolean connected;
     private final Alert alert;
-    private String command;
+    private final String command;
 
     public InternetConnectionService() {
         this.connected = true;

@@ -10,7 +10,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
@@ -109,7 +108,7 @@ public class LobbyGameListController {
         return today.equals(date) || yesterday.equals(date);
     }
 
-    Comparator<Game> gameComparator = new Comparator<>() {
+    final Comparator<Game> gameComparator = new Comparator<>() {
         @Override
         public int compare(Game o1, Game o2) {
             return o1.createdAt().compareTo(o2.createdAt());

@@ -5,34 +5,38 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="gameBoxRoot" maxHeight="30.0" maxWidth="280.0" minHeight="30.0" minWidth="280.0" onMouseClicked="#doubleClicked" prefHeight="30.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.GameListElementController">
-   <children>
-      <Label fx:id="creationTime" maxHeight="30.0" maxWidth="80.0" minHeight="30.0" minWidth="80.0" prefHeight="30.0" prefWidth="80.0" text="14:32:45 :">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <padding>
-            <Insets left="5.0" />
-         </padding>
-      </Label>
-      <Label fx:id="title" maxHeight="30.0" maxWidth="130.0" minHeight="30.0" minWidth="130.0" prefHeight="30.0" prefWidth="130.0" text="teamHtestGame">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <HBox.margin>
-            <Insets left="10.0" />
-         </HBox.margin>
-      </Label>
-      <Label fx:id="memberCount" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" prefHeight="30.0" prefWidth="30.0" text="2/4">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-         <padding>
-            <Insets left="5.0" />
-         </padding>
-      </Label>
-   </children>
+<HBox fx:id="gameBoxRoot" maxHeight="30.0" maxWidth="280.0" minHeight="30.0" minWidth="280.0"
+      onMouseClicked="#doubleClicked" prefHeight="30.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/18"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.pioneers.controller.subcontroller.GameListElementController">
+    <Label fx:id="creationTime" maxHeight="30.0" maxWidth="80.0" minHeight="30.0" minWidth="80.0" prefHeight="30.0"
+           prefWidth="80.0" text="14:32:45 :">
+        <font>
+          <Font size="16.0"/>
+        </font>
+        <padding>
+          <Insets left="5.0"/>
+        </padding>
+    </Label>
+    <Label fx:id="title" maxHeight="30.0" maxWidth="130.0" minHeight="30.0" minWidth="130.0" prefHeight="30.0"
+           prefWidth="130.0" text="teamHtestGame">
+        <font>
+          <Font size="16.0"/>
+        </font>
+        <HBox.margin>
+          <Insets left="10.0"/>
+        </HBox.margin>
+    </Label>
+    <Label fx:id="memberCount" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" prefHeight="30.0"
+           prefWidth="30.0" text="2/4">
+        <font>
+          <Font size="16.0"/>
+        </font>
+        <HBox.margin>
+          <Insets/>
+        </HBox.margin>
+        <padding>
+          <Insets left="5.0"/>
+        </padding>
+    </Label>
 </HBox>

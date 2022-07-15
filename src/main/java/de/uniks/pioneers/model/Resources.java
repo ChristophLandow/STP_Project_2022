@@ -3,8 +3,6 @@ package de.uniks.pioneers.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
-import java.util.HashMap;
-
 public record Resources(
         Integer unknown,
         Integer grain,

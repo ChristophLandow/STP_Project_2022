@@ -1,13 +1,12 @@
 package de.uniks.pioneers.services;
 
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxAssert;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CryptServiceTest {
 
-    CryptService cryptService = new CryptService();
+    final CryptService cryptService = new CryptService();
 
     @Test
     void encrypt() {
