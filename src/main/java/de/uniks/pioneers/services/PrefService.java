@@ -112,4 +112,112 @@ public class PrefService {
 
         return preferences.get(GENDER_VOICE, "");
     }
+    public String saveTradeChoiceBox(String choice){
+        preferences.put("tradeChoiceBox", choice);
+        return choice;
+    }
+
+    public String saveTradeTextInput(String input){
+        preferences.put("tradeTextField", input);
+        return input;
+    }
+
+    public String saveEndChoiceBox(String choice){
+        preferences.put("endChoiceBox", choice);
+        return choice;
+    }
+
+    public String saveEndTextInput(String input){
+        preferences.put("endTextField", input);
+        return input;
+    }
+
+    public String saveSettingsChoiceBox(String choice){
+        preferences.put("settingsChoiceBox", choice);
+        return choice;
+    }
+
+    public String saveSettingsTextInput(String input){
+        preferences.put("settingsTextField", input);
+        return input;
+    }
+
+    public String saveRulesChoiceBox(String choice){
+        preferences.put("rulesChoiceBox", choice);
+        return choice;
+    }
+
+    public String saveRulesTextInput(String input){
+        preferences.put("rulesTextField", input);
+        return input;
+    }
+
+    public String getTradeChoiceBox(){
+        return preferences.get("tradeChoiceBox", "");
+    }
+
+    public Character getTradeTextField(){
+        if(preferences.get("tradeTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("tradeTextField", "").charAt(0);
+        }
+    }
+
+    public String getEndChoiceBox(){
+        return preferences.get("endChoiceBox", "");
+    }
+
+    public Character getEndTextField(){
+        if(preferences.get("endTextField", "").equals("")){
+           return Character.MIN_VALUE;
+        } else {
+            return preferences.get("endTextField", "").charAt(0);
+        }
+    }
+
+    public String getSettingsChoiceBox(){
+        return preferences.get("settingsChoiceBox", "");
+    }
+
+    public Character getSettingsTextField(){
+        if(preferences.get("settingsTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("settingsTextField", "").charAt(0);
+        }
+
+    }
+
+    public String getRulesChoiceBox(){
+        return preferences.get("rulesChoiceBox", "");
+    }
+
+    public Character getRulesTextField(){
+        if(preferences.get("rulesTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("rulesTextField", "").charAt(0);
+        }
+    }
+
+    public void deleteTradeHotkey(){
+        preferences.put("tradeTextField", "");
+        preferences.put("tradeChoiceBox", "");
+    }
+
+    public void deleteEndHotkey(){
+        preferences.put("endTextField", "");
+        preferences.put("endChoiceBox", "");
+    }
+
+    public void deleteSettingsHotkey(){
+        preferences.put("settingsTextField", "");
+        preferences.put("settingsChoiceBox", "");
+    }
+
+    public void deleteRulesHotkey(){
+        preferences.put("rulesTextField", "");
+        preferences.put("rulesChoiceBox", "");
+    }
 }
