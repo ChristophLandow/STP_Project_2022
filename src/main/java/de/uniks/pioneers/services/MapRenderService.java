@@ -4,7 +4,6 @@ import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import javax.inject.Inject;
@@ -18,8 +17,6 @@ public class MapRenderService {
 
     private final GameStorage gameStorage;
     private ArrayList<HexTileController> tileControllers = new ArrayList<>();
-
-    private Canvas mapCanvas;
 
     private GraphicsContext gc;
 
@@ -36,10 +33,6 @@ public class MapRenderService {
 
     public void setFinishedLoading(boolean finishedLoading) {
         this.finishedLoading.set(finishedLoading);
-    }
-
-    public void setMapCanvas(Canvas mapCanvas) {
-        this.mapCanvas = mapCanvas;
     }
 
     public void setGc(GraphicsContext gc) {

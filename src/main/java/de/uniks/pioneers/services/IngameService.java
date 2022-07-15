@@ -25,7 +25,7 @@ public class IngameService {
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
     public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
+    final private SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
 

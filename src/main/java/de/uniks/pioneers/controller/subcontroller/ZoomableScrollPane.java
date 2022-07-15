@@ -43,8 +43,6 @@ public class ZoomableScrollPane {
         resizeMap();
 
         this.fieldPane.getTransforms().add(fieldScale);
-
-        this.mapRenderService.setMapCanvas(canvas);
         this.mapRenderService.setGc(canvas.getGraphicsContext2D());
     }
 

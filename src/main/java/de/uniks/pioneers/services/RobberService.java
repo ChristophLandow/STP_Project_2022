@@ -5,7 +5,6 @@ import de.uniks.pioneers.controller.subcontroller.HexTileController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.Move;
-import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.PioneersApiService;

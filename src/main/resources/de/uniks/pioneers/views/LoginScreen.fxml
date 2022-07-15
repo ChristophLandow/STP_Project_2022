@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.LoginScreenController">
    <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="30.0">
       <Pane prefHeight="409.0" prefWidth="600.0">
          <Text layoutX="202.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pioneers" textAlignment="CENTER" wrappingWidth="195.263671875">
