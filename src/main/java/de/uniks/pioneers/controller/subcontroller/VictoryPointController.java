@@ -1,9 +1,11 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.SpeechService;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +38,8 @@ public class VictoryPointController {
     private Stage stage;
     private Pane root;
     private LeaveGameController leaveGameController;
+
+    @Inject SpeechService speechService;
 
     @Inject
     public VictoryPointController(GameService gameService) {
@@ -80,6 +84,7 @@ public class VictoryPointController {
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if(!gameService.wonGame) {
                 if(c.getValueAdded() != null && c.getValueAdded().victoryPoints() == victoryPoints) {
+                    speechService.play(GameConstants.SPEECH_WINNER);
                     gameService.wonGame = true;
                     winnerID = c.getKey();
                     winnerPoints = c.getValueAdded().victoryPoints();

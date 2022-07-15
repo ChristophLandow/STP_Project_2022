@@ -76,6 +76,9 @@ public class GameConstants {
     public static final String SPEECH_DROP_RESOURCES = "dropresources";
     public static final String SPEECH_MOVE_ROBBER = "moverobber";
     public static final String SPEECH_STEAL = "steal";
+    public static final String SPEECH_TRADE = "trade";
+    public static final String SPEECH_TRADEOFFER = "tradeoffer";
+    public static final String SPEECH_WINNER = "winner";
 
     // resource names
     public static final String LUMBER = "lumber";
