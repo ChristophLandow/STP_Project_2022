@@ -20,6 +20,7 @@ public class RobberController implements Controller {
     @Inject IngameService ingameService;
     private RobberService robberService;
     @Inject MapRenderService mapRenderService;
+    @Inject SpeechService speechService;
     private DiscardResourcesController discardResourcesController;
     private RobPlayerController robPlayerController;
     private final ChangeListener<Number> changeListener = (observable, oldValue, newValue) -> callNext(newValue.intValue());
@@ -62,6 +63,7 @@ public class RobberController implements Controller {
 
     public void rob(){
         if (robberService.getRobbingCandidates().size() != 0) {
+            speechService.play(GameConstants.SPEECH_STEAL);
             robPlayerController = robPlayerControllerProvider.get();
             robPlayerController.init();
         }

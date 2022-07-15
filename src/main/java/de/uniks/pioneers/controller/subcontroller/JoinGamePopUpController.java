@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import retrofit2.HttpException;
 
 import java.util.Random;
 
@@ -51,8 +52,12 @@ public class JoinGamePopUpController{
                     lobbyScreenController.showNewGameLobby(game, password, randomColor);
                     closePopUp();
                 }, throwable -> {
-                    this.wrongPasswordLabel.visibleProperty().set(true);
-                    throwable.printStackTrace();
+                    if (throwable instanceof HttpException) {
+                        this.wrongPasswordLabel.visibleProperty().set(true);
+                    }
+                    else{
+                        throwable.printStackTrace();
+                    }
                 }));
     }
 
