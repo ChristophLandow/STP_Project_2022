@@ -9,10 +9,13 @@ import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.MapRenderService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
+import javafx.scene.robot.Robot;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -60,6 +63,8 @@ public class StreetPointController {
     }
 
     public void init() {
+        checkIfMouseInsideView();
+
         this.eventView.setOnMouseClicked(this::placeStreet);
         this.eventView.setOnMouseEntered(this::dye);
         this.eventView.setOnMouseExited(this::undye);
@@ -148,6 +153,25 @@ public class StreetPointController {
             this.reset(this.eventView);
             this.view.setVisible(false);
             this.view.setRadius(0);
+        }
+    }
+
+    private void checkIfMouseInsideView(){
+        //Get Mouse and view position on screen
+        Point2D mousePos = new Robot().getMousePosition();
+
+        Bounds viewBounds = view.localToScreen(view.getBoundsInLocal());
+        Point2D viewPos =  new Point2D(viewBounds.getMinX() + viewBounds.getWidth()/2, viewBounds.getMinY() + viewBounds.getHeight()/2);
+
+        //Check if mouse is in eventView
+        Point2D deltaPos = new Point2D(Math.abs(mousePos.getX()-viewPos.getX()), Math.abs(mousePos.getY()-viewPos.getY()));
+        double viewRadius = gameStorage.getHexScale()/5;
+        boolean mouseInView = deltaPos.getX() <= viewRadius && deltaPos.getY() <= viewRadius;
+
+        //If mouse is already in circle dye circle
+        if(mouseInView) {
+            this.view.setFill(HOVER_COLOR);
+            this.view.setVisible(true);
         }
     }
 

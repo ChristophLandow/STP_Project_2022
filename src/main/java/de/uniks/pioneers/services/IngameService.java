@@ -11,13 +11,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -26,8 +24,8 @@ public class IngameService {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
-    public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    public final SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
 
@@ -210,4 +208,11 @@ public class IngameService {
         }
     }
 
+    public ExpectedMove getExpectedMove() {
+        return currentExpectedMove.get();
+    }
+
+    public void setExpectedMove(ExpectedMove expectedMove) {
+        currentExpectedMove.set(expectedMove);
+    }
 }

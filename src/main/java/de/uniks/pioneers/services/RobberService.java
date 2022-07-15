@@ -46,11 +46,7 @@ public class RobberService {
         this.robbingCandidates.removeIf(user -> user._id().equals(gameService.me));
 
         //Check player resources
-        for(User u : robbingCandidates){
-            Player p = gameService.players.get(u._id());
-            Resources resources = p.resources();
-            if(resources.unknown() == 0) this.robbingCandidates.removeIf(user -> user._id().equals(u._id()));
-        }
+        this.robbingCandidates.removeIf(user -> gameService.players.get(user._id()).resources().unknown() == 0);
     }
 
     public ArrayList<User> getRobbingCandidates() {
