@@ -29,8 +29,8 @@ public class IngameService {
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
 
-    public SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
-    public SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
+    public final SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
+    public final SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
     public ObservableList<Move> tradeAccepted = FXCollections.observableArrayList();
 
     @Inject
@@ -137,6 +137,16 @@ public class IngameService {
                 .doOnError(Throwable::printStackTrace)
                 .subscribe(move -> tradeAccepted = FXCollections.emptyObservableList())
         );
+    }
+
+    public void declineTrade() {
+        if (currentExpectedMove.get().action().equals(ACCEPT)) {
+            disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT))
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(error -> System.err.println(error.getMessage()))
+                    .subscribe(System.out::println)
+            );
+        }
     }
 
     protected boolean checkTradeOptions(Resources resources) {

@@ -18,7 +18,6 @@ import java.util.Objects;
 import java.util.Timer;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.BUILD;
 
 public class IngameStateController {
     private final UserService userService;
@@ -77,7 +76,7 @@ public class IngameStateController {
                 case BUILD -> {
                     // set builder timer, in progress...
                     robberService.getRobberState().set(ROBBER_FINISHED);
-                    this.timerService.setBuildTimer(new Timer());
+                    this.timerService.setBuildTimer(new Timer(), 120);
                     this.enableEndTurn();
                     this.enableBuildingPoints(move.action());
                     this.enableStreetPoints(move.action());

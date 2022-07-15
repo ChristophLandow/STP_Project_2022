@@ -64,7 +64,7 @@ public class LobbyScreenController implements Controller {
 
     private  LobbyUserlistController lobbyUserlistController;
     private Stage appStage;
-    public SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
+    public final SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
 

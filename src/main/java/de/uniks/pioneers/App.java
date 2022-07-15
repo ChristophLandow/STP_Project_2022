@@ -1,7 +1,6 @@
 package de.uniks.pioneers;
 
 import de.uniks.pioneers.controller.Controller;
-import de.uniks.pioneers.services.InternetConnectionService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;

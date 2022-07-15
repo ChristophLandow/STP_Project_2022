@@ -22,21 +22,21 @@ import static de.uniks.pioneers.GameConstants.*;
 @Singleton
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
-    public ObservableList<Member> members = FXCollections.observableArrayList();
+    public final ObservableList<Member> members = FXCollections.observableArrayList();
     private ArrayList<User> users = new ArrayList<>();
     public ObservableList<Member> lobbyMembers;
     public final ObservableList<Building> buildings = FXCollections.observableArrayList();
     public final ObservableList<Move> moves = FXCollections.observableArrayList();
-    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameApiService gameApiService;
     public String me;
     private final UserService userService;
     private final IngameService ingameService;
 
-    public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
+    public final ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
-    public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
+    public final SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
     public int victoryPoints;
     public boolean wonGame;
     public SimpleStringProperty moveAction;

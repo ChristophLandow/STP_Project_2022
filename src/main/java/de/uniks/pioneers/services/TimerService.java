@@ -16,13 +16,22 @@ import static de.uniks.pioneers.GameConstants.BUILD;
 @Singleton
 public class TimerService {
     private boolean timeUp = false;
-    private Timer timer;
+    private Timer buildTimer;
+    private Timer tradeTimer;
     private Label timeLabel;
+    private Label tradeTimeLabel;
     private Timer countdownTimer;
+    private Timer tradeCountdownTimer;
+    private long remainingTime;
+    private long remainingTurnTime;
+    private int remainingTradeTime;
 
     private final IngameService ingameService;
     private final GameService gameService;
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private TimerTask countdownTimerTask;
+    private TimerTask buildTimerTask;
+    private TimerTask tradeCountdownTimerTask;
 
     @Inject
     public TimerService(IngameService ingameService, GameService gameService) {
@@ -30,12 +39,10 @@ public class TimerService {
         this.gameService = gameService;
     }
 
-    public boolean timeUp() {
-        return timeUp;
-    }
+    public boolean timeUp() { return timeUp; }
 
     public void setRollTimer(String action, Timer timer) {
-        this.timer = timer;
+        this.buildTimer = timer;
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -53,9 +60,9 @@ public class TimerService {
         timer.schedule(task, 10 * 1000);
     }
 
-    public void setBuildTimer(Timer timer) {
+    public void setBuildTimer(Timer timer, long sec) {
         this.timeUp = false;
-        this.timer = timer;
+        this.buildTimer = timer;
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -74,26 +81,54 @@ public class TimerService {
                 );
             }
         };
-        this.initCountdown(new Timer(), 120);
-        timer.schedule(task, 120 * 1000);
+        this.buildTimerTask = task;
+        this.initCountdown(new Timer(), sec);
+        timer.schedule(task, sec * 1000);
     }
 
-    private void initCountdown(Timer timer, int sec) {
-        this.countdownTimer = timer;
+    public void setTradeTimer(Timer timer) {
+        int tradeTime = 30;
+        this.tradeTimer = timer;
+        remainingTurnTime = this.remainingTime;
+        countdownTimerTask.cancel();
+        countdownTimer.cancel();
+        buildTimerTask.cancel();
+        buildTimer.cancel();
+        this.initTradeCountdown(new Timer(), tradeTime);
+    }
+
+    private void initTradeCountdown(Timer timer, int sec) {
+        this.remainingTradeTime = sec;
+        this.tradeCountdownTimer = timer;
         TimerTask task = new TimerTask() {
-            int remainingTime = sec;
+            @Override
+            public void run() {
+                Platform.runLater(() -> tradeTimeLabel.setText(String.valueOf(remainingTradeTime--)));
+            }
+        };
+        this.tradeCountdownTimerTask = task;
+        this.tradeCountdownTimer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    private void initCountdown(Timer timer, long sec) {
+        this.countdownTimer = timer;
+        this.remainingTime = sec;
+        TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> timeLabel.setText(String.valueOf(remainingTime--)));
             }
         };
-
-        this.countdownTimer.scheduleAtFixedRate(task, 0, 1000);
+        if (countdownTimerTask != null) {
+            countdownTimerTask.cancel();
+        }
+        this.countdownTimerTask = task;
+        timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
     public void reset() {
-        if (this.timer != null) {
-            this.timer.cancel();
+        if (this.buildTimer != null) {
+            this.buildTimer.cancel();
         }
         if(timeLabel != null) {
             this.timeLabel.setText("");
@@ -103,7 +138,16 @@ public class TimerService {
         }
     }
 
+    public void stopTrade() {
+        setBuildTimer(new Timer(), remainingTurnTime);
+        ingameService.declineTrade();
+        this.tradeTimer.cancel();
+        this.tradeCountdownTimerTask.cancel();
+        this.tradeCountdownTimer.cancel();
+    }
+
     public void setTimeLabel(Label timeLabel) {
         this.timeLabel = timeLabel;
     }
+    public void setTradeTimeLabel(Label label) { this.tradeTimeLabel = label; }
 }

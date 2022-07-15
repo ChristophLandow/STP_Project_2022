@@ -34,7 +34,7 @@ public class ChatTabController {
     private VBox chatBox;
     public User chattingWith;
     public User currentUser;
-    public SimpleStringProperty groupId = new SimpleStringProperty("");
+    public final SimpleStringProperty groupId = new SimpleStringProperty("");
     private final ChangeListener<String> changeListener = (observable, oldValue, newValue) -> initSubscription();
     private final UserService userService;
     private final GroupService groupService;

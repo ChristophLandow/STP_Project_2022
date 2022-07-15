@@ -38,8 +38,8 @@ public class StreetPointController {
     private Circle eventView;
     private final CompositeDisposable disposable = new CompositeDisposable();
     // coordinates to be uploaded to the server as: x, y, z, side
-    public int[] uploadCoords = new int[4];
-    public ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
+    public final int[] uploadCoords = new int[4];
+    public final ArrayList<BuildingPointController> adjacentBuildings = new ArrayList<>();
     private String action;
 
     @Inject

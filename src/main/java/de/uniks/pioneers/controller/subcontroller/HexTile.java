@@ -3,14 +3,14 @@ package de.uniks.pioneers.controller.subcontroller;
 import static java.lang.Math.sqrt;
 
 public class HexTile {
-    public int q;
-    public int r;
-    public int s;
-    public double x;
-    public double y;
+    public final int q;
+    public final int r;
+    public final int s;
+    public final double x;
+    public final double y;
     public String type = "";
     public int number;
-    double scale;
+    final double scale;
 
     public HexTile(int q, int r, int s, double scale, boolean top) {
         this.scale = scale;
