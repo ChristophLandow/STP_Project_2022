@@ -10,7 +10,6 @@ import java.util.Objects;
 
 @Singleton
 public class SpeechService {
-
     boolean buildingPhaseOnce = true;
 
     @Inject PrefService prefService;
