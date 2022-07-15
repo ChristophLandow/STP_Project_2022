@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.controller.BoardController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.ExpectedMove;
@@ -90,12 +91,14 @@ public class IngameStateController {
                     this.enableHexagonPoints();
 
                     if(robberService.getRobberState().get() != ROBBER_STEAL){
+                        speechService.play(GameConstants.SPEECH_MOVE_ROBBER);
                         robberService.getRobberState().set(ROBBER_MOVE);
                     }
-
-                    speechService.play(SPEECH_MOVE_ROBBER);
                 }
-                case OFFER -> ingameService.tradeIsOffered.set(true);
+                case OFFER -> {
+                    ingameService.tradeIsOffered.set(true);
+                    speechService.play(SPEECH_TRADEOFFER);
+                }
                 case ACCEPT -> {
                 }
             }

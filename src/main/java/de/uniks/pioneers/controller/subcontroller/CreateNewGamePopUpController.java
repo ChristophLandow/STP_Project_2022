@@ -21,9 +21,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import retrofit2.HttpException;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;

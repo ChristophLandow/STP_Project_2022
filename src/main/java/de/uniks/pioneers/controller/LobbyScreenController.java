@@ -215,7 +215,7 @@ public class LobbyScreenController implements Controller {
         rulesController.init();
     }
 
-    public void logout(ActionEvent event) {
+    public void logout(ActionEvent ignoredEvent) {
         //This function is only called by the logout button
         this.messageService.getchatUserList().clear();
         prefService.forget();

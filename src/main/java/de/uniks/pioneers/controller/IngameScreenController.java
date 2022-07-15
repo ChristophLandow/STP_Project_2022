@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
@@ -328,6 +329,7 @@ public class IngameScreenController implements Controller {
     public void openTradePopUp(){
         ExpectedMove expectedMove = ingameService.getExpectedMove();
         if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)){
+            speechService.play(GameConstants.SPEECH_TRADE);
             TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
             tradePopUpController.show();
         }

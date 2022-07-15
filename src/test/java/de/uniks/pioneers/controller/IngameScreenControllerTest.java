@@ -75,6 +75,9 @@ class IngameScreenControllerTest extends ApplicationTest {
     @Mock
     IngameService ingameService;
 
+    @Mock
+    SpeechService speechService;
+
     @Spy
     GameService gameService = new GameService(gameApiService, userService, ingameService);
 
