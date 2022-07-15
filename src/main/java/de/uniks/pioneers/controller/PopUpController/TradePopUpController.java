@@ -173,11 +173,11 @@ public class TradePopUpController implements Controller {
             if (c.wasAdded()) {
                 c.getList().forEach(s -> {
                     TradePopUpPlayerListElementController playerAccepted = playerElements.get(s.userId());
-                    if(playerAccepted != null) {
+                    if(playerAccepted != null && s.resources() != null) {
                         playerAccepted.displayAcceptedMark();
+                        ingameService.confirmTrade(s.userId());
+                        Platform.runLater(this::stop);
                     }
-                    ingameService.confirmTrade(s.userId());
-                    Platform.runLater(this::stop);
                 });
             }
         };
@@ -215,8 +215,7 @@ public class TradePopUpController implements Controller {
         cancel.removeEventHandler(MouseEvent.MOUSE_CLICKED, cancelHandler);
         tradePane.disableProperty().set(false);
         ingameService.tradeAccepted.removeListener(acceptedTradeListener);
-        this.timerService.stopTradeTimers();
-        this.timerService.getTradeTimerTask().run();
+        this.timerService.stopTrade();
         //playerElements.values().forEach(c -> stop());
         tradeStage.close();
     }

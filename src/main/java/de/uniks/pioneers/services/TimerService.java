@@ -23,6 +23,7 @@ public class TimerService {
     private Timer countdownTimer;
     private Timer tradeCountdownTimer;
     private long remainingTime;
+    private long remainingTurnTime;
     private int remainingTradeTime;
 
     private final IngameService ingameService;
@@ -31,8 +32,6 @@ public class TimerService {
     private TimerTask countdownTimerTask;
     private TimerTask buildTimerTask;
     private TimerTask tradeCountdownTimerTask;
-    private TimerTask tradeTimerTask;
-
 
     @Inject
     public TimerService(IngameService ingameService, GameService gameService) {
@@ -90,20 +89,12 @@ public class TimerService {
     public void setTradeTimer(Timer timer) {
         int tradeTime = 30;
         this.tradeTimer = timer;
-        long remainingTurnTime = this.remainingTime;
+        remainingTurnTime = this.remainingTime;
         countdownTimerTask.cancel();
         countdownTimer.cancel();
         buildTimerTask.cancel();
         buildTimer.cancel();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setBuildTimer(new Timer(), remainingTurnTime);
-            }
-        };
-        this.tradeTimerTask = task;
         this.initTradeCountdown(new Timer(), tradeTime);
-        this.tradeTimer.schedule(task, tradeTime * 1000);
     }
 
     private void initTradeCountdown(Timer timer, int sec) {
@@ -147,8 +138,9 @@ public class TimerService {
         }
     }
 
-    public void stopTradeTimers() {
-        this.tradeTimerTask.cancel();
+    public void stopTrade() {
+        setBuildTimer(new Timer(), remainingTurnTime);
+        ingameService.declineTrade();
         this.tradeTimer.cancel();
         this.tradeCountdownTimerTask.cancel();
         this.tradeCountdownTimer.cancel();
@@ -158,5 +150,4 @@ public class TimerService {
         this.timeLabel = timeLabel;
     }
     public void setTradeTimeLabel(Label label) { this.tradeTimeLabel = label; }
-    public TimerTask getTradeTimerTask() { return this.tradeTimerTask; }
 }

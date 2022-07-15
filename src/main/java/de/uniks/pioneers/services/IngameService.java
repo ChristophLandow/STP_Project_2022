@@ -11,7 +11,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import javafx.util.Callback;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -140,6 +139,16 @@ public class IngameService {
                 .doOnError(Throwable::printStackTrace)
                 .subscribe(move -> tradeAccepted = FXCollections.emptyObservableList())
         );
+    }
+
+    public void declineTrade() {
+        if (currentExpectedMove.get().action().equals(ACCEPT)) {
+            disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT))
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(error -> System.err.println(error.getMessage()))
+                    .subscribe(System.out::println)
+            );
+        }
     }
 
     protected boolean checkTradeOptions(Resources resources) {

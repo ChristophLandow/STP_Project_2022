@@ -1,8 +1,10 @@
 package de.uniks.pioneers.controller.PopUpController;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
@@ -113,13 +115,10 @@ public class TradeOfferPopUpController implements Controller {
             }
         });
 
-        tradeAcceptedListener = new ListChangeListener<Move>() {
-            @Override
-            public void onChanged(Change<? extends Move> c) {
-                c.next();
-                if (c.wasAdded()){
-                    stop();
-                }
+        tradeAcceptedListener = c -> {
+            c.next();
+            if (c.wasAdded()){
+                stop();
             }
         };
 
@@ -204,7 +203,14 @@ public class TradeOfferPopUpController implements Controller {
 
         // invoke event handlers for accept and decline trade offer
         acceptHandler = e -> ingameService.acceptOffer();
-        declineHandler = e -> ingameService.tradeIsOffered.set(false);
+        declineHandler = e -> { disposable.add(
+                ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(GameConstants.OFFER))
+                        .observeOn(FX_SCHEDULER)
+                        .doOnError(Throwable::printStackTrace)
+                        .subscribe()
+        );
+            ingameService.tradeIsOffered.set(false);
+        };
         closeStageHandler = e -> ingameService.tradeIsOffered.set(false);
 
         // set handlers to buttons and stage
