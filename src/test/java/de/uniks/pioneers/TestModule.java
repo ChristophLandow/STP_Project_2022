@@ -27,13 +27,13 @@ import static org.mockito.Mockito.*;
 
 @Module
 public class TestModule {
-    public static PublishSubject<Event<Member>> gameMemberSubject = PublishSubject.create();
-    public static PublishSubject<Event<Game>> gameSubject = PublishSubject.create();
-    public static PublishSubject<Event<State>> gameStateSubject = PublishSubject.create();
-    public static PublishSubject<Event<Building>> gameBuildingSubject = PublishSubject.create();
-    public static PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
-    public static PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
-    public static PublishSubject<Event<MessageDto>> gameChatSubject = PublishSubject.create();
+    public static final PublishSubject<Event<Member>> gameMemberSubject = PublishSubject.create();
+    public static final PublishSubject<Event<Game>> gameSubject = PublishSubject.create();
+    public static final PublishSubject<Event<State>> gameStateSubject = PublishSubject.create();
+    public static final PublishSubject<Event<Building>> gameBuildingSubject = PublishSubject.create();
+    public static final PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
+    public static final PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
+    public static final PublishSubject<Event<MessageDto>> gameChatSubject = PublishSubject.create();
 
     @Provides
     @Singleton

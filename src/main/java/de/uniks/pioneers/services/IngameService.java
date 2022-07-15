@@ -26,13 +26,13 @@ public class IngameService {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
-    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
-    public SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
+    public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public final SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
 
-    public SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
-    public SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
+    public final SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
+    public final SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
     public ObservableList<Move> tradeAccepted = FXCollections.observableArrayList();
 
     @Inject

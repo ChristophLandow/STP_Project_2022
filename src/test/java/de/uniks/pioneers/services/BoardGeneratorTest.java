@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BoardGeneratorTest {
 
 
-    BoardGenerator boardGenerator = new BoardGenerator();
+    final BoardGenerator boardGenerator = new BoardGenerator();
 
     @Test
     void generateTiles() {

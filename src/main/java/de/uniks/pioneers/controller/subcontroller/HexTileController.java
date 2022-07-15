@@ -22,9 +22,9 @@ public class HexTileController {
     private final Circle eventView;
     private final Circle view;
     private ImageView robber;
-    public HexTile tile;
-    public BuildingPointController[] corners = new BuildingPointController[6];
-    public StreetPointController[] edges = new StreetPointController[6];
+    public final HexTile tile;
+    public final BuildingPointController[] corners = new BuildingPointController[6];
+    public final StreetPointController[] edges = new StreetPointController[6];
     private RobberService robberService;
 
     public HexTileController(Pane fieldPane, HexTile tile, Circle view, Circle eventView) {

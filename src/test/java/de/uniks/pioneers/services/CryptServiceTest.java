@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CryptServiceTest {
 
-    CryptService cryptService = new CryptService();
+    final CryptService cryptService = new CryptService();
 
     @Test
     void encrypt() {

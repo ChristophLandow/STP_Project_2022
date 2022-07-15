@@ -73,11 +73,11 @@ class AsOwner extends ApplicationTest {
     @InjectMocks
     NewGameScreenLobbyController newGameScreenLobbyController;
 
-    String randomColor02 = createRandomColor();
-    String randomColor03 = createRandomColor();
-    String randomAvatar01 = createRandomAvatar();
-    String randomAvatar02 = createRandomAvatar();
-    String randomAvatar03 = createRandomAvatar();
+    final String randomColor02 = createRandomColor();
+    final String randomColor03 = createRandomColor();
+    final String randomAvatar01 = createRandomAvatar();
+    final String randomAvatar02 = createRandomAvatar();
+    final String randomAvatar03 = createRandomAvatar();
 
     private String patternToObserveGameMembers;
     private String patternToObserveUserOwner;

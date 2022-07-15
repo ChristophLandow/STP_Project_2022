@@ -23,7 +23,7 @@ public class RobberService {
     @Inject MapRenderService mapRenderService;
     private HexTileController robberTile;
     private ArrayList<User> robbingCandidates = new ArrayList<>();
-    SimpleIntegerProperty robberState = new SimpleIntegerProperty(-1);
+    final SimpleIntegerProperty robberState = new SimpleIntegerProperty(-1);
 
     @Inject
     public RobberService(PioneersApiService pioneersApiService, GameService gameService) {

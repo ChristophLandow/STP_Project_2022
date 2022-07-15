@@ -71,7 +71,7 @@ public class NewGameScreenLobbyController implements Controller {
     private final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final SimpleStringProperty password = new SimpleStringProperty();
     private final App app;
-    public SimpleIntegerProperty memberCount = new SimpleIntegerProperty();
+    public final SimpleIntegerProperty memberCount = new SimpleIntegerProperty();
     private User currentUser;
     private final Map<String, PlayerEntryController> playerEntries = new HashMap<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
