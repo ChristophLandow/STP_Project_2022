@@ -7,6 +7,7 @@ import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -28,6 +29,9 @@ import java.util.List;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class GameChatController {
+
+    @Inject
+    PrefService prefService;
     private ScrollPane chatScrollPane;
     private VBox messageBox;
     private TextField messageText;
@@ -127,6 +131,9 @@ public class GameChatController {
         avatarView.setFitHeight(25);
         avatarView.setFitWidth(25);
         Label textLabel = new Label(user.name() + ": " + message.body());
+        if(prefService.getDarkModeState()){
+            textLabel.setId("textMessage");
+        }
         textLabel.setFont(new Font(15));
         HBox hbox = new HBox(avatarView, textLabel);
         hbox.setSpacing(7);
