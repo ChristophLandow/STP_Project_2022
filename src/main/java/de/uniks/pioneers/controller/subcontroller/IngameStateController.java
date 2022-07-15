@@ -55,7 +55,7 @@ public class IngameStateController {
     public void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         ExpectedMove move = currentState.expectedMoves().get(0);
-        ingameService.currentExpectedMove.set(move);
+        ingameService.setExpectedMove(move);
 
         assert move.players().get(0)!=null;
         if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
