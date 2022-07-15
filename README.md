@@ -96,39 +96,48 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
 ## Roadmap
 
 - [X] User-Management
-    - [X] Create Account
-    - [X] Login
+  - [X] Create Account
+  - [X] Login
 - [X] Lobby
-    - [X] Show list of (online)-users
-    - [X] Show list of games
-    - [X] Logout
-    - [X] Logout
+  - [X] Show list of (online)-users
+  - [X] Show list of games
+  - [X] Logout
+  - [X] Logout
 - [X] Direct messages
-    - [X] Display of old messages
-    - [X] Send to other users
-    - [X] Delete own messages
-    - [X] Automatic display of new message
+  - [X] Display of old messages
+  - [X] Send to other users
+  - [X] Delete own messages
+  - [X] Automatic display of new message
 - [X] Game-Management
-    - [X] Create game
+  - [X] Create game
 - [X] Game Lobby view
-    - [X] Show list of participants
-    - [X] Join with password
-    - [X] Ready / not ready
-    - [X] Leave
-    - [X] Select and show Color
-    - [X] Start game
+  - [X] Show list of participants
+  - [X] Join with password
+  - [X] Join as spectator
+  - [X] Ready / not ready
+  - [X] Leave
+  - [X] Select and show Color
+  - [X] Start game
 - [X] Ingame view
-  - [X] Game chat 
+  - [X] Game chat
   - [X] Load map
   - [X] Founding-roll
   - [X] Founding-settlement phase
   - [X] Roll
   - [X] End turn
   - [X] Buy and build pieces
+  - [X] Trading
+  - [X] Robber
   - [X] Member list
+  - [X] Victory points
+  - [X] Victory point rankin at end of game
+  - [X] Longest trading route
+  - [X] Rules
   - [X] Settings
   - [X] Dark mode
   - [X] Music
+  - [X] Speech Instructions
+  - [X] Hotkeys
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -137,9 +146,7 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
 <!-- CHANGELOG -->
 ## Changelog
 
-- Version 1.0
-    - 1.1 Bug fixes (Game and user list in the lobby)
-- Version 2.0
+- Version 3.0
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
