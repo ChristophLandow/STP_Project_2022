@@ -26,16 +26,14 @@
    <Button fx:id="EditProfileButton" layoutX="150.0" layoutY="550.0" mnemonicParsing="false" onAction="#editProfile" text="Edit Profile" />
    <Button fx:id="LogoutButton" layoutX="267.0" layoutY="550.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
    <Button fx:id="NewGameButton" layoutX="530.0" layoutY="550.0" mnemonicParsing="false" onAction="#newGame" text="New Game" />
-    <ScrollPane hbarPolicy="NEVER" layoutX="100.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0"
-                style="-fx-border-color: black;">
+    <ScrollPane hbarPolicy="NEVER" layoutX="100.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0" style="-fx-border-color: black;">
         <VBox fx:id="UsersVBox" prefHeight="400.0" prefWidth="280.0">
            <padding>
-               <Insets bottom="2.0" left="5.0" right="5.0" top="2.0"/>
+               <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
            </padding>
         </VBox>
     </ScrollPane>
-    <ScrollPane hbarPolicy="NEVER" layoutX="420.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0"
-                style="-fx-border-color: black;">
-        <ListView fx:id="listViewGames" maxWidth="280.0" minWidth="280.0" prefHeight="400.0" prefWidth="280.0"/>
+    <ScrollPane fx:id="gameScrollPane" hbarPolicy="NEVER" layoutX="420.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0" style="-fx-border-color: black;">
+        <ListView fx:id="listViewGames" maxWidth="280.0" minWidth="280.0" prefHeight="400.0" prefWidth="280.0" />
     </ScrollPane>
 </Pane>
