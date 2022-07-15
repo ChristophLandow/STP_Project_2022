@@ -21,9 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-
-import java.io.File;
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 
@@ -120,14 +118,15 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         write("\t");
         type(KeyCode.ENTER);
-
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.ENTER);
+
         write("\t");
         type(KeyCode.ENTER);
 
         verify(prefService, atLeastOnce()).getTradeChoiceBox();
         verify(prefService, atLeastOnce()).getEndChoiceBox();
         verify(prefService, atLeastOnce()).getRulesChoiceBox();
-        verify(prefService).saveGenderVoice(GameConstants.FEMALE);
     }
 }
