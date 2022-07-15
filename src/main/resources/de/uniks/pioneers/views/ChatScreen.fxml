@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.ChatController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.ChatController">
    <TabPane id="chatTabPane" fx:id="chatTabPane" layoutX="20.0" layoutY="20.0" prefHeight="300.0" prefWidth="380.0"
             tabClosingPolicy="ALL_TABS">
-      <Tab id="allTab" closable="true" text="Chat One">
-         <ScrollPane fx:id="tabScrollPane" prefHeight="579.0">
+      <Tab text="Chat One">
+         <ScrollPane prefHeight="579.0">
             <VBox/>
          </ScrollPane>
       </Tab>
