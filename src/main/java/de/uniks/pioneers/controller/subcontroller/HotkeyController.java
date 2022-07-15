@@ -213,18 +213,13 @@ public class HotkeyController implements Controller, Initializable {
         boolean equalHotkeys = false;
         ArrayList<String> hotkeyVariants = new ArrayList<>();
         String tradeKeycomb = tradingChoiceBox.getValue() + tradingTextField.getText();
-        System.out.println(tradeKeycomb);
         String endKeycomb = endTurnChoiceBox.getValue() + endTurnTextField.getText();
-        System.out.println(endKeycomb);
         String rulesKeycomb = openRulesChoiceBox.getValue() + openRulesTextField.getText();
-        System.out.println(rulesKeycomb);
         String settingsKeyComb = openSettingsChoiceBox.getValue() + openSettingsTextField.getText();
-        System.out.println(settingsKeyComb);
         Collections.addAll(hotkeyVariants, tradeKeycomb,endKeycomb,rulesKeycomb,settingsKeyComb);
         for(String variant : hotkeyVariants){
             for(String varaint2 : hotkeyVariants){
                 if((variant == varaint2) || ((variant.equals("")) && (varaint2.equals("")))){
-                    System.out.println("continue");
                     continue;
                 }
                 if(variant.equals(varaint2)){
