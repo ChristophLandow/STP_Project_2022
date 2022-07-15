@@ -334,4 +334,8 @@ public class IngameScreenController implements Controller {
             tradePopUpController.show();
         }
     }
+
+    public IngameStateController getIngameStateController(){
+        return this.ingameStateController;
+    }
 }
