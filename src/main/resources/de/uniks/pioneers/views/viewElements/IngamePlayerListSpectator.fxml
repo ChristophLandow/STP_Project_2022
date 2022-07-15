@@ -6,15 +6,17 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="playerBox" prefHeight="40.0" prefWidth="230.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerListSpectatorController">
-   <children>
-      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="3.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../controller/subcontroller/images/spectator.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="playerName" alignment="CENTER" ellipsisString="" layoutX="7.0" layoutY="-3.0" maxHeight="40.0" maxWidth="70.0" minHeight="5.0" minWidth="40.0" prefHeight="17.0" prefWidth="70.0" text="kappa" />
-      <Button fx:id="kickButton" layoutX="184.0" layoutY="8.0" mnemonicParsing="false" onMouseClicked="#onKickButtonClicked" style="-fx-background-color: red; -fx-text-fill: white;" text="Kick" />
-   </children>
+<Pane fx:id="playerBox" prefHeight="40.0" prefWidth="230.0" xmlns="http://javafx.com/javafx/18"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerListSpectatorController">
+    <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="3.0" layoutY="10.0" pickOnBounds="true"
+               preserveRatio="true">
+        <Image url="@../../controller/subcontroller/images/spectator.png"/>
+    </ImageView>
+    <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="10.0" pickOnBounds="true"
+               preserveRatio="true"/>
+    <Label fx:id="playerName" alignment="CENTER" ellipsisString="" layoutX="7.0" layoutY="-3.0" maxHeight="40.0"
+           maxWidth="70.0" minHeight="5.0" minWidth="40.0" prefHeight="17.0" prefWidth="70.0" text="kappa"/>
+    <Button fx:id="kickButton" layoutX="184.0" layoutY="8.0" mnemonicParsing="false"
+            onMouseClicked="#onKickButtonClicked" style="-fx-background-color: red; -fx-text-fill: white;" text="Kick"/>
 </Pane>
