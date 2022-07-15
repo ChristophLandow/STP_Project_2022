@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import static de.uniks.pioneers.Constants.*;
 
@@ -42,7 +43,6 @@ public class HotkeyController implements Controller, Initializable {
     private final IngameScreenController ingameController;
     private final String[] hotkeyChoiceBoxElements = {NOHOTKEY,STRG, ALT};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
-    private final ArrayList<TextField> hotkeyTextfieldVariants = new ArrayList<>();
     private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
     private final Scene scene;
     public HotkeyController(Scene scene, PrefService prefService, IngameScreenController ingameController) {
@@ -54,7 +54,6 @@ public class HotkeyController implements Controller, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Collections.addAll(hotkeyChoiceBoxVariants, tradingChoiceBox,endTurnChoiceBox,openRulesChoiceBox,openSettingsChoiceBox);
-        Collections.addAll(hotkeyTextfieldVariants, tradingTextField,endTurnTextField,openSettingsTextField,openRulesTextField);
         for (ChoiceBox<String> box : hotkeyChoiceBoxVariants){
             box.getItems().addAll(hotkeyChoiceBoxElements);
         }
@@ -212,12 +211,23 @@ public class HotkeyController implements Controller, Initializable {
 
     public void safeHotkeys() {
         boolean equalHotkeys = false;
-        for(TextField field : hotkeyTextfieldVariants){
-            for(TextField field2 : hotkeyTextfieldVariants){
-                if(field.equals(field2)){
+        ArrayList<String> hotkeyVariants = new ArrayList<>();
+        String tradeKeycomb = tradingChoiceBox.getValue() + tradingTextField.getText();
+        System.out.println(tradeKeycomb);
+        String endKeycomb = endTurnChoiceBox.getValue() + endTurnTextField.getText();
+        System.out.println(endKeycomb);
+        String rulesKeycomb = openRulesChoiceBox.getValue() + openRulesTextField.getText();
+        System.out.println(rulesKeycomb);
+        String settingsKeyComb = openSettingsChoiceBox.getValue() + openSettingsTextField.getText();
+        System.out.println(settingsKeyComb);
+        Collections.addAll(hotkeyVariants, tradeKeycomb,endKeycomb,rulesKeycomb,settingsKeyComb);
+        for(String variant : hotkeyVariants){
+            for(String varaint2 : hotkeyVariants){
+                if((variant == varaint2) || ((variant.equals("")) && (varaint2.equals("")))){
+                    System.out.println("continue");
                     continue;
                 }
-                if((field.getText().equals(field2.getText())) && !(field.getText().isEmpty() && field2.getText().isEmpty())){
+                if(variant.equals(varaint2)){
                     equalHotkeys = true;
                 }
             }
