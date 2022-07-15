@@ -211,7 +211,14 @@ public class TradeOfferPopUpController implements Controller {
         );
             ingameService.tradeIsOffered.set(false);
         };
-        closeStageHandler = e -> ingameService.tradeIsOffered.set(false);
+        closeStageHandler = e -> { disposable.add(
+                ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(GameConstants.OFFER))
+                        .observeOn(FX_SCHEDULER)
+                        .doOnError(Throwable::printStackTrace)
+                        .subscribe()
+        );
+            ingameService.tradeIsOffered.set(false);
+        };
 
         // set handlers to buttons and stage
         accept.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
