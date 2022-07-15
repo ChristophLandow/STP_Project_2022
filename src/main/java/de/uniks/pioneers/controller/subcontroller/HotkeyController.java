@@ -37,7 +37,6 @@ public class HotkeyController implements Controller, Initializable {
     @FXML public Text endTurnText;
     @FXML public Text openSettingsText;
     @FXML public Text openRulesText;
-    @FXML public Button safeButton;
     @FXML public Text identicText;
     private final PrefService prefService;
     private final IngameScreenController ingameController;
