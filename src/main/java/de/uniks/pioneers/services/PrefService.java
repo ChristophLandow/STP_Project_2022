@@ -9,8 +9,6 @@ import javax.inject.Singleton;
 import java.util.prefs.Preferences;
 import static de.uniks.pioneers.Constants.*;
 
-import static de.uniks.pioneers.Constants.REMEMBER_ME;
-
 @Singleton
 public class PrefService {
     private final Preferences preferences;

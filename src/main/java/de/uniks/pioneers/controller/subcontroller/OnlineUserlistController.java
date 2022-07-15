@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.MessageService;
-import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;

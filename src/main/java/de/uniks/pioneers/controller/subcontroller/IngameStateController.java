@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Timer;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.BUILD;
 
 public class IngameStateController {
     private final UserService userService;

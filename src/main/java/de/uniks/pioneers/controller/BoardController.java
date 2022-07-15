@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.CITY;
 
 public class BoardController {
 

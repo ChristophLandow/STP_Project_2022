@@ -1,7 +1,6 @@
 package de.uniks.pioneers.services;
 
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxAssert;
 
 import static org.junit.jupiter.api.Assertions.*;
 
