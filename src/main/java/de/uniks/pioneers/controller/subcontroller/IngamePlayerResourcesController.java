@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.services.GameService;
 import javafx.animation.*;
 import javafx.application.Platform;
@@ -96,18 +95,15 @@ public class IngamePlayerResourcesController {
             }
         };
 
-        mapChangeListener = new MapChangeListener<>() {
-            @Override
-            public void onChanged(Change<? extends String, ? extends Integer> change) {
-                String type = change.getKey();
-                if (change.wasAdded() && change.wasRemoved()) {
-                    if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
-                        invokeElement(type, change.getValueAdded());
-                    } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
-                        revokeElement(type);
-                    } else {
-                        mutateElement(type, change.getValueAdded());
-                    }
+        mapChangeListener = change -> {
+            String type = change.getKey();
+            if (change.wasAdded() && change.wasRemoved()) {
+                if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
+                    invokeElement(type, change.getValueAdded());
+                } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
+                    revokeElement(type);
+                } else {
+                    mutateElement(type, change.getValueAdded());
                 }
             }
         };

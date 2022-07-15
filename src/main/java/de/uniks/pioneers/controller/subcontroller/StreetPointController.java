@@ -124,6 +124,8 @@ public class StreetPointController {
         node.setOnMouseClicked(null);
         node.setOnMouseEntered(null);
         node.setOnMouseExited(null);
+
+        this.view.setFill(STANDARD_COLOR);
     }
 
     public void renderRoad(Building building) {

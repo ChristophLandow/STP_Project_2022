@@ -109,7 +109,7 @@ public class IngameScreenController implements Controller {
         this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
-            if (mapRenderService.isFinishedLoading().get()) initWhenMapFinishedRendering();
+            if (mapRenderService.isFinishedLoading().get()) Platform.runLater(this::initWhenMapFinishedRendering);
         };
     }
 

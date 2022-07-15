@@ -124,7 +124,8 @@ public class NewGameLobbyUserController {
                         screenController.setGame(gameEvent.data());
                         screenController.setMemberCount(screenController.getGame().members());
                         if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
-                            screenController.toIngame(screenController.getGame(), newGameLobbyService.getUsers().values().stream().toList(), screenController.getColorPickerController().getColor(), false, -1);
+                            screenController.toIngame(screenController.getGame(), newGameLobbyService.getUsers().values().stream().toList(),
+                                    screenController.getColorPickerController().getColor(), false, gameEvent.data().settings().mapRadius());
                         } else if (gameEvent.event().endsWith(".deleted")) {
                             screenController.getApp().show(screenController.getLobbyScreenController());
                             screenController.stop();

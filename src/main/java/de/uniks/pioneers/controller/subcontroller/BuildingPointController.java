@@ -104,6 +104,11 @@ public class BuildingPointController {
         node.setOnMouseClicked(null);
         node.setOnMouseEntered(null);
         node.setOnMouseExited(null);
+
+        this.view.setFill(STANDARD_COLOR);
+        if (this.building != null) {
+            this.view.setVisible(false);
+        }
     }
 
     public void placeBuilding(Building building) {
