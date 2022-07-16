@@ -27,7 +27,7 @@
                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
              <HBox alignment="CENTER" prefHeight="49.0" prefWidth="335.0">
-                 <Label fx:id="Welcome" text="Welcome to: ">
+                 <Label text="Welcome to: ">
                     <font>
                         <Font size="20.0"/>
                     </font>
@@ -42,7 +42,7 @@
                  <VBox.margin>
                      <Insets top="-11.0"/>
                  </VBox.margin>
-                 <Label fx:id="ThePasswordIs" text="The password of this game is: ">
+                 <Label text="The password of this game is: ">
                     <font>
                         <Font size="13.0"/>
                     </font>
@@ -92,7 +92,7 @@
                  <VBox.margin>
                      <Insets/>
                  </VBox.margin>
-                 <Label fx:id="chooseColorHere" prefHeight="25.0" prefWidth="213.0" text="Choose your color here:">
+                 <Label prefHeight="25.0" prefWidth="213.0" text="Choose your color here:">
                     <font>
                         <Font size="16.0"/>
                     </font>
@@ -124,7 +124,7 @@
                  </Label>
                  <Spinner fx:id="victoryPointSpinner" prefHeight="25.0" prefWidth="98.0"/>
              </HBox>
-            <Label fx:id="RightNowText" prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
+            <Label prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
                <font>
                   <Font size="17.0" />
                </font>
@@ -132,7 +132,7 @@
                   <Insets bottom="-10.0" />
                </VBox.margin>
             </Label>
-             <ScrollPane fx:id="userScrollPane" prefHeight="171.0" prefWidth="349.0"
+             <ScrollPane prefHeight="171.0" prefWidth="349.0"
                          style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
                  <VBox fx:id="userBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                        minHeight="-Infinity" minWidth="-Infinity" prefHeight="152.0" prefWidth="332.0" spacing="7.0">

@@ -211,7 +211,13 @@ public class NewGameScreenLobbyController implements Controller {
     public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius) {
         if(!rejoin) {
             gameStorage.resetRemainingBuildings();
-            gameStorage.calcZoom(boardSizeSpinner.getValue());
+
+            if(mapRadius == -1){
+                gameStorage.calcZoom(boardSizeSpinner.getValue());
+            }
+            else{
+                gameStorage.calcZoom(mapRadius);
+            }
         } else {
             gameStorage.calcZoom(mapRadius);
         }

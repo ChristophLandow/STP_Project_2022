@@ -98,10 +98,6 @@ public class GameStorage {
         }
     }
 
-    public List<String> getTradeOptions() {
-        return this.tradeOptions;
-    }
-
     public void addToTradeOptions(String tradeOption) {
         if (!this.tradeOptions.contains(tradeOption)) {
             this.tradeOptions.add(tradeOption);
