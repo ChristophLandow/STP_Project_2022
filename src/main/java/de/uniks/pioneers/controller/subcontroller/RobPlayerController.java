@@ -3,17 +3,22 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -93,6 +98,10 @@ public class RobPlayerController implements Controller {
         this.menuButton.setOnMouseClicked(this::playerListToggleVisibility);
         this.robAnchorpane.setOnMouseClicked(this::setPlayerListInvisible);
         this.acceptButton.setOnMouseClicked(this::okClicked);
+
+        openListViewWithSpace(this.menuButton);
+        choosePlayerWithSpace(this.playerListView);
+        pressOkWithSpace(acceptButton);
     }
 
     @Override
@@ -124,6 +133,41 @@ public class RobPlayerController implements Controller {
         if(playerListView.getItems().size() < 5){
             playerListView.setPrefHeight(playerListView.getItems().size() * 27);
         }
+    }
+
+    private void openListViewWithSpace(Node node) {
+        node.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.SPACE)) {
+                this.playerListView.setVisible(!this.playerListView.isVisible());
+                event.consume();
+            }
+        });
+    }
+
+    private void choosePlayerWithSpace(Node node) {
+        node.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.SPACE)) {
+                this.playerListView.getSelectionModel().getSelectedItem().fireEvent(
+                        new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+                                MouseButton.PRIMARY, 1, false, false, false,
+                                false, false, false, false,
+                                false, true, false, null));
+                event.consume();
+            }
+        });
+    }
+
+    private void pressOkWithSpace(Node node){
+        node.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.SPACE)) {
+                this.acceptButton.fireEvent(
+                        new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+                                MouseButton.PRIMARY, 1, false, false, false,
+                                false, false, false, false,
+                                false, true, false, null));
+                event.consume();
+            }
+        });
     }
 
     public void okClicked(MouseEvent event){

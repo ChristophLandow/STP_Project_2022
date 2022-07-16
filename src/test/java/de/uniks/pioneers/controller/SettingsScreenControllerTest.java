@@ -1,16 +1,11 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.GameConstants;
-import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.PrefService;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 
@@ -71,8 +65,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @InjectMocks LobbyGameListController lobbyGameListController;
     @InjectMocks SpeechSettingsController speechSettingsController;
 
-    @Mock
-    PrefService prefService;
+    @Mock PrefService prefService;
 
     @InjectMocks SettingsScreenController settingsScreenController;
 
