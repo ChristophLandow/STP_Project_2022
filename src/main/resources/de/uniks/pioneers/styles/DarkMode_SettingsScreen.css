@@ -6,6 +6,10 @@
 	-fx-fill: rgb(255, 255, 255);
 }
 
+#Appearencetext{
+	-fx-fill: rgb(255, 255, 255);
+}
+
 #tradingText {
 	-fx-fill: rgb(255, 255, 255);
 }
@@ -22,6 +26,10 @@
 	-fx-fill: rgb(255, 255, 255);
 }
 
+#voiceOutputCheckBox{
+	-fx-text-fill: white;
+}
+
 .choice-box .label {
 	-fx-text-fill: BLACK;
 }
@@ -32,5 +40,9 @@
 
 .button {
 	-fx-background-color: #156EAD;
+	-fx-text-fill: white;
+}
+
+.radio-button{
 	-fx-text-fill: white;
 }
