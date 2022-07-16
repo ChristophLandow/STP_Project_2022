@@ -74,6 +74,8 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @Mock
     PrefService prefService;
 
+    @Mock HotkeyController hotkeyController;
+
     @InjectMocks SettingsScreenController settingsScreenController;
 
     @Override
@@ -122,6 +124,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
         type(KeyCode.SPACE);
         type(KeyCode.ENTER);
 
+
         //Set Trade hotkey
         write("\t");
         write("\t");
@@ -144,8 +147,6 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         write("\t");
         type(KeyCode.ENTER);
-
-
 
         verify(prefService, atLeastOnce()).getTradeChoiceBox();
         verify(prefService, atLeastOnce()).getEndChoiceBox();
