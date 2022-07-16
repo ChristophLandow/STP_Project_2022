@@ -122,8 +122,30 @@ class SettingsScreenControllerTest extends ApplicationTest {
         type(KeyCode.SPACE);
         type(KeyCode.ENTER);
 
+        //Set Trade hotkey
+        write("\t");
+        write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        write("\t");
+        type(KeyCode.E);
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
+        write("\t");
         write("\t");
         type(KeyCode.ENTER);
+
+
 
         verify(prefService, atLeastOnce()).getTradeChoiceBox();
         verify(prefService, atLeastOnce()).getEndChoiceBox();

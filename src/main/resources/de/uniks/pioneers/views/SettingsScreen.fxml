@@ -51,7 +51,7 @@
       </font>
    </CheckBox>
    <ChoiceBox fx:id="genderChoiceBox" layoutX="741.0" layoutY="142.0" prefWidth="150.0" value="female voice" />
-   <Button layoutX="741.0" layoutY="589.0" mnemonicParsing="false" onAction="#safe" text="Save">
+   <Button fx:id="safeButton" layoutX="741.0" layoutY="589.0" mnemonicParsing="false" onAction="#safe" text="Save">
       <font>
          <Font size="24.0" />
       </font>
