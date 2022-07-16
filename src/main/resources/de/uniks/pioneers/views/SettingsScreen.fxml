@@ -13,8 +13,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.SettingsScreenController">
-   <Label layoutX="56.0" layoutY="75.0" text="Appearance-Mode : ">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.SettingsScreenController">
+   <Label fx:id="Appearencetext" layoutX="56.0" layoutY="75.0" text="Appearance-Mode : ">
       <font>
          <Font size="33.0" />
       </font>
@@ -56,5 +56,5 @@
          <Font size="24.0" />
       </font>
    </Button>
-   <HBox fx:id="hotkeyHBox" layoutX="69.0" layoutY="400.0" prefHeight="350.0" prefWidth="500.0" />
+   <HBox fx:id="hotkeyHBox" layoutX="80.0" layoutY="383.0" prefHeight="350.0" prefWidth="500.0" />
 </AnchorPane>
