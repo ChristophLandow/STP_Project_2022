@@ -32,7 +32,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     public void
-    test() throws InterruptedException {
+    test() {
         //LoginScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("TestUser\t");

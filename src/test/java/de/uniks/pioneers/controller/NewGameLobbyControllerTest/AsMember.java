@@ -29,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import javax.inject.Provider;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
