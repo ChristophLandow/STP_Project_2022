@@ -31,9 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RobPlayerControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
-
     @InjectMocks RobPlayerController robPlayerController;
-
     @Mock RobberService robberService;
     @Mock PrefService prefService;
 
