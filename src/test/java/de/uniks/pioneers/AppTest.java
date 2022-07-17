@@ -356,6 +356,7 @@ class AppTest extends ApplicationTest {
         write("\t\t\t\t\t\t");
         type(KeyCode.SPACE);
         WaitForAsyncUtils.waitForFxEvents();
+        // test trade with players
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "000", "build", 0, null, null, new Resources(null,-1,1,0,0,0), null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("offer", List.of("002")), new ExpectedMove("accept", List.of("000")), new ExpectedMove("build", List.of("000"))), null)));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "002", "offer", 0, null, null, new Resources(null,1,-1,0,0,0), "000")));
@@ -365,11 +366,27 @@ class AppTest extends ApplicationTest {
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "000", "accept", 0, null, null, null, "002")));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("build", List.of("000"))), null)));
         WaitForAsyncUtils.waitForFxEvents();
+
+        // test build house
         clickOn("#houseSVG");
         clickOn("#0,0,0,0");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 0, 0, "17", 0, "settlement", "000", "000")));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "33", "000", "000", "build", 0, "17", null, null, null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 3, 1, 1), new RemainingBuildings(2, 4, 14), 3, 0)));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        // test trade with bank
+        clickOn("#tradePane");
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        write("\t\t\t\t\t");
+        type(KeyCode.UP);
+        write("\t\t\t\t\t\t\t");
+        type(KeyCode.SPACE);
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "000", "build", 0, null, null, new Resources(null,-4,1,0,0,0), "bank")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 0, 5, 4, 4, 4), new RemainingBuildings(2, 4, 14), 3, 0)));
         WaitForAsyncUtils.waitForFxEvents();
     }
 }
