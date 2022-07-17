@@ -14,6 +14,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class HotkeyController implements Controller, Initializable {
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
     private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
     private final Scene scene;
+
     public HotkeyController(Scene scene, PrefService prefService, IngameScreenController ingameController) {
         this.scene = scene;
         this.ingameController = ingameController;

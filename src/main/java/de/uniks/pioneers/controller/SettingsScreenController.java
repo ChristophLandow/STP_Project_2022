@@ -281,4 +281,8 @@ public class SettingsScreenController implements Controller, Initializable {
         hotkeyController.safeHotkeys();
         speechSettingsController.saveSettings();
     }
+
+    public HotkeyController getHotkeyController(){
+        return this.hotkeyController;
+    }
 }

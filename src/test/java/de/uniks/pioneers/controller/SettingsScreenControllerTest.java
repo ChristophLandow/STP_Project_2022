@@ -1,17 +1,20 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.GameConstants;
-import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.PrefService;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.media.MediaPlayer;
+import static de.uniks.pioneers.Constants.*;
+
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,8 +24,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-import static org.junit.jupiter.api.Assertions.*;
 
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,8 +78,6 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @Mock
     PrefService prefService;
 
-    @Mock HotkeyController hotkeyController;
-
     @InjectMocks SettingsScreenController settingsScreenController;
 
     @Override
@@ -99,6 +101,18 @@ class SettingsScreenControllerTest extends ApplicationTest {
 
     @Test
     void test() {
+
+        ChoiceBox<String> tradeChoiceBox= lookup("#tradingChoiceBox").query();
+        TextField tradeTextField = lookup("#tradingTextField").query();
+        ChoiceBox<String> endChoiceBox= lookup("#endTurnChoiceBox").query();
+        TextField endTextField = lookup("#endTurnTextField").query();
+        ChoiceBox<String> settingsChoiceBox= lookup("#openSettingsChoiceBox").query();
+        TextField setingsTextField = lookup("#openSettingsTextField").query();
+        ChoiceBox<String> rulesChoiceBox= lookup("#openRulesChoiceBox").query();
+        TextField rulesTextField = lookup("#openRulesTextField").query();
+        CheckBox voiceCheckBox = lookup("#voiceOutputCheckBox").query();
+
+
         type(KeyCode.SPACE);
 
         verify(ingameScreenControllerProvider, atLeastOnce()).get();
@@ -134,11 +148,24 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         type(KeyCode.E);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.E);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.DIGIT0);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.DIGIT1);
         write("\t");
         write("\t");
         write("\t");
@@ -147,9 +174,19 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         write("\t");
         type(KeyCode.ENTER);
-
+        //get saved data?
         verify(prefService, atLeastOnce()).getTradeChoiceBox();
         verify(prefService, atLeastOnce()).getEndChoiceBox();
         verify(prefService, atLeastOnce()).getRulesChoiceBox();
+        verify(prefService, atLeastOnce()).getSettingsChoiceBox();
+        verify(prefService, atLeastOnce()).getSettingsTextField();
+        verify(prefService, atLeastOnce()).getTradeTextField();
+        verify(prefService, atLeastOnce()).getRulesTextField();
+        verify(prefService, atLeastOnce()).getEndTextField();
+        //set new data?
+        //assertEquals(tradeChoiceBox.getValue(), STRG);
+        //assertEquals(endChoiceBox.getValue(), ALT);
+        //assertEquals(settingsChoiceBox.getValue(), STRG);
+        //assertEquals(rulesChoiceBox.getValue(), STRG);
     }
 }
