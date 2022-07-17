@@ -68,7 +68,7 @@ class RobPlayerControllerTest extends ApplicationTest {
         MenuButton menuButton = lookup("#menuButton").query();
         menuButton.fireEvent(leftClick);
 
-        sleep(1000);
+        sleep(2000);
         ListView<HBox> playerListView = lookup("#playerListView").query();
         assertTrue(playerListView.isVisible());
 
