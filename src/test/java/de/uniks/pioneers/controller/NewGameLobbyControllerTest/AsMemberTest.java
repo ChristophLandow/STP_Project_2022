@@ -38,13 +38,14 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class AsOwner extends ApplicationTest {
+class AsMemberTest extends ApplicationTest {
     @Mock
     UserService userService;
 
@@ -84,16 +85,16 @@ class AsOwner extends ApplicationTest {
     private String patternToObserveUserJoining;
 
     private final Game testGame = new Game("1", "2", "3", "name", "1", 2,false, null);
-    private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff",false);
-    private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02,false);
-    private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03,false);
+    private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff", false);
+    private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02, false);
+    private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03, false);
     private final MessageDto message01 = new MessageDto("1","1","1","1","hello there");
     private final MessageDto message02 = new MessageDto("2","2","2","2","how are you ");
     private final User owner  = new User("1", "owner", "online", randomAvatar01);
     private final User user02  = new User("2","member02","online",randomAvatar02);
     private final User userJoining = new User("3", "userJoining", "online", randomAvatar03);
 
-    AsOwner() throws IOException, URISyntaxException {}
+    AsMemberTest() throws IOException, URISyntaxException {}
 
     @Override
     public void start(Stage stage) {
@@ -102,10 +103,9 @@ class AsOwner extends ApplicationTest {
         patternToObserveUserUser02 = String.format("users.%s.updated", user02._id());
         patternToObserveUserJoining = String.format("users.%s.updated", userJoining._id());
         String patternToObserveGame = String.format("games.%s.*", testGame._id());
-
         when(app.getStage()).thenReturn(stage);
 
-        when(userService.getCurrentUser()).thenReturn(owner);
+        when(userService.getCurrentUser()).thenReturn(user02);
 
         when(eventListener.listen(patternToObserveUserOwner, User.class)).thenReturn(Observable.just(new Event<>("users.1.updated", owner)));
         when(eventListener.listen(patternToObserveUserUser02, User.class)).thenReturn(Observable.just(new Event<>("users.2.updated", user02)));
@@ -128,7 +128,7 @@ class AsOwner extends ApplicationTest {
     }
 
     @Test
-    void initControllerAsOwner() {
+    void initControllerAsOMember() {
         List<Member> members = newGameLobbyService.getMembers();
 
         assertEquals(members.get(1).createdAt(), "2");
@@ -142,7 +142,7 @@ class AsOwner extends ApplicationTest {
         // assertions for current user box, colorpicker gets random color
         FxAssert.verifyThat("#gameNameLabel", LabeledMatchers.hasText("name"));
         FxAssert.verifyThat("#passwordLabel", LabeledMatchers.hasText("12345678"));
-        FxAssert.verifyThat("#clientUserNameLabel", LabeledMatchers.hasText("owner"));
+        FxAssert.verifyThat("#clientUserNameLabel", LabeledMatchers.hasText("member02"));
 
         //assertion for member box, have to add some assertions
         assertThat(newGameScreenLobbyController.userBox.getChildren().size()).isEqualTo(2);
@@ -164,8 +164,6 @@ class AsOwner extends ApplicationTest {
         verify(eventListener).listen(patternToObserveUserUser02, User.class);
         verify(eventListener).listen(patternToObserveUserJoining, User.class);
         verify(eventListener).listen(patternToObserveGameMembers, Member.class);
-        //verify(newGameLobbyService).getMessages(testGame._id());
-        //verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
 
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));
