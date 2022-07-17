@@ -21,12 +21,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SettingsScreenControllerTest extends ApplicationTest {
+
+    ArrayList<Character> inputs = new ArrayList<>();
+    ArrayList<KeyCode> outputs = new ArrayList<>();
     @Spy
     App app = new App(null);
 
@@ -74,12 +80,14 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @Mock
     PrefService prefService;
 
-    @Mock HotkeyController hotkeyController;
+    @InjectMocks HotkeyController hotkeyController;
 
     @InjectMocks SettingsScreenController settingsScreenController;
 
     @Override
     public void start(Stage stage){
+        Collections.addAll(inputs, 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-',',','.','+','#','<');
+        Collections.addAll(outputs, KeyCode.A,KeyCode.B,KeyCode.C,KeyCode.D,KeyCode.E,KeyCode.F,KeyCode.G,KeyCode.H,KeyCode.I,KeyCode.J,KeyCode.K,KeyCode.L,KeyCode.M,KeyCode.N,KeyCode.O,KeyCode.P,KeyCode.Q,KeyCode.R,KeyCode.S,KeyCode.T,KeyCode.U,KeyCode.V,KeyCode.W,KeyCode.X,KeyCode.Y,KeyCode.Z,KeyCode.DIGIT0,KeyCode.DIGIT1,KeyCode.DIGIT2,KeyCode.DIGIT3,KeyCode.DIGIT4,KeyCode.DIGIT5,KeyCode.DIGIT6,KeyCode.DIGIT7,KeyCode.DIGIT8,KeyCode.DIGIT9,KeyCode.MINUS,KeyCode.COMMA,KeyCode.PERIOD,KeyCode.PLUS,KeyCode.NUMBER_SIGN,KeyCode.LESS);
         when(ingameScreenControllerProvider.get()).thenReturn(ingameScreenController);
         when(newGameLobbyControllerProvider.get()).thenReturn(newGameScreenLobbyController);
         when(editProfileControllerProvider.get()).thenReturn(editProfileController);
@@ -185,6 +193,11 @@ class SettingsScreenControllerTest extends ApplicationTest {
         verify(prefService, atLeastOnce()).getTradeTextField();
         verify(prefService, atLeastOnce()).getRulesTextField();
         verify(prefService, atLeastOnce()).getEndTextField();
+        int j = 0;
+        for(Character i : inputs){
+            assertEquals(hotkeyController.stringToKeyCode(i), outputs.get(j));
+            j+=1;
+        }
         //set new data?
         /*assertEquals(tradeChoiceBox.getValue(), STRG);
         assertEquals(endChoiceBox.getValue(), ALT);
