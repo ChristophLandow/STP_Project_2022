@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,11 +37,11 @@ class LobbyServiceTest {
         lobbyService.logout();
         verify(authApiService).logout();
     }
-    /*
+
     @Test
     void getGames() {
-        Game testGame = new Game("1","2","3","name1","owner1", 1);
-        Game testGame2 = new Game("1","2","3","name2","owner2", 1);
+        Game testGame = new Game("1","2","3","name1","owner1", 1, false, null);
+        Game testGame2 = new Game("1","2","3","name2","owner2", 1, false, null);
         List<Game> testGameList = new ArrayList<>();
         testGameList.add(testGame);
         testGameList.add(testGame2);
@@ -51,8 +54,6 @@ class LobbyServiceTest {
 
         verify(gameApiService).getGames();
     }
-
-     */
 
     @Test
     void createGame() {

@@ -29,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import javax.inject.Provider;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AsMember extends ApplicationTest {
+class AsMemberTest extends ApplicationTest {
     @Mock
     UserService userService;
 
@@ -94,7 +94,7 @@ class AsMember extends ApplicationTest {
     private final User user02  = new User("2","member02","online",randomAvatar02);
     private final User userJoining = new User("3", "userJoining", "online", randomAvatar03);
 
-    AsMember() throws IOException, URISyntaxException {}
+    AsMemberTest() throws IOException, URISyntaxException {}
 
     @Override
     public void start(Stage stage) {

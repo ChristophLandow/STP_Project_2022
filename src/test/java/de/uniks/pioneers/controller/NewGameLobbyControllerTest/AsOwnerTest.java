@@ -17,7 +17,6 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -30,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
-import javax.inject.Provider;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,7 +44,7 @@ import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class AsOwner extends ApplicationTest {
+class AsOwnerTest extends ApplicationTest {
     @Mock
     UserService userService;
 
@@ -94,7 +93,7 @@ class AsOwner extends ApplicationTest {
     private final User user02  = new User("2","member02","online",randomAvatar02);
     private final User userJoining = new User("3", "userJoining", "online", randomAvatar03);
 
-    AsOwner() throws IOException, URISyntaxException {}
+    AsOwnerTest() throws IOException, URISyntaxException {}
 
     @Override
     public void start(Stage stage) {
