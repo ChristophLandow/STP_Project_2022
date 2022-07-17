@@ -147,6 +147,8 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
 ## Changelog
 
 - Version 3.0
+  - improved test coverage
+- Version 3.1
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
