@@ -70,7 +70,7 @@ class RobPlayerControllerTest extends ApplicationTest {
 
         sleep(1000);
         ListView<HBox> playerListView = lookup("#playerListView").query();
-        assertFalse(playerListView.isVisible());
+        assertTrue(playerListView.isVisible());
 
         playerListView.fireEvent(leftClick);
         type(KeyCode.DOWN);
