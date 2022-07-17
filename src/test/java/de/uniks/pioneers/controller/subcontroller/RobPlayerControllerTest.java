@@ -8,7 +8,10 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -35,11 +38,16 @@ class RobPlayerControllerTest extends ApplicationTest {
     @Mock RobberService robberService;
     @Mock PrefService prefService;
 
+    MouseEvent leftClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+            MouseButton.PRIMARY, 1, false, false, false,
+            false, false, false, false,
+            false, true, false, null);
+
     @Override
     public void start(Stage stage){
         ArrayList<User> robbingCandidates = new ArrayList<>();
-        robbingCandidates.add(new User("player1","player1","", Constants.DEFAULT_AVATAR));
-        robbingCandidates.add(new User("player2","player2","", Constants.DEFAULT_AVATAR));
+        robbingCandidates.add(new User("player1","player1","online", Constants.DEFAULT_AVATAR));
+        robbingCandidates.add(new User("player2","player2","online", Constants.DEFAULT_AVATAR));
 
         RobDto robMove = new RobDto(0,0,0,"player1");
 
@@ -53,19 +61,24 @@ class RobPlayerControllerTest extends ApplicationTest {
 
     @Test
     void test() {
+
         Pane anchorPane = lookup("#robAnchorpane").query();
-        anchorPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        anchorPane.fireEvent(leftClick);
 
-        write("\t");
-        type(KeyCode.SPACE);
+        MenuButton menuButton = lookup("#menuButton").query();
+        menuButton.fireEvent(leftClick);
 
-        write("\t");
+        sleep(1000);
+        ListView<HBox> playerListView = lookup("#playerListView").query();
+        assertTrue(playerListView.isVisible());
+
+        playerListView.fireEvent(leftClick);
         type(KeyCode.DOWN);
         type(KeyCode.SPACE);
+        menuButton.fireEvent(leftClick);
 
-        write("\t");
-        write("\t");
-        type(KeyCode.SPACE);
+        sleep(2000);
+        assertFalse(playerListView.isVisible());
 
         sleep(1500);
 

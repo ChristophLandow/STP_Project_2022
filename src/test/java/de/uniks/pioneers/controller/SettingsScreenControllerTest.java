@@ -67,8 +67,6 @@ class SettingsScreenControllerTest extends ApplicationTest {
 
     @Mock PrefService prefService;
 
-    @Mock HotkeyController hotkeyController;
-
     @InjectMocks SettingsScreenController settingsScreenController;
 
     @Override
