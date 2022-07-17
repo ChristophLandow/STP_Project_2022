@@ -42,7 +42,7 @@ public class HotkeyController implements Controller, Initializable {
     private final String[] hotkeyChoiceBoxElements = {NOHOTKEY,STRG, ALT};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
     private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
-    private final Scene scene;
+    public Scene scene;
 
     public HotkeyController(Scene scene, PrefService prefService, IngameScreenController ingameController) {
         this.scene = scene;
@@ -208,7 +208,7 @@ public class HotkeyController implements Controller, Initializable {
         }
     }
 
-    public void safeHotkeys() {
+    public boolean safeHotkeys() {
         boolean equalHotkeys = false;
         ArrayList<String> hotkeyVariants = new ArrayList<>();
         String tradeKeycomb = tradingChoiceBox.getValue() + tradingTextField.getText();
@@ -230,6 +230,7 @@ public class HotkeyController implements Controller, Initializable {
         }
         if(equalHotkeys){
             identicText.setText("Identical shortcuts exist!");
+            return false;
         } else {
             for(HotkeyEventController controller : hotkeyControllers){
                 controller.stop();
@@ -240,6 +241,7 @@ public class HotkeyController implements Controller, Initializable {
             safeEndTurnHotKeys();
             safeOpenRulesHotkeys();
             safeOpenSettingsHotKeys();
+            return true;
         }
     }
 }

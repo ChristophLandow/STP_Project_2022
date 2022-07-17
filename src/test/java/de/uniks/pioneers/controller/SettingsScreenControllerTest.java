@@ -7,10 +7,13 @@ import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.PrefService;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static de.uniks.pioneers.Constants.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,7 +82,6 @@ class SettingsScreenControllerTest extends ApplicationTest {
 
     @Mock
     PrefService prefService;
-
     @InjectMocks HotkeyController hotkeyController;
 
     @InjectMocks SettingsScreenController settingsScreenController;
@@ -98,11 +100,29 @@ class SettingsScreenControllerTest extends ApplicationTest {
         when(lobbyUserlistControllerProvider.get()).thenReturn(lobbyUserlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
         when(speechSettingsControllerProvider.get()).thenReturn(speechSettingsController);
-
+        when(prefService.saveTradeTextInput(any())).thenReturn("e");
+        when(prefService.saveTradeChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveEndChoiceBox(any())).thenReturn(ALT);
+        when(prefService.saveEndTextInput(any())).thenReturn("e");
+        when(prefService.saveRulesChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveRulesTextInput(any())).thenReturn("0");
+        when(prefService.saveSettingsChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveSettingsTextInput(any())).thenReturn("1");
         when(prefService.getGenderVoice()).thenReturn("female");
 
         app.start(stage);
         app.show(settingsScreenController);
+        hotkeyController.tradingChoiceBox = new ChoiceBox<>();
+        hotkeyController.tradingTextField = new TextField();
+        hotkeyController.endTurnChoiceBox = new ChoiceBox<>();
+        hotkeyController.endTurnTextField = new TextField();
+        hotkeyController.openSettingsChoiceBox = new ChoiceBox<>();
+        hotkeyController.openSettingsTextField = new TextField();
+        hotkeyController.openRulesTextField = new TextField();
+        hotkeyController.openRulesChoiceBox = new ChoiceBox<>();
+        hotkeyController.identicText = new Text();
+
+        hotkeyController.scene = app.getStage().getScene();
     }
 
     @Test
@@ -118,10 +138,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
         TextField rulesTextField = lookup("#openRulesTextField").query();
         CheckBox voiceCheckBox = lookup("#voiceOutputCheckBox").query();
         AnchorPane anchor = lookup("anchorPane").query();*/
-
-
         type(KeyCode.SPACE);
-
         verify(ingameScreenControllerProvider, atLeastOnce()).get();
         verify(newGameLobbyControllerProvider).get();
         verify(lobbyScreenControllerProvider).get();
@@ -198,6 +215,16 @@ class SettingsScreenControllerTest extends ApplicationTest {
             assertEquals(hotkeyController.stringToKeyCode(i), outputs.get(j));
             j+=1;
         }
+        hotkeyController.tradingTextField.setText("e");
+        hotkeyController.tradingChoiceBox.setValue(STRG);
+        hotkeyController.endTurnTextField.setText("e");
+        hotkeyController.endTurnChoiceBox.setValue(ALT);
+        hotkeyController.openSettingsTextField.setText("0");
+        hotkeyController.openSettingsChoiceBox.setValue(STRG);
+        hotkeyController.openRulesTextField.setText("1");
+        hotkeyController.openRulesChoiceBox.setValue(STRG);
+        assertTrue(hotkeyController.safeHotkeys());
+
         //set new data?
         /*assertEquals(tradeChoiceBox.getValue(), STRG);
         assertEquals(endChoiceBox.getValue(), ALT);
