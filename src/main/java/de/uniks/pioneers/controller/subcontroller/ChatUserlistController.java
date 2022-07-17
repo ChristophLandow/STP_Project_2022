@@ -1,6 +1,5 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.App;
 import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.ChatController;
 import de.uniks.pioneers.model.User;
@@ -21,8 +20,6 @@ public class ChatUserlistController extends OnlineUserlistController {
     public ObservableList<ChatTabController> chatTabControllers = FXCollections.observableArrayList(new ArrayList<>());
     public TabPane chatTabPane;
     public ChatController chatController;
-
-    private App app;
 
     @Inject
     public ChatUserlistController(UserService userService, MessageService messageService, UserlistService userlistService, EventListener eventListener) {

@@ -43,6 +43,7 @@ public class HotkeyController implements Controller, Initializable {
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
     private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
     private final Scene scene;
+
     public HotkeyController(Scene scene, PrefService prefService, IngameScreenController ingameController) {
         this.scene = scene;
         this.ingameController = ingameController;

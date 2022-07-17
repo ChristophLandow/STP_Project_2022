@@ -1,11 +1,16 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.GameConstants;
+import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.PrefService;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +21,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SettingsScreenControllerTest extends ApplicationTest {
+
+    ArrayList<Character> inputs = new ArrayList<>();
+    ArrayList<KeyCode> outputs = new ArrayList<>();
     @Spy
     App app = new App(null);
 
@@ -65,12 +77,17 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @InjectMocks LobbyGameListController lobbyGameListController;
     @InjectMocks SpeechSettingsController speechSettingsController;
 
-    @Mock PrefService prefService;
+    @Mock
+    PrefService prefService;
+
+    @InjectMocks HotkeyController hotkeyController;
 
     @InjectMocks SettingsScreenController settingsScreenController;
 
     @Override
     public void start(Stage stage){
+        Collections.addAll(inputs, 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-',',','.','+','#','<');
+        Collections.addAll(outputs, KeyCode.A,KeyCode.B,KeyCode.C,KeyCode.D,KeyCode.E,KeyCode.F,KeyCode.G,KeyCode.H,KeyCode.I,KeyCode.J,KeyCode.K,KeyCode.L,KeyCode.M,KeyCode.N,KeyCode.O,KeyCode.P,KeyCode.Q,KeyCode.R,KeyCode.S,KeyCode.T,KeyCode.U,KeyCode.V,KeyCode.W,KeyCode.X,KeyCode.Y,KeyCode.Z,KeyCode.DIGIT0,KeyCode.DIGIT1,KeyCode.DIGIT2,KeyCode.DIGIT3,KeyCode.DIGIT4,KeyCode.DIGIT5,KeyCode.DIGIT6,KeyCode.DIGIT7,KeyCode.DIGIT8,KeyCode.DIGIT9,KeyCode.MINUS,KeyCode.COMMA,KeyCode.PERIOD,KeyCode.PLUS,KeyCode.NUMBER_SIGN,KeyCode.LESS);
         when(ingameScreenControllerProvider.get()).thenReturn(ingameScreenController);
         when(newGameLobbyControllerProvider.get()).thenReturn(newGameScreenLobbyController);
         when(editProfileControllerProvider.get()).thenReturn(editProfileController);
@@ -90,6 +107,19 @@ class SettingsScreenControllerTest extends ApplicationTest {
 
     @Test
     void test() {
+
+        /*ChoiceBox<String> tradeChoiceBox= lookup("#tradingChoiceBox").query();
+        TextField tradeTextField = lookup("#tradingTextField").query();
+        ChoiceBox<String> endChoiceBox= lookup("#endTurnChoiceBox").query();
+        TextField endTextField = lookup("#endTurnTextField").query();
+        ChoiceBox<String> settingsChoiceBox= lookup("#openSettingsChoiceBox").query();
+        TextField setingsTextField = lookup("#openSettingsTextField").query();
+        ChoiceBox<String> rulesChoiceBox= lookup("#openRulesChoiceBox").query();
+        TextField rulesTextField = lookup("#openRulesTextField").query();
+        CheckBox voiceCheckBox = lookup("#voiceOutputCheckBox").query();
+        AnchorPane anchor = lookup("anchorPane").query();*/
+
+
         type(KeyCode.SPACE);
 
         verify(ingameScreenControllerProvider, atLeastOnce()).get();
@@ -99,7 +129,10 @@ class SettingsScreenControllerTest extends ApplicationTest {
         verify(editProfileControllerProvider).get();
         verify(loginScreenControllerProvider).get();
         verify(rulesScreenControllerProvider).get();
-
+        //change apperence Mode
+        type(KeyCode.RIGHT);
+        type(KeyCode.SPACE);
+        //assertEquals(anchor.getBackground(), Background.fill(Color.rgb(66,66,66)));
         //Select music
         write("\t");
         write("\t");
@@ -125,11 +158,24 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         type(KeyCode.E);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.E);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.DIGIT0);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.DIGIT1);
         write("\t");
         write("\t");
         write("\t");
@@ -138,9 +184,28 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         write("\t");
         type(KeyCode.ENTER);
-
+        //get saved data?
         verify(prefService, atLeastOnce()).getTradeChoiceBox();
         verify(prefService, atLeastOnce()).getEndChoiceBox();
         verify(prefService, atLeastOnce()).getRulesChoiceBox();
+        verify(prefService, atLeastOnce()).getSettingsChoiceBox();
+        verify(prefService, atLeastOnce()).getSettingsTextField();
+        verify(prefService, atLeastOnce()).getTradeTextField();
+        verify(prefService, atLeastOnce()).getRulesTextField();
+        verify(prefService, atLeastOnce()).getEndTextField();
+        int j = 0;
+        for(Character i : inputs){
+            assertEquals(hotkeyController.stringToKeyCode(i), outputs.get(j));
+            j+=1;
+        }
+        //set new data?
+        /*assertEquals(tradeChoiceBox.getValue(), STRG);
+        assertEquals(endChoiceBox.getValue(), ALT);
+        assertEquals(settingsChoiceBox.getValue(), STRG);
+        assertEquals(rulesChoiceBox.getValue(), STRG);
+        assertEquals(tradeTextField.getText(), "e");
+        assertEquals(endTextField.getText(), "e");
+        assertEquals(setingsTextField.getText(), "0");
+        assertEquals(rulesTextField.getText(), "1");*/
     }
 }
