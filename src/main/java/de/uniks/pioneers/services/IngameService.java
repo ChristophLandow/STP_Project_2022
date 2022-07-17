@@ -24,7 +24,7 @@ public class IngameService {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
-    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();

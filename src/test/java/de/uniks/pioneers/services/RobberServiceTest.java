@@ -92,11 +92,11 @@ class RobberServiceTest {
         this.robberService.mapRenderService = mapRenderService;
         robberService.moveRobber(new HexTileController(null, new HexTile(0,0,0,0,false), null , new Circle()));
 
-        RobDto robMove = new RobDto(0,0,0,"target");
+        RobDto robInfo = new RobDto(0,0,0,"target");
 
-        CreateMoveDto ropMove = new CreateMoveDto(
+        CreateMoveDto robMove = new CreateMoveDto(
                 GameConstants.ROB,
-                robMove,
+                robInfo,
                 null,
                 null,
                 null
@@ -105,8 +105,8 @@ class RobberServiceTest {
         when(gameService.getGame()).thenReturn(
                 new Game("","","1","testgame","u",1, true,null));
 
-        when(pioneersApiService.postMove("1", ropMove)).thenReturn(
-                Observable.just(new Move("", "","1", "u","rob",0, null, robMove, null, "")));
+        when(pioneersApiService.postMove("1", robMove)).thenReturn(
+                Observable.just(new Move("", "","1", "u","rob",0, null, robInfo, null, "")));
 
         final Move robResult = robberService.robPlayer("target").blockingFirst();
 
@@ -114,9 +114,9 @@ class RobberServiceTest {
         assertEquals(robResult.userId(), "u");
         assertEquals(robResult.action(), "rob");
         assertEquals(robResult.roll(), 0);
-        assertEquals(robResult.rob(), robMove);
+        assertEquals(robResult.rob(), robInfo);
 
-        verify(pioneersApiService).postMove("1", ropMove);
+        verify(pioneersApiService).postMove("1", robMove);
     }
 
     @Test
