@@ -74,7 +74,7 @@ public class PrefService {
 
     }
 
-    private void forgetSavedGame() {
+    public void forgetSavedGame() {
         preferences.put(LEAVE_GAME, "");
         preferences.put("MapRadius", "");
     }

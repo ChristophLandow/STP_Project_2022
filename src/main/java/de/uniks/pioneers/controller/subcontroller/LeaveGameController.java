@@ -27,15 +27,15 @@ public class LeaveGameController {
     private final GameService gameService;
     private final TimerService timerService;
     private final GameStorage gameStorage;
-    private List<User> users;
+    public List<User> users;
     private final ObservableList<Member> members;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private boolean leavedWithButton;
-    private String myColor;
+    public boolean leavedWithButton;
+    public String myColor;
     @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
-    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    private IngameScreenController ingameScreenController;
-    private GameChatController gameChatController;
+    @Inject public Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    public IngameScreenController ingameScreenController;
+    public GameChatController gameChatController;
     private boolean onClose;
     private boolean kicked;
 
@@ -70,11 +70,11 @@ public class LeaveGameController {
         this.myColor = myColor;
     }
 
-    public void loadLeavedGame(Game leavedGame) {
+    public boolean loadLeavedGame(Game leavedGame) {
         if(leavedGame != null) {
             int mapRadius = prefService.getSavedMapRadius();
             if(leavedWithButton) {
-                toIngameScreen(leavedGame, myColor, true, mapRadius);
+                return toIngameScreen(leavedGame, myColor, true, mapRadius);
             } else {
                 disposable.add(newGameLobbyService.getAll(leavedGame._id())
                         .observeOn(FX_SCHEDULER)
@@ -88,13 +88,16 @@ public class LeaveGameController {
                             }
                             toIngameScreen(leavedGame, myColor, true, mapRadius);
                         }, Throwable::printStackTrace));
+                return true;
             }
         }
+        return false;
     }
 
-    private void toIngameScreen(Game leavedGame, String myColor, boolean rejoin, int mapRadius) {
+    private boolean toIngameScreen(Game leavedGame, String myColor, boolean rejoin, int mapRadius) {
         timerService.reset();
         newGameScreenLobbyController.toIngame(leavedGame, users, myColor, rejoin, mapRadius);
+        return true;
     }
 
     public void leave() {
