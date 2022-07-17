@@ -80,7 +80,7 @@ class RobPlayerControllerTest extends ApplicationTest {
         sleep(2000);
         assertFalse(playerListView.isVisible());
 
-        sleep(1500);
+        sleep(2000);
 
         HBox selectedItemBox = lookup("#selectedItemBox").query();
         Label playerLabel = (Label) selectedItemBox.getChildren().get(1);
