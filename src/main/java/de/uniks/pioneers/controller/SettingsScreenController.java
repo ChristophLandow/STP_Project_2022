@@ -50,16 +50,16 @@ public class SettingsScreenController implements Controller, Initializable {
     private final App app;
     private Stage stage;
     private final String[] songNameList = {"no music", "Hardbass", "Ambient"};
-    private final Provider<IngameScreenController> ingameScreenControllerProvider;
-    private final Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider;
-    private final Provider<EditProfileController> editProfileControllerProvider;
-    private final Provider<ChatController> chatControllerProvider;
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    private final Provider<LoginScreenController> loginScreenControllerProvider;
-    private final Provider<RulesScreenController> rulesScreenControllerProvider;
-    private final Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
+    @Inject Provider<IngameScreenController> ingameScreenControllerProvider;
+    @Inject Provider<NewGameScreenLobbyController> newGameLobbyControllerProvider;
+    @Inject Provider<EditProfileController> editProfileControllerProvider;
+    @Inject Provider<ChatController> chatControllerProvider;
+    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @Inject Provider<LoginScreenController> loginScreenControllerProvider;
+    @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject Provider<LobbyUserlistController> lobbyUserlistControllerProvider;
 
-    private final Provider<LobbyGameListController> lobbyGameListControllerProvider;
+    @Inject Provider<LobbyGameListController> lobbyGameListControllerProvider;
 
     @Inject Provider<SpeechSettingsController> speechSettingsControllerProvider;
     private ArrayList<File> songs;
