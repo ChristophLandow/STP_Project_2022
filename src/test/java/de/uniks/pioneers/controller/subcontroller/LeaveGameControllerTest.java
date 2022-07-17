@@ -1,6 +1,9 @@
-package de.uniks.pioneers.controller;
+package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.controller.IngameScreenController;
+import de.uniks.pioneers.controller.LobbyScreenController;
+import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
 import de.uniks.pioneers.model.Game;

@@ -28,10 +28,10 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class BuildingPointController {
-    private final Pane fieldPane;
+    public Pane fieldPane;
     private final GameService gameService;
-    private final Circle view;
-    private final Circle eventView;
+    public Circle view;
+    public Circle eventView;
     private final IngameService ingameService;
     private final UserService userService;
     private final GameStorage gameStorage;
@@ -46,7 +46,7 @@ public class BuildingPointController {
     private Building building = null;
 
     private User owner = null;
-    private SVGPath displayedBuilding = null;
+    public SVGPath displayedBuilding = null;
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, GameService gameService, String gameId,
@@ -95,9 +95,11 @@ public class BuildingPointController {
 
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         checkTradeOptions();
-        disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, newBuilding))
-                .observeOn(FX_SCHEDULER)
-                .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
+        if(gameId != null) {
+            disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, newBuilding))
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
+        }
     }
 
     private void reset(Node node) {
@@ -155,14 +157,14 @@ public class BuildingPointController {
         this.eventView.toFront();
     }
 
-    private void checkPosition(MouseEvent mouseEvent) {
+    public boolean checkPosition(MouseEvent mouseEvent) {
+        boolean valid = true;
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
             build();
             gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkResourcesSettlement()) {
-                    boolean valid = true;
                     for (StreetPointController street : adjacentStreets) {
                         for (BuildingPointController building : street.getAdjacentBuildings()) {
                             if (building != this) {
@@ -172,7 +174,7 @@ public class BuildingPointController {
                             }
                         }
                     }
-                    if(valid){
+                    if(valid) {
                         build();
                         gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
 
@@ -187,6 +189,8 @@ public class BuildingPointController {
                 }
             }
         }
+
+        return valid;
     }
 
     private void checkIfMouseInsideView(){
@@ -194,7 +198,12 @@ public class BuildingPointController {
         Point2D mousePos = new Robot().getMousePosition();
 
         Bounds viewBounds = view.localToScreen(view.getBoundsInLocal());
-        Point2D viewPos =  new Point2D(viewBounds.getMinX() + viewBounds.getWidth()/2, viewBounds.getMinY() + viewBounds.getHeight()/2);
+        Point2D viewPos = null;
+        if(viewBounds != null) {
+            viewPos =  new Point2D(viewBounds.getMinX() + viewBounds.getWidth()/2, viewBounds.getMinY() + viewBounds.getHeight()/2);
+        } else {
+            viewPos = new Point2D(0,0);
+        }
 
         //Check if mouse is in eventView
         Point2D deltaPos = new Point2D(Math.abs(mousePos.getX()-viewPos.getX()), Math.abs(mousePos.getY()-viewPos.getY()));
@@ -246,7 +255,7 @@ public class BuildingPointController {
         }
     }
 
-    private void checkTradeOptions() {
+    public void checkTradeOptions() {
         // checks for every harbor if it is near the current building point an if so adds the option to tradeOptions in game storage
         int upX = 0;
         int upY = 1;
@@ -291,5 +300,4 @@ public class BuildingPointController {
             }
         }
     }
-
 }
