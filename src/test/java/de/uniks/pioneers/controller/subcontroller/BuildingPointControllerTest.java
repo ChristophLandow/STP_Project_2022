@@ -100,4 +100,9 @@ class BuildingPointControllerTest extends ApplicationTest {
         assertFalse(buildingPointController.view.isVisible());
         assertNotNull(buildingPointController.displayedBuilding);
     }
+
+    @Test
+    void checkTradeOptions() {
+        buildingPointController.checkTradeOptions();
+    }
 }

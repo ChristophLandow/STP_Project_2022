@@ -255,7 +255,7 @@ public class BuildingPointController {
         }
     }
 
-    private void checkTradeOptions() {
+    public void checkTradeOptions() {
         // checks for every harbor if it is near the current building point an if so adds the option to tradeOptions in game storage
         int upX = 0;
         int upY = 1;
