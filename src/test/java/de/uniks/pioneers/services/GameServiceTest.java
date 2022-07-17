@@ -1,6 +1,5 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
 import io.reactivex.rxjava3.core.Observable;
