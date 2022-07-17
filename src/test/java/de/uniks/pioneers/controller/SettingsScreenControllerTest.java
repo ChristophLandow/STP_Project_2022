@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
@@ -66,10 +65,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @InjectMocks LobbyGameListController lobbyGameListController;
     @InjectMocks SpeechSettingsController speechSettingsController;
 
-    @Mock
-    PrefService prefService;
-
-    @Mock HotkeyController hotkeyController;
+    @Mock PrefService prefService;
 
     @InjectMocks SettingsScreenController settingsScreenController;
 
