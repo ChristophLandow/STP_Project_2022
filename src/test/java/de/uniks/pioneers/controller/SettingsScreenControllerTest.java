@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import static de.uniks.pioneers.Constants.*;
 
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -21,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
@@ -102,7 +104,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @Test
     void test() {
 
-        ChoiceBox<String> tradeChoiceBox= lookup("#tradingChoiceBox").query();
+        /*ChoiceBox<String> tradeChoiceBox= lookup("#tradingChoiceBox").query();
         TextField tradeTextField = lookup("#tradingTextField").query();
         ChoiceBox<String> endChoiceBox= lookup("#endTurnChoiceBox").query();
         TextField endTextField = lookup("#endTurnTextField").query();
@@ -111,6 +113,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
         ChoiceBox<String> rulesChoiceBox= lookup("#openRulesChoiceBox").query();
         TextField rulesTextField = lookup("#openRulesTextField").query();
         CheckBox voiceCheckBox = lookup("#voiceOutputCheckBox").query();
+        AnchorPane anchor = lookup("anchorPane").query();*/
 
 
         type(KeyCode.SPACE);
@@ -122,7 +125,10 @@ class SettingsScreenControllerTest extends ApplicationTest {
         verify(editProfileControllerProvider).get();
         verify(loginScreenControllerProvider).get();
         verify(rulesScreenControllerProvider).get();
-
+        //change apperence Mode
+        type(KeyCode.RIGHT);
+        type(KeyCode.SPACE);
+        //assertEquals(anchor.getBackground(), Background.fill(Color.rgb(66,66,66)));
         //Select music
         write("\t");
         write("\t");
@@ -184,9 +190,16 @@ class SettingsScreenControllerTest extends ApplicationTest {
         verify(prefService, atLeastOnce()).getRulesTextField();
         verify(prefService, atLeastOnce()).getEndTextField();
         //set new data?
-        //assertEquals(tradeChoiceBox.getValue(), STRG);
-        //assertEquals(endChoiceBox.getValue(), ALT);
-        //assertEquals(settingsChoiceBox.getValue(), STRG);
-        //assertEquals(rulesChoiceBox.getValue(), STRG);
+        /*assertEquals(tradeChoiceBox.getValue(), STRG);
+        assertEquals(endChoiceBox.getValue(), ALT);
+        assertEquals(settingsChoiceBox.getValue(), STRG);
+        assertEquals(rulesChoiceBox.getValue(), STRG);
+        assertEquals(tradeTextField.getText(), "e");
+        assertEquals(endTextField.getText(), "e");
+        assertEquals(setingsTextField.getText(), "0");
+        assertEquals(rulesTextField.getText(), "1");*/
+
+
+
     }
 }
