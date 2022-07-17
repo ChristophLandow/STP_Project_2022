@@ -99,6 +99,19 @@ class SettingsScreenControllerTest extends ApplicationTest {
 
     @Test
     void test() {
+
+        /*ChoiceBox<String> tradeChoiceBox= lookup("#tradingChoiceBox").query();
+        TextField tradeTextField = lookup("#tradingTextField").query();
+        ChoiceBox<String> endChoiceBox= lookup("#endTurnChoiceBox").query();
+        TextField endTextField = lookup("#endTurnTextField").query();
+        ChoiceBox<String> settingsChoiceBox= lookup("#openSettingsChoiceBox").query();
+        TextField setingsTextField = lookup("#openSettingsTextField").query();
+        ChoiceBox<String> rulesChoiceBox= lookup("#openRulesChoiceBox").query();
+        TextField rulesTextField = lookup("#openRulesTextField").query();
+        CheckBox voiceCheckBox = lookup("#voiceOutputCheckBox").query();
+        AnchorPane anchor = lookup("anchorPane").query();*/
+
+
         type(KeyCode.SPACE);
 
         verify(ingameScreenControllerProvider, atLeastOnce()).get();
@@ -108,7 +121,10 @@ class SettingsScreenControllerTest extends ApplicationTest {
         verify(editProfileControllerProvider).get();
         verify(loginScreenControllerProvider).get();
         verify(rulesScreenControllerProvider).get();
-
+        //change apperence Mode
+        type(KeyCode.RIGHT);
+        type(KeyCode.SPACE);
+        //assertEquals(anchor.getBackground(), Background.fill(Color.rgb(66,66,66)));
         //Select music
         write("\t");
         write("\t");
@@ -134,11 +150,24 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         type(KeyCode.E);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.E);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.DIGIT0);
         write("\t");
+        type(KeyCode.SPACE);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         write("\t");
+        type(KeyCode.DIGIT1);
         write("\t");
         write("\t");
         write("\t");
@@ -147,9 +176,23 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         write("\t");
         type(KeyCode.ENTER);
-
+        //get saved data?
         verify(prefService, atLeastOnce()).getTradeChoiceBox();
         verify(prefService, atLeastOnce()).getEndChoiceBox();
         verify(prefService, atLeastOnce()).getRulesChoiceBox();
+        verify(prefService, atLeastOnce()).getSettingsChoiceBox();
+        verify(prefService, atLeastOnce()).getSettingsTextField();
+        verify(prefService, atLeastOnce()).getTradeTextField();
+        verify(prefService, atLeastOnce()).getRulesTextField();
+        verify(prefService, atLeastOnce()).getEndTextField();
+        //set new data?
+        /*assertEquals(tradeChoiceBox.getValue(), STRG);
+        assertEquals(endChoiceBox.getValue(), ALT);
+        assertEquals(settingsChoiceBox.getValue(), STRG);
+        assertEquals(rulesChoiceBox.getValue(), STRG);
+        assertEquals(tradeTextField.getText(), "e");
+        assertEquals(endTextField.getText(), "e");
+        assertEquals(setingsTextField.getText(), "0");
+        assertEquals(rulesTextField.getText(), "1");*/
     }
 }
