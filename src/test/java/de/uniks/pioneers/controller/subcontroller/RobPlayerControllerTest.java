@@ -8,7 +8,6 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
