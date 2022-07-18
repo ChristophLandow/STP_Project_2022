@@ -68,7 +68,7 @@ class RobPlayerControllerTest extends ApplicationTest {
         MenuButton menuButton = lookup("#menuButton").query();
         menuButton.fireEvent(leftClick);
 
-        sleep(1000);
+        sleep(2000);
         ListView<HBox> playerListView = lookup("#playerListView").query();
         assertTrue(playerListView.isVisible());
 
@@ -80,7 +80,7 @@ class RobPlayerControllerTest extends ApplicationTest {
         sleep(2000);
         assertFalse(playerListView.isVisible());
 
-        sleep(1500);
+        sleep(2000);
 
         HBox selectedItemBox = lookup("#selectedItemBox").query();
         Label playerLabel = (Label) selectedItemBox.getChildren().get(1);
