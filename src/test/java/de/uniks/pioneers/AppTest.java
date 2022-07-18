@@ -112,7 +112,7 @@ class AppTest extends ApplicationTest {
         write("\t\t\tHallo Test");
         type(KeyCode.ENTER);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "004", "A", "Hallo Test Test")));
-        verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
+        //verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#settingsButton");
