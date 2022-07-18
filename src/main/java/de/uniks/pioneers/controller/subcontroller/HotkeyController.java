@@ -42,7 +42,11 @@ public class HotkeyController implements Controller, Initializable {
     private final String[] hotkeyChoiceBoxElements = {NOHOTKEY,STRG, ALT};
     private final ArrayList<ChoiceBox<String>> hotkeyChoiceBoxVariants = new ArrayList<>();
     private final ArrayList<HotkeyEventController> hotkeyControllers = new ArrayList<>();
-    private final Scene scene;
+    public HotkeyEventController tradeHotkeyController;
+    public HotkeyEventController endTurnHotkeyController;
+    public HotkeyEventController openSettingsHotkeyController;
+    public HotkeyEventController openRulesHotkeyController;
+    public Scene scene;
 
     public HotkeyController(Scene scene, PrefService prefService, IngameScreenController ingameController) {
         this.scene = scene;
@@ -144,7 +148,7 @@ public class HotkeyController implements Controller, Initializable {
         }
         if(!tradingTextField.getText().equals("") && !tradingChoiceBox.getValue().equals("")){
             Character tradeChar = prefService.saveTradeTextInput(tradingTextField.getText()).charAt(0);
-            HotkeyEventController tradeHotkeyController = new HotkeyEventController(scene,ingameController);
+            tradeHotkeyController = new HotkeyEventController(scene,ingameController);
             hotkeyControllers.add(tradeHotkeyController);
             if(prefService.saveTradeChoiceBox(tradingChoiceBox.getValue()).equals(STRG)){
                 tradeHotkeyController.setHotkey(stringToKeyCode(tradeChar),STRG, TRADE);
@@ -162,12 +166,12 @@ public class HotkeyController implements Controller, Initializable {
         }
         if(!endTurnTextField.getText().equals("") && !endTurnChoiceBox.getValue().equals("")){
             Character endChar = prefService.saveEndTextInput(endTurnTextField.getText()).charAt(0);
-            HotkeyEventController endHotkeyController = new HotkeyEventController(scene,ingameController);
-            hotkeyControllers.add(endHotkeyController);
+            endTurnHotkeyController = new HotkeyEventController(scene,ingameController);
+            hotkeyControllers.add(endTurnHotkeyController);
             if(prefService.saveEndChoiceBox(endTurnChoiceBox.getValue()).equals(STRG)){
-                endHotkeyController.setHotkey(stringToKeyCode(endChar),STRG, END);
+                endTurnHotkeyController.setHotkey(stringToKeyCode(endChar),STRG, END);
             } else {
-                endHotkeyController.setHotkey(stringToKeyCode(endChar),ALT, END);
+                endTurnHotkeyController.setHotkey(stringToKeyCode(endChar),ALT, END);
             }
         }
     }
@@ -180,12 +184,12 @@ public class HotkeyController implements Controller, Initializable {
         }
         if(!openSettingsTextField.getText().equals("") && !openSettingsChoiceBox.getValue().equals("")){
             Character settingsChar = prefService.saveSettingsTextInput(openSettingsTextField.getText()).charAt(0);
-            HotkeyEventController settingsHotkeyController = new HotkeyEventController(scene,ingameController);
-            hotkeyControllers.add(settingsHotkeyController);
+            openSettingsHotkeyController = new HotkeyEventController(scene,ingameController);
+            hotkeyControllers.add(openSettingsHotkeyController);
             if(prefService.saveSettingsChoiceBox(openSettingsChoiceBox.getValue()).equals(STRG)){
-                settingsHotkeyController.setHotkey(stringToKeyCode(settingsChar),STRG, SETTINGS);
+                openSettingsHotkeyController.setHotkey(stringToKeyCode(settingsChar),STRG, SETTINGS);
             } else {
-                settingsHotkeyController.setHotkey(stringToKeyCode(settingsChar),ALT, SETTINGS);
+                openSettingsHotkeyController.setHotkey(stringToKeyCode(settingsChar),ALT, SETTINGS);
             }
         }
     }
@@ -198,18 +202,22 @@ public class HotkeyController implements Controller, Initializable {
         }
         if(!openRulesTextField.getText().equals("") && !openRulesChoiceBox.getValue().equals("")){
             Character rulesChar = prefService.saveRulesTextInput(openRulesTextField.getText()).charAt(0);
-            HotkeyEventController rulesHotkeyController = new HotkeyEventController(scene,ingameController);
-            hotkeyControllers.add(rulesHotkeyController);
+            openRulesHotkeyController = new HotkeyEventController(scene,ingameController);
+            hotkeyControllers.add(openRulesHotkeyController);
             if(prefService.saveRulesChoiceBox(openRulesChoiceBox.getValue()).equals(STRG)){
-                rulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),STRG, RULES);
+                openRulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),STRG, RULES);
             } else {
-                rulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),ALT, RULES);
+                openRulesHotkeyController.setHotkey(stringToKeyCode(rulesChar),ALT, RULES);
             }
         }
     }
 
     public void safeHotkeys() {
         boolean equalHotkeys = false;
+        tradeHotkeyController = null;
+        endTurnHotkeyController = null;
+        openSettingsHotkeyController = null;
+        openRulesHotkeyController = null;
         ArrayList<String> hotkeyVariants = new ArrayList<>();
         String tradeKeycomb = tradingChoiceBox.getValue() + tradingTextField.getText();
         String endKeycomb = endTurnChoiceBox.getValue() + endTurnTextField.getText();

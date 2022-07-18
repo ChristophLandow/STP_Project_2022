@@ -1,16 +1,15 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.PrefService;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static de.uniks.pioneers.Constants.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,7 +78,6 @@ class SettingsScreenControllerTest extends ApplicationTest {
 
     @Mock
     PrefService prefService;
-
     @InjectMocks HotkeyController hotkeyController;
 
     @InjectMocks SettingsScreenController settingsScreenController;
@@ -98,30 +96,32 @@ class SettingsScreenControllerTest extends ApplicationTest {
         when(lobbyUserlistControllerProvider.get()).thenReturn(lobbyUserlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
         when(speechSettingsControllerProvider.get()).thenReturn(speechSettingsController);
-
+        when(prefService.saveTradeTextInput(any())).thenReturn("e");
+        when(prefService.saveTradeChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveEndChoiceBox(any())).thenReturn(ALT);
+        when(prefService.saveEndTextInput(any())).thenReturn("e");
+        when(prefService.saveRulesChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveRulesTextInput(any())).thenReturn("0");
+        when(prefService.saveSettingsChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveSettingsTextInput(any())).thenReturn("1");
         when(prefService.getGenderVoice()).thenReturn("female");
-
         app.start(stage);
         app.show(settingsScreenController);
+        hotkeyController.tradingChoiceBox = new ChoiceBox<>();
+        hotkeyController.tradingTextField = new TextField();
+        hotkeyController.endTurnChoiceBox = new ChoiceBox<>();
+        hotkeyController.endTurnTextField = new TextField();
+        hotkeyController.openSettingsChoiceBox = new ChoiceBox<>();
+        hotkeyController.openSettingsTextField = new TextField();
+        hotkeyController.openRulesTextField = new TextField();
+        hotkeyController.openRulesChoiceBox = new ChoiceBox<>();
+        hotkeyController.identicText = new Text();
+        hotkeyController.scene = app.getStage().getScene();
     }
 
     @Test
     void test() {
-
-        /*ChoiceBox<String> tradeChoiceBox= lookup("#tradingChoiceBox").query();
-        TextField tradeTextField = lookup("#tradingTextField").query();
-        ChoiceBox<String> endChoiceBox= lookup("#endTurnChoiceBox").query();
-        TextField endTextField = lookup("#endTurnTextField").query();
-        ChoiceBox<String> settingsChoiceBox= lookup("#openSettingsChoiceBox").query();
-        TextField setingsTextField = lookup("#openSettingsTextField").query();
-        ChoiceBox<String> rulesChoiceBox= lookup("#openRulesChoiceBox").query();
-        TextField rulesTextField = lookup("#openRulesTextField").query();
-        CheckBox voiceCheckBox = lookup("#voiceOutputCheckBox").query();
-        AnchorPane anchor = lookup("anchorPane").query();*/
-
-
         type(KeyCode.SPACE);
-
         verify(ingameScreenControllerProvider, atLeastOnce()).get();
         verify(newGameLobbyControllerProvider).get();
         verify(lobbyScreenControllerProvider).get();
@@ -132,14 +132,12 @@ class SettingsScreenControllerTest extends ApplicationTest {
         //change apperence Mode
         type(KeyCode.RIGHT);
         type(KeyCode.SPACE);
-        //assertEquals(anchor.getBackground(), Background.fill(Color.rgb(66,66,66)));
         //Select music
         write("\t");
         write("\t");
         type(KeyCode.SPACE);
         type(KeyCode.DOWN);
         type(KeyCode.ENTER);
-
         //Select voice output
         write("\t");
         write("\t");
@@ -147,8 +145,6 @@ class SettingsScreenControllerTest extends ApplicationTest {
         write("\t");
         type(KeyCode.SPACE);
         type(KeyCode.ENTER);
-
-
         //Set Trade hotkey
         write("\t");
         write("\t");
@@ -193,19 +189,42 @@ class SettingsScreenControllerTest extends ApplicationTest {
         verify(prefService, atLeastOnce()).getTradeTextField();
         verify(prefService, atLeastOnce()).getRulesTextField();
         verify(prefService, atLeastOnce()).getEndTextField();
+        //dos conversion works?
         int j = 0;
         for(Character i : inputs){
             assertEquals(hotkeyController.stringToKeyCode(i), outputs.get(j));
             j+=1;
         }
-        //set new data?
-        /*assertEquals(tradeChoiceBox.getValue(), STRG);
-        assertEquals(endChoiceBox.getValue(), ALT);
-        assertEquals(settingsChoiceBox.getValue(), STRG);
-        assertEquals(rulesChoiceBox.getValue(), STRG);
-        assertEquals(tradeTextField.getText(), "e");
-        assertEquals(endTextField.getText(), "e");
-        assertEquals(setingsTextField.getText(), "0");
-        assertEquals(rulesTextField.getText(), "1");*/
+        //does save hotkeys work?
+        hotkeyController.tradingTextField.setText("e");
+        hotkeyController.tradingChoiceBox.setValue(STRG);
+        hotkeyController.endTurnTextField.setText("e");
+        hotkeyController.endTurnChoiceBox.setValue(ALT);
+        hotkeyController.openSettingsTextField.setText("0");
+        hotkeyController.openSettingsChoiceBox.setValue(STRG);
+        hotkeyController.openRulesTextField.setText("1");
+        hotkeyController.openRulesChoiceBox.setValue(STRG);
+        hotkeyController.safeHotkeys();
+        assertNotNull(hotkeyController.tradeHotkeyController);
+        assertNotNull(hotkeyController.endTurnHotkeyController);
+        assertNotNull(hotkeyController.openSettingsHotkeyController);
+        assertNotNull(hotkeyController.openRulesHotkeyController);
+        //..and with empty fields?
+        hotkeyController.tradingTextField.setText("");
+        hotkeyController.tradingChoiceBox.setValue("");
+        hotkeyController.endTurnTextField.setText("");
+        hotkeyController.endTurnChoiceBox.setValue("");
+        hotkeyController.openSettingsTextField.setText("");
+        hotkeyController.openSettingsChoiceBox.setValue("");
+        hotkeyController.openRulesTextField.setText("");
+        hotkeyController.safeHotkeys();
+        assertNull(hotkeyController.tradeHotkeyController);
+        assertNull(hotkeyController.endTurnHotkeyController);
+        assertNull(hotkeyController.openSettingsHotkeyController);
+        assertNull(hotkeyController.openRulesHotkeyController);
+        verify(prefService, atLeastOnce()).deleteTradeHotkey();
+        verify(prefService, atLeastOnce()).deleteSettingsHotkey();
+        verify(prefService, atLeastOnce()).deleteEndHotkey();
+        verify(prefService, atLeastOnce()).deleteRulesHotkey();
     }
 }
