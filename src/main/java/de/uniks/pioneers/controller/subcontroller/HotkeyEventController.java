@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.controller.IngameScreenController;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
@@ -50,9 +51,9 @@ public class HotkeyEventController {
     }
 
     private void fireEndHotkey(){
-        //Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
-        //       1, false, false, false, false, false, false, false, false, true, false, null);
-        //ingameController.turnPane.fireEvent(rightClick);
+        Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
+               1, false, false, false, false, false, false, false, false, true, false, null);
+        ingameController.turnPane.fireEvent(rightClick);
         System.out.println("toDo");
     }
 

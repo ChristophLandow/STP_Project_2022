@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
@@ -32,6 +33,7 @@ public class IngameService {
     public final SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
     public final SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
     public ObservableList<Move> tradeAccepted = FXCollections.observableArrayList();
+    private IngameScreenController actualIngameController;
 
     @Inject
     public IngameService(PioneersApiService pioneersApiService, GameStorage gameStorage) {
@@ -214,5 +216,13 @@ public class IngameService {
 
     public void setExpectedMove(ExpectedMove expectedMove) {
         currentExpectedMove.set(expectedMove);
+    }
+
+    public void setActualIngameController(IngameScreenController controller){
+        this.actualIngameController = controller;
+    }
+
+    public IngameScreenController getActualIngameController(){
+        return this.actualIngameController;
     }
 }

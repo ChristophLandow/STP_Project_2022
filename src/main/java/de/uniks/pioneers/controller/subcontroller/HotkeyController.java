@@ -48,8 +48,8 @@ public class HotkeyController implements Controller, Initializable {
     public HotkeyEventController openRulesHotkeyController;
     public Scene scene;
 
-    public HotkeyController(Scene scene, PrefService prefService, IngameScreenController ingameController) {
-        this.scene = scene;
+    public HotkeyController(PrefService prefService, IngameScreenController ingameController) {
+        this.scene = ingameController.getApp().getStage().getScene();
         this.ingameController = ingameController;
         this.prefService = prefService;
     }
