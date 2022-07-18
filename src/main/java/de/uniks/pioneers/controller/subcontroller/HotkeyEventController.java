@@ -54,7 +54,6 @@ public class HotkeyEventController {
         Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
                1, false, false, false, false, false, false, false, false, true, false, null);
         ingameController.turnPane.fireEvent(rightClick);
-        System.out.println("toDo");
     }
 
     private void fireSettingsHotkey(){
