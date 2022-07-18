@@ -160,7 +160,7 @@ public class SettingsScreenController implements Controller, Initializable {
             e.printStackTrace();
             return null;
         }
-        hotkeyController = new HotkeyController(prefService, ingameService.getActualIngameController());
+        hotkeyController = new HotkeyController(app.getStage().getScene(), prefService, ingameService.getActualIngameController());
         hotkeyHBox.getChildren().add(hotkeyController.render());
         hotkeyController.init();
 

@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
+import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -78,6 +79,9 @@ class SettingsScreenControllerTest extends ApplicationTest {
 
     @Mock
     PrefService prefService;
+
+    @Mock
+    IngameService ingameService;
     @InjectMocks HotkeyController hotkeyController;
 
     @InjectMocks SettingsScreenController settingsScreenController;
