@@ -234,9 +234,9 @@ public class LobbyScreenController implements Controller {
         Scene scene = new Scene(node);
         createNewGameStage.setScene(scene);
         if(prefService.getDarkModeState()){
-            createNewGameStage.getScene().getStylesheets().addAll(styleGlobalDark,"/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
+            createNewGameStage.getScene().getStylesheets().addAll(STYLE_GLOBAL_DARK,"/de/uniks/pioneers/styles/DarkMode_NewGamePopup.css");
         } else {
-            createNewGameStage.getScene().getStylesheets().addAll(styleGlobal, "/de/uniks/pioneers/styles/NewGamePopup.css");
+            createNewGameStage.getScene().getStylesheets().addAll(STYLE_GLOBAL, "/de/uniks/pioneers/styles/NewGamePopup.css");
         }
         createNewGameStage.initOwner(appStage);
         isCreatingGame.set(true);

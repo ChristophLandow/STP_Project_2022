@@ -1,14 +1,12 @@
 package de.uniks.pioneers.services;
 
-import dagger.Provides;
-import de.uniks.pioneers.Constants;
 import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static de.uniks.pioneers.Constants.styleGlobal;
-import static de.uniks.pioneers.Constants.styleGlobalDark;
+import static de.uniks.pioneers.Constants.STYLE_GLOBAL;
+import static de.uniks.pioneers.Constants.STYLE_GLOBAL_DARK;
 
 @Singleton
 public class StylesService {
@@ -22,21 +20,21 @@ public class StylesService {
 
     public void setStyleSheets(ObservableList<String> screen) {
         if (prefService.getDarkModeState()) {
-            screen.removeIf((style -> style.equals(styleGlobal)));
-            screen.addAll(styleGlobalDark);
+            screen.removeIf((style -> style.equals(STYLE_GLOBAL)));
+            screen.addAll(STYLE_GLOBAL_DARK);
         } else {
-            screen.removeIf((style -> style.equals(styleGlobalDark)));
-            screen.addAll(styleGlobal);
+            screen.removeIf((style -> style.equals(STYLE_GLOBAL_DARK)));
+            screen.addAll(STYLE_GLOBAL);
         }
     }
 
     public void setStyleSheets(ObservableList<String> screen, String localStyle, String localStyleDark) {
         if (prefService.getDarkModeState()) {
-            screen.removeIf((style -> style.equals(styleGlobal)));
-            screen.addAll(styleGlobalDark, localStyleDark);
+            screen.removeIf((style -> style.equals(STYLE_GLOBAL)));
+            screen.addAll(STYLE_GLOBAL_DARK, localStyleDark);
         } else {
-            screen.removeIf((style -> style.equals(styleGlobalDark)));
-            screen.addAll(styleGlobal, localStyle);
+            screen.removeIf((style -> style.equals(STYLE_GLOBAL_DARK)));
+            screen.addAll(STYLE_GLOBAL, localStyle);
         }
     }
 }
