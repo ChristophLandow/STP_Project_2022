@@ -36,4 +36,5 @@
     <ScrollPane fx:id="gameScrollPane" hbarPolicy="NEVER" layoutX="420.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0" style="-fx-border-color: black;">
         <ListView fx:id="listViewGames" maxWidth="280.0" minWidth="280.0" prefHeight="400.0" prefWidth="280.0" />
     </ScrollPane>
+   <Button fx:id="MapEditorButton" layoutX="383.0" layoutY="550.0" mnemonicParsing="false" onAction="#openMapEditor" text="Map Editor" />
 </Pane>

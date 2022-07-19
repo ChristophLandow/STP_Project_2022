@@ -251,4 +251,7 @@ public class LobbyScreenController implements Controller {
     public App getApp() {
         return this.app;
     }
+
+    public void openMapEditor(ActionEvent actionEvent) {
+    }
 }
