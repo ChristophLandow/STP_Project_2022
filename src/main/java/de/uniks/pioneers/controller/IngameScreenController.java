@@ -176,6 +176,7 @@ public class IngameScreenController implements Controller {
             this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
             this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/IngameScreen.css");
         }
+        ingameService.setActualIngameController(this);
     }
 
     private void initWhenMapFinishedRendering() {

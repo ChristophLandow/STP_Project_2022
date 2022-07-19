@@ -6,6 +6,7 @@ import de.uniks.pioneers.controller.subcontroller.HotkeyController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
+import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,6 +47,9 @@ public class SettingsScreenController implements Controller, Initializable {
 
     @Inject
     PrefService prefService;
+
+    @Inject
+    IngameService ingameService;
 
     private final App app;
     private Stage stage;
@@ -156,7 +160,7 @@ public class SettingsScreenController implements Controller, Initializable {
             e.printStackTrace();
             return null;
         }
-        hotkeyController = new HotkeyController(ingameScreenControllerProvider.get().getApp().getStage().getScene(),prefService, ingameScreenControllerProvider.get());
+        hotkeyController = new HotkeyController(app.getStage().getScene(), prefService, ingameService.getActualIngameController());
         hotkeyHBox.getChildren().add(hotkeyController.render());
         hotkeyController.init();
 
