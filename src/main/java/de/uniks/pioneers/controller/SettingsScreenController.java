@@ -67,6 +67,7 @@ public class SettingsScreenController implements Controller, Initializable {
     @Inject Provider<LobbyGameListController> lobbyGameListControllerProvider;
 
     @Inject Provider<SpeechSettingsController> speechSettingsControllerProvider;
+    @Inject Provider<MapBrowserController> mapBrowserControllerProvider;
     private ArrayList<File> songs;
     private MediaPlayer mediaPlayer;
     private HotkeyController hotkeyController;
@@ -212,6 +213,7 @@ public class SettingsScreenController implements Controller, Initializable {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         LobbyUserlistController userListController = lobbyUserlistControllerProvider.get();
         LobbyGameListController gameListController = lobbyGameListControllerProvider.get();
+        MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
 
         //handle the options
         if (lightMode_RadioButton.isSelected()){
@@ -240,6 +242,9 @@ public class SettingsScreenController implements Controller, Initializable {
             userListController.getApp().getStage().getScene().getStylesheets().addAll(STYLE_GLOBAL, "/de/uniks/pioneers/styles/UserListView.css");
             gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(STYLE_GLOBAL_DARK)));
             gameListController.getApp().getStage().getScene().getStylesheets().addAll(STYLE_GLOBAL);
+            mapBrowserController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_MapBrowser.css")));
+            mapBrowserController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(STYLE_GLOBAL_DARK)));
+            mapBrowserController.getApp().getStage().getScene().getStylesheets().addAll(STYLE_GLOBAL, "/de/uniks/pioneers/styles/MapBrowser.css");
             stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css")));
             stage.getScene().getStylesheets().removeIf((style -> style.equals(STYLE_GLOBAL_DARK)));
             stage.getScene().getStylesheets().addAll(STYLE_GLOBAL, "/de/uniks/pioneers/styles/SettingsScreen.css");
@@ -270,6 +275,9 @@ public class SettingsScreenController implements Controller, Initializable {
             userListController.getApp().getStage().getScene().getStylesheets().addAll(STYLE_GLOBAL_DARK, "/de/uniks/pioneers/styles/DarkMode_UserListView.css");
             gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(STYLE_GLOBAL)));
             gameListController.getApp().getStage().getScene().getStylesheets().addAll(STYLE_GLOBAL_DARK);
+            mapBrowserController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/MapBrowser.css")));
+            mapBrowserController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(STYLE_GLOBAL)));
+            mapBrowserController.getApp().getStage().getScene().getStylesheets().addAll(STYLE_GLOBAL_DARK, "/de/uniks/pioneers/styles/DarkMode_MapBrowser.css");
             stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/SettingsScreen.css")));
             stage.getScene().getStylesheets().removeIf((style -> style.equals(STYLE_GLOBAL)));
             stage.getScene().getStylesheets().addAll(STYLE_GLOBAL_DARK, "/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
