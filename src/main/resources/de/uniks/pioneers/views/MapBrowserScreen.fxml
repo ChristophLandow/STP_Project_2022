@@ -12,7 +12,7 @@
    <ListView fx:id="mapListView" layoutX="14.0" layoutY="14.0" prefHeight="524.0" prefWidth="373.0" />
    <Button fx:id="mapBrowserToLobbyButton" layoutX="233.0" layoutY="548.0" mnemonicParsing="false" onAction="#leaveToLobby" prefHeight="36.0" prefWidth="112.0" text="To Lobby" />
    <Button fx:id="mapBrowserCreateButton" layoutX="52.0" layoutY="548.0" mnemonicParsing="false" onAction="#createNewMap" prefHeight="36.0" prefWidth="112.0" text="Create" />
-   <Pane fx:id="mapPreviewPane" layoutX="413.0" layoutY="14.0" prefHeight="308.0" prefWidth="373.0" style="-fx-border-color: BLACK;" />
+   <Pane fx:id="mapPreviewPane" layoutX="413.0" layoutY="14.0" prefHeight="308.0" prefWidth="373.0" />
    <Text fx:id="mapDetailsText" layoutX="413.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Details" textAlignment="RIGHT">
       <font>
          <Font name="System Bold" size="24.0" />
