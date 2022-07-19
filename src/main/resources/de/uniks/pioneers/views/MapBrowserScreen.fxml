@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="mapBrowserAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.MapBrowserController">
+   <ListView fx:id="mapListView" layoutX="14.0" layoutY="14.0" prefHeight="524.0" prefWidth="373.0" />
+   <Button fx:id="mapBrowserToLobbyButton" layoutX="233.0" layoutY="548.0" mnemonicParsing="false" onAction="#leaveToLobby" prefHeight="36.0" prefWidth="112.0" text="To Lobby" />
+   <Button fx:id="mapBrowserCreateButton" layoutX="52.0" layoutY="548.0" mnemonicParsing="false" onAction="#createNewMap" prefHeight="36.0" prefWidth="112.0" text="Create" />
+   <Pane fx:id="mapPreviewPane" layoutX="413.0" layoutY="14.0" prefHeight="308.0" prefWidth="373.0" />
+   <Text fx:id="mapDetailsText" layoutX="413.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Map Details" textAlignment="RIGHT">
+      <font>
+         <Font name="System Bold" size="24.0" />
+      </font>
+   </Text>
+   <Text fx:id="createdText" layoutX="413.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="created : ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="sizeText" layoutX="413.0" layoutY="450.0" strokeType="OUTSIDE" strokeWidth="0.0" text="size :" wrappingWidth="55.23046875">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="tilesText" layoutX="413.0" layoutY="480.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tiles : ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="numbersText" layoutX="413.0" layoutY="510.0" strokeType="OUTSIDE" strokeWidth="0.0" text="numbers : ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Text>
+   <ImageView fx:id="creatorImageView" fitHeight="78.0" fitWidth="73.0" layoutX="687.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true" />
+   <Text fx:id="createdOutputText" layoutX="512.0" layoutY="391.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="harborsText" layoutX="413.0" layoutY="540.0" strokeType="OUTSIDE" strokeWidth="0.0" text="harbors :">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="lastUpdatedText" layoutX="413.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="last updated : " wrappingWidth="126.23046875">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="lastUpdatedOutputText" layoutX="539.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="sizeOutputText" layoutX="474.0" layoutY="450.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="tilesOutputText" layoutX="474.0" layoutY="480.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="numbersOutputText" layoutX="520.0" layoutY="509.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="harborsOutputText" layoutX="520.0" layoutY="540.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="cratorNameText" layoutX="700.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="name">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Text>
+   <Button fx:id="editMapButton" layoutX="684.0" layoutY="487.0" mnemonicParsing="false" onAction="#editMap" prefHeight="32.0" prefWidth="78.0" text="Edit" />
+</AnchorPane>
