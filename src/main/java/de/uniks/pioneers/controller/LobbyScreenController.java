@@ -58,6 +58,8 @@ public class LobbyScreenController implements Controller {
     @Inject Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
     @Inject Provider<LobbyGameListController> lobbyGameListControllerProvider;
 
+    @Inject Provider<MapBrowserController> mapBrowserControllerProvider;
+
     private final App app;
     private LobbyGameListController lobbyGameListController;
 
@@ -65,6 +67,7 @@ public class LobbyScreenController implements Controller {
     public final SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
+    private MapBrowserController mapBrowserController;
     private final StylesService stylesService;
 
     @Inject
@@ -246,5 +249,10 @@ public class LobbyScreenController implements Controller {
 
     public App getApp() {
         return this.app;
+    }
+
+    public void openMapEditor(ActionEvent actionEvent) {
+        mapBrowserController = mapBrowserControllerProvider.get();
+        app.show(mapBrowserController);
     }
 }

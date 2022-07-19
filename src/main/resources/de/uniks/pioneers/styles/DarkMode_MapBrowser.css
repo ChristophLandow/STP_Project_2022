@@ -1,0 +1,53 @@
+#mapBrowserAnchorPane {
+    -fx-background-color:  #424242;
+}
+
+#mapPreviewPane {
+    -fx-border-radius: 2%;
+    -fx-background-radius: 3%;
+    -fx-background-color: #717988;
+    -fx-border-width: 4px;
+    -fx-border-color: #006666;
+}
+
+#mapDetailsText {
+    -fx-fill: WHITE;
+}
+
+#cratorNameText {
+    -fx-fill: WHITE;
+}
+
+#createdText, #createdOutputText {
+    -fx-fill: WHITE;
+}
+
+#sizeText, #sizeOutputText{
+    -fx-fill: WHITE;
+}
+
+#tilesText, #tilesOutputText {
+    -fx-fill: WHITE;
+}
+
+#numbersText, #numbersOutputText {
+    -fx-fill: WHITE;
+}
+
+#harborsText, #harborsOutputText {
+    -fx-fill: WHITE;
+}
+
+#lastUpdatedText, #lastUpdatedOutputText{
+    -fx-fill: WHITE;
+}
+
+
+.list-view {
+    -fx-background-color: #717988;
+}
+
+.button {
+    -fx-background-color: #156EAD;
+    -fx-text-fill: white;
+}
