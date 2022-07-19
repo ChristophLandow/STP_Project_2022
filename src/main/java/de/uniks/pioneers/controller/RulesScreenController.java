@@ -2,11 +2,12 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -16,14 +17,13 @@ import static de.uniks.pioneers.Constants.RULES_SCREEN_TITLE;
 @Singleton
 public class RulesScreenController implements Controller {
     private final App app;
+    private final StylesService stylesService;
     private Stage stage;
 
     @Inject
-    PrefService prefService;
-
-    @Inject
-    public RulesScreenController(App app) {
+    public RulesScreenController(App app, StylesService stylesService) {
         this.app = app;
+        this.stylesService = stylesService;
     }
 
     @Override
@@ -48,20 +48,14 @@ public class RulesScreenController implements Controller {
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(RULES_SCREEN_TITLE);
             this.stage.setX(100);
-            if(prefService.getDarkModeState()){
-                this.stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/RulesScreen.css")));
-                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
-            } else {
-                this.stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_RulesScreen.css")));
-                this.stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/RulesScreen.css");
-            }
+            String localStyle = "/de/uniks/pioneers/styles/RulesScreen.css";
+            String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css";
+            stylesService.setStyleSheets(this.stage.getScene().getStylesheets(), localStyle, localStyleDark);
             this.stage.show();
         } else {
-            if(prefService.getDarkModeState()){
-                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
-            } else {
-                stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/RulesScreen.css");
-            }
+            String localStyle = "/de/uniks/pioneers/styles/RulesScreen.css";
+            String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css";
+            stylesService.setStyleSheets(this.stage.getScene().getStylesheets(), localStyle, localStyleDark);
             // bring to front if already open
             this.stage.show();
             this.stage.toFront();

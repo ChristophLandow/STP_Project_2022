@@ -8,6 +8,7 @@ import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,6 +71,7 @@ public class SettingsScreenController implements Controller, Initializable {
     private MediaPlayer mediaPlayer;
     private HotkeyController hotkeyController;
     private SpeechSettingsController speechSettingsController;
+    private final StylesService stylesService;
 
     @Inject
     public SettingsScreenController(App app, Provider<IngameScreenController> ingameScreenControllerProvider,
@@ -80,7 +82,7 @@ public class SettingsScreenController implements Controller, Initializable {
                                     Provider<LobbyScreenController> lobbyScreenControllerProvider,
                                     Provider<LoginScreenController> loginScreenControllerProvider,
                                     Provider<RulesScreenController> rulesScreenControllerProvider,
-                                    Provider<LobbyUserlistController> lobbyUserlistControllerProvider) {
+                                    Provider<LobbyUserlistController> lobbyUserlistControllerProvider, StylesService stylesService) {
         this.app = app;
         this.ingameScreenControllerProvider = ingameScreenControllerProvider;
         this.newGameLobbyControllerProvider = newGameLobbyControllerProvider;
@@ -91,6 +93,7 @@ public class SettingsScreenController implements Controller, Initializable {
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.lobbyUserlistControllerProvider = lobbyUserlistControllerProvider;
         this.lobbyGameListControllerProvider = lobbyGameListControllerProvider;
+        this.stylesService = stylesService;
     }
 
     @Override
@@ -100,18 +103,14 @@ public class SettingsScreenController implements Controller, Initializable {
             this.stage = new Stage();
             this.stage.setScene(new Scene(render()));
             this.stage.setTitle(SETTINGS_SCREEN_TITLE);
-            if(prefService.getDarkModeState()) {
-                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
-            } else {
-                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/SettingsScreen.css");
-            }
+            String localStyle = "/de/uniks/pioneers/styles/SettingsScreen.css";
+            String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css";
+            stylesService.setStyleSheets(stage.getScene().getStylesheets(), localStyle, localStyleDark);
             this.stage.show();
         } else {
-            if(prefService.getDarkModeState()) {
-                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
-            } else {
-                this.stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/SettingsScreen.css");
-            }
+            String localStyle = "/de/uniks/pioneers/styles/SettingsScreen.css";
+            String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css";
+            stylesService.setStyleSheets(stage.getScene().getStylesheets(), localStyle, localStyleDark);
             // bring to front if already open
             this.stage.show();
             this.stage.toFront();
@@ -218,47 +217,62 @@ public class SettingsScreenController implements Controller, Initializable {
         if (lightMode_RadioButton.isSelected()){
             prefService.saveDarkModeState(DARKMODE_FALSE);
             ingameScreenController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
-            ingameScreenController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/IngameScreen.css");
+            ingameScreenController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            ingameScreenController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal, "/de/uniks/pioneers/styles/IngameScreen.css");
             newGameController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css")));
-            newGameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/NewGameScreen.css");
+            newGameController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            newGameController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal,"/de/uniks/pioneers/styles/NewGameScreen.css");
             lobbyController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css")));
-            lobbyController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/LobbyScreen.css");
-            chatController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_ChatScreen.css")));
-            chatController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/ChatScreen.css");
+            lobbyController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            lobbyController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal, "/de/uniks/pioneers/styles/LobbyScreen.css");
+            chatController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            chatController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal);
             editController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css")));
-            editController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/EditProfileScreen.css");
-            loginController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LoginScreenScreen.css")));
-            loginController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/LoginScreen.css");
+            editController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            editController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal, "/de/uniks/pioneers/styles/EditProfileScreen.css");
+            loginController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            loginController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal);
             rulesController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_RulesScreen.css")));
-            rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/RulesScreen.css");
+            rulesController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            rulesController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal, "/de/uniks/pioneers/styles/RulesScreen.css");
             userListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_UserListView.css")));
-            userListController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/UserListView.css");
-            gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css")));
-            gameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/LobbyGameList.css");
+            userListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            userListController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal, "/de/uniks/pioneers/styles/UserListView.css");
+            gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            gameListController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobal);
             stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css")));
-            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/SettingsScreen.css");
+            stage.getScene().getStylesheets().removeIf((style -> style.equals(styleGlobalDark)));
+            stage.getScene().getStylesheets().addAll(styleGlobal, "/de/uniks/pioneers/styles/SettingsScreen.css");
         }
         if(darkMode_RadioButton.isSelected()){
             prefService.saveDarkModeState(DARKMODE_TRUE);
             ingameScreenController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
-            ingameScreenController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
+            ingameScreenController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            ingameScreenController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark, "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
             newGameController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/NewGameScreen.css")));
-            newGameController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css");
-            lobbyController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
-            chatController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/ChatScreen.css")));
-            chatController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_ChatScreen.css");
+            newGameController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            newGameController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark, "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css");
+            lobbyController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LobbyScreen.css")));
+            lobbyController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            lobbyController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark, "/de/uniks/pioneers/styles/DarkMode_LobbyScreen.css");
+            chatController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            chatController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark);
             editController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/EditProfileScreen.css")));
-            editController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
-            loginController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LoginScreen.css")));
-            loginController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_LoginScreen.css");
+            editController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            editController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark, "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
+            loginController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            loginController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark);
             rulesController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/RulesScreen.css")));
-            rulesController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
+            rulesController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            rulesController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark, "/de/uniks/pioneers/styles/DarkMode_RulesScreen.css");
             userListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/UserListView.css")));
-            userListController.getApp().getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_UserListView.css");
-            gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LobbyGameList.css")));
-            gameListController.getApp().getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_LobbyGameList.css");
+            userListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            userListController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark, "/de/uniks/pioneers/styles/DarkMode_UserListView.css");
+            gameListController.getApp().getStage().getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            gameListController.getApp().getStage().getScene().getStylesheets().addAll(styleGlobalDark);
             stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/SettingsScreen.css")));
-            stage.getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
+            stage.getScene().getStylesheets().removeIf((style -> style.equals(styleGlobal)));
+            stage.getScene().getStylesheets().addAll(styleGlobalDark, "/de/uniks/pioneers/styles/DarkMode_SettingsScreen.css");
         }
     }
 

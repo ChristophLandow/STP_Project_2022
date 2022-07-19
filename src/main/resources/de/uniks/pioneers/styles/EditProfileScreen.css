@@ -1,7 +1,3 @@
-#root{
-    -fx-background-color:  #F5F5F5;
-}
-
 #currentUsernameText {
     -fx-fill: BLACK;
 }
@@ -29,14 +25,4 @@
 
 #avatarStatusText {
     -fx-fill: RED;
-}
-
-.text-field {
-    -fx-background-color: #ffffff;
-    -fx-text-fill: BLACK;
-}
-
-.button {
-    -fx-background-color: #156EAD;
-    -fx-text-fill: WHITE;
 }

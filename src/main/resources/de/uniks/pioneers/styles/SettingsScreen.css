@@ -21,12 +21,3 @@
 #openSettingsText {
 	-fx-fill: BLACK;
 }
-
-.label{
-	-fx-text-fill: rgb(0, 0, 0);
-}
-
-.button {
-	-fx-background-color: #156EAD;
-	-fx-text-fill: white;
-}

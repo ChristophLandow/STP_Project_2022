@@ -6,6 +6,7 @@ import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -64,13 +65,15 @@ public class EditProfileController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private String avatarStr;
     private String customAvatar = "";
+    private final StylesService stylesService;
 
     @Inject
-    public EditProfileController(UserService userService, LoginService loginService, App app, Provider<LobbyScreenController> lobbyScreenControllerProvider) {
+    public EditProfileController(UserService userService, LoginService loginService, App app, Provider<LobbyScreenController> lobbyScreenControllerProvider, StylesService stylesService) {
         this.userService = userService;
         this.loginService = loginService;
         this.app = app;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.stylesService = stylesService;
     }
 
     @Override
@@ -110,13 +113,9 @@ public class EditProfileController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(EDIT_PROFILE_SCREEN_TITLE);
-        if(prefService.getDarkModeState()){
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/EditProfileScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css");
-        } else {
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/EditProfileScreen.css");
-        }
+        String localStyle = "/de/uniks/pioneers/styles/EditProfileScreen.css";
+        String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_EditProfileScreen.css";
+        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), localStyle, localStyleDark);
         // get currentUser from Server and display name
         this.usernameLabel.setText(userService.getCurrentUser().name());
 
@@ -146,9 +145,9 @@ public class EditProfileController implements Controller {
 
         // set new avatar if spinner value changed
         if (chooseAvatarSpinner.getValue() > 0) {
-            if(getClass().getResource("subcontroller/" + avatarStr).toString().contains("!")) {
+            if(Objects.requireNonNull(getClass().getResource("subcontroller/" + avatarStr)).toString().contains("!")) {
                 final Map<String, String> env = new HashMap<>();
-                String[] array = getClass().getResource("subcontroller/" + avatarStr).toString().split("!");
+                String[] array = Objects.requireNonNull(getClass().getResource("subcontroller/" + avatarStr)).toString().split("!");
                 FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), env);
                 byte[] data = Files.readAllBytes(Objects.requireNonNull(fs.getPath(array[1])));
                 newAvatar = "data:image/png;base64," + Base64.getEncoder().encodeToString(data);

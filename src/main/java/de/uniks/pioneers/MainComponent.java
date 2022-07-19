@@ -3,8 +3,9 @@ package de.uniks.pioneers;
 import dagger.BindsInstance;
 import dagger.Component;
 import de.uniks.pioneers.controller.LoginScreenController;
-import javax.inject.Singleton;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 @Component(modules = MainModule.class)
 @Singleton
 public interface MainComponent {

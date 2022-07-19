@@ -5,6 +5,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.AvatarSpinnerController;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -61,27 +62,25 @@ public class SignUpScreenController implements Controller {
     private final App app;
     private final Provider<LoginScreenController> loginScreenControllerProvider;
     private final UserService userService;
+    private final StylesService stylesService;
     private String avatar;
     private String customAvatar = "";
 
     @Inject
-    public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider,App app) {
+    public SignUpScreenController(UserService userService, Provider<LoginScreenController> loginScreenControllerProvider, App app, StylesService stylesService) {
         this.userService = userService;
         this.loginScreenControllerProvider = loginScreenControllerProvider;
         this.app = app;
+        this.stylesService = stylesService;
     }
 
     @Override
     public void init() {
         Stage stage = app.getStage();
         stage.setTitle(SIGNUP_SCREEN_TITLE);
-        if(prefService.getDarkModeState()){
-            stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/SignUpScreen.css")));
-            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css");
-        } else {
-            stage.getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css")));
-            stage.getScene().getStylesheets().add( "/de/uniks/pioneers/styles/SignUpScreen.css");
-        }
+        String localStyle = "/de/uniks/pioneers/styles/SignUpScreen.css";
+        String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_SignUpScreen.css";
+        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), localStyle, localStyleDark);
         // Spinner Code
         AvatarSpinnerController spinnerValueFactory = new AvatarSpinnerController(this::updateAvatarString);
         spinnerValueFactory.init(imageViewAvatar);

@@ -6,10 +6,7 @@ import de.uniks.pioneers.controller.subcontroller.ChatTabController;
 import de.uniks.pioneers.controller.subcontroller.ChatUserlistController;
 import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.GroupService;
-import de.uniks.pioneers.services.MessageService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
@@ -32,8 +29,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static de.uniks.pioneers.Constants.CHAT_SCREEN_TITLE;
-import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.Constants.*;
 
 public class ChatController implements Controller {
     @FXML public Button sendButton;
@@ -46,6 +42,7 @@ public class ChatController implements Controller {
     private final MessageService messageService;
     private final UserService userService;
     private final GroupService groupService;
+    private final StylesService stylesService;
     private final EventListener eventListener;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
@@ -60,12 +57,13 @@ public class ChatController implements Controller {
 
     @Inject
     public ChatController(App app, MessageService messageService, UserService userService,
-                          EventListener eventListener, GroupService groupService,
+                          StylesService stylesService, EventListener eventListener, GroupService groupService,
                           Provider<LobbyScreenController> lobbyScreenControllerProvider,
                           Provider<ChatUserlistController> userlistControllerProvider) {
         this.app = app;
         this.messageService = messageService;
         this.userService = userService;
+        this.stylesService = stylesService;
         this.groupService = groupService;
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
@@ -112,13 +110,7 @@ public class ChatController implements Controller {
     @Override
     public void init() {
         app.getStage().setTitle(CHAT_SCREEN_TITLE);
-        if(prefService.getDarkModeState()){
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/ChatScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_ChatScreen.css");
-        } else {
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_ChatScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/ChatScreen.css");
-        }
+        stylesService.setStyleSheets(app.getStage().getScene().getStylesheets());
         this.sendButton.setDefaultButton(true);
         Node textFieldNode = this.messageTextField;
         Node sendButtonNode = this.sendButton;

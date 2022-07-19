@@ -1,10 +1,12 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -40,15 +42,17 @@ public class LoginScreenController implements Controller {
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final PrefService prefService;
+    private final StylesService stylesService;
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService, StylesService stylesService) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.prefService = prefService;
+        this.stylesService = stylesService;
     }
 
     @Override
@@ -94,13 +98,7 @@ public class LoginScreenController implements Controller {
                     .subscribe();
         }
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
-        if(prefService.getDarkModeState()){
-            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/LoginScreen.css")));
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_LoginScreen.css");
-        } else {
-            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_LoginScreen.css")));
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/LoginScreen.css");
-        }
+        stylesService.setStyleSheets(app.getStage().getScene().getStylesheets());
     }
 
     @Override

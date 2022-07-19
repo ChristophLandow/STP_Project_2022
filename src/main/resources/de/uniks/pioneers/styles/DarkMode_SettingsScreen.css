@@ -29,20 +29,3 @@
 #voiceOutputCheckBox{
 	-fx-text-fill: white;
 }
-
-.choice-box .label {
-	-fx-text-fill: BLACK;
-}
-
-.label{
-	-fx-text-fill: rgb(255, 255, 255);
-}
-
-.button {
-	-fx-background-color: #156EAD;
-	-fx-text-fill: white;
-}
-
-.radio-button{
-	-fx-text-fill: white;
-}
