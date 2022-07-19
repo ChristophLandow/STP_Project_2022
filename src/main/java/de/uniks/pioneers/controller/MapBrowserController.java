@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.services.PrefService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
