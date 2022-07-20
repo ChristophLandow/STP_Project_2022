@@ -74,9 +74,12 @@ public class NewGameScreenLobbyController implements Controller {
     private NewGameLobbyReadyController newGameLobbyReadyController;
     private NewGameLobbyUserController newGameLobbyUserController;
 
+    private final StylesService stylesService;
+
     @Inject
-    public NewGameScreenLobbyController(App app) {
+    public NewGameScreenLobbyController(App app, StylesService stylesService) {
         this.app = app;
+        this.stylesService = stylesService;
     }
 
     @Override
@@ -86,13 +89,9 @@ public class NewGameScreenLobbyController implements Controller {
         newGameLobbyUserController = new NewGameLobbyUserController();
         newGameLobbyUserController.init(this, playerEntries, newGameLobbyService, userService, userBox, lobbyScreenControllerProvider, eventListener);
 
-        if(prefService.getDarkModeState()){
-            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/NewGameScreen.css")));
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css");
-        } else {
-            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css")));
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/NewGameScreen.css");
-        }
+        String localStyle = "/de/uniks/pioneers/styles/NewGameScreen.css";
+        String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_NewGameScreen.css";
+        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), localStyle, localStyleDark);
         //set game name label and password text label
         gameNameLabel.setText(game.get().name());
         passwordLabel.setText(password.get());

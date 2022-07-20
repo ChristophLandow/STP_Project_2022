@@ -41,13 +41,3 @@
 #lastUpdatedText, #lastUpdatedOutputText{
     -fx-fill: WHITE;
 }
-
-
-.list-view {
-    -fx-background-color: #717988;
-}
-
-.button {
-    -fx-background-color: #156EAD;
-    -fx-text-fill: white;
-}

@@ -1,8 +1,3 @@
-.button {
-    -fx-background-color: #156EAD;
-    -fx-text-fill: white;
-}
-
 #mapPreviewPane {
     -fx-border-radius: 2%;
     -fx-background-radius: 3%;

@@ -78,6 +78,9 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @Mock
     PrefService prefService;
 
+    @Mock
+    StylesService stylesService;
+
     @InjectMocks
     LobbyScreenController lobbyScreenController;
 
@@ -114,6 +117,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
         //Start controller
         app.start(stage);
         app.show(lobbyScreenController);
+        verify(stylesService).setStyleSheets(any(), anyString(), anyString());
     }
 
     @Test
@@ -123,7 +127,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
         //Hit logout button
         write("\t");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //Check if logout functions were called
         verify(userService).editProfile(null,null,null,"offline");

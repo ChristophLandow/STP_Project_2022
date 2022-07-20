@@ -1,7 +1,3 @@
-#root{
-    -fx-background-color:  #F5F5F5;
-}
-
 #gameNameLabel{
     -fx-text-fill: black;
 }
@@ -28,9 +24,4 @@
 #leaveButton {
     -fx-background-color: #156EAD;
     -fx-text-fill: white;
-}
-
-.text-field {
-    -fx-background-color: #ffffff;
-    -fx-text-fill: black;
 }

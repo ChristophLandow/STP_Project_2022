@@ -6,6 +6,7 @@ import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
+import de.uniks.pioneers.services.StylesService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,9 +41,11 @@ public class RobPlayerController implements Controller {
     @Inject RobberService robberService;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private final StylesService stylesService;
 
     @Inject
-    public RobPlayerController() {
+    public RobPlayerController(StylesService stylesService) {
+        this.stylesService = stylesService;
     }
 
     @Override
@@ -84,13 +87,7 @@ public class RobPlayerController implements Controller {
         this.stage.setTitle("Discard resource cards");
         Scene scene = new Scene(node);
         this.stage.setScene(scene);
-        if(prefService.getDarkModeState()){
-            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/RobPlayerPopUp.css")));
-            scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_RobPlayerPopUp.css");
-        } else {
-            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_RobPlayerPopUp.css")));
-            scene.getStylesheets().add("/de/uniks/pioneers/styles/RobPlayerPopUp.css");
-        }
+        stylesService.setStyleSheets(scene.getStylesheets());
 
         this.stage.show();
 

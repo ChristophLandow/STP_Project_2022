@@ -9,6 +9,8 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.services.*;
 import javafx.beans.property.SimpleBooleanProperty;
+
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -80,6 +82,9 @@ class IngameScreenControllerTest extends ApplicationTest {
 
     @Spy
     GameService gameService = new GameService(gameApiService, userService, ingameService);
+
+    @Mock
+    StylesService stylesService;
 
     @Mock
     GameChatController gameChatController;
@@ -159,5 +164,7 @@ class IngameScreenControllerTest extends ApplicationTest {
 
         tradePane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         verify(tradePopUpController).show();
+        verify(stylesService).setStyleSheets(any(), anyString(), anyString());
+        verify(timerService).setTimeLabel(any());
     }
 }

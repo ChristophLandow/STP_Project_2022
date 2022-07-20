@@ -13,13 +13,3 @@ passwordStatusText{
 #avatarStatusText {
     -fx-fill: RED;
 }
-
-.text-field {
-    -fx-background-color: #ffffff;
-    -fx-text-fill: black;
-}
-
-.button {
-    -fx-background-color: #156EAD;
-    -fx-text-fill: white;
-}

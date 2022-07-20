@@ -7,6 +7,7 @@ import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -66,6 +67,12 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @Mock(name = "speechSettingsControllerProvider")
     Provider<SpeechSettingsController> speechSettingsControllerProvider;
 
+    @Mock(name = "mapBrowserControllerProvider")
+    Provider<MapBrowserController> mapBrowserControllerProvider;
+
+    @Mock
+    StylesService stylesService;
+
     @InjectMocks IngameScreenController ingameScreenController;
     @InjectMocks NewGameScreenLobbyController newGameScreenLobbyController;
     @InjectMocks EditProfileController editProfileController;
@@ -76,6 +83,8 @@ class SettingsScreenControllerTest extends ApplicationTest {
     @InjectMocks LobbyUserlistController lobbyUserlistController;
     @InjectMocks LobbyGameListController lobbyGameListController;
     @InjectMocks SpeechSettingsController speechSettingsController;
+
+    @InjectMocks MapBrowserController mapBrowserController;
 
     @Mock
     PrefService prefService;
@@ -100,6 +109,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
         when(lobbyUserlistControllerProvider.get()).thenReturn(lobbyUserlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
         when(speechSettingsControllerProvider.get()).thenReturn(speechSettingsController);
+        when(mapBrowserControllerProvider.get()).thenReturn(mapBrowserController);
         when(prefService.saveTradeTextInput(any())).thenReturn("e");
         when(prefService.saveTradeChoiceBox(any())).thenReturn(STRG);
         when(prefService.saveEndChoiceBox(any())).thenReturn(ALT);
@@ -230,5 +240,6 @@ class SettingsScreenControllerTest extends ApplicationTest {
         verify(prefService, atLeastOnce()).deleteSettingsHotkey();
         verify(prefService, atLeastOnce()).deleteEndHotkey();
         verify(prefService, atLeastOnce()).deleteRulesHotkey();
+        verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
     }
 }

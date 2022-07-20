@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,22 +28,20 @@ public class MapBrowserController implements Controller {
     @FXML
     private final App app;
     private LobbyScreenController lobbyScreenController;
+    private final StylesService stylesService;
     @Inject
-    public MapBrowserController(App app){
+    public MapBrowserController(App app, StylesService stylesService){
         this.app = app;
+        this.stylesService = stylesService;
     }
     
 
 
     @Override
     public void init() {
-        if(prefService.getDarkModeState()){
-            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/MapBrowser.css")));
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/DarkMode_MapBrowser.css");
-        } else {
-            app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_MapBrowser.css")));
-            app.getStage().getScene().getStylesheets().add( "/de/uniks/pioneers/styles/MapBrowser.css");
-        }
+        String styleLocal = "/de/uniks/pioneers/styles/MapBrowser.css";
+        String styleLocalDark = "/de/uniks/pioneers/styles/DarkMode_MapBrowser.css";
+        stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), styleLocal, styleLocalDark);
     }
 
     @Override
@@ -73,5 +72,8 @@ public class MapBrowserController implements Controller {
     public void leaveToLobby(ActionEvent actionEvent) {
         lobbyScreenController = lobbyScreenControllerProvider.get();
         app.show(lobbyScreenController);
+    }
+    public App getApp() {
+        return this.app;
     }
 }

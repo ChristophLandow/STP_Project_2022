@@ -84,6 +84,7 @@ public class IngameScreenController implements Controller {
     private final TimerService timerService;
     private final SpeechService speechService;
     private final RobberService robberService;
+    private final StylesService stylesService;
     private final BoardController boardController;
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -95,7 +96,7 @@ public class IngameScreenController implements Controller {
 
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
-                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService) {
+                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService) {
         this.app = app;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
@@ -105,6 +106,7 @@ public class IngameScreenController implements Controller {
         this.timerService = timerService;
         this.robberService = robberService;
         this.speechService = speechService;
+        this.stylesService = stylesService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
         this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, mapRenderService);
 
@@ -169,13 +171,9 @@ public class IngameScreenController implements Controller {
         // set timeLabel of timer
         this.timerService.setTimeLabel(this.timeLabel);
 
-        if (prefService.getDarkModeState()) {
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/IngameScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css");
-        } else {
-            this.app.getStage().getScene().getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_IngameScreen.css")));
-            this.app.getStage().getScene().getStylesheets().add("/de/uniks/pioneers/styles/IngameScreen.css");
-        }
+        String localStyle = "/de/uniks/pioneers/styles/IngameScreen.css";
+        String localStyleDark = "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css";
+        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), localStyle, localStyleDark);
         ingameService.setActualIngameController(this);
     }
 

@@ -3,9 +3,9 @@
 <div id="top"></div>
 
 <br>
-<h3 align="center">Pioneers</h3>
-<div align="center">
-  <p align="center">
+<h3 style="text-align: center;">Pioneers</h3>
+<div style="text-align: center;">
+  <p style="text-align: center;">
     Contract work for Dead Birds Society
   </p>
 </div>
@@ -16,7 +16,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>So
+      <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
@@ -34,22 +34,23 @@
   </ol>
 </details>
 
-
+<div id="about-the-project"></div>
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 <br>
 
-<div align="center">
+<div style="text-align: center;">
   <a href="https://github.com/sekassel/stp-22-team-h">
-    <img src="images/pioneers.png">
+    <img src="images/pioneers.png" alt="Image of the LoginScreen">
   </a>
 </div>
 
 <br><br>
 Project Pioneers is a contract work for Deadly Birds Society to develop a modern clone of Settlers of Catan. Among other things, it features a comprehensive chat function and the possibility to play online with other settlers.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
+<div id="built-with"></div>
 ### Built With
 
 * [Java 17](https://www.oracle.com/java/)
@@ -59,14 +60,15 @@ Project Pioneers is a contract work for Deadly Birds Society to develop a modern
 * [RxJava](https://reactivex.io/)
 * [javax.websocket](https://frontbackend.com/maven/artifact/javax.websocket)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
-
+<div id="getting-started"></div>
 <!-- GETTING STARTED -->
 ## Getting Started
 
 To play Pioneers you only need Java 17 or higher and an active connection to the Internet.
 
+<div id="prerequisites"></div>
 ### Prerequisites
 
 * Java 17
@@ -74,24 +76,25 @@ To play Pioneers you only need Java 17 or higher and an active connection to the
   https://www.oracle.com/java/technologies/downloads/#java17
   ```
 
+<div id="installation"></div>
 ### Installation
 
 1. Download and install Java 17 or higher
 2. Download the executable JAR from Pioneers
 3. Launch Pioneers.jar and have fun
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
-
+<div id="usage"></div>
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 To play Pioneers you need an account. If you don't have an account yet, you can go from the Login Screen to the Sign Up Screen and create an account with username, password and avatar. Then you can log in with your account using the login screen. After a successful login process you will find yourself in the lobby. From there, you can chat with other users, join an existing game or create a new game yourself. We at Team HERKULES wish you a lot of fun with Pioneers.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
 
-
+<div id="roadmap"></div>
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -139,10 +142,10 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
   - [X] Speech Instructions
   - [X] Hotkeys
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
 
-
+<div id="changelog"></div>
 <!-- CHANGELOG -->
 ## Changelog
 
@@ -150,7 +153,7 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
   - improved test coverage
 - Version 3.1
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
 
 

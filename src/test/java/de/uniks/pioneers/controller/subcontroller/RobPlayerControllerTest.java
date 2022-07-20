@@ -7,6 +7,7 @@ import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
+import de.uniks.pioneers.services.StylesService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -33,9 +34,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class RobPlayerControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
-    @InjectMocks RobPlayerController robPlayerController;
-    @Mock RobberService robberService;
-    @Mock PrefService prefService;
+    @Mock
+    RobberService robberService;
+    @Mock
+    PrefService prefService;
+    @Mock
+    StylesService stylesService;
+
+    @InjectMocks
+    RobPlayerController robPlayerController;
 
     MouseEvent leftClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
             MouseButton.PRIMARY, 1, false, false, false,
@@ -50,7 +57,6 @@ class RobPlayerControllerTest extends ApplicationTest {
 
         RobDto robMove = new RobDto(0,0,0,"player1");
 
-        when(prefService.getDarkModeState()).thenReturn(false);
         when(robberService.getRobbingCandidates()).thenReturn(robbingCandidates);
         when(robberService.robPlayer("player1")).thenReturn(Observable.just(new Move("", "","1", "u","rob",0, null, robMove, null, "")));
 
@@ -91,5 +97,6 @@ class RobPlayerControllerTest extends ApplicationTest {
         type(KeyCode.SPACE);
 
         verify(robberService, atLeastOnce()).robPlayer("player1");
+        verify(stylesService, atLeastOnce()).setStyleSheets(any());
     }
 }

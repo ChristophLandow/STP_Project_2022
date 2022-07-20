@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,9 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
     @Mock
     PrefService prefService;
+
+    @Mock
+    StylesService stylesService;
 
     @InjectMocks
     IngameScreenController ingameScreenController;

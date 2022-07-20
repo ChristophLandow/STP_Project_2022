@@ -12,6 +12,7 @@ import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
@@ -55,6 +56,9 @@ class AsOwnerTest extends ApplicationTest {
     PrefService prefService;
 
     @Mock
+    StylesService stylesService;
+
+    @Mock
     EventListener eventListener;
 
     @Mock
@@ -87,8 +91,6 @@ class AsOwnerTest extends ApplicationTest {
     private final Member member01 = new Member("1", "2", "3", "1", true, "#0075ff",false);
     private final Member member02 = new Member("2", "2", "3", "2", true, randomColor02,false);
     private final Member nowMember = new Member("3", "3", "3", "3", true, randomColor03,false);
-    private final MessageDto message01 = new MessageDto("1","1","1","1","hello there");
-    private final MessageDto message02 = new MessageDto("2","2","2","2","how are you ");
     private final User owner  = new User("1", "owner", "online", randomAvatar01);
     private final User user02  = new User("2","member02","online",randomAvatar02);
     private final User userJoining = new User("3", "userJoining", "online", randomAvatar03);
@@ -164,8 +166,7 @@ class AsOwnerTest extends ApplicationTest {
         verify(eventListener).listen(patternToObserveUserUser02, User.class);
         verify(eventListener).listen(patternToObserveUserJoining, User.class);
         verify(eventListener).listen(patternToObserveGameMembers, Member.class);
-        //verify(newGameLobbyService).getMessages(testGame._id());
-        //verify(eventListener).listen("games." + testGame._id() + ".messages.*.*", MessageDto.class);
+        verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
 
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));
