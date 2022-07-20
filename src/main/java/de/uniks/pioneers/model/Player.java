@@ -9,11 +9,12 @@ public record Player(
         Resources resources,
         RemainingBuildings remainingBuildings,
         int victoryPoints,
-        int longestRoad
+        int longestRoad,
+        DevelopmentCard developmentCards
 ) {
 
     public Player normalize(Resources normalizedResources) {
-        return new Player(gameId, userId, color, active, foundingRoll, normalizedResources, remainingBuildings, victoryPoints, longestRoad);
+        return new Player(gameId, userId, color, active, foundingRoll, normalizedResources, remainingBuildings, victoryPoints, longestRoad, developmentCards);
     }
 }
 

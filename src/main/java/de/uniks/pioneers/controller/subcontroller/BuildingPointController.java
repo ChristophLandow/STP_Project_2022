@@ -96,7 +96,7 @@ public class BuildingPointController {
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         checkTradeOptions();
         if(gameId != null) {
-            disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, newBuilding))
+            disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, null, newBuilding))
                     .observeOn(FX_SCHEDULER)
                     .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
         }
@@ -198,11 +198,9 @@ public class BuildingPointController {
         Point2D mousePos = new Robot().getMousePosition();
 
         Bounds viewBounds = view.localToScreen(view.getBoundsInLocal());
-        Point2D viewPos = null;
+        Point2D viewPos = new Point2D(0,0);
         if(viewBounds != null) {
             viewPos =  new Point2D(viewBounds.getMinX() + viewBounds.getWidth()/2, viewBounds.getMinY() + viewBounds.getHeight()/2);
-        } else {
-            viewPos = new Point2D(0,0);
         }
 
         //Check if mouse is in eventView

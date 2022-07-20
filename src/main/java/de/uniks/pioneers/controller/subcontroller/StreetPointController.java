@@ -91,7 +91,7 @@ public class StreetPointController {
         if (valid) {
             gameStorage.remainingBuildings.put(ROAD, gameStorage.remainingBuildings.get(ROAD)-1 );
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
-            disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, null, null, null, newBuilding))
+            disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, null, null, null, null, newBuilding))
                     .observeOn(FX_SCHEDULER)
                     .subscribe(move -> {
                         Pane fieldPane = (Pane) this.view.getScene().getRoot().lookup("#fieldPane");

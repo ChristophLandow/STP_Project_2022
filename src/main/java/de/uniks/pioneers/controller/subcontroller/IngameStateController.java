@@ -124,7 +124,7 @@ public class IngameStateController {
     }
 
     private void endTurn(MouseEvent mouseEvent) {
-        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
+        final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null, null);
         disposable.add(ingameService.postMove(game._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {
