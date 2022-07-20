@@ -26,7 +26,7 @@ class GameServiceTest {
 
     @Test
     void deleteGame() {
-        Game testGame = new Game("yesterday", "now", "123", "TestGame", "Me", 1, false, new GameSettings(2, 10));
+        Game testGame = new Game("yesterday", "now", "123", "TestGame", "Me", 1, false, new GameSettings(2, 10, null, true, 0));
         when(gameApiService.delete("123")).thenReturn(Observable.just(testGame));
         String result = gameService.deleteGame("123").blockingFirst()._id();
         assertEquals("123", result);
@@ -135,7 +135,7 @@ class GameServiceTest {
 
     @Test
     void checkRoad() {
-        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
         gameService.myResources.put("grain", 1);
@@ -146,7 +146,7 @@ class GameServiceTest {
         boolean result = gameService.checkRoad();
         assertTrue(result);
         assertFalse(gameService.notEnoughRessources.get());
-        player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.replace(player.userId(), player);
         gameService.myResources.put("grain", 1);
         gameService.myResources.put("brick", 1);
@@ -160,7 +160,7 @@ class GameServiceTest {
 
     @Test
     void checkResourcesSettlement() {
-        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
         gameService.myResources.put("grain", 1);
@@ -171,7 +171,7 @@ class GameServiceTest {
         boolean result = gameService.checkResourcesSettlement();
         assertTrue(result);
         assertFalse(gameService.notEnoughRessources.get());
-        player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.replace(player.userId(), player);
         gameService.myResources.put("grain", 1);
         gameService.myResources.put("brick", 1);
@@ -185,7 +185,7 @@ class GameServiceTest {
 
     @Test
     void checkCity() {
-        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(2,1,3,1,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(2,1,3,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
         gameService.myResources.put("grain", 2);
@@ -196,7 +196,7 @@ class GameServiceTest {
         boolean result = gameService.checkCity();
         assertTrue(result);
         assertFalse(gameService.notEnoughRessources.get());
-        player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.replace(player.userId(), player);
         gameService.myResources.put("grain", 1);
         gameService.myResources.put("brick", 1);
@@ -210,7 +210,7 @@ class GameServiceTest {
 
     @Test
     void getRessourcesSize() {
-        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(2,1,3,1,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(2,1,3,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
         int result = gameService.getRessourcesSize();

@@ -190,12 +190,12 @@ public class TestModule {
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10)));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10, null, true, 0)));
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(2,10)));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(2,10, null, true, 0)));
             }
 
             @Override
@@ -409,20 +409,20 @@ public class TestModule {
             public Observable<List<Player>> getAllPlayers(String gameId) {
                 List<Player> players = new ArrayList<>();
 
-                players.add(new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
-                players.add(new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
-                players.add(new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
-                players.add(new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
+                players.add(new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
+                players.add(new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
+                players.add(new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
+                players.add(new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
 
                 return Observable.just(players);
             }
 
             @Override
             public Observable<Player> getPlayer(String gameId, String userId) {
-                Player player1 = new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
-                Player player2 = new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
-                Player player3 = new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
-                Player player4 = new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
+                Player player1 = new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
+                Player player2 = new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
+                Player player3 = new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
+                Player player4 = new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
 
                 if(userId.equals(player1.userId())) {
                     return Observable.just(player1);
@@ -459,15 +459,15 @@ public class TestModule {
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
                 if(dto.building() != null) {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner()));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner(), null));
                 } else {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner()));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner(), null));
                 }
             }
 
             @Override
             public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
-                return Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
+                return Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0, new ArrayList<>()));
             }
         };
     }

@@ -36,7 +36,7 @@ class IngameServiceTest {
     @Test
     void getAllPlayers() {
         List<Player> playerList= new ArrayList<>();
-        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         playerList.add(player);
         when(pioneersApiService.getAllPlayers(anyString())).thenReturn(Observable.just(playerList));
         Player result = ingameService.getAllPlayers("123").blockingFirst().get(0);
@@ -46,7 +46,7 @@ class IngameServiceTest {
 
     @Test
     void getPlayer() {
-        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         when(pioneersApiService.getPlayer(anyString(), anyString())).thenReturn(Observable.just(player));
         Player result = ingameService.getPlayer("123", "1234").blockingFirst();
         assertEquals(player, result);
@@ -94,7 +94,7 @@ class IngameServiceTest {
     @Test
     void postMove() {
         Resources resources = new Resources(3,3,3,2,1);
-        when(pioneersApiService.postMove(anyString(), any())).thenReturn(Observable.just(new Move("now", "12345", "123", "1234", "build", 3, "igloo", new RobDto(2,1,2,"test"), resources, "test")));
+        when(pioneersApiService.postMove(anyString(), any())).thenReturn(Observable.just(new Move("now", "12345", "123", "1234", "build", 3, "igloo", new RobDto(2,1,2,"test"), resources, "test", null)));
         CreateMoveDto move = new CreateMoveDto("test", resources, "test");
         Move result = ingameService.postMove("123", move).blockingFirst();
         assertEquals(resources, result.resources());
@@ -103,7 +103,7 @@ class IngameServiceTest {
 
     @Test
     void updatePlayer() {
-        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0);
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         when(pioneersApiService.updatePlayer(anyString(), anyString(), any())).thenReturn(Observable.just(player));
         Player result = ingameService.updatePlayer("123", "1234", true).blockingFirst();
         assertEquals(player.remainingBuildings(), result.remainingBuildings());
