@@ -26,7 +26,6 @@ public class DiceSubcontroller {
 
     @Inject
     Provider<RobberController> robberControllerProvider;
-    private final PrefService prefService;
     private ImageView leftDiceView;
     private ImageView rightDiceView;
     private String action;
@@ -45,7 +44,6 @@ public class DiceSubcontroller {
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.prefService = prefService;
         this.robberService = robberService;
     }
     

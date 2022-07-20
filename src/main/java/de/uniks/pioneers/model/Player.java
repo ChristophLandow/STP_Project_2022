@@ -1,5 +1,7 @@
 package de.uniks.pioneers.model;
 
+import java.util.List;
+
 public record Player(
         String gameId,
         String userId,
@@ -10,7 +12,7 @@ public record Player(
         RemainingBuildings remainingBuildings,
         int victoryPoints,
         int longestRoad,
-        DevelopmentCard developmentCards
+        List<DevelopmentCard> developmentCards
 ) {
 
     public Player normalize(Resources normalizedResources) {
