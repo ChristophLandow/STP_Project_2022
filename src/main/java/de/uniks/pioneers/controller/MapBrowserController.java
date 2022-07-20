@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 import javax.inject.Inject;
@@ -21,10 +22,13 @@ public class MapBrowserController implements Controller {
     Provider<LobbyScreenController> lobbyScreenControllerProvider;
 
     @Inject
+    Provider<MapEditorController> mapEditorControllerProvider;
+
+    @Inject
     PrefService prefService;
 
     @FXML
-    ListView mapListView;
+    Button mapBrowserCreateButton;
     @FXML
     private final App app;
     private LobbyScreenController lobbyScreenController;
@@ -42,6 +46,7 @@ public class MapBrowserController implements Controller {
         String styleLocal = "/de/uniks/pioneers/styles/MapBrowser.css";
         String styleLocalDark = "/de/uniks/pioneers/styles/DarkMode_MapBrowser.css";
         stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), styleLocal, styleLocalDark);
+
     }
 
     @Override
@@ -67,6 +72,8 @@ public class MapBrowserController implements Controller {
     }
 
     public void createNewMap(ActionEvent actionEvent) {
+        MapEditorController mapEditorController = mapEditorControllerProvider.get();
+        this.app.show(mapEditorController);
     }
 
     public void leaveToLobby(ActionEvent actionEvent) {
