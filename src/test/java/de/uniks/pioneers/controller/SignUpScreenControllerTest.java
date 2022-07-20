@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
@@ -28,6 +29,9 @@ class SignUpScreenControllerTest extends ApplicationTest {
 
     @Mock
     PrefService prefService;
+
+    @Mock
+    StylesService stylesService;
 
     @Spy
     Provider<LoginScreenController> loginScreenControllerProvider;
@@ -61,7 +65,7 @@ class SignUpScreenControllerTest extends ApplicationTest {
         type(KeyCode.DOWN);
         write("\t");
         write("\t");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
         verify(userService).register("Test",snakeAvatarB64, "12345678");
     }
 }

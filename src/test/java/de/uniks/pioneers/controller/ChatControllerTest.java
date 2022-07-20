@@ -49,6 +49,9 @@ class ChatControllerTest extends ApplicationTest {
     UserService userService;
 
     @Mock
+    StylesService stylesService;
+
+    @Mock
     GroupService groupService;
 
     @Mock

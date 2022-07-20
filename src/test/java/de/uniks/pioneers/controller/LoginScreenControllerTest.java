@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -28,6 +29,9 @@ class LoginScreenControllerTest extends ApplicationTest {
     LoginService loginService;
     @Mock
     PrefService prefService;
+
+    @Mock
+    StylesService stylesService;
     @InjectMocks
     LoginScreenController loginScreenController;
     @Override
