@@ -1,5 +1,7 @@
 package de.uniks.pioneers.model;
 
+import java.util.List;
+
 public record MapTemplate(
         String createdAt,
         String updatedAt,
@@ -8,7 +10,7 @@ public record MapTemplate(
         String icon,
         String createdBy,
         int votes,
-        TileTemplate tiles,
-        HarborTemplate harbors
+        List<TileTemplate> tiles,
+        List<HarborTemplate> harbors
 ) {
 }
