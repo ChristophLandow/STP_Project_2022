@@ -86,4 +86,6 @@ public class GameConstants {
     public static final String GRAIN = "grain";
     public static final String WOOL = "wool";
     public static final String ORE = "ore";
+
+    public static final String RANDOM = "random";
 }
