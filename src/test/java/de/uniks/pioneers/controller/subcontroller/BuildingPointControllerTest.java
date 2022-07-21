@@ -23,6 +23,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import java.util.ArrayList;
+
 import static de.uniks.pioneers.GameConstants.*;
 import static de.uniks.pioneers.GameConstants.CITY;
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,7 +94,7 @@ class BuildingPointControllerTest extends ApplicationTest {
 
     @Test
     void placeBuilding() {
-        when(ingameService.getPlayer("000", "000")).thenReturn(Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0)));
+        when(ingameService.getPlayer("000", "000")).thenReturn(Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0, new ArrayList<>())));
         buildingPointController.fieldPane = new Pane();
         buildingPointController.view = new Circle();
 

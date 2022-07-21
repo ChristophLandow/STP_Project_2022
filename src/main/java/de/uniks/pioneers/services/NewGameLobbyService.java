@@ -83,7 +83,7 @@ public class NewGameLobbyService {
                 game.name(),
                 game.owner(),
                 started,
-                new GameSettings(mapRadius,victoryPoints),
+                new GameSettings(mapRadius,victoryPoints, null, true, 0),
                 password
         ));
     }

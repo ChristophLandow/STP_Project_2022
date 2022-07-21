@@ -67,6 +67,7 @@ public class RobberService {
                 new RobDto(robberTile.tile.q,robberTile.tile.s,robberTile.tile.r, target),
                 null,
                 null,
+                null,
                 null
         );
 
@@ -78,6 +79,7 @@ public class RobberService {
                 GameConstants.DROP,
                 null,
                 drop,
+                null,
                 null,
                 null
         );

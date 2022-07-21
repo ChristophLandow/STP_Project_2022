@@ -26,7 +26,6 @@ public class DiceSubcontroller {
 
     @Inject
     Provider<RobberController> robberControllerProvider;
-    private final PrefService prefService;
     private ImageView leftDiceView;
     private ImageView rightDiceView;
     private String action;
@@ -45,7 +44,6 @@ public class DiceSubcontroller {
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.prefService = prefService;
         this.robberService = robberService;
     }
     
@@ -79,7 +77,7 @@ public class DiceSubcontroller {
     }
 
     private void roll(MouseEvent mouseEvent) {
-        CreateMoveDto rollMove = new CreateMoveDto(this.action, null, null, null, null);
+        CreateMoveDto rollMove = new CreateMoveDto(this.action, null, null, null, null, null);
         disposable.add(ingameService.postMove(gameService.game.get()._id(), rollMove)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(move -> {

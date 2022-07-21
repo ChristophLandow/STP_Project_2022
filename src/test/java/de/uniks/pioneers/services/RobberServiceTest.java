@@ -42,13 +42,13 @@ class RobberServiceTest {
     void updateRobbingCandidates() {
         ObservableMap<String, Player> players = FXCollections.observableHashMap();
         players.put("me", new Player("","me","",true,
-                0,new Resources(10,0,0,0,0,0),null,0,0));
+                0,new Resources(10,0,0,0,0,0),null,0,0, new ArrayList<>()));
 
         players.put("id1", new Player("","id1","",true,
-                0,new Resources(3,0,0,0,0,0),null,0,0));
+                0,new Resources(3,0,0,0,0,0),null,0,0, new ArrayList<>()));
 
         players.put("id2", new Player("","id2","",true,
-                0,new Resources(0,0,0,0,0,0),null,0,0));
+                0,new Resources(0,0,0,0,0,0),null,0,0, new ArrayList<>()));
 
         gameService.me = "me";
         gameService.players = players;
@@ -99,6 +99,7 @@ class RobberServiceTest {
                 robInfo,
                 null,
                 null,
+                null,
                 null
         );
 
@@ -106,7 +107,7 @@ class RobberServiceTest {
                 new Game("","","1","testgame","u",1, true,null));
 
         when(pioneersApiService.postMove("1", robMove)).thenReturn(
-                Observable.just(new Move("", "","1", "u","rob",0, null, robInfo, null, "")));
+                Observable.just(new Move("", "","1", "u","rob",0, null, robInfo, null, "", null)));
 
         final Move robResult = robberService.robPlayer("target").blockingFirst();
 
@@ -128,6 +129,7 @@ class RobberServiceTest {
                 null,
                 resources,
                 null,
+                null,
                 null
         );
 
@@ -135,7 +137,7 @@ class RobberServiceTest {
                 new Game("","","1","testgame","u",1, true,null));
 
         when(pioneersApiService.postMove("1", dropMove)).thenReturn(
-                Observable.just(new Move("", "","1", "u","drop",0, null, null, resources, "")));
+                Observable.just(new Move("", "","1", "u","drop",0, null, null, resources, "", null)));
 
         final Move dropResult = robberService.dropResources(resources).blockingFirst();
 
