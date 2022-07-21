@@ -471,5 +471,17 @@ public class TestModule {
             }
         };
     }
+
+    @Provides
+    @Singleton
+    MapApiService mapApiService() {
+        return new MapApiService() {
+
+            @Override
+            public Observable<List<MapTemplate>> getMaps() {
+                return null;
+            }
+        };
+    }
 }
 
