@@ -92,27 +92,38 @@
                         <Insets right="10.0" />
                     </HBox.margin>
                  </Label>
-                 <ColorPicker fx:id="colorPicker" onAction="#onColorChange" prefHeight="25.0" prefWidth="107.0">
+                 <ColorPicker fx:id="colorPicker" onAction="#onColorChange" prefHeight="25.0" prefWidth="151.0">
                     <HBox.margin>
                         <Insets left="20.0" />
                     </HBox.margin>
                  </ColorPicker>
              </HBox>
              <HBox prefHeight="43.0" prefWidth="349.0">
-                 <Label fx:id="boardSizeLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="248.0" text="Board size:">
+                 <Label fx:id="victoryPointsLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="222.0" text="Victory Points to win:">
                     <font>
                         <Font size="16.0" />
                     </font>
                  </Label>
-                 <Spinner fx:id="boardSizeSpinner" prefHeight="25.0" prefWidth="98.0" />
+                 <Spinner fx:id="victoryPointSpinner" prefHeight="25.0" prefWidth="130.0" />
+               <VBox.margin>
+                  <Insets top="-10.0" />
+               </VBox.margin>
              </HBox>
              <HBox prefHeight="43.0" prefWidth="349.0">
-                 <Label fx:id="victoryPointsLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="248.0" text="Victory Points to win:">
+                 <Label fx:id="boardSizeLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="134.0" text="Map:">
                     <font>
                         <Font size="16.0" />
                     </font>
                  </Label>
-                 <Spinner fx:id="victoryPointSpinner" prefHeight="25.0" prefWidth="98.0" />
+                 <Spinner fx:id="boardSizeSpinner" prefHeight="25.0" prefWidth="73.0" />
+               <Spinner fx:id="boardSizeSpinner1" prefHeight="25.0" prefWidth="129.0">
+                  <HBox.margin>
+                     <Insets left="16.0" />
+                  </HBox.margin>
+               </Spinner>
+               <VBox.margin>
+                  <Insets top="-9.0" />
+               </VBox.margin>
              </HBox>
             <Label fx:id="yourOpponentText" prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
                <font>
