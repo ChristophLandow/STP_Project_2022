@@ -12,6 +12,7 @@ public record Move(
         String building,
         RobDto rob,
         Resources resources,
-        String partner
+        String partner,
+        String developmentCard
 ) {
 }
