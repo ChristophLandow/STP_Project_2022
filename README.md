@@ -34,8 +34,10 @@
   </ol>
 </details>
 
-<div id="about-the-project"></div>
+
 <!-- ABOUT THE PROJECT -->
+<div id="about-the-project"></div>
+
 ## About The Project
 <br>
 
@@ -51,6 +53,7 @@ Project Pioneers is a contract work for Deadly Birds Society to develop a modern
 <p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
 <div id="built-with"></div>
+
 ### Built With
 
 * [Java 17](https://www.oracle.com/java/)
@@ -62,13 +65,15 @@ Project Pioneers is a contract work for Deadly Birds Society to develop a modern
 
 <p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
-<div id="getting-started"></div>
 <!-- GETTING STARTED -->
+<div id="getting-started"></div>
+
 ## Getting Started
 
 To play Pioneers you only need Java 17 or higher and an active connection to the Internet.
 
 <div id="prerequisites"></div>
+
 ### Prerequisites
 
 * Java 17
@@ -77,6 +82,7 @@ To play Pioneers you only need Java 17 or higher and an active connection to the
   ```
 
 <div id="installation"></div>
+
 ### Installation
 
 1. Download and install Java 17 or higher
@@ -86,6 +92,7 @@ To play Pioneers you only need Java 17 or higher and an active connection to the
 <p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
 <div id="usage"></div>
+
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -96,6 +103,7 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
 
 <div id="roadmap"></div>
 <!-- ROADMAP -->
+
 ## Roadmap
 
 - [X] User-Management
@@ -141,12 +149,19 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
   - [X] Music
   - [X] Speech Instructions
   - [X] Hotkeys
+  - [ ] Development Cards
+  - [ ] Achievements
+- [ ] Map Browser
+  - [ ] Creating Custom Maps
+  - [ ] Editing Maps
+  - [ ] Voting for Maps
 
 <p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
 
 <div id="changelog"></div>
 <!-- CHANGELOG -->
+
 ## Changelog
 
 - Version 3.0
