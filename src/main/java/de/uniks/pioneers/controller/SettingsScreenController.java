@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-import static de.uniks.pioneers.Constants.SETTINGS_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.*;
 
 @Singleton
 public class SettingsScreenController implements Controller, Initializable {
@@ -215,6 +215,12 @@ public class SettingsScreenController implements Controller, Initializable {
         LobbyUserlistController userListController = lobbyUserlistControllerProvider.get();
         LobbyGameListController gameListController = lobbyGameListControllerProvider.get();
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
+
+        if (lightMode_RadioButton.isSelected()) {
+            prefService.saveDarkModeState(DARKMODE_FALSE);
+        } else if (darkMode_RadioButton.isSelected()) {
+            prefService.saveDarkModeState(DARKMODE_TRUE);
+        }
 
         //set StyleSheets (if no localStyleSheet is needed, set both to null)
         stylesService.setStyleSheets(ingameScreenController.getApp().getStage().getScene().getStylesheets(), "/de/uniks/pioneers/styles/IngameScreen.css", "/de/uniks/pioneers/styles/DarkMode_IngameScreen.css", lightMode_RadioButton.isSelected(), darkMode_RadioButton.isSelected());
