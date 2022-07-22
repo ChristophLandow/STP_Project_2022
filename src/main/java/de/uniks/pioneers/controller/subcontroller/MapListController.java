@@ -73,6 +73,7 @@ public class MapListController implements Controller {
             if(n.getId().equals("MapNameLabel")){
                 ((Label) n).setText(map.name());
             }
+            //Add other modifications of HBox elements
         }
     }
 
