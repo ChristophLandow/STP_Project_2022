@@ -98,10 +98,16 @@ public class BoardController {
             edges.forEach(this::loadEdge);
             corners.forEach(this::loadCorner);
             harbors.forEach(this::loadHarbor);
-            linkTiles();
-            mapRenderService.setTileControllers(this.tileControllers);
-            loadSnowAnimation();
-            mapRenderService.setFinishedLoading(true);
+            this.hextileRenderThread = new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                    linkTiles();
+                    mapRenderService.setTileControllers(this.tileControllers);
+                    loadSnowAnimation();
+                    mapRenderService.setFinishedLoading(true);
+                }
+                catch (InterruptedException ignored){}
+            });
         }
 
     }

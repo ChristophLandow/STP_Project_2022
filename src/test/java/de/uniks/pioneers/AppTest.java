@@ -92,18 +92,13 @@ class AppTest extends ApplicationTest {
         TestModule.gameMemberSubject.onNext(new Event<>(".created", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "001", false, "#ffffff", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".created", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "002", false, "#000000", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".created", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "003", false, "#888888", false)));
-        TestModule.gameSubject.onNext(new Event<>(".updated", new Game("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "000", "000", 3, false , new GameSettings(1, 4, null, true, 0))));
+        TestModule.gameSubject.onNext(new Event<>(".updated", new Game("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "000", "000", 3, false , new GameSettings(2, 4, null, true, 0))));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "001", true, "#ffffff", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "002", true, "#000000", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "003", true, "#888888", false)));
         write("\t\t");
         type(KeyCode.DOWN);
-        type(KeyCode.DOWN);
-        type(KeyCode.DOWN);
-        type(KeyCode.DOWN);
-        type(KeyCode.DOWN);
-        type(KeyCode.DOWN);
-        type(KeyCode.DOWN);
+        type(KeyCode.UP);
         write("\t\tHallo Test Test\t");
         type(KeyCode.ENTER);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "003", "A", "Hallo Test Test")));
@@ -113,6 +108,7 @@ class AppTest extends ApplicationTest {
 
         //IngameScreen
         WaitForAsyncUtils.waitForFxEvents();
+        sleep(1000);
         write("\t\t\tHallo Test");
         type(KeyCode.ENTER);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "004", "A", "Hallo Test Test")));
@@ -128,12 +124,13 @@ class AppTest extends ApplicationTest {
         type(KeyCode.SPACE);
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#leftDiceImageView");
+        sleep(1000);
 
         WaitForAsyncUtils.waitForFxEvents();
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 0, 0, 0, 0, 0), new RemainingBuildings(5, 4, 15), 0, 0, new ArrayList<>())));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "0", "000", "000", "founding-roll", 3, null, null, null, null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove[]{new ExpectedMove("founding-roll", List.of(new String[]{"001", "002", "003"}))}), null)));
-        sleep(1000);
+        sleep(3000);
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "roll the dice"));

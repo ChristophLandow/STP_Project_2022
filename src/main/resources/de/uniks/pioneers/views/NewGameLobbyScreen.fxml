@@ -116,9 +116,9 @@
                     </font>
                  </Label>
                  <Spinner fx:id="boardSizeSpinner" prefHeight="25.0" prefWidth="73.0" />
-               <Spinner fx:id="boardSizeSpinner1" prefHeight="25.0" prefWidth="129.0">
+               <Spinner fx:id="mapTemplateSpinner" prefHeight="25.0" prefWidth="130.0">
                   <HBox.margin>
-                     <Insets left="16.0" />
+                     <Insets left="13.0" />
                   </HBox.margin>
                </Spinner>
                <VBox.margin>

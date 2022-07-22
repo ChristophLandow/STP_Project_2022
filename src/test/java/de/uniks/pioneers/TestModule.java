@@ -192,7 +192,7 @@ public class TestModule {
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10, null, true, 0)));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(2,10, null, true, 0)));
             }
 
             @Override
