@@ -4,6 +4,7 @@ import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.*;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -20,13 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.assertions.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class AppTest extends ApplicationTest {
+    final App app = new App(null);
 
     @Override
     public void start(Stage stage) {
-        final App app = new App(null);
         MainComponent testComponent = DaggerTestComponent.builder().mainApp(app).build();
         app.start(stage);
         app.show(testComponent.loginController());
@@ -102,7 +104,7 @@ class AppTest extends ApplicationTest {
         type(KeyCode.DOWN);
         type(KeyCode.DOWN);
         type(KeyCode.DOWN);
-        write("\tHallo Test Test\t");
+        write("\t\tHallo Test Test\t");
         type(KeyCode.ENTER);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "003", "A", "Hallo Test Test")));
         write("\t");
@@ -115,6 +117,7 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "004", "A", "Hallo Test Test")));
         //verifyThat("#situationLabel", LabeledMatchers.hasText("ME:\n" + "roll the dice"));
+        WaitForAsyncUtils.waitForFxEvents();
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#settingsButton");
