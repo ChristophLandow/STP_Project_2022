@@ -30,8 +30,9 @@ public class MapBrowserController implements Controller {
     @FXML
     Button mapBrowserCreateButton;
     @FXML
+    Button editMapButton;
+    @FXML
     private final App app;
-    private LobbyScreenController lobbyScreenController;
     private final StylesService stylesService;
     @Inject
     public MapBrowserController(App app, StylesService stylesService){
@@ -69,6 +70,8 @@ public class MapBrowserController implements Controller {
     }
 
     public void editMap(ActionEvent actionEvent) {
+        MapEditorController mapEditorController = mapEditorControllerProvider.get();
+        this.app.show(mapEditorController);
     }
 
     public void createNewMap(ActionEvent actionEvent) {
@@ -77,7 +80,7 @@ public class MapBrowserController implements Controller {
     }
 
     public void leaveToLobby(ActionEvent actionEvent) {
-        lobbyScreenController = lobbyScreenControllerProvider.get();
+        LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
         app.show(lobbyScreenController);
     }
     public App getApp() {

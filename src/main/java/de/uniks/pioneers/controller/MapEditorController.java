@@ -1,9 +1,11 @@
 package de.uniks.pioneers.controller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.EditorManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,10 +16,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import de.uniks.pioneers.GameConstants;
 
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -45,16 +47,22 @@ public class MapEditorController implements Controller{
 
     EditorManager editorManager;
 
+    @Inject
+    Provider<MapBrowserController> mapBrowserControllerProvider;
+
     List<EditTile> tiles = new ArrayList<>();
 
     public String selection = "";
 
+    private final App app;
+
 
 
     @Inject
-    public MapEditorController(EditorManager editorManager){
+    public MapEditorController(EditorManager editorManager, App app){
 
         this.editorManager = editorManager;
+        this.app = app;
         init();
 
     }
@@ -120,7 +128,10 @@ public class MapEditorController implements Controller{
 
     public void toMaps(){
     }
-    public void save(){}
+    public void save(ActionEvent event){
+        MapBrowserController mapBrowserController =  mapBrowserControllerProvider.get();
+        this.app.show(mapBrowserController);
+    }
 
 
     public void selectWhale(MouseEvent mouseEvent) {this.selection = "fields";}
