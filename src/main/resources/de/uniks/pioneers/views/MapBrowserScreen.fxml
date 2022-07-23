@@ -88,7 +88,7 @@
          <Font size="18.0" />
       </font>
    </Text>
-   <Text fx:id="cratorNameText" layoutX="700.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="name">
+   <Text fx:id="creatorNameOutputText" layoutX="700.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="name">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
