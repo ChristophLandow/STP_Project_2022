@@ -27,71 +27,61 @@
          <Font name="System Bold" size="24.0" />
       </font>
    </Text>
-   <Text fx:id="createdText" layoutX="413.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="created : ">
+   <Text fx:id="votesText" layoutX="411.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="votes:" wrappingWidth="55.23046875">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Text>
-   <Text fx:id="sizeText" layoutX="413.0" layoutY="450.0" strokeType="OUTSIDE" strokeWidth="0.0" text="size :" wrappingWidth="55.23046875">
+   <Text fx:id="tilesText" layoutX="411.0" layoutY="497.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tiles : ">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Text>
-   <Text fx:id="tilesText" layoutX="413.0" layoutY="480.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tiles : ">
+   <ImageView fx:id="creatorImageView" fitHeight="78.0" fitWidth="73.0" layoutX="686.0" layoutY="372.0" pickOnBounds="true" preserveRatio="true" />
+   <Text fx:id="harborsText" layoutX="411.0" layoutY="526.0" strokeType="OUTSIDE" strokeWidth="0.0" text="harbors :">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Text>
-   <Text fx:id="numbersText" layoutX="413.0" layoutY="510.0" strokeType="OUTSIDE" strokeWidth="0.0" text="numbers : ">
+   <Text fx:id="lastUpdatedText" layoutX="411.0" layoutY="437.0" strokeType="OUTSIDE" strokeWidth="0.0" text="last updated : " wrappingWidth="126.23046875">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Text>
-   <ImageView fx:id="creatorImageView" fitHeight="78.0" fitWidth="73.0" layoutX="687.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true" />
-   <Text fx:id="createdOutputText" layoutX="512.0" layoutY="391.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+   <Text fx:id="lastUpdatedOutputText" layoutX="527.0" layoutY="437.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="232.23046875">
       <font>
          <Font size="18.0" />
       </font>
    </Text>
-   <Text fx:id="harborsText" layoutX="413.0" layoutY="540.0" strokeType="OUTSIDE" strokeWidth="0.0" text="harbors :">
+   <Text fx:id="votesOutputText" layoutX="466.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="294.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="tilesOutputText" layoutX="466.0" layoutY="497.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="294.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="harborsOutputText" layoutX="495.0" layoutY="526.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="157.23046875">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Text>
+   <Text fx:id="mapNameOutputText" layoutX="549.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="name" textAlignment="CENTER" wrappingWidth="213.96875">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Text>
-   <Text fx:id="lastUpdatedText" layoutX="413.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="last updated : " wrappingWidth="126.23046875">
+   <Button fx:id="editMapButton" layoutX="685.0" layoutY="511.0" mnemonicParsing="false" onAction="#editMap" prefHeight="32.0" prefWidth="78.0" text="Edit" />
+   <Text fx:id="createdByText" layoutX="410.0" layoutY="407.0" strokeType="OUTSIDE" strokeWidth="0.0" text="created by:" wrappingWidth="126.23046875">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Text>
-   <Text fx:id="lastUpdatedOutputText" layoutX="539.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
+   <Text fx:id="createdByOutputText" layoutX="506.0" layoutY="407.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="232.23046875">
       <font>
          <Font size="18.0" />
       </font>
    </Text>
-   <Text fx:id="sizeOutputText" layoutX="474.0" layoutY="450.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Text>
-   <Text fx:id="tilesOutputText" layoutX="474.0" layoutY="480.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Text>
-   <Text fx:id="numbersOutputText" layoutX="520.0" layoutY="509.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Text>
-   <Text fx:id="harborsOutputText" layoutX="520.0" layoutY="540.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="55.23046875">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Text>
-   <Text fx:id="creatorNameOutputText" layoutX="700.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="name">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Text>
-   <Button fx:id="editMapButton" layoutX="684.0" layoutY="487.0" mnemonicParsing="false" onAction="#editMap" prefHeight="32.0" prefWidth="78.0" text="Edit" />
 </AnchorPane>

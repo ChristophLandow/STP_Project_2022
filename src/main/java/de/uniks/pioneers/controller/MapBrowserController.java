@@ -26,13 +26,12 @@ import java.io.IOException;
 public class MapBrowserController implements Controller {
     @FXML public Pane mapPreviewPane;
     @FXML public ImageView creatorImageView;
-    @FXML public Text createdOutputText;
     @FXML public Text lastUpdatedOutputText;
-    @FXML public Text sizeOutputText;
+    @FXML public Text votesOutputText;
     @FXML public Text tilesOutputText;
-    @FXML public Text numbersOutputText;
     @FXML public Text harborsOutputText;
-    @FXML public Text creatorNameOutputText;
+    @FXML public Text mapNameOutputText;
+    @FXML public Text createdByOutputText;
     @FXML ScrollPane MapListScrollPane;
     @FXML ListView<HBox> mapListView;
 
@@ -66,13 +65,14 @@ public class MapBrowserController implements Controller {
 
         // init map details
         MapDetailsSubcontroller mapDetailsSubcontroller = mapDetailsSubcontrollerProvider.get();
-        mapDetailsSubcontroller.setCreatedOutputText(createdOutputText)
-                .setCreatorImageView(creatorImageView)
-                .setLastUpdatedOutputText(lastUpdatedOutputText)
-                .setMapPreviewPane(mapPreviewPane)
-                .setCreatorNameOutputText(creatorNameOutputText)
-                .setSizeOutputText(sizeOutputText)
-                .setTilesOutputText(tilesOutputText);
+        mapDetailsSubcontroller.setLastUpdatedOutputText(lastUpdatedOutputText)
+                .setVotesOutputText(votesOutputText)
+                .setTilesOutputText(tilesOutputText)
+                .setHarborsOutputText(harborsOutputText)
+                .setMapNameOutputText(mapNameOutputText)
+                .setCreatedByOutputText(createdByOutputText)
+                .setCreatorImageView(creatorImageView);
+        System.out.println("init map detail labels!");
 
     }
 
