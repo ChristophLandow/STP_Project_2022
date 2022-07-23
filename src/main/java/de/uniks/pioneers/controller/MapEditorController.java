@@ -117,6 +117,7 @@ public class MapEditorController implements Controller{
             for(EditTile oldTile : this.tiles){
                 if((oldTile.hexTile.q == hexTile.q) & (oldTile.hexTile.r == hexTile.r) & (oldTile.hexTile.s == hexTile.s)){
                     hexTile.type = oldTile.hexTile.type;
+                    hexTile.number = oldTile.hexTile.number;
                     this.tiles.remove(oldTile);
                     break;
                 }
@@ -138,14 +139,26 @@ public class MapEditorController implements Controller{
                 tile.setFill(Paint.valueOf("#ffffff"));
                 tile.setStroke(Paint.valueOf("#000000"));
             }
+            ImageView numberView = new ImageView();
+            numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 335);
+            numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 335);
+            numberView.setScaleX(0.03);
+            numberView.setScaleY(0.03);
+            if(hexTile.number != 0){
+
+                Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + hexTile.number + ".png")).toString());
+                numberView.setImage(image);
+                numberView.toFront();
+            }
 
             tile.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2);
             tile.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2);
 
             this.scrollPaneAnchorPane.getChildren().add(tile);
+            this.scrollPaneAnchorPane.getChildren().add(numberView);
             this.tileViews.add(tile);
 
-            this.tiles.add(new EditTile(hexTile, tile, this));
+            this.tiles.add(new EditTile(hexTile, tile, numberView, this));
         }
 
         this.sizeSpinner.toFront();
@@ -211,4 +224,43 @@ public class MapEditorController implements Controller{
         this.blankFieldImageView.setImage(image);
     }
 
+    public void select2(MouseEvent mouseEvent) {
+        this.selection = "2num";
+    }
+
+    public void select3(MouseEvent mouseEvent) {
+        this.selection = "3num";
+    }
+
+    public void select4(MouseEvent mouseEvent) {
+        this.selection = "4num";
+    }
+
+    public void select5(MouseEvent mouseEvent) {
+        this.selection = "5num";
+    }
+
+    public void select6(MouseEvent mouseEvent) {
+        this.selection = "6num";
+    }
+
+    public void select8(MouseEvent mouseEvent) {
+        this.selection = "8num";
+    }
+
+    public void select9(MouseEvent mouseEvent) {
+        this.selection = "9num";
+    }
+
+    public void select10(MouseEvent mouseEvent) {
+        this.selection = "10num";
+    }
+
+    public void select11(MouseEvent mouseEvent) {
+        this.selection = "11num";
+    }
+
+    public void select12(MouseEvent mouseEvent) {
+        this.selection = "12num";
+    }
 }

@@ -64,16 +64,16 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Text>
-            <Circle fx:id="Circle2" fill="DODGERBLUE" layoutX="103.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle3" fill="DODGERBLUE" layoutX="145.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle4" fill="DODGERBLUE" layoutX="188.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle5" fill="DODGERBLUE" layoutX="233.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle6" fill="DODGERBLUE" layoutX="28.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle8" fill="DODGERBLUE" layoutX="68.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle9" fill="DODGERBLUE" layoutX="110.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle10" fill="DODGERBLUE" layoutX="152.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle11" fill="DODGERBLUE" layoutX="188.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="Circle12" fill="DODGERBLUE" layoutX="233.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle2" onMouseClicked="#select2" fill="DODGERBLUE" layoutX="103.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle3" onMouseClicked="#select3" fill="DODGERBLUE" layoutX="145.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle4" onMouseClicked="#select4" fill="DODGERBLUE" layoutX="188.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle5" onMouseClicked="#select5" fill="DODGERBLUE" layoutX="233.0" layoutY="28.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle6" onMouseClicked="#select6" fill="DODGERBLUE" layoutX="28.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle8" onMouseClicked="#select8" fill="DODGERBLUE" layoutX="68.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle9" onMouseClicked="#select9" fill="DODGERBLUE" layoutX="110.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle10" onMouseClicked="#select10" fill="DODGERBLUE" layoutX="152.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle11" onMouseClicked="#select11" fill="DODGERBLUE" layoutX="188.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="Circle12" onMouseClicked="#select12" fill="DODGERBLUE" layoutX="233.0" layoutY="71.0" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="harborsAnchorPane" layoutX="525.0" layoutY="412.0" prefHeight="180.0" prefWidth="261.0" style="-fx-border-color: BLACK;">
