@@ -102,4 +102,10 @@ public class MainModule {
     PioneersApiService pioneersApiService(Retrofit retrofit) {
         return  retrofit.create(PioneersApiService.class);
     }
+
+    @Provides
+    @Singleton
+    MapApiService mapApiService(Retrofit retrofit) {
+        return  retrofit.create(MapApiService.class);
+    }
 }
