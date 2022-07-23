@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
@@ -19,15 +20,22 @@ public class MapListController implements Controller {
     private ListView<HBox> mapList;
 
     private final MapBrowserService mapBrowserService;
+    private final MapDetailsSubcontroller mapDetailsSubcontroller;
 
     @Inject
-    public MapListController(MapBrowserService mapBrowserService) {
+    public MapListController(MapBrowserService mapBrowserService, MapDetailsSubcontroller mapDetailsSubcontroller) {
         this.mapBrowserService = mapBrowserService;
+        this.mapDetailsSubcontroller = mapDetailsSubcontroller;
     }
 
     @Override
     public void init() {
+        this.mapList.setOnMouseClicked(this::onItemClicked);
+    }
 
+    private void onItemClicked(MouseEvent mouseEvent) {
+        String selectedMapId = this.mapList.getSelectionModel().getSelectedItem().getId();
+        this.mapDetailsSubcontroller.updateMapDetails(selectedMapId);
     }
 
     @Override

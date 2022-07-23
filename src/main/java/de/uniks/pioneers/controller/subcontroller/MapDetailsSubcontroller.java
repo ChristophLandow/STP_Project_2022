@@ -6,10 +6,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+import javax.inject.Inject;
+
 
 public class MapDetailsSubcontroller {
 
-    private ListView<HBox> mapListView;
     private Pane mapPreviewPane;
     private ImageView creatorImageView;
     private Text createdOutputText;
@@ -18,9 +19,8 @@ public class MapDetailsSubcontroller {
     private Text tilesOutputText;
     private Text creatorNameOutputText;
 
-    public MapDetailsSubcontroller setMapListView(ListView<HBox> mapListView) {
-        this.mapListView = mapListView;
-        return this;
+    @Inject
+    public MapDetailsSubcontroller() {
     }
 
     public MapDetailsSubcontroller setMapPreviewPane(Pane mapPreviewPane) {
@@ -59,6 +59,7 @@ public class MapDetailsSubcontroller {
     }
 
     // TODO: update details when new map is clicked
-    public void updateMapDetails() {
+    public void updateMapDetails(String mapId) {
+        System.out.println("map id: " + mapId);
     }
 }

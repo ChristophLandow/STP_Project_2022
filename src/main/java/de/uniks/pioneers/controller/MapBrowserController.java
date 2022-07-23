@@ -69,7 +69,6 @@ public class MapBrowserController implements Controller {
         mapDetailsSubcontroller.setCreatedOutputText(createdOutputText)
                 .setCreatorImageView(creatorImageView)
                 .setLastUpdatedOutputText(lastUpdatedOutputText)
-                .setMapListView(mapListView)
                 .setMapPreviewPane(mapPreviewPane)
                 .setCreatorNameOutputText(creatorNameOutputText)
                 .setSizeOutputText(sizeOutputText)
