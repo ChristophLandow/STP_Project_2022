@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.subcontroller.MapDetailsSubcontroller;
 import de.uniks.pioneers.controller.subcontroller.MapListController;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
@@ -37,6 +38,7 @@ public class MapBrowserController implements Controller {
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<MapListController> mapListControllerProvider;
+    @Inject Provider<MapDetailsSubcontroller> mapDetailsSubcontrollerProvider;
     @Inject PrefService prefService;
 
     @FXML private final App app;
@@ -48,19 +50,31 @@ public class MapBrowserController implements Controller {
         this.app = app;
         this.stylesService = stylesService;
     }
-    
+
     @Override
     public void init() {
         String styleLocal = "/de/uniks/pioneers/styles/MapBrowser.css";
         String styleLocalDark = "/de/uniks/pioneers/styles/DarkMode_MapBrowser.css";
         stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), styleLocal, styleLocalDark);
 
+        // init map list
         MapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
         mapListController = mapListControllerProvider.get();
         mapListController.setMapList(mapListView);
         mapListController.init();
         mapListController.render();
+
+        // init map details
+        MapDetailsSubcontroller mapDetailsSubcontroller = mapDetailsSubcontrollerProvider.get();
+        mapDetailsSubcontroller.setCreatedOutputText(createdOutputText)
+                .setCreatorImageView(creatorImageView)
+                .setLastUpdatedOutputText(lastUpdatedOutputText)
+                .setMapListView(mapListView)
+                .setMapPreviewPane(mapPreviewPane)
+                .setCreatorNameOutputText(creatorNameOutputText)
+                .setSizeOutputText(sizeOutputText)
+                .setTilesOutputText(tilesOutputText);
+
     }
 
     @Override
