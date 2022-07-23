@@ -73,14 +73,12 @@ public class MapEditorController implements Controller{
     public void init() {
 
         SpinnerValueFactory<Integer> valueFactory = //
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 10, 2);
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, 2);
 
         this.sizeSpinner.setValueFactory(valueFactory);
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             display(newValue);
         });
-
-
 
     }
 
@@ -119,9 +117,9 @@ public class MapEditorController implements Controller{
             for(EditTile oldTile : this.tiles){
                 if((oldTile.hexTile.q == hexTile.q) & (oldTile.hexTile.r == hexTile.r) & (oldTile.hexTile.s == hexTile.s)){
                     hexTile.type = oldTile.hexTile.type;
-
+                    this.tiles.remove(oldTile);
+                    break;
                 }
-
             }
 
             Polygon tile = new Polygon();
@@ -136,9 +134,7 @@ public class MapEditorController implements Controller{
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + hexTile.type + ".png")).toString());
 
                 tile.setFill(new ImagePattern(image));
-            }
-            else {
-
+            }else {
                 tile.setFill(Paint.valueOf("#ffffff"));
                 tile.setStroke(Paint.valueOf("#000000"));
             }
@@ -155,17 +151,6 @@ public class MapEditorController implements Controller{
         this.sizeSpinner.toFront();
         this.buttonSave.toFront();
         this.buttonToMaps.toFront();
-
-
-    }
-
-    public <T> List<T> listUnion(List<T> list1, List<T> list2) {
-        Set<T> set = new HashSet<T>();
-
-        set.addAll(list1);
-        set.addAll(list2);
-
-        return new ArrayList<T>(set);
     }
 
     public void toMaps(){
@@ -173,17 +158,57 @@ public class MapEditorController implements Controller{
     public void save(){}
 
 
-    public void selectWhale(MouseEvent mouseEvent) {this.selection = "fields";}
+    public void selectWhale(MouseEvent mouseEvent) {
+        this.selection = "fields";
+        resetSelection();
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
+        this.whaleImageView.setImage(image);}
 
-    public void selectIce(MouseEvent mouseEvent) {this.selection = "hills";}
+    public void selectIce(MouseEvent mouseEvent) {
+        this.selection = "hills";
+        resetSelection();
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
+        this.iceImageView.setImage(image);}
 
-    public void selectFish(MouseEvent mouseEvent) {this.selection = "forest";}
+    public void selectFish(MouseEvent mouseEvent) {
+        this.selection = "forest";
+        resetSelection();
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
+        this.fishImageView.setImage(image);}
 
-    public void selectRandom(MouseEvent mouseEvent) {this.selection = RANDOM;}
+    public void selectRandom(MouseEvent mouseEvent) {
+        this.selection = RANDOM;}
 
-    public void selectPolar(MouseEvent mouseEvent) {this.selection = "pasture";}
+    public void selectPolar(MouseEvent mouseEvent) {
+        this.selection = "pasture";
+        resetSelection();
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
+        this.icebearImageView.setImage(image);}
 
-    public void selectCoal(MouseEvent mouseEvent) {this.selection = "mountains";}
+    public void selectCoal(MouseEvent mouseEvent) {
+        this.selection = "mountains";
+        resetSelection();
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
+        this.rockImageView.setImage(image);}
 
-    public void selectDesert(MouseEvent mouseEvent) {this.selection = "desert";}
+    public void selectDesert(MouseEvent mouseEvent) {
+        this.selection = "desert";
+        resetSelection();
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
+        this.blankFieldImageView.setImage(image);}
+    private void resetSelection(){
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "fields" + ".png")).toString());
+        this.whaleImageView.setImage(image);
+        image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "hills" + ".png")).toString());
+        this.iceImageView.setImage(image);
+        image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "forest" + ".png")).toString());
+        this.fishImageView.setImage(image);
+        image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "pasture" + ".png")).toString());
+        this.icebearImageView.setImage(image);
+        image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "mountains" + ".png")).toString());
+        this.rockImageView.setImage(image);
+        image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "desert" + ".png")).toString());
+        this.blankFieldImageView.setImage(image);
+    }
+
 }
