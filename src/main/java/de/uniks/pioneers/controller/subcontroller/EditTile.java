@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class EditTile {
 
-    HexTile hexTile;
+    public HexTile hexTile;
 
     Polygon view;
 
@@ -40,6 +40,7 @@ public class EditTile {
             Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.mapEditorController.selection + ".png")).toString());
 
             this.view.setFill(new ImagePattern(image));
+            this.hexTile.type = this.mapEditorController.selection;
         }
     }
 }

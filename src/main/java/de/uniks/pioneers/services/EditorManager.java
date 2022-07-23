@@ -15,7 +15,7 @@ public class EditorManager {
     @Inject
     public EditorManager(){}
 
-    public List<HexTile> buildFrame(int size, int scale) {
+    public List<HexTile> buildFrame(int size, double scale) {
 
         List<HexTile> frame = new ArrayList<>();
 

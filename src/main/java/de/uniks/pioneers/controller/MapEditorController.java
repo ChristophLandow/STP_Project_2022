@@ -8,15 +8,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import de.uniks.pioneers.GameConstants;
 
 import static de.uniks.pioneers.GameConstants.*;
@@ -43,9 +47,16 @@ public class MapEditorController implements Controller{
     @FXML
     Button buttonSave;
 
+    @FXML
+    Spinner<Integer> sizeSpinner;
+
     EditorManager editorManager;
 
     List<EditTile> tiles = new ArrayList<>();
+
+    List<HexTile> frame = new ArrayList<>();
+
+    List<Polygon> tileViews = new ArrayList<>();
 
     public String selection = "";
 
@@ -55,12 +66,19 @@ public class MapEditorController implements Controller{
     public MapEditorController(EditorManager editorManager){
 
         this.editorManager = editorManager;
-        init();
 
     }
 
     @Override
     public void init() {
+
+        SpinnerValueFactory<Integer> valueFactory = //
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 10, 2);
+
+        this.sizeSpinner.setValueFactory(valueFactory);
+        this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            display(newValue);
+        });
 
 
 
@@ -82,6 +100,7 @@ public class MapEditorController implements Controller{
             e.printStackTrace();
             return null;
         }
+        init();
         display(2);
 
         return parent;
@@ -89,11 +108,21 @@ public class MapEditorController implements Controller{
 
     private void display(int size){
 
-        int scale = 50;
+        double scale = 100.0/size;
 
-        List<HexTile> frame = this.editorManager.buildFrame(size, scale);
+        this.frame = this.editorManager.buildFrame(size, scale);
 
-        for(HexTile hexTile : frame){
+        this.scrollPaneAnchorPane.getChildren().removeAll(this.tileViews);
+
+        for(HexTile hexTile : this.frame){
+
+            for(EditTile oldTile : this.tiles){
+                if((oldTile.hexTile.q == hexTile.q) & (oldTile.hexTile.r == hexTile.r) & (oldTile.hexTile.s == hexTile.s)){
+                    hexTile.type = oldTile.hexTile.type;
+
+                }
+
+            }
 
             Polygon tile = new Polygon();
             tile.getPoints().addAll(0.0*scale, 1.0*scale,
@@ -103,19 +132,40 @@ public class MapEditorController implements Controller{
                     (-Math.sqrt(3)/2)*scale,-0.5*scale,
                     (-Math.sqrt(3)/2)*scale,0.5*scale);
 
-            tile.setFill(Paint.valueOf("#ffffff"));
-            tile.setStroke(Paint.valueOf("#000000"));
+            if(hexTile.type != ""){
+                Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + hexTile.type + ".png")).toString());
+
+                tile.setFill(new ImagePattern(image));
+            }
+            else {
+
+                tile.setFill(Paint.valueOf("#ffffff"));
+                tile.setStroke(Paint.valueOf("#000000"));
+            }
 
             tile.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2);
             tile.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2);
 
             this.scrollPaneAnchorPane.getChildren().add(tile);
+            this.tileViews.add(tile);
 
             this.tiles.add(new EditTile(hexTile, tile, this));
-
         }
 
+        this.sizeSpinner.toFront();
+        this.buttonSave.toFront();
+        this.buttonToMaps.toFront();
 
+
+    }
+
+    public <T> List<T> listUnion(List<T> list1, List<T> list2) {
+        Set<T> set = new HashSet<T>();
+
+        set.addAll(list1);
+        set.addAll(list2);
+
+        return new ArrayList<T>(set);
     }
 
     public void toMaps(){

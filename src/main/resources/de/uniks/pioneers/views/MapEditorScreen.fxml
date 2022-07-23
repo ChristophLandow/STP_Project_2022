@@ -91,7 +91,7 @@
                <children>
                   <Button fx:id="buttonToMaps" layoutX="23.0" layoutY="498.0" mnemonicParsing="false" onAction="#toMaps" prefHeight="28.0" prefWidth="75.0" text="To Maps" />
                   <Button fx:id="buttonSave" layoutX="23.0" layoutY="534.0" mnemonicParsing="false" onAction="#save" prefHeight="28.0" prefWidth="75.0" text="Save" />
-                  <Spinner layoutX="433.0" layoutY="14.0" prefHeight="25.0" prefWidth="60.0" />
+                  <Spinner fx:id="sizeSpinner" layoutX="433.0" layoutY="14.0" prefHeight="25.0" prefWidth="60.0" />
                </children>
             </AnchorPane>
         </content>
