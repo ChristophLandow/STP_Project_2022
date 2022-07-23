@@ -34,9 +34,9 @@ public class GameService {
     private final UserService userService;
     private final IngameService ingameService;
 
-    public final ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
+    public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
-    public final SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
+    public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
     public int victoryPoints;
     public boolean wonGame;
     public SimpleStringProperty moveAction;
@@ -78,6 +78,7 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(moveEvent -> {
                     final Move move = moveEvent.data();
+                    System.out.println(moveEvent);
                     if(moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
                         if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
@@ -97,6 +98,7 @@ public class GameService {
         disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
+                    System.out.println(gameEvent);
                     Player player = gameEvent.data();
                     String id = player.userId();
                     if (gameEvent.event().endsWith(".updated")) {
@@ -234,6 +236,20 @@ public class GameService {
         }
     }
 
+    public boolean checkDevCard() {
+        boolean enoughRessources = (myResources.get(WOOL) > 0 && myResources.get(GRAIN) > 0 && myResources.get(ORE) > 0);
+
+        if(enoughRessources) {
+            notEnoughRessources.set(false);
+            return true;
+        } else {
+            Map<String, Integer> cost = Map.of(WOOL, 1, GRAIN, 1, ORE, 1);
+            calcMissingRessources(cost);
+            notEnoughRessources.set(true);
+            return false;
+        }
+    }
+
     public boolean checkResourcesSettlement() {
         boolean enoughRessources = (myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1
                 && myResources.get(GRAIN) >= 1 && myResources.get(WOOL) >= 1);
@@ -304,5 +320,10 @@ public class GameService {
 
     public Game getGame() {
         return game.get();
+    }
+
+    public void resetMyResources() {
+        myResources = FXCollections.observableHashMap();
+        notEnoughRessources = new SimpleBooleanProperty();
     }
 }

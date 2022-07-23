@@ -12,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
+import static de.uniks.pioneers.GameConstants.MAP_WIDTH;
+
 public class SnowAnimationControllor {
     private final Random rand;
     private final ArrayList<BuildingPointController> buildingControllers;
@@ -46,7 +48,7 @@ public class SnowAnimationControllor {
     }
 
     private void initSnow() {
-        ImageView[] snowFlakes = new ImageView[15];
+        ImageView[] snowFlakes = new ImageView[20];
 
         for (int i = 0; i < snowFlakes.length; i++) {
             snowFlakes[i] = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/snow" + rand.nextInt(1, 4) + ".png")).toString()));
@@ -57,15 +59,21 @@ public class SnowAnimationControllor {
 
     public void snowFallingAnimation(ImageView snow, boolean visible) {
         double imageSize = snow.getImage().getWidth();
-        double paneWidthMinusImageSize = fieldPane.getWidth() - imageSize;
-        double randomX = rand.nextDouble(paneWidthMinusImageSize);
+        double paneWidthMinusImageSize = MAP_WIDTH*2 - imageSize;
+        double randomX = rand.nextDouble(-200, paneWidthMinusImageSize);
         int time = 3000 + rand.nextInt(3000);
         snow.setVisible(visible);
 
         TranslateTransition tt = new TranslateTransition(Duration.millis(time), snow);
         tt.setFromX(randomX);
         tt.setFromY(-100.0);
-        tt.setToX(rand.nextDouble(Math.abs(randomX - paneWidth/8), Math.min((randomX + paneWidth/8), paneWidthMinusImageSize)));
+        if(randomX < 0) {
+            tt.setToX(rand.nextDouble(randomX, randomX + 100));
+        } else if(randomX > 0 && randomX < 200) {
+            tt.setToX(rand.nextDouble(randomX - 100, randomX));
+        } else {
+            tt.setToX(rand.nextDouble(Math.abs(randomX - paneWidth / 8), Math.min((randomX + paneWidth / 8), paneWidthMinusImageSize)));
+        }
         tt.setToY(paneHeight - 7);
         tt.setOnFinished(t -> snowFallingAnimation(snow, true));
         tt.play();

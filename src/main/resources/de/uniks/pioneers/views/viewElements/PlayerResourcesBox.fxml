@@ -2,67 +2,67 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="resourcesHBox" alignment="CENTER" prefHeight="60.0" prefWidth="296.0" spacing="5.0"
-      style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
-    <padding>
-        <Insets left="15.0"/>
-    </padding>
-    <ImageView id="fischRessource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
-               preserveRatio="true">
+<HBox fx:id="resourcesHBox" alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="466.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
+    <ImageView id="fischRessource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
         <HBox.margin>
-            <Insets/>
+            <Insets />
         </HBox.margin>
-        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_fish.png"/>
     </ImageView>
-    <Label id="fischCount" fx:id="fischCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0"
-           translateY="-18.0">
+    <Label id="fischCount" fx:id="fischCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
         <font>
-          <Font name="System Bold" size="14.0"/>
+          <Font name="System Bold" size="14.0" />
         </font>
     </Label>
-    <ImageView id="packeisRessource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
-               preserveRatio="true">
-        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_ice.png"/>
-    </ImageView>
-    <Label id="packeisCount" fx:id="packeisCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0"
-           translateY="-18.0">
+    <ImageView id="packeisRessource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
+    <Label id="packeisCount" fx:id="packeisCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
         <font>
-          <Font name="System Bold" size="14.0"/>
+          <Font name="System Bold" size="14.0" />
         </font>
     </Label>
-    <ImageView id="fellRessource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
-               preserveRatio="true">
-        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_polarbear.png"/>
-    </ImageView>
+    <ImageView id="fellRessource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
     <Label id="fellCount" fx:id="fellCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
         <font>
-          <Font name="System Bold" size="14.0"/>
+          <Font name="System Bold" size="14.0" />
         </font>
     </Label>
-    <ImageView id="kohleRessource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true"
-               preserveRatio="true">
-        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_carbon.png"/>
-    </ImageView>
+    <ImageView id="kohleRessource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
     <Label id="kohleCount" fx:id="kohleCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
         <font>
-          <Font name="System Bold" size="14.0"/>
+          <Font name="System Bold" size="14.0" />
         </font>
     </Label>
-    <ImageView id="walknochenRessource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0"
-               pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_whale.png"/>
-    </ImageView>
-    <Label id="walknochenCount" fx:id="walknochenCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0"
-           translateY="-18.0">
+    <ImageView id="walknochenRessource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
+    <Label id="walknochenCount" fx:id="walknochenCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
         <font>
-          <Font name="System Bold" size="14.0"/>
+          <Font name="System Bold" size="14.0" />
         </font>
     </Label>
+   <ImageView id="knightCard" fx:id="knightCard" fitHeight="53.0" fitWidth="36.0" layoutX="199.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <HBox.margin>
+         <Insets right="9.0" />
+      </HBox.margin></ImageView>
+   <ImageView id="roadCard" fx:id="roadCard" fitHeight="53.0" fitWidth="36.0" layoutX="244.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <HBox.margin>
+         <Insets right="9.0" />
+      </HBox.margin></ImageView>
+   <ImageView id="plentyCard" fx:id="plentyCard" fitHeight="53.0" fitWidth="36.0" layoutX="280.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <HBox.margin>
+         <Insets right="9.0" />
+      </HBox.margin></ImageView>
+   <ImageView id="monopolyCard" fx:id="monopolyCard" fitHeight="53.0" fitWidth="36.0" layoutX="316.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <HBox.margin>
+         <Insets right="9.0" />
+      </HBox.margin></ImageView>
+   <ImageView id="vpointCard" fx:id="vpointCard" fitHeight="53.0" fitWidth="36.0" layoutX="352.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <HBox.margin>
+         <Insets right="9.0" />
+      </HBox.margin>
+   </ImageView>
+   <padding>
+      <Insets left="8.0" />
+   </padding>
 </HBox>

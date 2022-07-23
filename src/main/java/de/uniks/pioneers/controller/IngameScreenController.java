@@ -42,7 +42,7 @@ import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-    @FXML public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane;
+    @FXML public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane, hammerPane, leftPane, rightPane;
     @FXML public AnchorPane scrollAnchorPane;
     @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
     @FXML public SVGPath streetSVG, houseSVG, citySVG;
@@ -50,7 +50,7 @@ public class IngameScreenController implements Controller {
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
     @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
-    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
+    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView, leftView, rightView;
     @FXML public ListView<Node> playerListView;
     @FXML public Rectangle downRectangle, upRectangle;
     @FXML public Canvas mapCanvas;
@@ -196,6 +196,7 @@ public class IngameScreenController implements Controller {
         disposable.add(eventListener.listen(patternToObserveGameState, State.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
+                    System.out.println(gameEvent);
                     if (gameEvent.event().endsWith(".updated")) {
                         ingameStateController.handleGameState(gameEvent.data());
                     }
@@ -256,6 +257,8 @@ public class IngameScreenController implements Controller {
         // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
+
+        new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, gameService);
     }
 
     private void renderBuilding(Building building) {
