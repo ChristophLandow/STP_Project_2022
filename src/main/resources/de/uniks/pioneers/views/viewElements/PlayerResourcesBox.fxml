@@ -4,65 +4,111 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="resourcesHBox" alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="466.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
-    <ImageView id="fischRessource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-        <HBox.margin>
-            <Insets />
-        </HBox.margin>
-    </ImageView>
-    <Label id="fischCount" fx:id="fischCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
-        <font>
-          <Font name="System Bold" size="14.0" />
-        </font>
-    </Label>
-    <ImageView id="packeisRessource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
-    <Label id="packeisCount" fx:id="packeisCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
-        <font>
-          <Font name="System Bold" size="14.0" />
-        </font>
-    </Label>
-    <ImageView id="fellRessource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
-    <Label id="fellCount" fx:id="fellCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
-        <font>
-          <Font name="System Bold" size="14.0" />
-        </font>
-    </Label>
-    <ImageView id="kohleRessource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
-    <Label id="kohleCount" fx:id="kohleCount" ellipsisString="" text="4" translateX="-14.0" translateY="-18.0">
-        <font>
-          <Font name="System Bold" size="14.0" />
-        </font>
-    </Label>
-    <ImageView id="walknochenRessource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
-    <Label id="walknochenCount" fx:id="walknochenCount" ellipsisString="" text="4" textFill="WHITE" translateX="-14.0" translateY="-18.0">
-        <font>
-          <Font name="System Bold" size="14.0" />
-        </font>
-    </Label>
-   <ImageView id="knightCard" fx:id="knightCard" fitHeight="53.0" fitWidth="36.0" layoutX="199.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-      <HBox.margin>
-         <Insets right="9.0" />
-      </HBox.margin></ImageView>
-   <ImageView id="roadCard" fx:id="roadCard" fitHeight="53.0" fitWidth="36.0" layoutX="244.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-      <HBox.margin>
-         <Insets right="9.0" />
-      </HBox.margin></ImageView>
-   <ImageView id="plentyCard" fx:id="plentyCard" fitHeight="53.0" fitWidth="36.0" layoutX="280.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-      <HBox.margin>
-         <Insets right="9.0" />
-      </HBox.margin></ImageView>
-   <ImageView id="monopolyCard" fx:id="monopolyCard" fitHeight="53.0" fitWidth="36.0" layoutX="316.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-      <HBox.margin>
-         <Insets right="9.0" />
-      </HBox.margin></ImageView>
-   <ImageView id="vpointCard" fx:id="vpointCard" fitHeight="53.0" fitWidth="36.0" layoutX="352.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-      <HBox.margin>
-         <Insets right="9.0" />
-      </HBox.margin>
-   </ImageView>
+<HBox fx:id="resourcesHBox" alignment="CENTER_LEFT" maxWidth="466.0" minWidth="466.0" prefHeight="60.0" prefWidth="466.0" spacing="10.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
+   <Pane fx:id="fischPane">
+      <children>
+          <ImageView id="fischRessource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <Label id="fischCount" fx:id="fischCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+              <font>
+                <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="packeisPane">
+      <children>
+          <ImageView id="packeisRessource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <Label id="packeisCount" fx:id="packeisCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+              <font>
+                <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="fellPane">
+      <children>
+          <ImageView id="fellRessource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <Label id="fellCount" fx:id="fellCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4">
+              <font>
+                <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="kohlePane">
+      <children>
+          <ImageView id="kohleRessource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <Label id="kohleCount" fx:id="kohleCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4">
+              <font>
+                <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="walknochenPane">
+      <children>
+          <ImageView id="walknochenRessource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <Label id="walknochenCount" fx:id="walknochenCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+              <font>
+                <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="knightPane">
+      <children>
+         <ImageView id="knightCard" fx:id="knightCard" fitHeight="53.0" fitWidth="36.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+         <Label id="knightCardLabel" fx:id="knightCardLabel" alignment="CENTER" ellipsisString="" layoutX="7.0" layoutY="36.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="roadPane">
+      <children>
+         <ImageView id="roadCard" fx:id="roadCard" fitHeight="53.0" fitWidth="36.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+         <Label id="roadCardLabel" fx:id="roadCardLabel" alignment="CENTER" ellipsisString="" layoutX="7.0" layoutY="36.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="plentyPane">
+      <children>
+         <ImageView id="plentyCard" fx:id="plentyCard" fitHeight="53.0" fitWidth="36.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+         <Label id="plentyCardLabel" fx:id="plentyCardLabel" alignment="CENTER" ellipsisString="" layoutX="7.0" layoutY="36.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="monopolyPane">
+      <children>
+         <ImageView id="monopolyCard" fx:id="monopolyCard" fitHeight="53.0" fitWidth="36.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+         <Label id="monopolyCardLabel" fx:id="monopolyCardLabel" alignment="CENTER" ellipsisString="" layoutX="7.0" layoutY="36.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+      </children>
+   </Pane>
+   <Pane fx:id="vpointPane">
+      <children>
+         <ImageView id="vpointCard" fx:id="vpointCard" fitHeight="53.0" fitWidth="36.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+         <Label id="vpointCardLabel" fx:id="vpointCardLabel" alignment="CENTER" ellipsisString="" layoutX="7.0" layoutY="36.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+      </children>
+   </Pane>
    <padding>
-      <Insets left="8.0" />
+      <Insets left="6.0" />
    </padding>
 </HBox>

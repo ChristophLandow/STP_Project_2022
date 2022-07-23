@@ -8,6 +8,7 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -36,8 +37,11 @@ public class IngamePlayerResourcesController {
 
     private final GameService gameService;
     private Map<String, ImageView> resourceImageMap;
+    private Map<String, Label> resourceLabelMap;
+    private Map<String, Pane> resourcePaneMap;
     private Map<String, ImageView> devImageMap;
-    private Map<String, Label> labelMap;
+    private Map<String, Label> devLabelMap;
+    private Map<String, Pane> devPaneMap;
     private ChangeListener<Boolean> enoughResourcesListener;
     private MapChangeListener<String, Integer> mapChangeListener;
     private ResourceAnimationController resourceAnimationController;
@@ -103,62 +107,70 @@ public class IngamePlayerResourcesController {
         //iterate over resourceStrings to create a map with resourceName -> resourceImage
         List<String> subStrings = List.of("fish", "ice", "polarbear", "carbon", "whale");
         Iterator<String> iter = subStrings.iterator();
-
         List<String> resStrings = List.of("lumber", "brick", "wool", "ore", "grain");
         Iterator<String> resIter = resStrings.iterator();
         Iterator<String> resIterLabels = resStrings.iterator();
 
         List<String> devStrings = List.of("knight", "road", "plenty", "monopoly", "vpoint");
         Iterator<String> devIter = devStrings.iterator();
+        Iterator<String> devCountIter = devStrings.iterator();
 
         resourceImageMap = new HashMap<>();
+        resourceLabelMap = new HashMap<>();
+        resourcePaneMap = new HashMap<>();
         devImageMap = new HashMap<>();
-        labelMap = new HashMap<>();
+        devLabelMap = new HashMap<>();
+        devPaneMap = new HashMap<>();
 
-        resourcesHBox.getChildren().forEach(node -> {
-            String id = node.getId();
-            if (id.endsWith("Ressource")) {
-                String url = String.format("images/card_%s.png", iter.next());
-                Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
-                ImageView view = (ImageView) node;
-                resourceImageMap.put(resIter.next(), view);
-                view.setImage(img);
-            } else if (id.endsWith("Card")) {
-                String devCard = devIter.next();
-                String url = String.format("images/card_%s.png", devCard);
-                Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
-                ImageView view = (ImageView) node;
-                devImageMap.put(devCard, view);
-                view.setImage(img);
-            } else if(id.endsWith("Count")) {
-                Label resouceCount = (Label) node;
-                labelMap.put(resIterLabels.next(), resouceCount);
-            }
+        resourcesHBox.getChildren().forEach(paneNode -> {
+            Pane pane = (Pane) paneNode;
+            pane.getChildren().forEach(node -> {
+                String id = node.getId();
+                if (id.endsWith("Ressource")) {
+                    String res = resIter.next();
+                    String url = String.format("images/card_%s.png", iter.next());
+                    Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
+                    ImageView view = (ImageView) node;
+                    resourceImageMap.put(res, view);
+                    resourcePaneMap.put(res, pane);
+                    view.setImage(img);
+                } else if (id.endsWith("Count")) {
+                    Label resouceCount = (Label) node;
+                    resourceLabelMap.put(resIterLabels.next(), resouceCount);
+                } else if (id.endsWith("Card")) {
+                    String devCard = devIter.next();
+                    String url = String.format("images/card_%s.png", devCard);
+                    Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
+                    ImageView view = (ImageView) node;
+                    devImageMap.put(devCard, view);
+                    devPaneMap.put(devCard, pane);
+                    view.setImage(img);
+                    view.setScaleY(1.25);
+                } else if (id.endsWith("Label")) {
+                    Label devCount = (Label) node;
+                    devLabelMap.put(devCountIter.next(), devCount);
+                }
+            });
         });
-        //resourcesHBox.getChildren().clear();
+        resourcesHBox.getChildren().clear();
     }
 
     private void invokeElement(String type, Integer valueAdded) {
-        ImageView img = resourceImageMap.get(type);
-        Label lbl = labelMap.get(type);
-        resourcesHBox.getChildren().add(img);
-        resourcesHBox.getChildren().add(lbl);
-        double x = img.getLayoutX();
-        double y = img.getLayoutY();
-        lbl.setLayoutX(x);
-        lbl.setLayoutY(y);
+        Label lbl = resourceLabelMap.get(type);
+        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
+        resourcesHBox.getChildren().add(resourcePaneMap.get(type));
+        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
         lbl.setText(String.valueOf(valueAdded));
     }
 
     private void revokeElement(String type) {
-        ImageView img = resourceImageMap.get(type);
-        Label lbl = labelMap.get(type);
-        resourcesHBox.getChildren().remove(img);
-        resourcesHBox.getChildren().remove(lbl);
+        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
+        resourcesHBox.getChildren().remove(resourcePaneMap.get(type));
+        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
     }
 
     private void mutateElement(String type, Integer valueAdded) {
-        Label lbl = labelMap.get(type);
+        Label lbl = resourceLabelMap.get(type);
         lbl.setText(String.valueOf(valueAdded));
     }
 
@@ -170,16 +182,16 @@ public class IngamePlayerResourcesController {
             Integer delta = missingResources.get(s);
             Integer oldValue = resources.getOrDefault(s, 0);
             if (delta < 0) {
-                ImageView node = resourceImageMap.get(s);
-                Label label = labelMap.get(s);
+                Pane pane = resourcePaneMap.get(s);
+                Label label = resourceLabelMap.get(s);
                 Paint color = label.textFillProperty().get();
                 label.setText(String.valueOf(missingResources.get(s)));
                 label.setTextFill(Color.RED);
-                if (resourcesHBox.getChildren().contains(node)) {
-                    resourceAnimationController.textFillAnimation(node, label, oldValue, color, resourcesHBox);
+                if (resourcesHBox.getChildren().contains(pane)) {
+                    resourceAnimationController.textFillAnimation(pane, label, oldValue, color, resourcesHBox);
                 } else {
-                    Platform.runLater(() -> resourceAnimationController.addFadingIn(node, label, resourcesHBox));
-                    resourceAnimationController.textFillAnimation(node, label, oldValue, color, resourcesHBox);
+                    Platform.runLater(() -> resourceAnimationController.addFadingIn(pane, resourcesHBox));
+                    resourceAnimationController.textFillAnimation(pane, label, oldValue, color, resourcesHBox);
                 }
             }
         });

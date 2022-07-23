@@ -135,14 +135,9 @@ public class ResourceAnimationController {
         }
     }
 
-    public void addFadingIn(Node node, Label label, HBox parent) {
+    public void addFadingIn(Node node, HBox parent) {
         FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
         parent.getChildren().add(node);
-        parent.getChildren().add(label);
-        double x = node.getLayoutX();
-        double y = node.getLayoutY();
-        label.setLayoutX(x);
-        label.setLayoutY(y);
         transition.setFromValue(0);
         transition.setToValue(1);
         transition.setInterpolator(Interpolator.EASE_IN);
@@ -157,8 +152,7 @@ public class ResourceAnimationController {
         transition.play();
     }
 
-    public void textFillAnimation(ImageView node, Label label, Integer oldValue, Paint color, HBox resourcesHBox) {
-        label.setTranslateX(-19);
+    public void textFillAnimation(Pane pane, Label label, Integer oldValue, Paint color, HBox resourcesHBox) {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0)),
                 new KeyFrame(Duration.seconds(1.5))
@@ -167,10 +161,8 @@ public class ResourceAnimationController {
         timeline.setCycleCount(1);
         timeline.setOnFinished(e -> {
             if (oldValue == 0) {
-                resourcesHBox.getChildren().remove(node);
-                resourcesHBox.getChildren().remove(label);
+                resourcesHBox.getChildren().remove(pane);
             }
-            label.setTranslateX(-14);
             label.setText(String.valueOf(oldValue));
             label.setTextFill(color);
         });
