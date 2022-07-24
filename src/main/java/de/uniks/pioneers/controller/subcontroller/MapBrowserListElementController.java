@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.dto.CreateVoteDto;
 import de.uniks.pioneers.model.MapTemplate;
+import de.uniks.pioneers.model.Vote;
 import de.uniks.pioneers.services.MapBrowserService;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -32,9 +33,14 @@ public class MapBrowserListElementController {
     public void vote(ActionEvent actionEvent) {
         CreateVoteDto voteMove = new CreateVoteDto(1);
         mapBrowserService.vote(map._id(),voteMove);
+        mapBrowserService.getVoteFromMap(map._id()).subscribe(this::setVoteLabel);
+    }
+
+    public void setVoteLabel(Vote vote){
         for(Node n : element.getChildren()) {
             if (n.getId().equals("VotingLabel")) {
-                ((Label) n).setText(Integer.toString(mapBrowserService.getActualScore()));
+                Label label = (Label) n;
+                label.setText(Integer.toString(vote.score()));
             }
         }
     }

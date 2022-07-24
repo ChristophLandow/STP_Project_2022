@@ -7,6 +7,7 @@ import de.uniks.pioneers.model.Vote;
 import de.uniks.pioneers.rest.MapApiService;
 import de.uniks.pioneers.rest.VoteApiService;
 import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,8 +28,6 @@ public class MapBrowserService {
     private final EventListener eventListener;
     private final MapApiService mapApiService;
     private final VoteApiService voteApiService;
-
-    private int actualScore;
 
     @Inject MapBrowserService(EventListener eventListener, VoteApiService voteApiService, MapApiService mapApiService){
         this.eventListener = eventListener;
@@ -66,15 +65,11 @@ public class MapBrowserService {
     }
     
     public void vote(String id, CreateVoteDto voteMove){
-        voteApiService.createVote(id,voteMove).subscribe(this::setActualScore, this::handleHttpError);
+        voteApiService.createVote(id,voteMove);
     }
 
-    public void setActualScore(Vote vote){
-        this.actualScore = vote.score();
-    }
-
-    public int getActualScore(){
-        return this.actualScore;
+    public Observable<Vote> getVoteFromMap(String id){
+        return voteApiService.getVotesOfMap(id);
     }
 
     private  void handleHttpError(Throwable exception) throws IOException {
