@@ -37,3 +37,26 @@
 .list-view {
     -fx-background-color: #717988;
 }
+
+.list-view .list-cell:even {
+    -fx-background-color: #717988;
+}
+.list-view .list-cell:odd {
+    -fx-background-color: #717988;
+}
+
+.thumb{
+    -fx-background-color: #a6a6a6;
+}
+
+.track, .increment-button, .decrement-button, .corner, .increment-arrow, .decrement-arrow{
+    -fx-background-color: #717988;
+}
+
+.scroll-pane {
+    -fx-background-color: #717988;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
