@@ -6,7 +6,9 @@ import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.dto.CreateVoteDto;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
+import de.uniks.pioneers.services.UserService;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +32,8 @@ public class MapListController implements Controller {
     @FXML
     private final App app;
     private final StylesService stylesService;
+    private final UserService userService;
+    private final PrefService prefService;
     @FXML
     Button VoteButton;
     private ListView<HBox> mapList;
@@ -40,10 +44,12 @@ public class MapListController implements Controller {
 
 
     @Inject
-    public MapListController(App app,StylesService styleService, MapBrowserService mapBrowserService) {
+    public MapListController(App app, PrefService prefService, StylesService styleService, MapBrowserService mapBrowserService, UserService userService) {
         this.mapBrowserService = mapBrowserService;
         this.app = app;
         this.stylesService = styleService;
+        this.userService = userService;
+        this.prefService = prefService;
     }
 
     @Override
@@ -89,7 +95,7 @@ public class MapListController implements Controller {
 
             //Adjust HBox Elements
             updateListElement(newListElement, map);
-            MapBrowserListElementController elementController = new MapBrowserListElementController( mapBrowserService, map, newListElement);
+            MapBrowserListElementController elementController = new MapBrowserListElementController(prefService, userService, mapBrowserService, map, newListElement);
             elementController.init();
         } catch (IOException e) {
             e.printStackTrace();

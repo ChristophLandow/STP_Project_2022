@@ -65,11 +65,19 @@ public class MapBrowserService {
     }
     
     public void vote(String id, CreateVoteDto voteMove){
-        voteApiService.createVote(id,voteMove);
+        voteApiService.createVote(id,voteMove).subscribe(System.out::println, this::handleHttpError);
     }
 
     public Observable<Vote> getVoteFromMap(String id){
         return voteApiService.getVotesOfMap(id);
+    }
+
+    public void deleteVote(String mapId, String userId){
+        voteApiService.deleteVotesOfUser(mapId,userId).subscribe(System.out::println, this::handleHttpError);
+    }
+
+    public Observable<Vote> getVoteFromUSer(String mapId, String userId){
+         return voteApiService.deleteVotesOfUser(mapId,userId);
     }
 
     private  void handleHttpError(Throwable exception) throws IOException {

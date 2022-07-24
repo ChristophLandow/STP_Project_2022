@@ -78,4 +78,8 @@ public class Constants {
     public static final String GENDER_VOICE = "genderVoice";
     public static String STYLE_GLOBAL_DARK = "/de/uniks/pioneers/styles/globalStylesDark.css";
     public static String STYLE_GLOBAL = "/de/uniks/pioneers/styles/globalStyles.css";
+
+    //Vote
+    public static final String VOTED = "voted";
+    public static final String NOT_VOTED = "not_voted";
 }
