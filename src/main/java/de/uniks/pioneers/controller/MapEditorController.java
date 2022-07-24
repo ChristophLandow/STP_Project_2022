@@ -35,7 +35,9 @@ public class MapEditorController implements Controller{
     @FXML
     ImageView fishImageView;
     @FXML
-    ImageView blankFieldImageView;
+    ImageView randomImageView;
+    @FXML
+    ImageView desertImageView;
     @FXML
     ImageView icebearImageView;
     @FXML
@@ -208,7 +210,7 @@ public class MapEditorController implements Controller{
         this.selection = "desert";
         resetSelection();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
-        this.blankFieldImageView.setImage(image);}
+        this.desertImageView.setImage(image);}
     private void resetSelection(){
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "fields" + ".png")).toString());
         this.whaleImageView.setImage(image);
@@ -221,7 +223,7 @@ public class MapEditorController implements Controller{
         image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "mountains" + ".png")).toString());
         this.rockImageView.setImage(image);
         image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "desert" + ".png")).toString());
-        this.blankFieldImageView.setImage(image);
+        this.desertImageView.setImage(image);
     }
 
     public void select2(MouseEvent mouseEvent) {
