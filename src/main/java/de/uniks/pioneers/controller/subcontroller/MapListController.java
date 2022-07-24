@@ -92,6 +92,9 @@ public class MapListController implements Controller {
                 ((Label) n).setText(map.name());
             }
             //Add other modifications of HBox elements
+            if(n.getId().equals("VotingLabel")){
+                ((Label) n).setText(Integer.toString(map.votes()));
+            }
 
         }
     }

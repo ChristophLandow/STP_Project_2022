@@ -14,8 +14,8 @@ public interface VoteApiService {
     Observable<Vote> getVotesOfMap(@Path("mapId") String id);
 
     @GET("maps/{mapId}/votes/{userId}")
-    Observable<Vote> getVotes(@Path("mapId") String mapId,  @Path("userId") String userId);
+    Observable<Vote> getVotesOfUser(@Path("mapId") String mapId,  @Path("userId") String userId);
 
     @DELETE("maps/{mapId}/votes/{userId}")
-    Observable<Vote> deleteVotes(@Path("mapId") String mapId,  @Path("userId") String userId);
+    Observable<Vote> deleteVotesOfUser(@Path("mapId") String mapId,  @Path("userId") String userId);
 }
