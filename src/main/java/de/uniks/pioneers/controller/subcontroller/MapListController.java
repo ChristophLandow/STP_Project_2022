@@ -86,6 +86,8 @@ public class MapListController implements Controller {
 
             //Adjust HBox Elements
             updateListElement(newListElement, map);
+            MapBrowserListElementController elementController = new MapBrowserListElementController( mapBrowserService, map, newListElement);
+            elementController.init();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,9 +111,9 @@ public class MapListController implements Controller {
     public void setMapList(ListView<HBox> mapList) {
         this.mapList = mapList;
     }
+}
 
-    public void vote(ActionEvent actionEvent) {
-        /*ObservableList<MapTemplate> maps = mapBrowserService.getMaps();
+/*ObservableList<MapTemplate> maps = mapBrowserService.getMaps();
         for(MapTemplate map : maps){
             for(HBox listElement : mapListElements){
                 if(map.name().equals(listElement.getId())){
@@ -121,5 +123,3 @@ public class MapListController implements Controller {
                 }
             }
         }*/
-    }
-}
