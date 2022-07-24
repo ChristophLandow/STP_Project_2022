@@ -90,10 +90,7 @@ public class IngameService {
         if (checkTradeOptions(offer)) {
             disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
                     .observeOn(FX_SCHEDULER)
-                    .doOnError(e -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
-                        alert.showAndWait();
-                    })
+                    .doOnError(err -> handleHttpError())
                     .subscribe());
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
@@ -106,7 +103,7 @@ public class IngameService {
 
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
                 .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
+                .doOnError(err -> handleHttpError())
                 .subscribe()
         );
     }
@@ -224,5 +221,13 @@ public class IngameService {
 
     public IngameScreenController getActualIngameController(){
         return this.actualIngameController;
+    }
+
+    public void handleHttpError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText("Trading Error");
+        alert.setContentText("Something went wrong, please check your resources!");
+        alert.showAndWait();
     }
 }

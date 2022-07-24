@@ -221,7 +221,6 @@ public class TradePopUpController implements Controller {
         tradePane.disableProperty().set(false);
         ingameService.tradeAccepted.removeListener(acceptedTradeListener);
         this.timerService.stopTrade();
-        //playerElements.values().forEach(c -> stop());
         tradeStage.close();
     }
 
