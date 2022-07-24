@@ -1,11 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.*;
-import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.GameSettings;
-import de.uniks.pioneers.model.LogoutResult;
-import de.uniks.pioneers.model.Member;
-import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.AuthApiService;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
@@ -78,12 +74,12 @@ public class NewGameLobbyService {
         return gameMemberApiService.patchMember(groupId, userId, new UpdateMemberDto(ready, color, spectator));
     }
 
-    public Observable<Game> updateGame(Game game, String password, boolean started, int mapRadius, int victoryPoints) {
+    public Observable<Game> updateGame(Game game, String password, boolean started, int mapRadius, int victoryPoints, String mapTemplate, boolean roll7, int startingResources) {
         return gameApiService.update(game._id(), new UpdateGameDto(
                 game.name(),
                 game.owner(),
                 started,
-                new GameSettings(mapRadius,victoryPoints, null, true, 0),
+                new GameSettings(mapRadius,victoryPoints, mapTemplate, roll7, startingResources),
                 password
         ));
     }
