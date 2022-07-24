@@ -118,12 +118,14 @@ public class NewGameLobbyReadyController {
     private void startGame(ActionEvent actionEvent) {
         // check if all users are ready
         if (allUsersReady()) {
-            disposable.add(newGameLobbyService.updateGame(game, screenController.getPassword(), true, boardSizeSpinner.getValueFactory().getValue(), victoryPointSpinner.getValueFactory().getValue())
+            disposable.add(newGameLobbyService.updateGame(game, screenController.getPassword(), true, boardSizeSpinner.getValueFactory().getValue(),
+                            victoryPointSpinner.getValueFactory().getValue(), null, true, 0)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
                     .subscribe(response -> {
                         screenController.setGame(response);
-                        screenController.toIngame(this.game, newGameLobbyService.getUsers().values().stream().toList(), colorPickerController.getColor(), false, -1);
+                        screenController.toIngame(this.game, newGameLobbyService.getUsers().values().stream().toList(), colorPickerController.getColor(),
+                                false, boardSizeSpinner.getValueFactory().getValue());
                     }, Throwable::printStackTrace));
         }
     }

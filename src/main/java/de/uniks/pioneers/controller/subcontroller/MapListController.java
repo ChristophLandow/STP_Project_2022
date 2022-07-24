@@ -48,6 +48,8 @@ public class MapListController implements Controller {
 
     @Override
     public Parent render() {
+        mapBrowserService.getMaps().forEach(this::renderListElement);
+
         mapBrowserService.getMaps().addListener((ListChangeListener<? super MapTemplate>) c-> {
             c.next();
             if(c.wasAdded()){
