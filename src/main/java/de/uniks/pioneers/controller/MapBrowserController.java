@@ -37,17 +37,13 @@ public class MapBrowserController implements Controller {
         this.app = app;
         this.stylesService = stylesService;
     }
-    
-
 
     @Override
     public void init() {
         String styleLocal = "/de/uniks/pioneers/styles/MapBrowser.css";
         String styleLocalDark = "/de/uniks/pioneers/styles/DarkMode_MapBrowser.css";
         stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), styleLocal, styleLocalDark);
-
         MapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
         mapListController = mapListControllerProvider.get();
         mapListController.setMapList(mapListView);
         mapListController.init();

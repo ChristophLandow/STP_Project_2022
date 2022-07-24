@@ -1,0 +1,12 @@
+#MapHBox {
+    -fx-background-color: #717988;
+}
+
+#mapListView {
+    -fx-background-color: #717988;
+}
+
+.label {
+    -fx-background-color: #717988;
+    -fx-text-fill: WHITE;
+}
