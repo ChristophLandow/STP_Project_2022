@@ -37,4 +37,30 @@ public class StylesService {
             screen.addAll(STYLE_GLOBAL, localStyle);
         }
     }
+
+    public void setStyleSheets(ObservableList<String> styles, String styleSheetAddress, String styleSheetAddressDark, boolean lightMode, boolean darkMode) {
+        // sets the Stylesheets for the app of a controller according to if a localStyleSheet is available
+        // set both styleSheetAddresses to null if no local styleSheet is available
+        if (styleSheetAddress != null) {
+            styles.removeAll();
+            if (lightMode) {
+                styles.removeIf(style -> style.equals(STYLE_GLOBAL_DARK));
+                styles.removeIf(style -> style.equals(styleSheetAddressDark));
+                styles.addAll(STYLE_GLOBAL, styleSheetAddress);
+            } else if (darkMode) {
+                styles.removeIf(style -> style.equals(STYLE_GLOBAL));
+                styles.removeIf(style -> style.equals(styleSheetAddress));
+                styles.addAll(STYLE_GLOBAL_DARK, styleSheetAddressDark);
+            }
+        } else {
+            styles.removeAll();
+            if (lightMode) {
+                styles.removeIf(style -> style.equals(STYLE_GLOBAL_DARK));
+                styles.addAll(STYLE_GLOBAL);
+            } else if (darkMode) {
+                styles.removeIf(style -> style.equals(STYLE_GLOBAL));
+                styles.addAll(STYLE_GLOBAL_DARK);
+            }
+        }
+    }
 }

@@ -128,6 +128,11 @@ public class TradePopUpController implements Controller {
             }
         });
 
+        //disable offerToPlayers Button if there is only one Player in the game
+        if (gameService.players.size() == 1) {
+            offerToPlayers.setDisable(true);
+        }
+
         // setup ImageViews
         List<String> subStrings = List.of("ice", "polarbear", "fish", "carbon", "whale");
         Iterator<String> first = subStrings.iterator();
