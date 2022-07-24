@@ -31,7 +31,6 @@ public class MapBrowserListElementController {
 
     public void vote(ActionEvent actionEvent) {
         CreateVoteDto voteMove = new CreateVoteDto(1);
-        System.out.println("vote for " + map.name());
         mapBrowserService.vote(map._id(),voteMove);
         for(Node n : element.getChildren()) {
             if (n.getId().equals("VotingLabel")) {
