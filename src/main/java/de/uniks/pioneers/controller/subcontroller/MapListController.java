@@ -80,8 +80,17 @@ public class MapListController implements Controller {
             if(n.getId().equals("MapNameLabel")){
                 ((Label) n).setText(map.name());
             }
-            //Add other modifications of HBox elements
         }
+
+        sortList();
+    }
+
+    private void sortList(){
+        mapList.getItems().sort(((o1, o2) -> {
+            Label voting1 = (Label) o1.getChildren().get(1);
+            Label voting2 = (Label) o2.getChildren().get(1);
+            return (Integer.parseInt(voting1.getText()) < Integer.parseInt(voting2.getText())) ? 1 : 0;
+        }));
     }
 
     public void setMapList(ListView<HBox> mapList) {
