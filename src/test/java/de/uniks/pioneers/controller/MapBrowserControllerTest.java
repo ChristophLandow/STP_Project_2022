@@ -1,13 +1,11 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.TestModule;
 import de.uniks.pioneers.controller.subcontroller.MapListController;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
-import io.reactivex.rxjava3.core.Observable;
 import javafx.collections.FXCollections;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;

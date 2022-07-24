@@ -50,6 +50,7 @@ public class MapBrowserController implements Controller {
 
         mapListController = mapListControllerProvider.get();
         mapListController.setMapList(mapListView);
+        mapListController.setMapListScrollPane(MapListScrollPane);
         mapListController.init();
         mapListController.render();
     }

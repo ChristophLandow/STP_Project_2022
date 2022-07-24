@@ -4,3 +4,11 @@
     -fx-border-width: 4px;
     -fx-border-color: #006666;
 }
+
+.scroll-bar:horizontal .increment-arrow,
+.scroll-bar:horizontal .decrement-arrow,
+.scroll-bar:horizontal .increment-button,
+.scroll-bar:horizontal .decrement-button {
+    -fx-padding:0;
+    -fx-opacity: 0;
+}
