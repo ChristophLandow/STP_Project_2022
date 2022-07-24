@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
@@ -17,6 +19,7 @@ import java.io.IOException;
 
 public class MapListController implements Controller {
     private ListView<HBox> mapList;
+    private ScrollPane mapListScrollPane;
 
     private final MapBrowserService mapBrowserService;
 
@@ -27,7 +30,7 @@ public class MapListController implements Controller {
 
     @Override
     public void init() {
-
+        mapListScrollPane.setOnScroll((ScrollEvent event) -> mapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER));
     }
 
     @Override
@@ -68,6 +71,8 @@ public class MapListController implements Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        mapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
     private void updateListElement(HBox element, MapTemplate map){
@@ -81,5 +86,9 @@ public class MapListController implements Controller {
 
     public void setMapList(ListView<HBox> mapList) {
         this.mapList = mapList;
+    }
+
+    public void setMapListScrollPane(ScrollPane mapListScrollPane) {
+        this.mapListScrollPane = mapListScrollPane;
     }
 }
