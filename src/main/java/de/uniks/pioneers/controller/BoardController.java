@@ -100,7 +100,7 @@ public class BoardController {
             harbors.forEach(this::loadHarbor);
             this.hextileRenderThread = new Thread(() -> {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     linkTiles();
                     mapRenderService.setTileControllers(this.tileControllers);
                     loadSnowAnimation();
@@ -108,6 +108,9 @@ public class BoardController {
                 }
                 catch (InterruptedException ignored){}
             });
+
+            hextileRenderThread.setDaemon(true);
+            hextileRenderThread.start();
         }
 
     }

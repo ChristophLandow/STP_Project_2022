@@ -478,7 +478,6 @@ public class TestModule {
     @Singleton
     MapApiService mapApiService() {
         return new MapApiService() {
-
             @Override
             public Observable<List<MapTemplate>> getMaps() {
                 ArrayList<MapTemplate> returnValue = new ArrayList<>();
