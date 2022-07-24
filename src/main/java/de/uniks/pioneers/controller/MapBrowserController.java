@@ -46,6 +46,7 @@ public class MapBrowserController implements Controller {
         MapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         mapListController = mapListControllerProvider.get();
         mapListController.setMapList(mapListView);
+        mapListController.setMapListScrollPane(MapListScrollPane);
         mapListController.init();
         mapListController.render();
     }

@@ -17,6 +17,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
@@ -30,12 +32,11 @@ public class MapListController implements Controller {
     @FXML
     Button VoteButton;
     private ListView<HBox> mapList;
+    private ScrollPane mapListScrollPane;
 
-    private ArrayList<HBox> mapListElements = new ArrayList<>();
-    private final StylesService stylesService;
     private final MapBrowserService mapBrowserService;
 
-    
+
 
     @Inject
     public MapListController(App app,StylesService styleService, MapBrowserService mapBrowserService) {
@@ -46,6 +47,7 @@ public class MapListController implements Controller {
 
     @Override
     public void init() {
+        mapListScrollPane.setOnScroll((ScrollEvent event) -> mapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER));
         String styleLocal = "/de/uniks/pioneers/styles/MapBrowserListElement.css";
         String styleLocalDark = "/de/uniks/pioneers/styles/DarkMode_MapBrowserListElement.css";
         stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), styleLocal, styleLocalDark);
@@ -91,6 +93,8 @@ public class MapListController implements Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        mapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
     private void updateListElement(HBox element, MapTemplate map){
@@ -111,15 +115,8 @@ public class MapListController implements Controller {
     public void setMapList(ListView<HBox> mapList) {
         this.mapList = mapList;
     }
-}
 
-/*ObservableList<MapTemplate> maps = mapBrowserService.getMaps();
-        for(MapTemplate map : maps){
-            for(HBox listElement : mapListElements){
-                if(map.name().equals(listElement.getId())){
-                    CreateVoteDto voteMove = new CreateVoteDto(map.votes() + 1);
-                    System.out.println("vote for " + map.name());
-                    mapBrowserService.vote(map._id(),voteMove);
-                }
-            }
-        }*/
+    public void setMapListScrollPane(ScrollPane mapListScrollPane) {
+        this.mapListScrollPane = mapListScrollPane;
+    }
+}
