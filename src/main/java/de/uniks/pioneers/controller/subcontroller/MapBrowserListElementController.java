@@ -4,7 +4,9 @@ import de.uniks.pioneers.dto.CreateVoteDto;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import retrofit2.HttpException;
 
@@ -31,5 +33,10 @@ public class MapBrowserListElementController {
         CreateVoteDto voteMove = new CreateVoteDto(1);
         System.out.println("vote for " + map.name());
         mapBrowserService.vote(map._id(),voteMove);
+        for(Node n : element.getChildren()) {
+            if (n.getId().equals("VotingLabel")) {
+                ((Label) n).setText(Integer.toString(mapBrowserService.getActualScore()));
+            }
+        }
     }
 }
