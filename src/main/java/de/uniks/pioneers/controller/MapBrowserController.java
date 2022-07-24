@@ -38,7 +38,7 @@ public class MapBrowserController implements Controller {
     @FXML
     Button editMapButton;
     private final StylesService stylesService;
-    //MapListController mapLisController
+    private MapListController mapListController;
 
     @Inject
     public MapBrowserController(App app, StylesService stylesService){
