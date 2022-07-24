@@ -2,7 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.controller.subcontroller.MapDetailsSubcontroller;
+import de.uniks.pioneers.controller.subcontroller.MapDetailsController;
 import de.uniks.pioneers.controller.subcontroller.MapListController;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
@@ -37,7 +37,7 @@ public class MapBrowserController implements Controller {
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<MapListController> mapListControllerProvider;
-    @Inject Provider<MapDetailsSubcontroller> mapDetailsSubcontrollerProvider;
+    @Inject Provider<MapDetailsController> mapDetailsControllerProvider;
     @Inject PrefService prefService;
 
     @FXML private final App app;
@@ -64,16 +64,14 @@ public class MapBrowserController implements Controller {
         mapListController.render();
 
         // init map details
-        MapDetailsSubcontroller mapDetailsSubcontroller = mapDetailsSubcontrollerProvider.get();
-        mapDetailsSubcontroller.setLastUpdatedOutputText(lastUpdatedOutputText)
+        MapDetailsController mapDetailsController = mapDetailsControllerProvider.get();
+        mapDetailsController.setLastUpdatedOutputText(lastUpdatedOutputText)
                 .setVotesOutputText(votesOutputText)
                 .setTilesOutputText(tilesOutputText)
                 .setHarborsOutputText(harborsOutputText)
                 .setMapNameOutputText(mapNameOutputText)
                 .setCreatedByOutputText(createdByOutputText)
                 .setCreatorImageView(creatorImageView);
-        System.out.println("init map detail labels!");
-
     }
 
     @Override

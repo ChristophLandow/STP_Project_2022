@@ -4,6 +4,9 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -14,28 +17,26 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 
 public class MapListController implements Controller {
     private ListView<HBox> mapList;
 
     private final MapBrowserService mapBrowserService;
-    private final MapDetailsSubcontroller mapDetailsSubcontroller;
+    private Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
-    public MapListController(MapBrowserService mapBrowserService, MapDetailsSubcontroller mapDetailsSubcontroller) {
+    public MapListController(MapBrowserService mapBrowserService, Provider<MapDetailsController> mapDetailsControllerProvider) {
         this.mapBrowserService = mapBrowserService;
-        this.mapDetailsSubcontroller = mapDetailsSubcontroller;
+        this.mapDetailsControllerProvider = mapDetailsControllerProvider;
     }
 
     @Override
     public void init() {
-        this.mapList.setOnMouseClicked(this::onItemClicked);
-    }
-
-    private void onItemClicked(MouseEvent mouseEvent) {
-        String selectedMapId = this.mapList.getSelectionModel().getSelectedItem().getId();
-        this.mapDetailsSubcontroller.updateMapDetails(selectedMapId);
+        this.mapList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            mapDetailsControllerProvider.get().updateMapDetails(newValue.getId());
+        });
     }
 
     @Override

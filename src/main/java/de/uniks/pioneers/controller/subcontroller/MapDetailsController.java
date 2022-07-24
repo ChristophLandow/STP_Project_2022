@@ -16,7 +16,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 
 @Singleton
-public class MapDetailsSubcontroller {
+public class MapDetailsController {
 
     private Pane mapPreviewPane;
     private ImageView creatorImageView;
@@ -32,27 +32,23 @@ public class MapDetailsSubcontroller {
     private final UserService userService;
 
     @Inject
-    public MapDetailsSubcontroller(MapBrowserService mapBrowserService, UserService userService) {
+    public MapDetailsController(MapBrowserService mapBrowserService, UserService userService) {
         this.mapBrowserService = mapBrowserService;
         this.userService = userService;
     }
 
-    public MapDetailsSubcontroller setMapPreviewPane(Pane mapPreviewPane) {
+    public MapDetailsController setMapPreviewPane(Pane mapPreviewPane) {
         this.mapPreviewPane = mapPreviewPane;
         return this;
     }
 
-    public MapDetailsSubcontroller setCreatorImageView(ImageView creatorImageView) {
+    public MapDetailsController setCreatorImageView(ImageView creatorImageView) {
         this.creatorImageView = creatorImageView;
         return this;
     }
 
-
     // update details when new map is clicked
     public void updateMapDetails(String mapId) {
-        System.out.println("map id: " + mapId);
-
-        // get map details from server
         disposable.add(mapBrowserService.getMap(mapId)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(this::setLabels));
@@ -69,7 +65,9 @@ public class MapDetailsSubcontroller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     createdByOutputText.setText(user.name());
-                    creatorImageView.setImage(new Image(user.avatar()));
+                    if (user.avatar() != null) {
+                        creatorImageView.setImage(new Image(user.avatar()));
+                    }
                 })
         );
     }
@@ -80,32 +78,32 @@ public class MapDetailsSubcontroller {
         return date + ", " + time;
     }
 
-    public MapDetailsSubcontroller setLastUpdatedOutputText(Text lastUpdatedOutputText) {
+    public MapDetailsController setLastUpdatedOutputText(Text lastUpdatedOutputText) {
         this.lastUpdatedOutputText = lastUpdatedOutputText;
         return this;
     }
 
-    public MapDetailsSubcontroller setVotesOutputText(Text votesOutputText) {
+    public MapDetailsController setVotesOutputText(Text votesOutputText) {
         this.votesOutputText = votesOutputText;
         return this;
     }
 
-    public MapDetailsSubcontroller setTilesOutputText(Text tilesOutputText) {
+    public MapDetailsController setTilesOutputText(Text tilesOutputText) {
         this.tilesOutputText = tilesOutputText;
         return this;
     }
 
-    public MapDetailsSubcontroller setHarborsOutputText(Text harborsOutputText) {
+    public MapDetailsController setHarborsOutputText(Text harborsOutputText) {
         this.harborsOutputText = harborsOutputText;
         return this;
     }
 
-    public MapDetailsSubcontroller setMapNameOutputText(Text mapNameOutputText) {
+    public MapDetailsController setMapNameOutputText(Text mapNameOutputText) {
         this.mapNameOutputText = mapNameOutputText;
         return this;
     }
 
-    public MapDetailsSubcontroller setCreatedByOutputText(Text createdByOutputText) {
+    public MapDetailsController setCreatedByOutputText(Text createdByOutputText) {
         this.createdByOutputText = createdByOutputText;
         return this;
     }
