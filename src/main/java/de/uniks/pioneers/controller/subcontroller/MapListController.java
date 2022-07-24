@@ -29,6 +29,7 @@ public class MapListController implements Controller {
 
     @FXML
     private final App app;
+    private final StylesService stylesService;
     @FXML
     Button VoteButton;
     private ListView<HBox> mapList;
@@ -109,7 +110,6 @@ public class MapListController implements Controller {
                 ((Label) n).setText(Integer.toString(map.votes()));
             }
         }
-        mapListElements.add(element);
     }
 
     public void setMapList(ListView<HBox> mapList) {
