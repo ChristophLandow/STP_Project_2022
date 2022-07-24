@@ -3,10 +3,12 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.dto.CreateVoteDto;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.StylesService;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,21 +21,24 @@ import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MapListController implements Controller {
 
     @FXML
     private final App app;
-
     @FXML
     Button VoteButton;
     private ListView<HBox> mapList;
-    private final StylesService stylesService;
 
+    private ArrayList<HBox> mapListElements = new ArrayList<>();
+    private final StylesService stylesService;
     private final MapBrowserService mapBrowserService;
 
+    
+
     @Inject
-    public MapListController(App app, StylesService styleService, MapBrowserService mapBrowserService) {
+    public MapListController(App app,StylesService styleService, MapBrowserService mapBrowserService) {
         this.mapBrowserService = mapBrowserService;
         this.app = app;
         this.stylesService = styleService;
@@ -87,16 +92,18 @@ public class MapListController implements Controller {
     }
 
     private void updateListElement(HBox element, MapTemplate map){
+        element.setId(map.name());
         for(Node n : element.getChildren()){
+            //show map name
             if(n.getId().equals("MapNameLabel")){
                 ((Label) n).setText(map.name());
             }
-            //Add other modifications of HBox elements
+            //show map votes
             if(n.getId().equals("VotingLabel")){
                 ((Label) n).setText(Integer.toString(map.votes()));
             }
-
         }
+        mapListElements.add(element);
     }
 
     public void setMapList(ListView<HBox> mapList) {
@@ -104,6 +111,15 @@ public class MapListController implements Controller {
     }
 
     public void vote(ActionEvent actionEvent) {
-
+        /*ObservableList<MapTemplate> maps = mapBrowserService.getMaps();
+        for(MapTemplate map : maps){
+            for(HBox listElement : mapListElements){
+                if(map.name().equals(listElement.getId())){
+                    CreateVoteDto voteMove = new CreateVoteDto(map.votes() + 1);
+                    System.out.println("vote for " + map.name());
+                    mapBrowserService.vote(map._id(),voteMove);
+                }
+            }
+        }*/
     }
 }

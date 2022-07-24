@@ -1,7 +1,10 @@
 package de.uniks.pioneers.services;
 
+
+import de.uniks.pioneers.dto.CreateVoteDto;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.rest.MapApiService;
+import de.uniks.pioneers.rest.VoteApiService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
@@ -19,11 +22,12 @@ public class MapBrowserService {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final EventListener eventListener;
     private final MapApiService mapApiService;
+    private final VoteApiService voteApiService;
 
-    @Inject MapBrowserService(EventListener eventListener, MapApiService mapApiService){
+    @Inject MapBrowserService(EventListener eventListener, VoteApiService voteApiService, MapApiService mapApiService){
         this.eventListener = eventListener;
         this.mapApiService = mapApiService;
-
+        this.voteApiService = voteApiService;
         initMapListener();
     }
 
@@ -54,4 +58,9 @@ public class MapBrowserService {
     public void stop(){
         disposable.dispose();
     }
+    
+    public void vote(String id, CreateVoteDto voteMove){
+       voteApiService.createVote(id,voteMove);
+    }
+
 }

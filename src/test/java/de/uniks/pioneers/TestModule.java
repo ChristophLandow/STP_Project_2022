@@ -486,5 +486,31 @@ public class TestModule {
             }
         };
     }
+
+    @Provides
+    @Singleton
+    VoteApiService voteApiService(){
+        return new VoteApiService() {
+            @Override
+            public Observable<Vote> createVote(String id, CreateVoteDto voteDto) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> getVotesOfMap(String id) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> getVotesOfUser(String mapId, String userId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> deleteVotesOfUser(String mapId, String userId) {
+                return null;
+            }
+        };
+    }
 }
 

@@ -108,4 +108,8 @@ public class MainModule {
     MapApiService mapApiService(Retrofit retrofit) {
         return  retrofit.create(MapApiService.class);
     }
+
+    @Provides
+    @Singleton
+    VoteApiService voteApiService(Retrofit retrofit) { return retrofit.create(VoteApiService.class);}
 }
