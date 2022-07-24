@@ -166,7 +166,7 @@ public class IngamePlayerListElementController {
         victoryPointsLabel.setText("" + valueAdded.victoryPoints());
 
         resourceCardsCount.setText(String.valueOf(resourceCount));
-        developmentCardsCount.setText(String.valueOf(resources.unknown()));
+        developmentCardsCount.setText(String.valueOf(valueAdded.developmentCards().size()));
         cityCount.setText(String.valueOf(4 - valueAdded.remainingBuildings().city()));
     }
 }

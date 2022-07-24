@@ -54,57 +54,59 @@ public class IngameStateController {
 
     public void handleGameState(State currentState) {
         // enable corresponding user to perform their action
-        ExpectedMove move = currentState.expectedMoves().get(0);
-        ingameService.setExpectedMove(move);
+        if(currentState.expectedMoves().size() > 0) {
+            ExpectedMove move = currentState.expectedMoves().get(0);
+            ingameService.setExpectedMove(move);
 
-        assert move.players().get(0)!=null;
-        if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
-            // enable posting move
-            switch (move.action()) {
-                case FOUNDING_ROLL, ROLL -> {
-                    this.enableRoll(move.action());
-                    speechService.play(SPEECH_ROLL_DICE);
-                }
-                case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> {
-                    this.enableBuildingPoints(move.action());
-                    speechService.play(SPEECH_PLACE_IGLOO);
-                }
-                case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> {
-                    this.enableStreetPoints(move.action());
-                    speechService.play(SPEECH_PLACE_STREET);
-                }
-                case BUILD -> {
-                    // set builder timer, in progress...
-                    robberService.getRobberState().set(ROBBER_FINISHED);
-                    this.timerService.setBuildTimer(new Timer(), 120);
-                    this.enableEndTurn();
-                    this.enableBuildingPoints(move.action());
-                    this.enableStreetPoints(move.action());
-                    speechService.play(SPEECH_BUILD);
-                }
-                case DROP -> {
-                    robberService.getRobberState().set(ROBBER_DISCARD);
-                    speechService.play(SPEECH_DROP_RESOURCES);
-                }
-                case ROB -> {
-                    this.enableHexagonPoints();
+            assert move.players().get(0)!=null;
+            if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+                // enable posting move
+                switch (move.action()) {
+                    case FOUNDING_ROLL, ROLL -> {
+                        this.enableRoll(move.action());
+                        speechService.play(SPEECH_ROLL_DICE);
+                    }
+                    case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> {
+                        this.enableBuildingPoints(move.action());
+                        speechService.play(SPEECH_PLACE_IGLOO);
+                    }
+                    case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> {
+                        this.enableStreetPoints(move.action());
+                        speechService.play(SPEECH_PLACE_STREET);
+                    }
+                    case BUILD -> {
+                        // set builder timer, in progress...
+                        robberService.getRobberState().set(ROBBER_FINISHED);
+                        this.timerService.setBuildTimer(new Timer(), 120);
+                        this.enableEndTurn();
+                        this.enableBuildingPoints(move.action());
+                        this.enableStreetPoints(move.action());
+                        speechService.play(SPEECH_BUILD);
+                    }
+                    case DROP -> {
+                        robberService.getRobberState().set(ROBBER_DISCARD);
+                        speechService.play(SPEECH_DROP_RESOURCES);
+                    }
+                    case ROB -> {
+                        this.enableHexagonPoints();
 
-                    if(robberService.getRobberState().get() != ROBBER_STEAL){
-                        speechService.play(GameConstants.SPEECH_MOVE_ROBBER);
-                        robberService.getRobberState().set(ROBBER_MOVE);
+                        if(robberService.getRobberState().get() != ROBBER_STEAL){
+                            speechService.play(GameConstants.SPEECH_MOVE_ROBBER);
+                            robberService.getRobberState().set(ROBBER_MOVE);
+                        }
+                    }
+                    case OFFER -> {
+                        ingameService.tradeIsOffered.set(true);
+                        speechService.play(SPEECH_TRADEOFFER);
+                    }
+                    case ACCEPT -> {
                     }
                 }
-                case OFFER -> {
-                    ingameService.tradeIsOffered.set(true);
-                    speechService.play(SPEECH_TRADEOFFER);
-                }
-                case ACCEPT -> {
-                }
             }
-        }
 
-        this.setSituationLabel(move.players().get(0), move.action());
-        this.placeRobber(currentState.robber(), move.action());
+            this.setSituationLabel(move.players().get(0), move.action());
+            this.placeRobber(currentState.robber(), move.action());
+        }
     }
 
     private void enableHexagonPoints(){

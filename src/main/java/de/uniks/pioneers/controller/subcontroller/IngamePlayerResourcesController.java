@@ -8,7 +8,6 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -43,7 +42,8 @@ public class IngamePlayerResourcesController {
     private Map<String, Label> devLabelMap;
     private Map<String, Pane> devPaneMap;
     private ChangeListener<Boolean> enoughResourcesListener;
-    private MapChangeListener<String, Integer> mapChangeListener;
+    private MapChangeListener<String, Integer> resourceMapChangeListener;
+    private MapChangeListener<String, Integer> devCardMapChangeListener;
     private ResourceAnimationController resourceAnimationController;
 
     @Inject
@@ -53,7 +53,8 @@ public class IngamePlayerResourcesController {
 
     public void stop() {
         //remove listeners
-        gameService.myResources.removeListener(mapChangeListener);
+        gameService.myResources.removeListener(resourceMapChangeListener);
+        gameService.myDevCards.removeListener(devCardMapChangeListener);
         gameService.notEnoughRessources.removeListener(enoughResourcesListener);
     }
 
@@ -79,27 +80,41 @@ public class IngamePlayerResourcesController {
         // add listener to model (myResources, enoughResources)
         enoughResourcesListener = (observable, oldValue, newValue) -> {
             if (newValue.equals(true)) {
-                showMissingRessources();
+                showMissingResources();
                 gameService.notEnoughRessources.set(false);
             }
         };
 
-        mapChangeListener = change -> {
+        resourceMapChangeListener = change -> {
             String type = change.getKey();
             if (change.wasAdded() && change.wasRemoved()) {
                 if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
-                    invokeElement(type, change.getValueAdded());
+                    invokeResourceElement(type, change.getValueAdded());
                 } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
-                    revokeElement(type);
+                    revokeResourceElement(type);
                 } else {
-                    mutateElement(type, change.getValueAdded());
+                    mutateResourceElement(type, change.getValueAdded());
                 }
             }
         };
 
-        gameService.myResources.addListener(mapChangeListener);
+        devCardMapChangeListener = change -> {
+            String type = change.getKey();
+            if (change.wasAdded() && change.wasRemoved()) {
+                if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
+                    invokeDevCardElement(type, change.getValueAdded());
+                } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
+                    revokeDevCardElement(type);
+                } else {
+                    mutateDevCardElement(type, change.getValueAdded());
+                }
+            }
+        };
+
+        gameService.myResources.addListener(resourceMapChangeListener);
+        gameService.myDevCards.addListener(devCardMapChangeListener);
         gameService.notEnoughRessources.addListener(enoughResourcesListener);
-        this.resourceAnimationController = new ResourceAnimationController(root, gameService, this);
+        this.resourceAnimationController = new ResourceAnimationController(root, gameService);
     }
 
     private void setImages() {
@@ -155,26 +170,37 @@ public class IngamePlayerResourcesController {
         resourcesHBox.getChildren().clear();
     }
 
-    private void invokeElement(String type, Integer valueAdded) {
+    private void invokeResourceElement(String type, Integer valueAdded) {
         Label lbl = resourceLabelMap.get(type);
-        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
         resourcesHBox.getChildren().add(resourcePaneMap.get(type));
-        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
         lbl.setText(String.valueOf(valueAdded));
     }
 
-    private void revokeElement(String type) {
-        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
+    private void revokeResourceElement(String type) {
         resourcesHBox.getChildren().remove(resourcePaneMap.get(type));
-        resourcesHBox.setAlignment(Pos.CENTER_LEFT);
     }
 
-    private void mutateElement(String type, Integer valueAdded) {
+    private void mutateResourceElement(String type, Integer valueAdded) {
         Label lbl = resourceLabelMap.get(type);
         lbl.setText(String.valueOf(valueAdded));
     }
 
-    private void showMissingRessources() {
+    private void invokeDevCardElement(String type, Integer valueAdded) {
+        Label lbl = devLabelMap.get(type);
+        resourcesHBox.getChildren().add(devPaneMap.get(type));
+        lbl.setText(String.valueOf(valueAdded));
+    }
+
+    private void revokeDevCardElement(String type) {
+        resourcesHBox.getChildren().remove(devPaneMap.get(type));
+    }
+
+    private void mutateDevCardElement(String type, Integer valueAdded) {
+        Label lbl = devLabelMap.get(type);
+        lbl.setText(String.valueOf(valueAdded));
+    }
+
+    private void showMissingResources() {
         Map<String, Integer> missingResources = gameService.missingResources;
         ObservableMap<String, Integer> resources = gameService.myResources;
         System.out.println(missingResources);

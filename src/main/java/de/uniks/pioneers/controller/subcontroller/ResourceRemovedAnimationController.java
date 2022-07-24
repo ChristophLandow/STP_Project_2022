@@ -16,11 +16,13 @@ import static de.uniks.pioneers.GameConstants.*;
 public class ResourceRemovedAnimationController {
     private final Pane root;
     private final GameService gameService;
+    private final ResourceAnimationController resourceAnimationController;
     private int ore, lumber, brick, wool, grain;
 
-    public ResourceRemovedAnimationController(Pane root, GameService gameService) {
+    public ResourceRemovedAnimationController(Pane root, GameService gameService, ResourceAnimationController resourceAnimationController) {
         this.root = root;
         this.gameService = gameService;
+        this.resourceAnimationController = resourceAnimationController;
     }
 
     public void setResourceCounts(int ore, int lumber, int brick, int wool, int grain) {
@@ -40,7 +42,7 @@ public class ResourceRemovedAnimationController {
     }
 
     public void removedResourceCardAnimationOne(ImageView card, int counter, int resNumber) {
-        card.setLayoutX(10);
+        card.setLayoutX(180);
         card.setLayoutY(409);
 
         new Thread(() -> {
@@ -58,7 +60,7 @@ public class ResourceRemovedAnimationController {
                 TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
                 tt.setToX(0);
                 tt.setToY(-509);
-                tt.setOnFinished(t -> removedResourceCardAnimationTwo(card, resNumber));
+                tt.setOnFinished(t -> removedResourceCardAnimationTwo(card, counter, resNumber));
                 tt.play();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -66,14 +68,14 @@ public class ResourceRemovedAnimationController {
         }).start();
     }
 
-    public void removedResourceCardAnimationTwo(ImageView card, int resNumber) {
+    public void removedResourceCardAnimationTwo(ImageView card, int counter, int resNumber) {
         new Thread(() -> {
             try {
-                Line lineOne = new Line(234, 227, 350, 399);
+                Line lineOne = new Line(407, 227, 523, 399);
                 lineOne.setStroke(Color.RED);
                 lineOne.setStrokeWidth(6);
 
-                Line lineTwo = new Line(350, 227, 234, 399);
+                Line lineTwo = new Line(523, 227, 407, 399);
                 lineTwo.setStroke(Color.RED);
                 lineTwo.setStrokeWidth(6);
 
@@ -96,7 +98,7 @@ public class ResourceRemovedAnimationController {
                 FadeTransition ftLineTwo = new FadeTransition(Duration.millis(100), lineTwo);
                 ftLineTwo.setFromValue(1);
                 ftLineTwo.setToValue(0);
-                ftLineTwo.setOnFinished(t -> removeAfterAnimation(card, resNumber, lineOne, lineTwo));
+                ftLineTwo.setOnFinished(t -> removeAfterAnimation(card, counter, resNumber, lineOne, lineTwo));
                 ftLineTwo.play();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -105,7 +107,7 @@ public class ResourceRemovedAnimationController {
     }
 
     public void removedTradeResourceCardAnimationOne(ImageView card, int counter, int resNumber) {
-        card.setLayoutX(10);
+        card.setLayoutX(180);
         card.setLayoutY(409);
 
         new Thread(() -> {
@@ -123,7 +125,7 @@ public class ResourceRemovedAnimationController {
                 TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
                 tt.setToX(0);
                 tt.setToY(-509);
-                tt.setOnFinished(t -> removedTradeResourceCardAnimationTwo(card, resNumber));
+                tt.setOnFinished(t -> removedTradeResourceCardAnimationTwo(card, counter, resNumber));
                 tt.play();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -131,7 +133,7 @@ public class ResourceRemovedAnimationController {
         }).start();
     }
 
-    public void removedTradeResourceCardAnimationTwo(ImageView card, int resNumber) {
+    public void removedTradeResourceCardAnimationTwo(ImageView card, int counter, int resNumber) {
         new Thread(() -> {
             try {
                 Thread.sleep(400);
@@ -144,9 +146,9 @@ public class ResourceRemovedAnimationController {
                 st.play();
 
                 TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
-                tt.setToX(565);
+                tt.setToX(557);
                 tt.setToY(-335);
-                tt.setOnFinished(t -> removedTradeResourceCardAnimationThree(card, resNumber));
+                tt.setOnFinished(t -> removedTradeResourceCardAnimationThree(card, counter, resNumber));
                 tt.play();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -154,17 +156,17 @@ public class ResourceRemovedAnimationController {
         }).start();
     }
 
-    public void removedTradeResourceCardAnimationThree(ImageView card, int resNumber) {
+    public void removedTradeResourceCardAnimationThree(ImageView card, int counter, int resNumber) {
         new Thread(() -> {
             FadeTransition ft = new FadeTransition(Duration.millis(100), card);
             ft.setFromValue(1);
             ft.setToValue(0);
-            ft.setOnFinished(t -> removeAfterAnimation(card, resNumber, null, null));
+            ft.setOnFinished(t -> removeAfterAnimation(card, counter, resNumber, null, null));
             ft.play();
         }).start();
     }
 
-    private void removeAfterAnimation(ImageView card, int resNumber, Line lineOne, Line lineTwo) {
+    private void removeAfterAnimation(ImageView card, int counter, int resNumber, Line lineOne, Line lineTwo) {
         Platform.runLater(() -> {
             root.getChildren().remove(lineOne);
             root.getChildren().remove(lineTwo);
@@ -183,5 +185,15 @@ public class ResourceRemovedAnimationController {
             gameService.updateResources(GRAIN, grain);
         }
 
+        if(counter == 1) {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(3000);
+                    resourceAnimationController.handleNewDevCards();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+        }
     }
 }

@@ -38,7 +38,7 @@ public class ResourceNewAnimationController {
     }
 
     public void newResourceCardAnimationOne(ImageView card, int counter, int resNumber) {
-        card.setLayoutX(10);
+        card.setLayoutX(180);
         card.setLayoutY(-100);
 
         new Thread(() -> {
@@ -83,7 +83,7 @@ public class ResourceNewAnimationController {
     }
 
     public void newTradeResourceCardAnimationOne(ImageView card, int counter, int resNumber) {
-        card.setLayoutX(575);
+        card.setLayoutX(738);
         card.setLayoutY(74);
         card.setScaleX(0.37f);
         card.setScaleY(0.37f);
@@ -114,7 +114,7 @@ public class ResourceNewAnimationController {
             st.play();
 
             TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
-            tt.setToX(-565);
+            tt.setToX(-557);
             tt.setToY(-174);
             tt.setOnFinished(t -> newTradeResourceCardAnimationThree(card, resNumber));
             tt.play();
@@ -134,7 +134,7 @@ public class ResourceNewAnimationController {
                 st.play();
 
                 TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
-                tt.setToX(-565);
+                tt.setToX(-557);
                 tt.setToY(235);
                 tt.setOnFinished(t -> newAfterAnimation(card, resNumber));
                 tt.play();

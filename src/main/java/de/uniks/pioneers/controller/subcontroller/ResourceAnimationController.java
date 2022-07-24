@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.model.DevelopmentCard;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
@@ -16,22 +17,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
-
+import java.util.List;
 import java.util.Objects;
 
 public class ResourceAnimationController {
     private final GameService gameService;
     private final ResourceNewAnimationController resourceNewAnimationController;
     private final ResourceRemovedAnimationController resourceRemovedAnimationController;
-    private ImageView carbonView, fishView, iceView, polarbearView, whaleView;
+    private final DevCardNewAnimationController devCardNewAnimationController;
+    private final DevCardRemovedAnimationController devCardRemovedAnimationController;
+    private ImageView carbonView, fishView, iceView, polarbearView, whaleView, knightView, roadView, plentyView, monopolyView, vpointView;
     private Player valueAdded;
     private Player valueRemoved;
     private boolean me;
+    private int knightOld, roadOld, plentyOld, monopolyOld, vpointOld ,unknownOld;
+    private int knightNew, roadNew, plentyNew, monopolyNew, vpointNew ,unknownNew;
 
-    public ResourceAnimationController(Pane root, GameService gameService, IngamePlayerResourcesController ingamePlayerResourcesController) {
+    public ResourceAnimationController(Pane root, GameService gameService) {
         this.gameService = gameService;
         this.resourceNewAnimationController = new ResourceNewAnimationController(root, gameService);
-        this.resourceRemovedAnimationController = new ResourceRemovedAnimationController(root, gameService);
+        this.resourceRemovedAnimationController = new ResourceRemovedAnimationController(root, gameService, this);
+        this.devCardNewAnimationController = new DevCardNewAnimationController(root, gameService);
+        this.devCardRemovedAnimationController = new DevCardRemovedAnimationController(root, gameService);
         this.me = false;
 
         this.addPlayerListener();
@@ -44,6 +51,12 @@ public class ResourceAnimationController {
         iceView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_ice.png")).toString()));
         polarbearView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_polarbear.png")).toString()));
         whaleView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_whale.png")).toString()));
+
+        knightView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_knight.png")).toString()));
+        roadView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_road.png")).toString()));
+        plentyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_plenty.png")).toString()));
+        monopolyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_monopoly.png")).toString()));
+        vpointView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_vpoint.png")).toString()));
     }
 
     private void addPlayerListener() {
@@ -65,15 +78,18 @@ public class ResourceAnimationController {
     private void addMoveActionListener() {
         gameService.moveAction.addListener((observable, oldValue, newValue) -> {
             if(me) {
+                initCards();
+                me = false;
+
+                System.out.println("move");
                 this.handleResources(gameService.moveAction.get());
+                this.handleDevCards();
             }
         });
     }
 
     public void handleResources(String moveAction) {
         int counter = 0;
-        initCards();
-        me = false;
 
         Resources resources = valueAdded.resources();
         int brick = resources.brick();
@@ -93,7 +109,7 @@ public class ResourceAnimationController {
         int oldLumber = resources.lumber();
         int oldWool = resources.wool();
         int oldUnknown = resources.unknown();
-        
+
         if (oldOre > ore) {
             counter += 1;
             resourceRemovedAnimationController.removedResourceCardAnimation(carbonView, counter, 1, moveAction);
@@ -132,6 +148,77 @@ public class ResourceAnimationController {
         } else if (grain > oldGrain) {
             counter += 1;
             resourceNewAnimationController.newResourceCardAnimation(whaleView, counter, 5, moveAction);
+        }
+    }
+
+    public void handleDevCards() {
+        List<DevelopmentCard> devCardsNew = valueAdded.developmentCards();
+        knightNew = 0;
+        roadNew = 0;
+        plentyNew = 0;
+        monopolyNew = 0;
+        vpointNew = 0;
+        unknownNew = 0;
+
+        for(DevelopmentCard devCard : devCardsNew) {
+            switch (devCard.type()) {
+                case "knight" -> knightNew += 1;
+                case "road-building" -> roadNew += 1;
+                case "year-of-plenty" -> plentyNew += 1;
+                case "monopoly" -> monopolyNew += 1;
+                case "victory-point" -> vpointNew += 1;
+                case "unknown" -> unknownNew += 1;
+            }
+        }
+
+        devCardNewAnimationController.setCardCounts(knightNew, roadNew, plentyNew, monopolyNew, vpointNew);
+        devCardRemovedAnimationController.setCardCounts(knightNew, roadNew, plentyNew, monopolyNew, vpointNew);
+
+        List<DevelopmentCard> devCardsOld = valueRemoved.developmentCards();
+        knightOld = 0;
+        roadOld = 0;
+        plentyOld = 0;
+        monopolyOld = 0;
+        vpointOld = 0;
+        unknownOld = 0;
+
+        for(DevelopmentCard devCard : devCardsOld) {
+            switch (devCard.type()) {
+                case "knight" -> knightOld += 1;
+                case "road-building" -> roadOld += 1;
+                case "year-of-plenty" -> plentyOld += 1;
+                case "monopoly" -> monopolyOld += 1;
+                case "victory-point" -> vpointOld += 1;
+                case "unknown" -> unknownOld += 1;
+            }
+        }
+    }
+
+    public void handleNewDevCards() {
+        if (knightNew > knightOld) {
+            devCardNewAnimationController.newDevCardAnimationOne(knightView, 1, 1);
+        } else if (roadNew > roadOld) {
+            devCardNewAnimationController.newDevCardAnimationOne(roadView, 1, 2);
+        } else if (plentyNew > plentyOld) {
+            devCardNewAnimationController.newDevCardAnimationOne(plentyView, 1, 3);
+        } else if (monopolyNew > monopolyOld) {
+            devCardNewAnimationController.newDevCardAnimationOne(monopolyView, 1, 4);
+        } else if (vpointNew > vpointOld) {
+            devCardNewAnimationController.newDevCardAnimationOne(vpointView, 1, 5);
+        }
+    }
+
+    public void handleRemovedDevCards() {
+        if (knightOld > knightNew) {
+            devCardRemovedAnimationController.removedDevCardAnimationOne(knightView, 1, 1);
+        } else if (roadOld > roadNew) {
+            devCardRemovedAnimationController.removedDevCardAnimationOne(roadView, 1, 2);
+        } else if (plentyOld > plentyNew) {
+            devCardRemovedAnimationController.removedDevCardAnimationOne(plentyView, 1, 3);
+        } else if (monopolyOld > monopolyNew) {
+            devCardRemovedAnimationController.removedDevCardAnimationOne(monopolyView, 1, 4);
+        } else if (vpointOld > vpointNew) {
+            devCardRemovedAnimationController.removedDevCardAnimationOne(vpointView, 1, 5);
         }
     }
 

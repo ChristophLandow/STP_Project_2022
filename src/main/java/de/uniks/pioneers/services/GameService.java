@@ -35,6 +35,7 @@ public class GameService {
     private final IngameService ingameService;
 
     public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
+    public ObservableMap<String, Integer> myDevCards = FXCollections.observableHashMap();
     public java.util.Map<String, Integer> missingResources = new HashMap<>();
     public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
     public int victoryPoints;
@@ -87,7 +88,11 @@ public class GameService {
                             ingameService.tradeAccepted.add(move);
                         }
 
-                        moveAction.set(move.action());
+                        if(moveAction.get() != null && moveAction.get().equals(move.action())) {
+                            moveAction.set(move.action() + "_again");
+                        } else {
+                            moveAction.set(move.action());
+                        }
                     }
                 })
         );
@@ -161,6 +166,7 @@ public class GameService {
                     // horrible malfunction for every listener, even added after the appointment
                     if(!userService.isSpectator()) {
                         myResources.putAll(players.get(me).resources().normalize().createObservableMap());
+                        myDevCards.putAll(getDevCardMap(players.get(me).developmentCards()));
                     }
                 }, Throwable::printStackTrace));
     }
@@ -215,6 +221,10 @@ public class GameService {
 
     public void updateResources(String type, int amount) {
         myResources.replace(type, myResources.get(type), amount);
+    }
+
+    public void updateDevCards(String type, int amount) {
+        myDevCards.replace(type, myDevCards.get(type), amount);
     }
 
     private void calcMissingRessources(Map<String, Integer> cost) {
@@ -324,6 +334,36 @@ public class GameService {
 
     public void resetMyResources() {
         myResources = FXCollections.observableHashMap();
+        myDevCards = FXCollections.observableHashMap();
         notEnoughRessources = new SimpleBooleanProperty();
+    }
+
+    public HashMap<String, Integer> getDevCardMap(List<DevelopmentCard> devCards) {
+        HashMap<String, Integer> devCardMap = new HashMap<>();
+        int knight = 0;
+        int road = 0;
+        int plenty = 0;
+        int monopoly = 0;
+        int vpoint = 0;
+        int unknown = 0;
+
+        for(DevelopmentCard devCard : devCards) {
+            switch (devCard.type()) {
+                case "knight" -> knight += 1;
+                case "road-building" -> road += 1;
+                case "year-of-plenty" -> plenty += 1;
+                case "monopoly" -> monopoly += 1;
+                case "victory-point" -> vpoint += 1;
+                case "unknown" -> unknown += 1;
+            }
+        }
+
+        devCardMap.put("knight", knight);
+        devCardMap.put("road", road);
+        devCardMap.put("plenty", plenty);
+        devCardMap.put("monopoly", monopoly);
+        devCardMap.put("vpoint", vpoint);
+
+        return devCardMap;
     }
 }
