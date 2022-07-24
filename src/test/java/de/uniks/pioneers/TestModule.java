@@ -13,6 +13,8 @@ import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -190,7 +192,7 @@ public class TestModule {
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10, null, true, 0)));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(2,10, null, true, 0)));
             }
 
             @Override
@@ -468,6 +470,19 @@ public class TestModule {
             @Override
             public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
                 return Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0, new ArrayList<>()));
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    MapApiService mapApiService() {
+        return new MapApiService() {
+            @Override
+            public Observable<List<MapTemplate>> getMaps() {
+                ArrayList<MapTemplate> returnValue = new ArrayList<>();
+                returnValue.add(new MapTemplate("","","","","","",0,null, null));
+                return Observable.just(returnValue);
             }
         };
     }
