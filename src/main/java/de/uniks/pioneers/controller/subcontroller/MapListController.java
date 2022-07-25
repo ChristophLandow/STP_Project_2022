@@ -23,7 +23,7 @@ public class MapListController implements Controller {
     private ScrollPane mapListScrollPane;
 
     private final MapBrowserService mapBrowserService;
-    private final Provider<MapDetailsController> mapDetailsControllerProvider;
+    private Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
     public MapListController(MapBrowserService mapBrowserService, Provider<MapDetailsController> mapDetailsControllerProvider) {
