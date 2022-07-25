@@ -40,8 +40,6 @@ public class MapBrowserController implements Controller {
     @Inject Provider<MapDetailsController> mapDetailsControllerProvider;
     @Inject PrefService prefService;
 
-    @FXML ScrollPane MapListScrollPane;
-    @FXML ListView<HBox> mapListView;
     @FXML private final App app;
     private LobbyScreenController lobbyScreenController;
     private final StylesService stylesService;

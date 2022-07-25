@@ -1,9 +1,13 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.services.StylesService;
+import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import de.uniks.pioneers.services.UserService;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -19,13 +23,17 @@ import javax.inject.Provider;
 import java.io.IOException;
 
 public class MapListController implements Controller {
+    private final App app;
+    private final StylesService stylesService;
+    private final UserService userService;
+    private final PrefService prefService;
     private ListView<HBox> mapList;
     private ScrollPane mapListScrollPane;
     private final MapBrowserService mapBrowserService;
-    private Provider<MapDetailsController> mapDetailsControllerProvider;
+    private final Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
-    public MapListController(App app, PrefService prefService, StylesService styleService, MapBrowserService mapBrowserService, UserService userService,Provider<MapDetailsController> mapDetailsControllerProvider) {
+    public MapListController(App app, PrefService prefService, StylesService styleService, MapBrowserService mapBrowserService, UserService userService, Provider<MapDetailsController> mapDetailsControllerProvider) {
         this.mapBrowserService = mapBrowserService;
         this.app = app;
         this.stylesService = styleService;
