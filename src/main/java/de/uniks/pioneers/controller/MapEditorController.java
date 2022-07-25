@@ -3,7 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
-import de.uniks.pioneers.services.EditorManager;
+import de.uniks.pioneers.services.BoardGenerator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,9 +20,6 @@ import javafx.scene.shape.Polygon;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
-
-import de.uniks.pioneers.GameConstants;
-
 import static de.uniks.pioneers.GameConstants.*;
 
 
@@ -52,7 +49,7 @@ public class MapEditorController implements Controller{
     @FXML
     Spinner<Integer> sizeSpinner;
 
-    EditorManager editorManager;
+    BoardGenerator boardGenerator;
 
     List<EditTile> tiles = new ArrayList<>();
 
@@ -65,9 +62,9 @@ public class MapEditorController implements Controller{
 
 
     @Inject
-    public MapEditorController(EditorManager editorManager){
+    public MapEditorController(){
 
-        this.editorManager = editorManager;
+        this.boardGenerator = new BoardGenerator();
 
     }
 
@@ -108,11 +105,16 @@ public class MapEditorController implements Controller{
 
     private void display(int size){
 
+        System.out.println(this.tiles.size());
+        System.out.println(this.frame.size());
+        System.out.println(this.tileViews.size());
+
         double scale = 100.0/size;
 
-        this.frame = this.editorManager.buildFrame(size, scale);
+        this.frame = this.boardGenerator.buildEditorFrame(size, scale);
 
         this.scrollPaneAnchorPane.getChildren().removeAll(this.tileViews);
+        this.tileViews.clear();
 
         for(HexTile hexTile : this.frame){
 

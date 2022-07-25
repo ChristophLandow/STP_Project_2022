@@ -66,4 +66,19 @@ public class BoardGenerator {
         }
         return this.corners;
     }
+
+    public List<HexTile> buildEditorFrame(int size, double scale) {
+
+        List<HexTile> frame = new ArrayList<>();
+
+        for(int q = -size; q <= size; q++){
+            for(int r = max(-size, -q-size); r <= min(+size, -q+size); r++){
+
+                int s = -q-r;
+                frame.add(new HexTile(q,r,s, scale, true));
+
+            }
+        }
+        return frame;
+    }
 }

@@ -50,9 +50,7 @@ public class EditTile {
                 this.numberView.setImage(image);
                 this.numberView.toFront();
                 return;
-
             }
-
             Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.mapEditorController.selection + ".png")).toString());
 
             this.view.setFill(new ImagePattern(image));
