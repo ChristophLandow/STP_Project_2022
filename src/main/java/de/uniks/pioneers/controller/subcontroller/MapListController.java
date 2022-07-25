@@ -15,6 +15,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 
 public class MapListController implements Controller {
@@ -22,14 +23,21 @@ public class MapListController implements Controller {
     private ScrollPane mapListScrollPane;
 
     private final MapBrowserService mapBrowserService;
+    private Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
-    public MapListController(MapBrowserService mapBrowserService) {
+    public MapListController(MapBrowserService mapBrowserService, Provider<MapDetailsController> mapDetailsControllerProvider) {
         this.mapBrowserService = mapBrowserService;
+        this.mapDetailsControllerProvider = mapDetailsControllerProvider;
     }
 
     @Override
     public void init() {
+        this.mapList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                mapDetailsControllerProvider.get().updateMapDetails(newValue.getId());
+            }
+        });
         mapListScrollPane.setOnScroll((ScrollEvent event) -> mapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER));
     }
 

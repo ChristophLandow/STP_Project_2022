@@ -3,6 +3,7 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.rest.MapApiService;
 import de.uniks.pioneers.ws.EventListener;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,6 +50,10 @@ public class MapBrowserService {
 
     public ObservableList<MapTemplate> getMaps() {
         return maps;
+    }
+
+    public Observable<MapTemplate> getMap(String id) {
+        return mapApiService.getMap(id);
     }
 
     public void stop(){
