@@ -51,7 +51,7 @@ public class MapBrowserService {
                         maps.remove(mapTemplate);
                     }
                     else if(event.event().endsWith(".updated")){
-                        maps.forEach(m -> m = (m._id().endsWith(mapTemplate._id()) ? mapTemplate : m));
+                        maps.forEach(m -> m = (m._id().equals(mapTemplate._id()) ? mapTemplate : m));
                     }
                 }));
     }
