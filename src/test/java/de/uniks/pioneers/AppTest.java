@@ -4,6 +4,7 @@ import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.*;
+import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.PrefService;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -19,6 +20,7 @@ import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +100,7 @@ class AppTest extends ApplicationTest {
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "001", true, "#ffffff", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "002", true, "#000000", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "003", true, "#888888", false)));
+        TestModule.mapTemplateSubject.onNext(new Event<>(".updated", new MapTemplate("","","id1","Test","","",0, null, null)));
         write("\t\t");
         type(KeyCode.DOWN);
         type(KeyCode.UP);
