@@ -220,4 +220,12 @@ public class PrefService {
         preferences.put("rulesTextField", "");
         preferences.put("rulesChoiceBox", "");
     }
+
+    public void setVoteButtonState(String mapId, String state){
+        preferences.put(mapId,state);
+    }
+
+    public Boolean getVoteButtonState(String mapId){
+        return preferences.get(mapId, "").equals(VOTED);
+    }
 }

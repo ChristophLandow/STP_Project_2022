@@ -115,7 +115,7 @@ public class MapBrowserController implements Controller {
     }
 
     public void leaveToLobby(ActionEvent actionEvent) {
-        LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
+        lobbyScreenController = lobbyScreenControllerProvider.get();
         app.show(lobbyScreenController);
     }
     public App getApp() {
