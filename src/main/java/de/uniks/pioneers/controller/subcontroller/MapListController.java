@@ -21,7 +21,6 @@ import java.io.IOException;
 public class MapListController implements Controller {
     private ListView<HBox> mapList;
     private ScrollPane mapListScrollPane;
-
     private final MapBrowserService mapBrowserService;
     private Provider<MapDetailsController> mapDetailsControllerProvider;
 
