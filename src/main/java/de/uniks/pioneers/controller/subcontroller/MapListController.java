@@ -4,16 +4,12 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
@@ -27,7 +23,7 @@ public class MapListController implements Controller {
     private ScrollPane mapListScrollPane;
 
     private final MapBrowserService mapBrowserService;
-    private Provider<MapDetailsController> mapDetailsControllerProvider;
+    private final Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
     public MapListController(MapBrowserService mapBrowserService, Provider<MapDetailsController> mapDetailsControllerProvider) {

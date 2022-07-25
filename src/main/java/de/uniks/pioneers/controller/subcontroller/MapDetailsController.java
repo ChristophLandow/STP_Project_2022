@@ -18,7 +18,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 @Singleton
 public class MapDetailsController {
 
-    private Pane mapPreviewPane;
+    private Pane mapPreviewPane; // need it later for the map preview
     private ImageView creatorImageView;
     private Text lastUpdatedOutputText;
     private Text votesOutputText;
@@ -42,9 +42,8 @@ public class MapDetailsController {
         return this;
     }
 
-    public MapDetailsController setCreatorImageView(ImageView creatorImageView) {
+    public void setCreatorImageView(ImageView creatorImageView) {
         this.creatorImageView = creatorImageView;
-        return this;
     }
 
     // update details when new map is clicked
