@@ -4,11 +4,16 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
+import de.uniks.pioneers.model.HarborTemplate;
+import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.services.EditorManager;
+import de.uniks.pioneers.services.MapService;
+import de.uniks.pioneers.services.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
 
@@ -47,6 +53,10 @@ public class MapEditorController implements Controller{
 
     EditorManager editorManager;
 
+    private final MapService mapService;
+
+    private final UserService userService;
+
     @Inject
     Provider<MapBrowserController> mapBrowserControllerProvider;
 
@@ -59,9 +69,11 @@ public class MapEditorController implements Controller{
 
 
     @Inject
-    public MapEditorController(EditorManager editorManager, App app){
+    public MapEditorController(EditorManager editorManager, MapService mapService, UserService userService, App app){
 
         this.editorManager = editorManager;
+        this.mapService = mapService;
+        this.userService = userService;
         this.app = app;
         init();
 
@@ -129,6 +141,20 @@ public class MapEditorController implements Controller{
     public void toMaps(){
     }
     public void save(ActionEvent event){
+        //TODO: get the actual Mapdetails
+        List<TileTemplate> tiles = new ArrayList<>();
+        tiles.add(new TileTemplate(0, 0, 0, "desert", 12));
+        List<HarborTemplate> harbors = new ArrayList<>();
+        harbors.add(new HarborTemplate(0, 0, 0, "grain", 1));
+        if (mapService.getCurrentMap().createdBy().equals(userService.getCurrentUser()._id())) {
+            mapService.saveMap(tiles, harbors)
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(err -> handleSaveError())
+                    .subscribe();
+        } else {
+            //TODO: create the map
+            System.out.println("nicht deine Map");
+        }
         MapBrowserController mapBrowserController =  mapBrowserControllerProvider.get();
         this.app.show(mapBrowserController);
     }
@@ -147,4 +173,12 @@ public class MapEditorController implements Controller{
     public void selectCoal(MouseEvent mouseEvent) {this.selection = "mountains";}
 
     public void selectDesert(MouseEvent mouseEvent) {this.selection = "desert";}
+
+    private void handleSaveError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText("Map-Saving-Error");
+        alert.setContentText("You need to create this map first");
+        alert.showAndWait();
+    }
 }

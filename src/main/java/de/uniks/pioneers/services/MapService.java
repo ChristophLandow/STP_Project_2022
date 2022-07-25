@@ -16,12 +16,22 @@ public class MapService {
 
     private final MapApiService mapApiService;
 
+    private MapTemplate currentMap;
+
     @Inject
     public MapService(MapApiService mapApiService) {
         this.mapApiService = mapApiService;
     }
 
-    private Observable<MapTemplate> saveMap(String id, List<TileTemplate> tiles, List<HarborTemplate> harbors) {
-        return mapApiService.updateMap(id, new UpdateMapTemplateDto(null, null, tiles, harbors));
+    public Observable<MapTemplate> saveMap(List<TileTemplate> tiles, List<HarborTemplate> harbors) {
+        return mapApiService.updateMap(currentMap._id(), new UpdateMapTemplateDto(null, null, tiles, harbors));
+    }
+
+    public void setCurrentMap(MapTemplate mapTemplate) {
+        this.currentMap = mapTemplate;
+    }
+
+    public MapTemplate getCurrentMap() {
+        return currentMap;
     }
 }
