@@ -15,6 +15,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 
 public class MapListController implements Controller {
@@ -22,14 +23,21 @@ public class MapListController implements Controller {
     private ScrollPane mapListScrollPane;
 
     private final MapBrowserService mapBrowserService;
+    private Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
-    public MapListController(MapBrowserService mapBrowserService) {
+    public MapListController(MapBrowserService mapBrowserService, Provider<MapDetailsController> mapDetailsControllerProvider) {
         this.mapBrowserService = mapBrowserService;
+        this.mapDetailsControllerProvider = mapDetailsControllerProvider;
     }
 
     @Override
     public void init() {
+        this.mapList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                mapDetailsControllerProvider.get().updateMapDetails(newValue.getId());
+            }
+        });
         mapListScrollPane.setOnScroll((ScrollEvent event) -> mapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER));
     }
 
@@ -80,8 +88,17 @@ public class MapListController implements Controller {
             if(n.getId().equals("MapNameLabel")){
                 ((Label) n).setText(map.name());
             }
-            //Add other modifications of HBox elements
         }
+
+        sortList();
+    }
+
+    private void sortList(){
+        mapList.getItems().sort(((o1, o2) -> {
+            Label voting1 = (Label) o1.getChildren().get(1);
+            Label voting2 = (Label) o2.getChildren().get(1);
+            return (Integer.parseInt(voting1.getText()) < Integer.parseInt(voting2.getText())) ? 1 : 0;
+        }));
     }
 
     public void setMapList(ListView<HBox> mapList) {
