@@ -12,10 +12,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
 
-import static de.uniks.pioneers.Constants.*;
+import static de.uniks.pioneers.Constants.API_PREFIX;
+import static de.uniks.pioneers.Constants.BASE_URL;
 
 @Module
 public class MainModule {

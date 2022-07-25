@@ -1,7 +1,10 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.model.*;
+import de.uniks.pioneers.model.Building;
+import de.uniks.pioneers.model.Player;
+import de.uniks.pioneers.model.RemainingBuildings;
+import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
@@ -26,7 +29,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.CITY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 

@@ -1,4 +1,5 @@
 package de.uniks.pioneers.controller.subcontroller;
+
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.controller.LobbyScreenController;
@@ -11,6 +12,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;

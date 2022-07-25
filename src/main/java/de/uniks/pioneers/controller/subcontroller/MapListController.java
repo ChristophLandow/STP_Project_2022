@@ -1,12 +1,12 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.Main;
-import de.uniks.pioneers.services.StylesService;
-import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import de.uniks.pioneers.services.UserService;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
@@ -30,16 +30,15 @@ public class MapListController implements Controller {
     private ListView<HBox> mapList;
     private ScrollPane mapListScrollPane;
     private final MapBrowserService mapBrowserService;
-    private final Provider<MapDetailsController> mapDetailsControllerProvider;
+    @Inject Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
-    public MapListController(App app, PrefService prefService, StylesService styleService, MapBrowserService mapBrowserService, UserService userService, Provider<MapDetailsController> mapDetailsControllerProvider) {
+    public MapListController(App app, PrefService prefService, StylesService styleService, MapBrowserService mapBrowserService, UserService userService) {
         this.mapBrowserService = mapBrowserService;
         this.app = app;
         this.stylesService = styleService;
         this.userService = userService;
         this.prefService = prefService;
-        this.mapDetailsControllerProvider = mapDetailsControllerProvider;
     }
 
     @Override
@@ -67,11 +66,13 @@ public class MapListController implements Controller {
             else if (c.wasRemoved()){
                 c.getRemoved().forEach(mapTemplate -> mapList.getItems().removeIf(hBox -> hBox.getId().equals(mapTemplate._id())));
             }
-            else if(c.wasUpdated()){
-                for(int i = c.getFrom(); i <= c.getTo(); i++){
-                    MapTemplate mapToUpdate = mapBrowserService.getMaps().get(i);
-                    updateListElement((HBox) mapList.lookup(mapToUpdate._id()), mapToUpdate);
-                }
+        });
+
+        mapBrowserService.getUpdateMaps().addListener((ListChangeListener<? super MapTemplate>) c-> {
+            c.next();
+            if(c.wasAdded()){
+                c.getAddedSubList().forEach(mapToUpdate -> updateListElement((HBox) mapList.lookup("#" + mapToUpdate._id()), mapToUpdate));
+                mapBrowserService.getUpdateMaps().removeAll(c.getAddedSubList());
             }
         });
 
@@ -88,11 +89,12 @@ public class MapListController implements Controller {
         loader.setControllerFactory(c -> this);
         try {
             HBox newListElement = loader.load();
-            newListElement.setId(map._id());
             mapList.getItems().add(newListElement);
 
             //Adjust HBox Elements
             updateListElement(newListElement, map);
+
+            //Add MapBrowserListElementController
             MapBrowserListElementController elementController = new MapBrowserListElementController(prefService, userService, mapBrowserService, map, newListElement);
             elementController.init();
         } catch (IOException e) {
@@ -103,7 +105,7 @@ public class MapListController implements Controller {
     }
 
     private void updateListElement(HBox element, MapTemplate map){
-        element.setId(map.name());
+        element.setId(map._id());
         for(Node n : element.getChildren()){
             //show map name
             if(n.getId().equals("MapNameLabel")){

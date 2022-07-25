@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;

@@ -4,6 +4,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Pair;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
