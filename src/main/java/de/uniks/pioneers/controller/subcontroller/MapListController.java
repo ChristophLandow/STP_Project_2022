@@ -67,11 +67,13 @@ public class MapListController implements Controller {
             else if (c.wasRemoved()){
                 c.getRemoved().forEach(mapTemplate -> mapList.getItems().removeIf(hBox -> hBox.getId().equals(mapTemplate._id())));
             }
-            else if(c.wasUpdated()){
-                for(int i = c.getFrom(); i <= c.getTo(); i++){
-                    MapTemplate mapToUpdate = mapBrowserService.getMaps().get(i);
-                    updateListElement((HBox) mapList.lookup(mapToUpdate._id()), mapToUpdate);
-                }
+        });
+
+        mapBrowserService.getUpdateMaps().addListener((ListChangeListener<? super MapTemplate>) c-> {
+            c.next();
+            if(c.wasAdded()){
+                c.getAddedSubList().forEach(mapToUpdate -> updateListElement((HBox) mapList.lookup("#" + mapToUpdate._id()), mapToUpdate));
+                mapBrowserService.getUpdateMaps().removeAll(c.getAddedSubList());
             }
         });
 
@@ -88,11 +90,12 @@ public class MapListController implements Controller {
         loader.setControllerFactory(c -> this);
         try {
             HBox newListElement = loader.load();
-            newListElement.setId(map._id());
             mapList.getItems().add(newListElement);
 
             //Adjust HBox Elements
             updateListElement(newListElement, map);
+
+            //Add MapBrowserListElementController
             MapBrowserListElementController elementController = new MapBrowserListElementController(prefService, userService, mapBrowserService, map, newListElement);
             elementController.init();
         } catch (IOException e) {
@@ -103,7 +106,7 @@ public class MapListController implements Controller {
     }
 
     private void updateListElement(HBox element, MapTemplate map){
-        element.setId(map.name());
+        element.setId(map._id());
         for(Node n : element.getChildren()){
             //show map name
             if(n.getId().equals("MapNameLabel")){

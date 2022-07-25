@@ -14,7 +14,6 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -22,6 +21,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 @Singleton
 public class MapBrowserService {
     private final ObservableList<MapTemplate> maps = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<MapTemplate> updateMaps = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<String> mapNames = FXCollections.observableList(new ArrayList<>());
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final EventListener eventListener;
@@ -58,11 +58,7 @@ public class MapBrowserService {
                         mapNames.removeIf(mapName -> mapName.equals(mapTemplate.name()));
                     }
                     else if(event.event().endsWith(".updated")){
-                        maps.remove(mapTemplate);
-                        mapNames.removeIf(mapName -> mapName.equals(mapTemplate.name()));
-
-                        maps.add(mapTemplate);
-                        mapNames.add(mapTemplate.name());
+                        updateMaps.add(mapTemplate);
                     }
                 }));
     }
@@ -73,6 +69,10 @@ public class MapBrowserService {
 
     public Observable<MapTemplate> getMap(String id) {
         return mapApiService.getMap(id);
+    }
+
+    public ObservableList<MapTemplate> getUpdateMaps() {
+        return updateMaps;
     }
 
     public ObservableList<String> getMapNames() {

@@ -78,13 +78,16 @@ public class MapBrowserControllerTest extends ApplicationTest {
         returnValue.add(new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",7,null, null));
         returnValue.add(new MapTemplate("yesterday", "today", "map123", "map", null, "1234", 3, null, null));
 
+        List<MapTemplate> maps = new ArrayList<>();
+        when(mapBrowserService.getUpdateMaps()).thenReturn(FXCollections.observableArrayList(maps));
+
         when(mapBrowserService.getMaps()).thenReturn(FXCollections.observableArrayList(returnValue));
 
         app.start(stage);
         app.show(mapBrowserController);
     }
 
-    /*@Test
+    @Test
     public void updateMapDetails() {
         List<TileTemplate> tiles = new ArrayList<>();
         List<HarborTemplate> harbors = new ArrayList<>();
@@ -92,6 +95,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
         when(userService.getUserById("1234")).thenReturn(Observable.just(new User("1234", "me", "online", null)));
         when(mapBrowserService.getMap("map456")).thenReturn(Observable.just(new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",0,tiles, harbors)));
         when(mapBrowserService.getMap("map123")).thenReturn(Observable.just(new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors)));
+
 
         // select map123
         type(KeyCode.DOWN);
@@ -102,7 +106,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
         FxAssert.verifyThat("#createdByOutputText", TextMatchers.hasText("me"));
         FxAssert.verifyThat("#lastUpdatedOutputText", TextMatchers.hasText("2022-07-24, 14:47"));
         FxAssert.verifyThat("#votesOutputText", TextMatchers.hasText("3"));
-    }*/
+    }
 
     @Test
     void test() {
