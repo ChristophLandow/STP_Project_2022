@@ -487,6 +487,12 @@ public class TestModule {
                 returnValue.add(new MapTemplate("","","","","","",0,null, null));
                 return Observable.just(returnValue);
             }
+
+            @Override
+            public Observable<MapTemplate> getMap(String id) {
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                return Observable.just(mapTemplate);
+            }
         };
     }
 }
