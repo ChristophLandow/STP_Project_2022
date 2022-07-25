@@ -34,7 +34,9 @@ public class MapListController implements Controller {
     @Override
     public void init() {
         this.mapList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mapDetailsControllerProvider.get().updateMapDetails(newValue.getId());
+            if (newValue != null) {
+                mapDetailsControllerProvider.get().updateMapDetails(newValue.getId());
+            }
         });
         mapListScrollPane.setOnScroll((ScrollEvent event) -> mapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER));
     }

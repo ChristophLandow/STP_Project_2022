@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.TestModule;
 import de.uniks.pioneers.controller.subcontroller.MapDetailsController;
 import de.uniks.pioneers.controller.subcontroller.MapListController;
 import de.uniks.pioneers.model.HarborTemplate;
@@ -26,7 +25,6 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextMatchers;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import javax.inject.Provider;
@@ -77,7 +75,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
         when(mapDetailsControllerProvider.get()).thenReturn(mapDetailsController);
 
         ArrayList<MapTemplate> returnValue = new ArrayList<>();
-        returnValue.add(new MapTemplate("","","","","","",0,null, null));
+        returnValue.add(new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",7,null, null));
         returnValue.add(new MapTemplate("yesterday", "today", "map123", "map", null, "1234", 3, null, null));
 
         when(mapBrowserService.getMaps()).thenReturn(FXCollections.observableArrayList(returnValue));
@@ -92,9 +90,11 @@ public class MapBrowserControllerTest extends ApplicationTest {
         List<HarborTemplate> harbors = new ArrayList<>();
 
         when(userService.getUserById("1234")).thenReturn(Observable.just(new User("1234", "me", "online", null)));
+        when(mapBrowserService.getMap("map456")).thenReturn(Observable.just(new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",0,tiles, harbors)));
         when(mapBrowserService.getMap("map123")).thenReturn(Observable.just(new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors)));
 
         // select map123
+        type(KeyCode.DOWN);
         type(KeyCode.DOWN);
 
         // check label contents
