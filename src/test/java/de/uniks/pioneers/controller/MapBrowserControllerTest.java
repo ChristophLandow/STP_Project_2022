@@ -96,7 +96,6 @@ public class MapBrowserControllerTest extends ApplicationTest {
         when(mapBrowserService.getMap("map456")).thenReturn(Observable.just(new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",0,tiles, harbors)));
         when(mapBrowserService.getMap("map123")).thenReturn(Observable.just(new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors)));
 
-
         // select map123
         type(KeyCode.DOWN);
         type(KeyCode.DOWN);

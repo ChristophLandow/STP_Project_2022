@@ -30,16 +30,15 @@ public class MapListController implements Controller {
     private ListView<HBox> mapList;
     private ScrollPane mapListScrollPane;
     private final MapBrowserService mapBrowserService;
-    private final Provider<MapDetailsController> mapDetailsControllerProvider;
+    @Inject Provider<MapDetailsController> mapDetailsControllerProvider;
 
     @Inject
-    public MapListController(App app, PrefService prefService, StylesService styleService, MapBrowserService mapBrowserService, UserService userService, Provider<MapDetailsController> mapDetailsControllerProvider) {
+    public MapListController(App app, PrefService prefService, StylesService styleService, MapBrowserService mapBrowserService, UserService userService) {
         this.mapBrowserService = mapBrowserService;
         this.app = app;
         this.stylesService = styleService;
         this.userService = userService;
         this.prefService = prefService;
-        this.mapDetailsControllerProvider = mapDetailsControllerProvider;
     }
 
     @Override
