@@ -13,8 +13,6 @@ import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
