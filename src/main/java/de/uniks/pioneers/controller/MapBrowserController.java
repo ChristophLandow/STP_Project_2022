@@ -41,6 +41,7 @@ public class MapBrowserController implements Controller {
     @Inject PrefService prefService;
 
     @FXML private final App app;
+    private LobbyScreenController lobbyScreenController;
     private final StylesService stylesService;
     private MapListController mapListController;
 
@@ -101,7 +102,7 @@ public class MapBrowserController implements Controller {
     }
 
     public void leaveToLobby(ActionEvent actionEvent) {
-        LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
+        lobbyScreenController = lobbyScreenControllerProvider.get();
         app.show(lobbyScreenController);
     }
     public App getApp() {

@@ -84,7 +84,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
         app.show(mapBrowserController);
     }
 
-    @Test
+    /*@Test
     public void updateMapDetails() {
         List<TileTemplate> tiles = new ArrayList<>();
         List<HarborTemplate> harbors = new ArrayList<>();
@@ -102,7 +102,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
         FxAssert.verifyThat("#createdByOutputText", TextMatchers.hasText("me"));
         FxAssert.verifyThat("#lastUpdatedOutputText", TextMatchers.hasText("2022-07-24, 14:47"));
         FxAssert.verifyThat("#votesOutputText", TextMatchers.hasText("3"));
-    }
+    }*/
 
     @Test
     void test() {
