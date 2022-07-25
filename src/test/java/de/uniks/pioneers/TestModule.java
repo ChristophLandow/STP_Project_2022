@@ -13,8 +13,6 @@ import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -36,6 +34,7 @@ public class TestModule {
     public static final PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
     public static final PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
     public static final PublishSubject<Event<MessageDto>> gameChatSubject = PublishSubject.create();
+    public static final PublishSubject<Event<MapTemplate>> mapTemplateSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -113,6 +112,8 @@ public class TestModule {
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(gameBuildingSubject);
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(gameStateSubject);
         when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(gameMoveSubject);
+
+        when(eventListener.listen("maps.*.*", MapTemplate.class)).thenReturn(mapTemplateSubject);
 
         return eventListener;
     }

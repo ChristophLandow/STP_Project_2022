@@ -17,6 +17,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 @Singleton
 public class MapBrowserService {
     private final ObservableList<MapTemplate> maps = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<String> mapNames = FXCollections.observableList(new ArrayList<>());
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final EventListener eventListener;
     private final MapApiService mapApiService;
@@ -29,7 +30,12 @@ public class MapBrowserService {
     }
 
     private void initMapListener(){
-        disposable.add(mapApiService.getMaps().observeOn(FX_SCHEDULER).subscribe(maps::setAll));
+        disposable.add(mapApiService.getMaps().observeOn(FX_SCHEDULER).subscribe((mapTemplates) -> {
+            maps.setAll(mapTemplates);
+            for(MapTemplate map : maps){
+                mapNames.add(map.name());
+            }
+        }));
 
         disposable.add(eventListener.listen("maps.*.*", MapTemplate.class)
                 .observeOn(FX_SCHEDULER)
@@ -38,12 +44,18 @@ public class MapBrowserService {
 
                     if(event.event().endsWith(".created")){
                         maps.add(mapTemplate);
+                        mapNames.add(mapTemplate.name());
                     }
                     else if(event.event().endsWith(".deleted")){
                         maps.remove(mapTemplate);
+                        mapNames.removeIf(mapName -> mapName.equals(mapTemplate.name()));
                     }
                     else if(event.event().endsWith(".updated")){
-                        maps.forEach(m -> m = (m._id().endsWith(mapTemplate._id()) ? mapTemplate : m));
+                        maps.remove(mapTemplate);
+                        mapNames.removeIf(mapName -> mapName.equals(mapTemplate.name()));
+
+                        maps.add(mapTemplate);
+                        mapNames.add(mapTemplate.name());
                     }
                 }));
     }
@@ -54,6 +66,10 @@ public class MapBrowserService {
 
     public Observable<MapTemplate> getMap(String id) {
         return mapApiService.getMap(id);
+    }
+
+    public ObservableList<String> getMapNames() {
+        return mapNames;
     }
 
     public void stop(){

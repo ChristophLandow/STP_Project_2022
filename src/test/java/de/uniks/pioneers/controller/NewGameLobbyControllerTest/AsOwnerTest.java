@@ -5,8 +5,8 @@ import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
 import de.uniks.pioneers.controller.subcontroller.NewGameLobbyReadyController;
+import de.uniks.pioneers.controller.subcontroller.NewGameLobbySpinnerController;
 import de.uniks.pioneers.dto.Event;
-import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
@@ -31,6 +31,7 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
+import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -75,6 +76,12 @@ class AsOwnerTest extends ApplicationTest {
 
     @InjectMocks
     NewGameScreenLobbyController newGameScreenLobbyController;
+
+    @Mock(name = "newGameLobbySpinnerControllerProvider")
+    Provider<NewGameLobbySpinnerController> newGameLobbySpinnerControllerProvider;
+
+    @Mock
+    NewGameLobbySpinnerController newGameLobbySpinnerController;
 
     final String randomColor02 = createRandomColor();
     final String randomColor03 = createRandomColor();
@@ -122,6 +129,8 @@ class AsOwnerTest extends ApplicationTest {
         when(eventListener.listen(patternToObserveGameMembers, Member.class)).thenReturn(Observable.just(new Event<>("games.3.member.3.created", nowMember)));
         when(eventListener.listen(patternToObserveGame, Game.class)).thenReturn(Observable.just(new Event<>("games.3.updated", testGame)));
         when(newGameLobbyService.getMembers()).thenReturn(FXCollections.observableArrayList());
+
+        when(newGameLobbySpinnerControllerProvider.get()).thenReturn(newGameLobbySpinnerController);
 
         newGameScreenLobbyController.setPassword("12345678");
         newGameScreenLobbyController.setGame(testGame);

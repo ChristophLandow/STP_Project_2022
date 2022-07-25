@@ -21,7 +21,6 @@ import java.io.IOException;
 public class MapListController implements Controller {
     private ListView<HBox> mapList;
     private ScrollPane mapListScrollPane;
-
     private final MapBrowserService mapBrowserService;
     private Provider<MapDetailsController> mapDetailsControllerProvider;
 
@@ -49,6 +48,9 @@ public class MapListController implements Controller {
             c.next();
             if(c.wasAdded()){
                 c.getAddedSubList().forEach(this::renderListElement);
+            }
+            else if (c.wasRemoved()){
+                c.getRemoved().forEach(mapTemplate -> mapList.getItems().removeIf(hBox -> hBox.getId().equals(mapTemplate._id())));
             }
             else if(c.wasUpdated()){
                 for(int i = c.getFrom(); i <= c.getTo(); i++){
