@@ -47,13 +47,12 @@ public class MapBrowserListElementController {
         thumbDown = new Image(Objects.requireNonNull(getClass().getResource("thumbDown.jpg")).toString());
         thumbUp = new Image(Objects.requireNonNull(getClass().getResource("thumbUp.jpg")).toString());
         voteButton.setOnAction(this::vote);
-        prefService.setVoteButtonState(map._id(),  VOTED);
-        voteButton.setId("VoteButtonVoted");
-        voteButtonImageView.setImage(thumbDown);
-        voteButton.setGraphic(voteButtonImageView);
-        try{
-            mapBrowserService.getVoteFromUSer(map._id(), userService.getCurrentUser()._id());
-        } catch (HttpException httpException) {
+        if (prefService.getVoteButtonState(map._id())) {
+            prefService.setVoteButtonState(map._id(), VOTED);
+            voteButton.setId("VoteButtonVoted");
+            voteButtonImageView.setImage(thumbDown);
+            voteButton.setGraphic(voteButtonImageView);
+        } else {
             prefService.setVoteButtonState(map._id(), NOT_VOTED);
             voteButton.setId("VoteButtonNotVoted");
             voteButtonImageView.setImage(thumbUp);

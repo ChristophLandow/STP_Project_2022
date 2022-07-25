@@ -81,13 +81,9 @@ public class MapBrowserService {
     }
 
     private  void handleHttpError(Throwable exception) throws IOException {
-        String errorBody;
         if (exception instanceof HttpException httpException) {
-            errorBody = Objects.requireNonNull(Objects.requireNonNull(httpException.response()).errorBody()).string();
-        } else {
             return;
         }
-        System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 
 }
