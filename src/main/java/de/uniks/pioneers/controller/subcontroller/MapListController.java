@@ -42,6 +42,9 @@ public class MapListController implements Controller {
             if(c.wasAdded()){
                 c.getAddedSubList().forEach(this::renderListElement);
             }
+            else if (c.wasRemoved()){
+                c.getRemoved().forEach(mapTemplate -> mapList.getItems().removeIf(hBox -> hBox.getId().equals(mapTemplate._id())));
+            }
             else if(c.wasUpdated()){
                 for(int i = c.getFrom(); i <= c.getTo(); i++){
                     MapTemplate mapToUpdate = mapBrowserService.getMaps().get(i);
