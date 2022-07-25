@@ -6,6 +6,7 @@ import de.uniks.pioneers.controller.subcontroller.MapDetailsController;
 import de.uniks.pioneers.controller.subcontroller.MapListController;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
+import de.uniks.pioneers.services.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,7 +47,6 @@ public class MapBrowserController implements Controller {
     @Inject PrefService prefService;
 
     @FXML private final App app;
-    private LobbyScreenController lobbyScreenController;
     @FXML
     Button mapBrowserCreateButton;
     @FXML
@@ -115,8 +115,8 @@ public class MapBrowserController implements Controller {
     }
 
     public void leaveToLobby(ActionEvent actionEvent) {
-        lobbyScreenController = lobbyScreenControllerProvider.get();
-        app.show(lobbyScreenController);
+        LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
+        this.app.show(lobbyScreenController);
     }
     public App getApp() {
         return this.app;
