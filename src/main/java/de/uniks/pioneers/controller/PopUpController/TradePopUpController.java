@@ -323,3 +323,4 @@ public class TradePopUpController implements Controller {
         alert.showAndWait();
     }
 }
+
