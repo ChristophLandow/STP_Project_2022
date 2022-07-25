@@ -2,7 +2,10 @@ package de.uniks.pioneers.controller.NewGameLobbyControllerTest;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
-import de.uniks.pioneers.controller.subcontroller.*;
+import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
+import de.uniks.pioneers.controller.subcontroller.GameChatController;
+import de.uniks.pioneers.controller.subcontroller.NewGameLobbyReadyController;
+import de.uniks.pioneers.controller.subcontroller.NewGameLobbySpinnerController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;

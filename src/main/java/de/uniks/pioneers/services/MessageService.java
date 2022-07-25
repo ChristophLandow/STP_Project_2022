@@ -10,10 +10,11 @@ import io.reactivex.rxjava3.core.Observable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class MessageService {

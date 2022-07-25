@@ -2,20 +2,19 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.dto.CreateVoteDto;
 import de.uniks.pioneers.model.MapTemplate;
-
 import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import javafx.event.ActionEvent;
-import static de.uniks.pioneers.Constants.*;
 import javafx.scene.control.Button;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import retrofit2.HttpException;
 
 import java.util.Objects;
+
+import static de.uniks.pioneers.Constants.NOT_VOTED;
+import static de.uniks.pioneers.Constants.VOTED;
 
 
 public class MapBrowserListElementController {

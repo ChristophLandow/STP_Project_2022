@@ -7,6 +7,7 @@ import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.services.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.beans.property.SimpleStringProperty;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;

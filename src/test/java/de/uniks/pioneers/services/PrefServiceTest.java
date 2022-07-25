@@ -13,9 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.*;
-import static de.uniks.pioneers.GameConstants.*;
+import static de.uniks.pioneers.GameConstants.FEMALE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

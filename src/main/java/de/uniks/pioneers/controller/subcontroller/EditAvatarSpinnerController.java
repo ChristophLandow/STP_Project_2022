@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.image.Image;
+
 import java.util.function.Consumer;
 
 public class EditAvatarSpinnerController extends AvatarSpinnerController {

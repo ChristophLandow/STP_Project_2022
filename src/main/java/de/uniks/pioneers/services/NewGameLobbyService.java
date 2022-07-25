@@ -9,6 +9,7 @@ import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;

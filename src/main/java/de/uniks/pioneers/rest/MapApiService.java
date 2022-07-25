@@ -1,7 +1,6 @@
 package de.uniks.pioneers.rest;
 
 import de.uniks.pioneers.model.MapTemplate;
-import de.uniks.pioneers.model.User;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

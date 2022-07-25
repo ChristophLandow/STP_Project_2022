@@ -6,6 +6,7 @@ import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.AuthApiService;
 import io.reactivex.rxjava3.core.Observable;
+
 import javax.inject.Inject;
 import java.io.IOException;
 

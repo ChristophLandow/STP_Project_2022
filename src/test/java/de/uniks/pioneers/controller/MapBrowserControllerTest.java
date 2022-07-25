@@ -25,11 +25,11 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextMatchers;
 
-import static org.mockito.Mockito.when;
-
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MapBrowserControllerTest extends ApplicationTest {

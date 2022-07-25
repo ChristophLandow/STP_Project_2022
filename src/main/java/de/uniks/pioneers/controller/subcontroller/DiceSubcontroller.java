@@ -14,7 +14,6 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.util.Objects;
 import java.util.Timer;
 

@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;

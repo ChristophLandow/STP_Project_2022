@@ -1,12 +1,12 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.Main;
-import de.uniks.pioneers.services.StylesService;
-import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.StylesService;
 import de.uniks.pioneers.services.UserService;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;

@@ -4,6 +4,7 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

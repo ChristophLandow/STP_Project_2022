@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Timer;
