@@ -7,6 +7,7 @@ import de.uniks.pioneers.rest.GameApiService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
+
 import static de.uniks.pioneers.Constants.*;
 
 @Singleton

@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.HashMap;

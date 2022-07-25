@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -29,7 +30,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static de.uniks.pioneers.Constants.*;
+import static de.uniks.pioneers.Constants.CHAT_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class ChatController implements Controller {
     @FXML public Button sendButton;

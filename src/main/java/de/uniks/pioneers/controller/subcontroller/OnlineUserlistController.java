@@ -7,6 +7,7 @@ import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.collections.ListChangeListener;
 import javafx.scene.input.MouseEvent;
+
 import javax.inject.Inject;
 
 public class OnlineUserlistController {

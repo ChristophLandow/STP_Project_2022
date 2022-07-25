@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.PopupWindow;
 import javafx.stage.Window;
+
 import javax.inject.Inject;
 
 public class ColorPickerController {

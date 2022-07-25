@@ -8,7 +8,9 @@ import dagger.Provides;
 import de.uniks.pioneers.dto.*;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
-import de.uniks.pioneers.services.*;
+import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.TokenStorage;
 import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
@@ -18,12 +20,16 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
-import static de.uniks.pioneers.Constants.*;
-import static org.mockito.Mockito.*;
+
+import static de.uniks.pioneers.Constants.API_PREFIX;
+import static de.uniks.pioneers.Constants.BASE_URL;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Module
 public class TestModule {

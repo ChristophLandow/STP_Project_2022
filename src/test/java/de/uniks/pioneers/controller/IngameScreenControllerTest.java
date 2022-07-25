@@ -9,9 +9,6 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.services.*;
 import javafx.beans.property.SimpleBooleanProperty;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -27,10 +24,14 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+
 import javax.inject.Provider;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

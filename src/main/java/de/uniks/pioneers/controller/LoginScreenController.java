@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.services.LoginService;
@@ -20,9 +19,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
-import static de.uniks.pioneers.Constants.*;
+
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.Constants.LOGIN_SCREEN_TITLE;
 
 public class LoginScreenController implements Controller {
     @FXML public TextField textFieldUserName;
