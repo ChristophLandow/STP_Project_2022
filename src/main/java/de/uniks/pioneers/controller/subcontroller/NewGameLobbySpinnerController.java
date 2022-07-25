@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.services.MapBrowserService;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Spinner;

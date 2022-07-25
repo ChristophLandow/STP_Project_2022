@@ -4,7 +4,6 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.dto.Event;
-import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
