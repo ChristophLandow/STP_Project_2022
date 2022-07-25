@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
@@ -25,11 +24,7 @@
             <Insets left="20.0" top="3.0" />
          </HBox.margin>
          <graphic>
-            <ImageView fitHeight="33.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../controller/subcontroller/thumbs_up.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="VoteButtonImageView" fitHeight="33.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
          </graphic>
       </Button>
    </children>
