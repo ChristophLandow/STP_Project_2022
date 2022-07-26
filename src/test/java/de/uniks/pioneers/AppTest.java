@@ -6,6 +6,9 @@ import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.*;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -392,7 +395,8 @@ class AppTest extends ApplicationTest {
         // buy dev card
         clickOn("#hammerPane");
         WaitForAsyncUtils.waitForFxEvents();
-        clickOn("#rightPane");
+        Pane rightPane = lookup("#rightPane").query();
+        rightPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard("knight", false, true)))));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "38", "000", "000", "build", 0, null, null, null, null, "new")));
         sleep(4000);
