@@ -80,6 +80,9 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @Mock
     StylesService stylesService;
 
+    @Mock
+    EventHandlerService eventHandlerService;
+
     @InjectMocks
     LobbyScreenController lobbyScreenController;
 
