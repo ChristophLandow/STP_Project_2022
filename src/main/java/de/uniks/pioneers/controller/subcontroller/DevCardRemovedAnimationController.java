@@ -1,6 +1,5 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.ResourceService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
