@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.GameSettings;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
@@ -88,7 +89,7 @@ class LeaveGameControllerTest {
     void saveLeavedGame() {
         Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
-        leaveGameController.saveLeavedGame("000", 2, List.of(new User("000", "test1", "online", null)), "#ff0000");
+        leaveGameController.saveLeavedGame("000", "111", 2, List.of(new User("000", "test1", "online", null)), "#ff0000");
         assertEquals(prefs.get(LEAVE_GAME, ""), "000");
         assertEquals(prefs.get("MapRadius", ""), "2");
         assertEquals(leaveGameController.users, List.of(new User("000", "test1", "online", null)));
@@ -109,8 +110,10 @@ class LeaveGameControllerTest {
     void leave() {
         Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
+        GameSettings settings = new GameSettings(2,10,null,true,0);
+
         when(userService.getCurrentUser()).thenReturn(new User("321", "test2", "online", null));
-        when((gameService.getGame())).thenReturn(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","123","TestGameB","001",1,false, null));
+        when((gameService.getGame())).thenReturn(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","123","TestGameB","001",1,false, settings));
         when(gameStorage.getMapRadius()).thenReturn(5);
         when(lobbyScreenControllerProvider.get()).thenReturn(lobbyScreenController);
         leaveGameController.setKicked(false);

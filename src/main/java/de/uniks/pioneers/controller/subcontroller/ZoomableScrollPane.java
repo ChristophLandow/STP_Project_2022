@@ -42,6 +42,12 @@ public class ZoomableScrollPane {
 
         resizeMap();
 
+        this.gameStorage.getResizePaneForCustomMap().addListener(((observable, oldValue, newValue) -> {
+            if(newValue){
+                resizeMap();
+            }
+        }));
+
         this.fieldPane.getTransforms().add(fieldScale);
         this.mapRenderService.setGc(canvas.getGraphicsContext2D());
     }

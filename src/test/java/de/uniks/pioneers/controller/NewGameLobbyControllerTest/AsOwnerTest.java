@@ -4,8 +4,8 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
+import de.uniks.pioneers.controller.subcontroller.NewGameLobbyGameSettingsController;
 import de.uniks.pioneers.controller.subcontroller.NewGameLobbyReadyController;
-import de.uniks.pioneers.controller.subcontroller.NewGameLobbySpinnerController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
@@ -79,10 +79,10 @@ class AsOwnerTest extends ApplicationTest {
     NewGameScreenLobbyController newGameScreenLobbyController;
 
     @Mock(name = "newGameLobbySpinnerControllerProvider")
-    Provider<NewGameLobbySpinnerController> newGameLobbySpinnerControllerProvider;
+    Provider<NewGameLobbyGameSettingsController> newGameLobbySpinnerControllerProvider;
 
     @Mock
-    NewGameLobbySpinnerController newGameLobbySpinnerController;
+    NewGameLobbyGameSettingsController newGameLobbySpinnerController;
 
     final String randomColor02 = createRandomColor();
     final String randomColor03 = createRandomColor();
