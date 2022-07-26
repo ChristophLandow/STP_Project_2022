@@ -9,7 +9,10 @@ import de.uniks.pioneers.services.UserlistService;
 import de.uniks.pioneers.ws.EventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 
 import javax.inject.Inject;

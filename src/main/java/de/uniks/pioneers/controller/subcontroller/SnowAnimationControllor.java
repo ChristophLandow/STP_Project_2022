@@ -1,8 +1,5 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
@@ -11,6 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
 
 import static de.uniks.pioneers.GameConstants.MAP_WIDTH;
 

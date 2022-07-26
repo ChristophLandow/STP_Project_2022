@@ -75,6 +75,12 @@ public class TradePopUpController implements Controller {
     @FXML
     public HBox getImages;
 
+    @FXML public Spinner<Integer> brickOffer;
+    @FXML public Spinner<Integer> woolOffer;
+    @FXML public Spinner<Integer> lumberOffer;
+    @FXML public Spinner<Integer> oreOffer;
+    @FXML public Spinner<Integer> grainOffer;
+
     private final IngameService ingameService;
     private final GameService gameService;
     private final TimerService timerService;
@@ -160,7 +166,17 @@ public class TradePopUpController implements Controller {
         bankHandler = event -> ingameService.tradeWithBank();
 
         // setup eventHandler for trade with player
-        playerHandler = event -> ingameService.tradeWithPlayers();
+        playerHandler = event -> {
+            if (woolOffer.getValue() > gameService.myResources.get("wool") ||
+                brickOffer.getValue() > gameService.myResources.get("brick") ||
+                grainOffer.getValue() > gameService.myResources.get("grain") ||
+                oreOffer.getValue() > gameService.myResources.get("ore") ||
+                lumberOffer.getValue() > gameService.myResources.get("lumber")) {
+                    handleError();
+            } else {
+                ingameService.tradeWithPlayers();
+            }
+        };
 
         // setup eventHandler to cancel trade
         cancelHandler = event -> stop();
@@ -221,7 +237,6 @@ public class TradePopUpController implements Controller {
         tradePane.disableProperty().set(false);
         ingameService.tradeAccepted.removeListener(acceptedTradeListener);
         this.timerService.stopTrade();
-        //playerElements.values().forEach(c -> stop());
         tradeStage.close();
     }
 
@@ -299,4 +314,13 @@ public class TradePopUpController implements Controller {
             }
         });
     }
+
+    public void handleError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText("Trading Error");
+        alert.setContentText("Something went wrong, please check your resources!");
+        alert.showAndWait();
+    }
 }
+

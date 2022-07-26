@@ -4,8 +4,6 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
-import de.uniks.pioneers.controller.subcontroller.GameChatController;
-import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
@@ -17,13 +15,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import javax.inject.Provider;
 import java.util.List;
 import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.LEAVE_GAME;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LeaveGameControllerTest {

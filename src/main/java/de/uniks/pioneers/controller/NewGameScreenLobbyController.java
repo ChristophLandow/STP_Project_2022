@@ -19,7 +19,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -30,10 +29,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -50,6 +52,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public ImageView RulesButton, spectatorImageView, clientAvatar;
     @FXML public CheckBox spectatorCheckBox;
     @FXML public Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
+    @FXML public Spinner<String> mapTemplateSpinner;
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject GameChatController gameChatController;
@@ -59,6 +62,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject PrefService prefService;
     @Inject EventListener eventListener;
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
+    @Inject Provider<NewGameLobbySpinnerController> newGameLobbySpinnerControllerProvider;
     @Inject NewGameLobbyService newGameLobbyService;
     @Inject UserService userService;
     @Inject GameStorage gameStorage;
@@ -103,17 +107,14 @@ public class NewGameScreenLobbyController implements Controller {
         Stage stage = this.app.getStage();
         stage.setOnCloseRequest(event -> {
             if (game.get().owner().equals(currentUser._id())) {
-                disposable.add(gameService.deleteGame(game.get()._id())
-                        .observeOn(FX_SCHEDULER)
-                        .subscribe());
+                disposable.add(gameService.deleteGame(game.get()._id()).observeOn(FX_SCHEDULER).subscribe());
             }
 
             newGameLobbyService.logout();
-            disposable.add(userService.editProfile(null, null, null, "offline")
-                    .subscribe(user -> {
-                        Platform.exit();
-                        System.exit(0);
-                            }));
+            disposable.add(userService.editProfile(null, null, null, "offline").subscribe(user -> {
+                Platform.exit();
+                System.exit(0);
+            }));
         });
 
         try {
@@ -139,8 +140,7 @@ public class NewGameScreenLobbyController implements Controller {
             }
         });
 
-        disposable.add(newGameLobbyService.getAll(game.get()._id())
-                .observeOn(FX_SCHEDULER)
+        disposable.add(newGameLobbyService.getAll(game.get()._id()).observeOn(FX_SCHEDULER)
                 .subscribe(newGameLobbyService.getMembers()::setAll, Throwable::printStackTrace));
 
         // init game chat controller
@@ -153,12 +153,11 @@ public class NewGameScreenLobbyController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        boardSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10));
-        boardSizeSpinner.editorProperty().get().setAlignment(Pos.CENTER);
-        boardSizeSpinner.getValueFactory().setValue(2);
-
-        victoryPointSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3,15,10));
-        victoryPointSpinner.editorProperty().get().setAlignment(Pos.CENTER);
+        NewGameLobbySpinnerController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
+        newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
+        newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
+        newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
+        newGameLobbySpinnerController.init();
 
         if(!currentUser._id().equals(game.get().owner())){
             boardSizeSpinner.setVisible(false);

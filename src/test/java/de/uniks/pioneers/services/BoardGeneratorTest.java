@@ -3,12 +3,13 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.model.Tile;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BoardGeneratorTest {
    final BoardGenerator boardGenerator = new BoardGenerator();

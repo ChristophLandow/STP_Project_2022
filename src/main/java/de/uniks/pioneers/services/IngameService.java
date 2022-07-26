@@ -12,11 +12,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -90,10 +92,7 @@ public class IngameService {
         if (checkTradeOptions(offer)) {
             disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
                     .observeOn(FX_SCHEDULER)
-                    .doOnError(e -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
-                        alert.showAndWait();
-                    })
+                    .doOnError(err -> handleHttpError())
                     .subscribe());
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
@@ -106,7 +105,7 @@ public class IngameService {
 
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
                 .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
+                .doOnError(err -> handleHttpError())
                 .subscribe()
         );
     }
@@ -224,5 +223,13 @@ public class IngameService {
 
     public IngameScreenController getActualIngameController(){
         return this.actualIngameController;
+    }
+
+    public void handleHttpError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText("Trading Error");
+        alert.setContentText("Something went wrong, please check your resources!");
+        alert.showAndWait();
     }
 }

@@ -5,6 +5,7 @@ import de.uniks.pioneers.dto.UpdateMemberDto;
 import de.uniks.pioneers.model.Member;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
+
 import java.util.List;
 
 public interface GameMemberApiService {

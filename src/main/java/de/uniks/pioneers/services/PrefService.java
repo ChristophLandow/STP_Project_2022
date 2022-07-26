@@ -7,6 +7,7 @@ import de.uniks.pioneers.rest.GameApiService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
+
 import static de.uniks.pioneers.Constants.*;
 
 @Singleton
@@ -219,5 +220,13 @@ public class PrefService {
     public void deleteRulesHotkey(){
         preferences.put("rulesTextField", "");
         preferences.put("rulesChoiceBox", "");
+    }
+
+    public void setVoteButtonState(String mapId, String state){
+        preferences.put(mapId,state);
+    }
+
+    public Boolean getVoteButtonState(String mapId){
+        return preferences.get(mapId, "").equals(VOTED);
     }
 }

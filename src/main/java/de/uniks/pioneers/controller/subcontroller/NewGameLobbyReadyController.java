@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+
 import java.util.Map;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;

@@ -8,24 +8,28 @@ import dagger.Provides;
 import de.uniks.pioneers.dto.*;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
-import de.uniks.pioneers.services.*;
+import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.TokenStorage;
 import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
-import static de.uniks.pioneers.Constants.*;
-import static org.mockito.Mockito.*;
+
+import static de.uniks.pioneers.Constants.API_PREFIX;
+import static de.uniks.pioneers.Constants.BASE_URL;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Module
 public class TestModule {
@@ -36,6 +40,7 @@ public class TestModule {
     public static final PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
     public static final PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
     public static final PublishSubject<Event<MessageDto>> gameChatSubject = PublishSubject.create();
+    public static final PublishSubject<Event<MapTemplate>> mapTemplateSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -113,6 +118,8 @@ public class TestModule {
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(gameBuildingSubject);
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(gameStateSubject);
         when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(gameMoveSubject);
+
+        when(eventListener.listen("maps.*.*", MapTemplate.class)).thenReturn(mapTemplateSubject);
 
         return eventListener;
     }
@@ -483,6 +490,38 @@ public class TestModule {
                 ArrayList<MapTemplate> returnValue = new ArrayList<>();
                 returnValue.add(new MapTemplate("","","","","","",0,null, null));
                 return Observable.just(returnValue);
+            }
+
+            @Override
+            public Observable<MapTemplate> getMap(String id) {
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                return Observable.just(mapTemplate);
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    VoteApiService voteApiService(){
+        return new VoteApiService() {
+            @Override
+            public Observable<Vote> createVote(String id, CreateVoteDto voteDto) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> getVotesOfMap(String id) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> getVotesOfUser(String mapId, String userId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> deleteVotesOfUser(String mapId, String userId) {
+                return null;
             }
         };
     }
