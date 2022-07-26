@@ -63,7 +63,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject PrefService prefService;
     @Inject EventListener eventListener;
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
-    @Inject Provider<NewGameLobbySpinnerController> newGameLobbySpinnerControllerProvider;
+    @Inject Provider<NewGameLobbyGameSettingsController> newGameLobbySpinnerControllerProvider;
     @Inject NewGameLobbyService newGameLobbyService;
     @Inject UserService userService;
     @Inject GameStorage gameStorage;
@@ -91,7 +91,7 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public void init() {
-        NewGameLobbySpinnerController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
+        NewGameLobbyGameSettingsController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
         newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
         newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
         newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);

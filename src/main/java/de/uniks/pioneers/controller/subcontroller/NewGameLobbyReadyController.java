@@ -33,7 +33,7 @@ public class NewGameLobbyReadyController {
     private Game game;
     private Button readyButton;
     private ImageView spectatorImageView;
-    private NewGameLobbySpinnerController spinnerController;
+    private NewGameLobbyGameSettingsController spinnerController;
     private boolean clientReady = false;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -41,7 +41,7 @@ public class NewGameLobbyReadyController {
 
     public void init(NewGameScreenLobbyController newGameScreenLobbyController, CheckBox spectatorCheckBox, Map<String, PlayerEntryController> playerEntries,
                      ColorPickerController colorPickerController, Label clientReadyLabel, HBox clientReadyBox, Button readyButton, Button startButton,
-                     ImageView spectatorImageView, NewGameLobbySpinnerController spinnerController, NewGameLobbyService newGameLobbyService, UserService userService) {
+                     ImageView spectatorImageView, NewGameLobbyGameSettingsController spinnerController, NewGameLobbyService newGameLobbyService, UserService userService) {
         this.newGameLobbyService = newGameLobbyService;
         this.userService = userService;
         this.screenController = newGameScreenLobbyController;

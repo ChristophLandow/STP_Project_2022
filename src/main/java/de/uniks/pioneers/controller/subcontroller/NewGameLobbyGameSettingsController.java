@@ -7,11 +7,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.skin.SpinnerSkin;
 
 import javax.inject.Inject;
 
-public class NewGameLobbySpinnerController implements Controller {
+public class NewGameLobbyGameSettingsController implements Controller {
 
     private Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
     private Spinner<String> mapTemplateSpinner;
@@ -20,7 +19,7 @@ public class NewGameLobbySpinnerController implements Controller {
     private int indexOfSpinner = -1;
 
     @Inject
-    public NewGameLobbySpinnerController(MapBrowserService mapBrowserService) {
+    public NewGameLobbyGameSettingsController(MapBrowserService mapBrowserService) {
         this.mapBrowserService = mapBrowserService;
     }
 
