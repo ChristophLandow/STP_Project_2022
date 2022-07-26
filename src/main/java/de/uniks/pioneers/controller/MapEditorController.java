@@ -40,7 +40,7 @@ public class MapEditorController implements Controller{
     @FXML
     ImageView rockImageView;
     @FXML
-    Pane scrollPaneAnchorPane;
+    public Pane scrollPaneAnchorPane;
     @FXML
     Button buttonToMaps;
     @FXML
@@ -49,9 +49,9 @@ public class MapEditorController implements Controller{
     @FXML
     Spinner<Integer> sizeSpinner;
 
-    BoardGenerator boardGenerator;
+    public BoardGenerator boardGenerator;
 
-    List<EditTile> tiles = new ArrayList<>();
+    public List<EditTile> tiles = new ArrayList<>();
 
     List<HexTile> frame = new ArrayList<>();
 
@@ -140,7 +140,7 @@ public class MapEditorController implements Controller{
 
                 tile.setFill(new ImagePattern(image));
             }else {
-                tile.setFill(Paint.valueOf("#ffffff"));
+                tile.setFill(Paint.valueOf("#2D9BE7"));
                 tile.setStroke(Paint.valueOf("#000000"));
             }
             ImageView numberView = new ImageView();
@@ -194,7 +194,10 @@ public class MapEditorController implements Controller{
         this.fishImageView.setImage(image);}
 
     public void selectRandom(MouseEvent mouseEvent) {
-        this.selection = RANDOM;}
+        this.selection = RANDOM;
+        resetSelection();
+        Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
+        this.randomImageView.setImage(image);}
 
     public void selectPolar(MouseEvent mouseEvent) {
         this.selection = "pasture";
@@ -226,6 +229,8 @@ public class MapEditorController implements Controller{
         this.rockImageView.setImage(image);
         image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "desert" + ".png")).toString());
         this.desertImageView.setImage(image);
+        image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "random" + ".png")).toString());
+        this.randomImageView.setImage(image);
     }
 
     public void select2(MouseEvent mouseEvent) {
@@ -266,5 +271,29 @@ public class MapEditorController implements Controller{
 
     public void select12(MouseEvent mouseEvent) {
         this.selection = "12num";
+    }
+
+    public void selectHarborGeneric(MouseEvent mouseEvent) {
+        this.selection = "harbour_general";
+    }
+
+    public void selectHarborFish(MouseEvent mouseEvent) {
+        this.selection = "harbour_lumber";
+    }
+
+    public void selectHarborIce(MouseEvent mouseEvent) {
+        this.selection = "harbour_brick";
+    }
+
+    public void selectHarborPolar(MouseEvent mouseEvent) {
+        this.selection = "harbour_wool";
+    }
+
+    public void selectHarborWhale(MouseEvent mouseEvent) {
+        this.selection = "harbour_grain";
+    }
+
+    public void selectHarborCoal(MouseEvent mouseEvent) {
+        this.selection = "harbour_ore";
     }
 }
