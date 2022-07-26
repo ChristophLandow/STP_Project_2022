@@ -41,7 +41,6 @@ public class IngameDevelopmentCardController {
     }
 
     private void onRightPaneClicked(MouseEvent mouseEvent) {
-        System.out.println(ingameService.game.get()._id());
         if(resourceService.checkDevCard()) {
             disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto())
                     .observeOn(FX_SCHEDULER)

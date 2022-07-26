@@ -15,7 +15,6 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import org.testfx.util.WaitForAsyncUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,12 +113,12 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
-        clickOn("#settingsButton");
+        /*clickOn("#settingsButton");
         WaitForAsyncUtils.waitForFxEvents();
         type(KeyCode.LEFT);
         type(KeyCode.SPACE);
         write("\t");
-        type(KeyCode.SPACE);
+        type(KeyCode.SPACE);*/
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#leftDiceImageView");
         sleep(1000);
@@ -356,6 +355,7 @@ class AppTest extends ApplicationTest {
         write("\t\t\t\t\t\t");
         type(KeyCode.SPACE);
         WaitForAsyncUtils.waitForFxEvents();
+
         // test trade with players
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "000", "build", 0, null, null, new Resources(null,-1,1,0,0,0), null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("offer", List.of("002")), new ExpectedMove("accept", List.of("000")), new ExpectedMove("build", List.of("000"))), null)));
@@ -372,7 +372,7 @@ class AppTest extends ApplicationTest {
         clickOn("#0,0,0,0");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 0, 0, "17", 0, "settlement", "000", "000")));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "33", "000", "000", "build", 0, "17", null, null, null, null)));
-        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 3, 1, 1), new RemainingBuildings(2, 4, 14), 3, 0, new ArrayList<>())));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 2, 1, 3, 1, 1), new RemainingBuildings(2, 4, 14), 3, 0, new ArrayList<>())));
         WaitForAsyncUtils.waitForFxEvents();
 
         // test trade with bank
@@ -386,7 +386,13 @@ class AppTest extends ApplicationTest {
         write("\t\t\t\t\t\t\t");
         type(KeyCode.SPACE);
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "000", "build", 0, null, null, new Resources(null,-4,1,0,0,0), "bank", null)));
-        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 0, 5, 4, 4, 4), new RemainingBuildings(2, 4, 14), 3, 0, new ArrayList<>())));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 5, 4, 4, 4), new RemainingBuildings(2, 4, 14), 3, 0, new ArrayList<>())));
         WaitForAsyncUtils.waitForFxEvents();
+
+        // buy dev card
+        clickOn("#hammerPane");
+        clickOn("#rightPane");
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "000", "build", 0, null, null, null, null, "new")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 0, 5, 3, 4, 3), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard("knight", false, true)))));
     }
 }

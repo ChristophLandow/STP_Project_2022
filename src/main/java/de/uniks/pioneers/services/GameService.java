@@ -74,7 +74,6 @@ public class GameService {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(moveEvent -> {
                     final Move move = moveEvent.data();
-                    System.out.println(moveEvent);
                     if(moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
                         if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
@@ -98,7 +97,6 @@ public class GameService {
         disposable.add(eventListener.listen(patternToObservePlayers, Player.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                    System.out.println(gameEvent);
                     Player player = gameEvent.data();
                     String id = player.userId();
                     if (gameEvent.event().endsWith(".updated")) {

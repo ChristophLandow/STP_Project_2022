@@ -200,7 +200,6 @@ public class IngamePlayerResourcesController {
     private void showMissingResources() {
         Map<String, Integer> missingResources = resourceService.missingResources;
         ObservableMap<String, Integer> resources = resourceService.myResources;
-        System.out.println(missingResources);
         missingResources.keySet().forEach(s -> {
             Integer delta = missingResources.get(s);
             Integer oldValue = resources.getOrDefault(s, 0);

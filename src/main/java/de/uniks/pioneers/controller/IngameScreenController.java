@@ -198,7 +198,6 @@ public class IngameScreenController implements Controller {
         disposable.add(eventListener.listen(patternToObserveGameState, State.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(gameEvent -> {
-                    System.out.println(gameEvent);
                     if (gameEvent.event().endsWith(".updated")) {
                         ingameStateController.handleGameState(gameEvent.data());
                     }

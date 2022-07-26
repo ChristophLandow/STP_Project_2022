@@ -90,7 +90,6 @@ public class ResourceAnimationController {
                 initCards();
                 me = false;
 
-                System.out.println("move");
                 this.handleResources(gameService.moveAction.get());
                 this.handleDevCards();
             }

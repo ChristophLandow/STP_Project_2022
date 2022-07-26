@@ -71,7 +71,6 @@ public class TradePopUpController implements Controller {
     private final Stage tradeStage;
     private final Node tradePane;
     private final EventHandlerService eventHandlerService;
-
     private ListChangeListener<Move> acceptedTradeListener;
     private Map<String, TradePopUpPlayerListElementController> playerElements;
 
