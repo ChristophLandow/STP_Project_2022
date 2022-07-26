@@ -5,6 +5,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUpPlayerListElementController;
 import de.uniks.pioneers.model.Move;
+import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.TimerService;
@@ -19,8 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -90,6 +89,7 @@ public class TradePopUpController implements Controller {
     private final Stage primaryStage;
     private final Stage tradeStage;
     private final Node tradePane;
+    private final EventHandlerService eventHandlerService;
 
     private ListChangeListener<Move> acceptedTradeListener;
     private Map<String, TradePopUpPlayerListElementController> playerElements;
@@ -98,10 +98,11 @@ public class TradePopUpController implements Controller {
     Provider<TradePopUpPlayerListElementController> elementControllerProvider;
 
     @Inject
-    public TradePopUpController(IngameService ingameService, GameService gameService, TimerService timerService, App app) {
+    public TradePopUpController(IngameService ingameService, GameService gameService, TimerService timerService, App app, EventHandlerService eventHandlerService) {
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.timerService = timerService;
+        this.eventHandlerService = eventHandlerService;
 
         // setup stages
         tradeStage = new Stage();
@@ -184,7 +185,7 @@ public class TradePopUpController implements Controller {
         // add event handler to buttons
         tradeWithBank.addEventHandler(MouseEvent.MOUSE_CLICKED, bankHandler);
         offerToPlayers.addEventHandler(MouseEvent.MOUSE_CLICKED, playerHandler);
-        setEventHandler(offerToPlayers);
+        eventHandlerService.setSpaceEventHandler(offerToPlayers, this.offerToPlayers);
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, cancelHandler);
         tradeStage.setOnCloseRequest(event -> stop());
 
@@ -304,15 +305,6 @@ public class TradePopUpController implements Controller {
                 ingameService.getOrCreateTrade(types.getValue(), increment);
             }
         }
-    }
-
-    private void setEventHandler(Node node) {
-        node.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode().equals(KeyCode.SPACE)) {
-                ingameService.tradeWithPlayers();
-                event.consume();
-            }
-        });
     }
 
     public void handleError() {
