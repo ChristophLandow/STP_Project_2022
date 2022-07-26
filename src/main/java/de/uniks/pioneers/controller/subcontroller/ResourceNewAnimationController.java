@@ -43,10 +43,10 @@ public class ResourceNewAnimationController {
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter * 1500L) - 1500);
+                Thread.sleep((counter * 1000L) - 1000);
                 Platform.runLater(() -> root.getChildren().add(card));
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(250), card);
                 st.setFromX(0f);
                 st.setFromY(0f);
                 st.setByX(0.2f);
@@ -62,7 +62,7 @@ public class ResourceNewAnimationController {
     public void newResourceCardAnimationTwo(ImageView card, int resNumber) {
         new Thread(() -> {
             try {
-                Thread.sleep(500);
+                Thread.sleep(250);
 
                 ScaleTransition st = new ScaleTransition(new Duration(500), card);
                 st.setFromX(0.2f);
@@ -90,7 +90,7 @@ public class ResourceNewAnimationController {
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter * 1500L) - 1500);
+                Thread.sleep((counter * 1000L) - 1000);
                 Platform.runLater(() -> root.getChildren().add(card));
 
                 FadeTransition ft = new FadeTransition(Duration.millis(100), card);
@@ -106,14 +106,14 @@ public class ResourceNewAnimationController {
 
     public void newTradeResourceCardAnimationTwo(ImageView card, int resNumber) {
         new Thread(() -> {
-            ScaleTransition st = new ScaleTransition(new Duration(500), card);
+            ScaleTransition st = new ScaleTransition(new Duration(350), card);
             st.setFromX(0.37f);
             st.setFromY(0.37f);
             st.setToX(0.2f);
             st.setToY(0.2f);
             st.play();
 
-            TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
+            TranslateTransition tt = new TranslateTransition(Duration.millis(350), card);
             tt.setToX(-557);
             tt.setToY(-174);
             tt.setOnFinished(t -> newTradeResourceCardAnimationThree(card, resNumber));
@@ -124,16 +124,16 @@ public class ResourceNewAnimationController {
     public void newTradeResourceCardAnimationThree(ImageView card, int resNumber) {
         new Thread(() -> {
             try {
-                Thread.sleep(400);
+                Thread.sleep(250);
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(300), card);
                 st.setFromX(0.2f);
                 st.setFromY(0.2f);
                 st.setToX(0.06f);
                 st.setToY(0.06f);
                 st.play();
 
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
+                TranslateTransition tt = new TranslateTransition(Duration.millis(300), card);
                 tt.setToX(-557);
                 tt.setToY(235);
                 tt.setOnFinished(t -> newAfterAnimation(card, resNumber));

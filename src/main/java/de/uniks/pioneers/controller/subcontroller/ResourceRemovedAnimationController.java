@@ -47,17 +47,17 @@ public class ResourceRemovedAnimationController {
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter * 1500L) - 1500);
+                Thread.sleep((counter * 1000L) - 1000);
                 Platform.runLater(() -> root.getChildren().add(card));
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(400), card);
                 st.setFromX(0.06f);
                 st.setFromY(0.06f);
                 st.setToX(0.2f);
                 st.setToY(0.2f);
                 st.play();
 
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
+                TranslateTransition tt = new TranslateTransition(Duration.millis(400), card);
                 tt.setToX(0);
                 tt.setToY(-509);
                 tt.setOnFinished(t -> removedResourceCardAnimationTwo(card, counter, resNumber));
@@ -79,11 +79,11 @@ public class ResourceRemovedAnimationController {
                 lineTwo.setStroke(Color.RED);
                 lineTwo.setStrokeWidth(6);
 
-                Thread.sleep(200);
+                Thread.sleep(100);
                 Platform.runLater(() -> root.getChildren().add(lineOne));
-                Thread.sleep(200);
+                Thread.sleep(100);
                 Platform.runLater(() -> root.getChildren().add(lineTwo));
-                Thread.sleep(500);
+                Thread.sleep(300);
 
                 FadeTransition ftCard = new FadeTransition(Duration.millis(100), card);
                 ftCard.setFromValue(1);
@@ -112,17 +112,17 @@ public class ResourceRemovedAnimationController {
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter * 1500L) - 1500);
+                Thread.sleep((counter * 1000L) - 1000);
                 Platform.runLater(() -> root.getChildren().add(card));
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(300), card);
                 st.setFromX(0.06f);
                 st.setFromY(0.06f);
                 st.setToX(0.2f);
                 st.setToY(0.2f);
                 st.play();
 
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
+                TranslateTransition tt = new TranslateTransition(Duration.millis(300), card);
                 tt.setToX(0);
                 tt.setToY(-509);
                 tt.setOnFinished(t -> removedTradeResourceCardAnimationTwo(card, counter, resNumber));
@@ -136,16 +136,16 @@ public class ResourceRemovedAnimationController {
     public void removedTradeResourceCardAnimationTwo(ImageView card, int counter, int resNumber) {
         new Thread(() -> {
             try {
-                Thread.sleep(400);
+                Thread.sleep(250);
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(350), card);
                 st.setFromX(0.2f);
                 st.setFromY(0.2f);
                 st.setToX(0.37f);
                 st.setToY(0.37f);
                 st.play();
 
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
+                TranslateTransition tt = new TranslateTransition(Duration.millis(350), card);
                 tt.setToX(557);
                 tt.setToY(-335);
                 tt.setOnFinished(t -> removedTradeResourceCardAnimationThree(card, counter, resNumber));
@@ -188,7 +188,7 @@ public class ResourceRemovedAnimationController {
         if(counter == 1) {
             new Thread(() -> {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                     resourceAnimationController.handleNewDevCards();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);

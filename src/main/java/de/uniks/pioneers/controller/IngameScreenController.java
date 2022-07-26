@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;

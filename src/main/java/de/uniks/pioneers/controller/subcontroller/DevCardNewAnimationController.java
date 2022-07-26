@@ -32,10 +32,10 @@ public class DevCardNewAnimationController {
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter * 1500L) - 1500);
+                Thread.sleep((counter * 1000L) - 1000);
                 Platform.runLater(() -> root.getChildren().add(card));
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(250), card);
                 st.setFromX(0f);
                 st.setFromY(0f);
                 st.setByX(0.5f);
@@ -53,7 +53,7 @@ public class DevCardNewAnimationController {
             try {
                 Thread.sleep(500);
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(250), card);
                 st.setFromX(0.5f);
                 st.setFromY(0.5f);
                 st.setToX(0.08f);
