@@ -39,14 +39,11 @@ public class BoardGenerator {
     }
 
     public List<HexTile> generateEdges(int size, double hexScale) {
-
         for(int q = -size; q <= size; q++){
             for(int r = max(-size, -q-size); r <= min(+size, -q+size); r++){
-
                 int s = -q-r;
                 if(!(((abs(q) + abs(r) + abs(s)) % 4 == 0) && (q % 2 == 0) && (r % 2 == 0) && (s % 2 == 0))){
-
-                    edges.add(new HexTile(q,r,s, hexScale/2, true));
+                    edges.add(new HexTile(q, r, s, hexScale / 2, true));
                 }
             }
         }
