@@ -18,7 +18,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import java.util.List;
-
 import java.util.Objects;
 
 public class ResourceAnimationController {
