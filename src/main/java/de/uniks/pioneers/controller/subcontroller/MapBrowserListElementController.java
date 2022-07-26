@@ -43,18 +43,14 @@ public class MapBrowserListElementController {
         voteButtonImageView = new ImageView();
         voteButtonImageView.setFitHeight(30);
         voteButtonImageView.setFitWidth(30);
-        thumbDown = new Image(Objects.requireNonNull(getClass().getResource("thumbDown.jpg")).toString());
-        thumbUp = new Image(Objects.requireNonNull(getClass().getResource("thumbUp.jpg")).toString());
+        thumbDown = new Image(Objects.requireNonNull(getClass().getResource("ThumbUp_NotFilled.png")).toString());
+        thumbUp = new Image(Objects.requireNonNull(getClass().getResource("ThumbUp_Filled.png")).toString());
         voteButton.setOnAction(this::vote);
         if (prefService.getVoteButtonState(map._id())) {
-            prefService.setVoteButtonState(map._id(), VOTED);
-            voteButton.setId("VoteButtonVoted");
-            voteButtonImageView.setImage(thumbDown);
+            voteButtonImageView.setImage(thumbUp);
             voteButton.setGraphic(voteButtonImageView);
         } else {
-            prefService.setVoteButtonState(map._id(), NOT_VOTED);
-            voteButton.setId("VoteButtonNotVoted");
-            voteButtonImageView.setImage(thumbUp);
+            voteButtonImageView.setImage(thumbDown);
             voteButton.setGraphic(voteButtonImageView);
         }
     }
@@ -64,15 +60,13 @@ public class MapBrowserListElementController {
         if(prefService.getVoteButtonState(map._id()).equals(false)){
             mapBrowserService.vote(map._id(),voteMove);
             prefService.setVoteButtonState(map._id(), VOTED);
-            voteButton.setId("VoteButtonVoted");
-            voteButtonImageView.setImage(thumbDown);
+            voteButtonImageView.setImage(thumbUp);
             voteButton.setGraphic(voteButtonImageView);
 
         } else {
             mapBrowserService.deleteVote(map._id(), userService.getCurrentUser()._id());
             prefService.setVoteButtonState(map._id(), NOT_VOTED);
-            voteButton.setId("VoteButtonNotVoted");
-            voteButtonImageView.setImage(thumbUp);
+            voteButtonImageView.setImage(thumbDown);
             voteButton.setGraphic(voteButtonImageView);
         }
     }
