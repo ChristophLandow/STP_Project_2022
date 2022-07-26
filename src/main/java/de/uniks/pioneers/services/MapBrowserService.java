@@ -14,7 +14,9 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -84,7 +86,11 @@ public class MapBrowserService {
     }
 
     public void vote(String id, CreateVoteDto voteMove){
-        voteApiService.createVote(id,voteMove).subscribe(System.out::println, this::handleHttpError);
+        disposable.add(voteApiService.createVote(id,voteMove)
+                .observeOn(FX_SCHEDULER)
+                .doOnError(this::handleHttpError)
+                .subscribe()
+        );
     }
 
     public Observable<Vote> getVoteFromMap(String id){
@@ -92,18 +98,25 @@ public class MapBrowserService {
     }
 
     public void deleteVote(String mapId, String userId){
-        voteApiService.deleteVotesOfUser(mapId,userId).subscribe(System.out::println, this::handleHttpError);
+        disposable.add(
+                voteApiService.deleteVotesOfUser(mapId,userId)
+                        .observeOn(FX_SCHEDULER)
+                        .doOnError(this::handleHttpError)
+                        .subscribe()
+        );
     }
 
     public Observable<Vote> getVoteFromUSer(String mapId, String userId){
          return voteApiService.deleteVotesOfUser(mapId,userId);
     }
 
-    private  HttpException handleHttpError(Throwable exception) {
+    private  void handleHttpError(Throwable exception) throws IOException {
+        String errorBody;
         if (exception instanceof HttpException httpException) {
-            return httpException;
+            errorBody = Objects.requireNonNull(Objects.requireNonNull(httpException.response()).errorBody()).string();
+        } else {
+            return;
         }
-        return null;
+        System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
-
 }

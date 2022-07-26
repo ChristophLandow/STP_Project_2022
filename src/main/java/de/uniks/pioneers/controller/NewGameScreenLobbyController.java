@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -80,11 +81,13 @@ public class NewGameScreenLobbyController implements Controller {
     private NewGameLobbyUserController newGameLobbyUserController;
 
     private final StylesService stylesService;
+    private final EventHandlerService eventHandlerService;
 
     @Inject
-    public NewGameScreenLobbyController(App app, StylesService stylesService) {
+    public NewGameScreenLobbyController(App app, StylesService stylesService, EventHandlerService eventHandlerService) {
         this.app = app;
         this.stylesService = stylesService;
+        this.eventHandlerService = eventHandlerService;
     }
 
     @Override
@@ -166,6 +169,8 @@ public class NewGameScreenLobbyController implements Controller {
             victoryPointsLabel.setVisible(false);
             victoryPointSpinner.setVisible(false);
         }
+        Node messageTextNode = this.messageText;
+        eventHandlerService.setEnterEventHandler(messageTextNode, this.sendButton);
     }
 
     private void openRules(MouseEvent mouseEvent) {

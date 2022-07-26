@@ -75,7 +75,6 @@ public class MapListController implements Controller {
                 mapBrowserService.getUpdateMaps().removeAll(c.getAddedSubList());
             }
         });
-
         return null;
     }
 
@@ -116,7 +115,6 @@ public class MapListController implements Controller {
                 ((Label) n).setText(Integer.toString(map.votes()));
             }
         }
-
         sortList();
     }
 

@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
+import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.LobbyService;
 import de.uniks.pioneers.services.PrefService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -11,6 +12,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -49,11 +51,13 @@ public class CreateNewGamePopUpController implements Controller {
     final CompositeDisposable disposable = new CompositeDisposable();
     private Stage stage;
     private LobbyScreenController lobbyScreenController;
+    private final EventHandlerService eventHandlerService;
 
     @Inject
-    public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<LobbyService> lobbyServiceProvider) {
+    public CreateNewGamePopUpController(Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<LobbyService> lobbyServiceProvider, EventHandlerService eventHandlerService) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.lobbyServiceProvider = lobbyServiceProvider;
+        this.eventHandlerService = eventHandlerService;
     }
 
     @Override
@@ -78,6 +82,8 @@ public class CreateNewGamePopUpController implements Controller {
         IntegerBinding passwordLength = Bindings.length(passwordTextField.textProperty());
         BooleanBinding invalid = Bindings.equal(passwordLen.textProperty(), nameLen.textProperty()).not();
         createGameButton.disableProperty().bind(invalid);
+        Node passwordFieldNode = this.passwordTextField;
+        eventHandlerService.setEnterEventHandler(passwordFieldNode, this.createGameButton);
 
         passwordLen.textProperty().bind(Bindings
                 .when(passwordLength.greaterThan(0)).then("")
