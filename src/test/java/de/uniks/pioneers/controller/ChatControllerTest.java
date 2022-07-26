@@ -31,8 +31,7 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChatControllerTest extends ApplicationTest {
@@ -65,6 +64,9 @@ class ChatControllerTest extends ApplicationTest {
 
     @Mock
     PrefService prefService;
+
+    @Mock
+    EventHandlerService eventHandlerService;
 
     @InjectMocks
     ChatController chatController;
@@ -253,6 +255,7 @@ class ChatControllerTest extends ApplicationTest {
         chatTabController.chattingWith = new User("123", "Tom", "online", null);
         app.start(stage);
         app.show(chatController);
+        verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
     }
 
     @Test
