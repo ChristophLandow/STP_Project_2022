@@ -93,9 +93,9 @@
    </Pane>
    <Pane fx:id="leftPane" layoutX="297.0" layoutY="625.0" prefHeight="60.0" prefWidth="60.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: white;" translateX="163.0" visible="false">
       <children>
-         <ImageView fx:id="leftView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.18" scaleY="0.25">
+         <ImageView fx:id="leftView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.19" scaleY="0.26">
             <image>
-               <Image url="@../controller/ingame/dev_card_question_mark.png" />
+               <Image url="@../controller/subcontroller/images/card_knight.png" />
             </image>
          </ImageView>
       </children>

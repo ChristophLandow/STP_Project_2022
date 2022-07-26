@@ -32,6 +32,7 @@ public class IngameDevelopmentCardController {
         this.resourceService = resourceService;
 
         hammerPane.setOnMouseClicked(this::onHammerClicked);
+        leftPane.setOnMouseClicked(this::onLeftPaneClicked);
         rightPane.setOnMouseClicked(this::onRightPaneClicked);
     }
 
@@ -40,8 +41,15 @@ public class IngameDevelopmentCardController {
         changeHammerBorder();
     }
 
+
+    private void onLeftPaneClicked(MouseEvent mouseEvent) {
+        changeVisibility();
+        changeHammerBorder();
+    }
+
+
     private void onRightPaneClicked(MouseEvent mouseEvent) {
-        if(resourceService.checkDevCard()) {
+        if(ingameService.getExpectedMove().action().equals("build") && resourceService.checkDevCard()) {
             disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto())
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)

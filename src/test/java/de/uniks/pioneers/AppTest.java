@@ -113,12 +113,12 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
-        /*clickOn("#settingsButton");
+        clickOn("#settingsButton");
         WaitForAsyncUtils.waitForFxEvents();
         type(KeyCode.LEFT);
         type(KeyCode.SPACE);
         write("\t");
-        type(KeyCode.SPACE);*/
+        type(KeyCode.SPACE);
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#leftDiceImageView");
         sleep(1000);
@@ -394,5 +394,7 @@ class AppTest extends ApplicationTest {
         clickOn("#rightPane");
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "000", "build", 0, null, null, null, null, "new")));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 0, 5, 3, 4, 3), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard("knight", false, true)))));
+        sleep(1000);
+        WaitForAsyncUtils.waitForFxEvents();
     }
 }
