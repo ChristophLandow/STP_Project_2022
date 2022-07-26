@@ -73,6 +73,10 @@ public class MapBrowserService {
         return mapApiService.getMap(id);
     }
 
+    public Observable<MapTemplate> deleteMap(String id) {
+        return mapApiService.deleteMap(id);
+    }
+
     public ObservableList<MapTemplate> getUpdateMaps() {
         return updateMaps;
     }

@@ -90,10 +90,10 @@ public class MapListController implements Controller {
             HBox newListElement = loader.load();
             mapList.getItems().add(newListElement);
 
-            //Adjust HBox Elements
+            // adjust HBox elements
             updateListElement(newListElement, map);
 
-            //Add MapBrowserListElementController
+            // add MapBrowserListElementController
             MapBrowserListElementController elementController = new MapBrowserListElementController(prefService, userService, mapBrowserService, map, newListElement);
             elementController.init();
         } catch (IOException e) {
@@ -106,14 +106,15 @@ public class MapListController implements Controller {
     private void updateListElement(HBox element, MapTemplate map){
         element.setId(map._id());
         for(Node n : element.getChildren()){
-            //show map name
+            // show map name
             if(n.getId().equals("MapNameLabel")){
                 ((Label) n).setText(map.name());
             }
-            //show map votes
+            // show map votes
             if(n.getId().equals("VotingLabel")){
                 ((Label) n).setText(Integer.toString(map.votes()));
             }
+
         }
         sortList();
     }
