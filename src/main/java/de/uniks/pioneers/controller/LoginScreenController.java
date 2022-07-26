@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.LoginResult;
+import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
@@ -15,6 +16,7 @@ import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -46,8 +48,10 @@ public class LoginScreenController implements Controller {
     private final PrefService prefService;
     private final StylesService stylesService;
 
+    private final EventHandlerService eventHandlerService;
+
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService, StylesService stylesService) {
+    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService, StylesService stylesService, EventHandlerService eventHandlerService) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;
@@ -55,6 +59,7 @@ public class LoginScreenController implements Controller {
         this.rulesScreenControllerProvider = rulesScreenControllerProvider;
         this.prefService = prefService;
         this.stylesService = stylesService;
+        this.eventHandlerService = eventHandlerService;
     }
 
     @Override
@@ -99,6 +104,8 @@ public class LoginScreenController implements Controller {
                     .doOnComplete(this::loginComplete)
                     .subscribe();
         }
+        Node passwordFieldNode = this.passwordField;
+        eventHandlerService.setEnterEventHandler(passwordFieldNode, this.buttonLogin);
         app.getStage().setTitle(LOGIN_SCREEN_TITLE);
         stylesService.setStyleSheets(app.getStage().getScene().getStylesheets());
     }
