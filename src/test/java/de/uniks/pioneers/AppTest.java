@@ -357,13 +357,13 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
 
         // test trade with players
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "000", "build", 0, null, null, new Resources(null,-1,1,0,0,0), null, null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "33", "000", "000", "build", 0, null, null, new Resources(null,-1,1,0,0,0), null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("offer", List.of("002")), new ExpectedMove("accept", List.of("000")), new ExpectedMove("build", List.of("000"))), null)));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "002", "offer", 0, null, null, new Resources(null,1,-1,0,0,0), "000", null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "002", "offer", 0, null, null, new Resources(null,1,-1,0,0,0), "000", null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("accept", List.of("000")), new ExpectedMove("build", List.of("000"))), null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","002","#0000ff", true,3, new Resources(0,2,0,0,1,1), new RemainingBuildings(3,4,13), 2, 0, new ArrayList<>())));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,1,3,3,2,2), new RemainingBuildings(3,4,13), 2, 0, new ArrayList<>())));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "32", "000", "000", "accept", 0, null, null, null, "002", null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "35", "000", "000", "accept", 0, null, null, null, "002", null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove("build", List.of("000"))), null)));
         WaitForAsyncUtils.waitForFxEvents();
 
@@ -371,7 +371,7 @@ class AppTest extends ApplicationTest {
         clickOn("#houseSVG");
         clickOn("#0,0,0,0");
         TestModule.gameBuildingSubject.onNext(new Event<>(".created", new Building(0, 0, 0, "17", 0, "settlement", "000", "000")));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "33", "000", "000", "build", 0, "17", null, null, null, null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "36", "000", "000", "build", 0, "17", null, null, null, null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 2, 1, 3, 1, 1), new RemainingBuildings(2, 4, 14), 3, 0, new ArrayList<>())));
         WaitForAsyncUtils.waitForFxEvents();
 
@@ -385,16 +385,16 @@ class AppTest extends ApplicationTest {
         type(KeyCode.UP);
         write("\t\t\t\t\t\t\t");
         type(KeyCode.SPACE);
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "000", "build", 0, null, null, new Resources(null,-4,1,0,0,0), "bank", null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "37", "000", "000", "build", 0, null, null, new Resources(null,-4,1,0,0,0), "bank", null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 5, 4, 4, 4), new RemainingBuildings(2, 4, 14), 3, 0, new ArrayList<>())));
         WaitForAsyncUtils.waitForFxEvents();
 
         // buy dev card
         clickOn("#hammerPane");
-        clickOn("#rightPane");
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "000", "build", 0, null, null, null, null, "new")));
-        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 0, 5, 3, 4, 3), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard("knight", false, true)))));
-        sleep(1000);
         WaitForAsyncUtils.waitForFxEvents();
+        clickOn("#rightPane");
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard("knight", false, true)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "38", "000", "000", "build", 0, null, null, null, null, "new")));
+        sleep(4000);
     }
 }
