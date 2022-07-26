@@ -7,19 +7,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GameServiceTest {
+class GameAndResourceServiceTest {
 
     @Mock
     GameApiService gameApiService;
+
+    @Spy
+    ResourceService resourceService = new ResourceService();
 
     @InjectMocks
     GameService gameService;
@@ -138,24 +143,24 @@ class GameServiceTest {
         Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
-        gameService.myResources.put("grain", 1);
-        gameService.myResources.put("brick", 1);
-        gameService.myResources.put("ore", 1);
-        gameService.myResources.put("lumber", 1);
-        gameService.myResources.put("wool", 1);
-        boolean result = gameService.checkRoad();
+        resourceService.myResources.put("grain", 1);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 1);
+        resourceService.myResources.put("lumber", 1);
+        resourceService.myResources.put("wool", 1);
+        boolean result = resourceService.checkRoad();
         assertTrue(result);
-        assertFalse(gameService.notEnoughRessources.get());
+        assertFalse(resourceService.notEnoughResources.get());
         player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.replace(player.userId(), player);
-        gameService.myResources.put("grain", 1);
-        gameService.myResources.put("brick", 1);
-        gameService.myResources.put("ore", 1);
-        gameService.myResources.put("lumber", 0);
-        gameService.myResources.put("wool", 1);
-        result = gameService.checkRoad();
+        resourceService.myResources.put("grain", 1);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 1);
+        resourceService.myResources.put("lumber", 0);
+        resourceService.myResources.put("wool", 1);
+        result = resourceService.checkRoad();
         assertFalse(result);
-        assertTrue(gameService.notEnoughRessources.get());
+        assertTrue(resourceService.notEnoughResources.get());
     }
 
     @Test
@@ -163,24 +168,24 @@ class GameServiceTest {
         Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
-        gameService.myResources.put("grain", 1);
-        gameService.myResources.put("brick", 1);
-        gameService.myResources.put("ore", 1);
-        gameService.myResources.put("lumber", 1);
-        gameService.myResources.put("wool", 1);
-        boolean result = gameService.checkResourcesSettlement();
+        resourceService.myResources.put("grain", 1);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 1);
+        resourceService.myResources.put("lumber", 1);
+        resourceService.myResources.put("wool", 1);
+        boolean result = resourceService.checkResourcesSettlement();
         assertTrue(result);
-        assertFalse(gameService.notEnoughRessources.get());
+        assertFalse(resourceService.notEnoughResources.get());
         player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.replace(player.userId(), player);
-        gameService.myResources.put("grain", 1);
-        gameService.myResources.put("brick", 1);
-        gameService.myResources.put("ore", 1);
-        gameService.myResources.put("lumber", 0);
-        gameService.myResources.put("wool", 1);
-        result = gameService.checkResourcesSettlement();
+        resourceService.myResources.put("grain", 1);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 1);
+        resourceService.myResources.put("lumber", 0);
+        resourceService.myResources.put("wool", 1);
+        result = resourceService.checkResourcesSettlement();
         assertFalse(result);
-        assertTrue(gameService.notEnoughRessources.get());
+        assertTrue(resourceService.notEnoughResources.get());
     }
 
     @Test
@@ -188,33 +193,85 @@ class GameServiceTest {
         Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(2,1,3,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
-        gameService.myResources.put("grain", 2);
-        gameService.myResources.put("brick", 1);
-        gameService.myResources.put("ore", 3);
-        gameService.myResources.put("lumber", 1);
-        gameService.myResources.put("wool", 1);
-        boolean result = gameService.checkCity();
+        resourceService.myResources.put("grain", 2);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 3);
+        resourceService.myResources.put("lumber", 1);
+        resourceService.myResources.put("wool", 1);
+        boolean result = resourceService.checkCity();
         assertTrue(result);
-        assertFalse(gameService.notEnoughRessources.get());
+        assertFalse(resourceService.notEnoughResources.get());
         player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.replace(player.userId(), player);
-        gameService.myResources.put("grain", 1);
-        gameService.myResources.put("brick", 1);
-        gameService.myResources.put("ore", 1);
-        gameService.myResources.put("lumber", 0);
-        gameService.myResources.put("wool", 1);
-        result = gameService.checkCity();
+        resourceService.myResources.put("grain", 1);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 1);
+        resourceService.myResources.put("lumber", 0);
+        resourceService.myResources.put("wool", 1);
+        result = resourceService.checkCity();
         assertFalse(result);
-        assertTrue(gameService.notEnoughRessources.get());
+        assertTrue(resourceService.notEnoughResources.get());
     }
 
     @Test
-    void getRessourcesSize() {
+    void checkDevCard() {
+        Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
+        gameService.players.put(player.userId(), player);
+        gameService.me = player.userId();
+        resourceService.myResources.put("grain", 1);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 1);
+        resourceService.myResources.put("lumber", 1);
+        resourceService.myResources.put("wool", 1);
+        boolean result = resourceService.checkDevCard();
+        assertTrue(result);
+        assertFalse(resourceService.notEnoughResources.get());
+        player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(1,1,1,0,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
+        gameService.players.replace(player.userId(), player);
+        resourceService.myResources.put("grain", 0);
+        resourceService.myResources.put("brick", 1);
+        resourceService.myResources.put("ore", 0);
+        resourceService.myResources.put("lumber", 0);
+        resourceService.myResources.put("wool", 1);
+        result = resourceService.checkCity();
+        assertFalse(result);
+        assertTrue(resourceService.notEnoughResources.get());
+    }
+
+    @Test
+    void getResourcesSize() {
         Player player = new Player("TestGame", "Me", "ffffff", true, 2, new Resources(2,1,3,1,1), new RemainingBuildings(3, 4, 13), 3, 0, new ArrayList<>());
         gameService.players.put(player.userId(), player);
         gameService.me = player.userId();
-        int result = gameService.getRessourcesSize();
+        
+        Resources ingameResources = gameService.players.get(gameService.me).resources();
+        int result = 0;
+
+        if (ingameResources.grain() != null) {
+            result += ingameResources.grain();
+        }
+        if (ingameResources.brick() != null) {
+            result += ingameResources.brick();
+        }
+        if (ingameResources.ore() != null) {
+            result += ingameResources.ore();
+        }
+        if (ingameResources.lumber() != null) {
+            result += ingameResources.lumber();
+        }
+        if (ingameResources.wool() != null) {
+            result += ingameResources.wool();
+        }
+
         assertEquals(8, result);
+    }
+
+    @Test
+    void getDevCardMap() {
+        HashMap<String, Integer> devCardMap = resourceService.getDevCardMap(List.of(new DevelopmentCard("knight", false, false), new DevelopmentCard("knight", false, false), new DevelopmentCard("knight", false, false), new DevelopmentCard("year-of-plenty", false, false)));
+        assertEquals(devCardMap.size(), 5);
+        assertEquals(devCardMap.get("knight"), 3);
+        assertEquals(devCardMap.get("plenty"), 1);
     }
 
     @Test

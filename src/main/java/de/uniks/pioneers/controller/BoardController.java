@@ -34,17 +34,19 @@ public class BoardController {
     private final IngameService ingameService;
     private final GameService gameService;
     private final UserService userService;
+    private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
     public final SimpleObjectProperty<Game> game;
 
     private  Thread hextileRenderThread;
 
     public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game,
-                           GameStorage gameStorage, GameService gameService, MapRenderService mapRenderService){
+                           GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.userService = userService;
         this.gameStorage = gameStorage;
+        this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
         this.game = game;
     }
@@ -161,7 +163,7 @@ public class BoardController {
         circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
         circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
         this.fieldPane.getChildren().add(circ);
-        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService);
+        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService, this.resourceService);
         this.buildingControllers.add(newbuildingPointController);
     }
 

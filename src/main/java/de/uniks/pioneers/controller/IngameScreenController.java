@@ -77,6 +77,7 @@ public class IngameScreenController implements Controller {
     public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private List<User> users;
     private final GameStorage gameStorage;
+    private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
     private final IngameService ingameService;
     private final UserService userService;
@@ -95,11 +96,12 @@ public class IngameScreenController implements Controller {
 
 
     @Inject
-    public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
+    public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
                                   GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService) {
         this.app = app;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
+        this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
         this.userService = userService;
         this.gameService = gameService;
@@ -108,7 +110,7 @@ public class IngameScreenController implements Controller {
         this.speechService = speechService;
         this.stylesService = stylesService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
-        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, resourceService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
             if (mapRenderService.isFinishedLoading().get()) Platform.runLater(this::initWhenMapFinishedRendering);
@@ -258,7 +260,7 @@ public class IngameScreenController implements Controller {
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
 
-        ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, gameService);
+        ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, resourceService);
     }
 
     private void renderBuilding(Building building) {

@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.ResourceService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -15,13 +16,13 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class ResourceRemovedAnimationController {
     private final Pane root;
-    private final GameService gameService;
+    private final ResourceService resourceService;
     private final ResourceAnimationController resourceAnimationController;
     private int ore, lumber, brick, wool, grain;
 
-    public ResourceRemovedAnimationController(Pane root, GameService gameService, ResourceAnimationController resourceAnimationController) {
+    public ResourceRemovedAnimationController(Pane root, ResourceService resourceService, ResourceAnimationController resourceAnimationController) {
         this.root = root;
-        this.gameService = gameService;
+        this.resourceService = resourceService;
         this.resourceAnimationController = resourceAnimationController;
     }
 
@@ -174,15 +175,15 @@ public class ResourceRemovedAnimationController {
         });
 
         if (resNumber == 1) {
-            gameService.updateResources(ORE, ore);
+            resourceService.updateResources(ORE, ore);
         } else if (resNumber == 2) {
-            gameService.updateResources(LUMBER, lumber);
+            resourceService.updateResources(LUMBER, lumber);
         } else if (resNumber == 3) {
-            gameService.updateResources(BRICK, brick);
+            resourceService.updateResources(BRICK, brick);
         } else if (resNumber == 4) {
-            gameService.updateResources(WOOL, wool);
+            resourceService.updateResources(WOOL, wool);
         } else if (resNumber == 5) {
-            gameService.updateResources(GRAIN, grain);
+            resourceService.updateResources(GRAIN, grain);
         }
 
         if(counter == 1) {

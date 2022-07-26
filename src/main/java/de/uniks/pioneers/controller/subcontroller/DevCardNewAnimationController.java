@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.ResourceService;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -10,12 +11,12 @@ import javafx.util.Duration;
 
 public class DevCardNewAnimationController {
     private final Pane root;
-    private final GameService gameService;
+    private final ResourceService resourceService;
     private int knight, road, plenty, monopoly, vpoint;
 
-    public DevCardNewAnimationController(Pane root, GameService gameService) {
+    public DevCardNewAnimationController(Pane root, ResourceService resourceService) {
         this.root = root;
-        this.gameService = gameService;
+        this.resourceService = resourceService;
     }
 
     public void setCardCounts(int knight, int road, int plenty, int monopoly, int vpoint) {
@@ -75,15 +76,15 @@ public class DevCardNewAnimationController {
         Platform.runLater(() -> root.getChildren().remove(card));
 
         if (devCardNumber == 1) {
-            gameService.updateDevCards("knight", knight);
+            resourceService.updateDevCards("knight", knight);
         } else if (devCardNumber == 2) {
-            gameService.updateDevCards("road", road);
+            resourceService.updateDevCards("road", road);
         } else if (devCardNumber == 3) {
-            gameService.updateDevCards("plenty", plenty);
+            resourceService.updateDevCards("plenty", plenty);
         } else if (devCardNumber == 4) {
-            gameService.updateDevCards("monopoly", monopoly);
+            resourceService.updateDevCards("monopoly", monopoly);
         } else if (devCardNumber == 5) {
-            gameService.updateDevCards("vpoint", vpoint);
+            resourceService.updateDevCards("vpoint", vpoint);
         }
     }
 }

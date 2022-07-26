@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.ResourceService;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.MapChangeListener;
@@ -35,10 +36,9 @@ public class IngamePlayerResourcesController {
     @FXML public Pane root;
 
     private final GameService gameService;
-    private Map<String, ImageView> resourceImageMap;
+    private final ResourceService resourceService;
     private Map<String, Label> resourceLabelMap;
     private Map<String, Pane> resourcePaneMap;
-    private Map<String, ImageView> devImageMap;
     private Map<String, Label> devLabelMap;
     private Map<String, Pane> devPaneMap;
     private ChangeListener<Boolean> enoughResourcesListener;
@@ -47,15 +47,16 @@ public class IngamePlayerResourcesController {
     private ResourceAnimationController resourceAnimationController;
 
     @Inject
-    public IngamePlayerResourcesController(GameService gameService) {
+    public IngamePlayerResourcesController(GameService gameService, ResourceService resourceService) {
         this.gameService = gameService;
+        this.resourceService = resourceService;
     }
 
     public void stop() {
         //remove listeners
-        gameService.myResources.removeListener(resourceMapChangeListener);
-        gameService.myDevCards.removeListener(devCardMapChangeListener);
-        gameService.notEnoughRessources.removeListener(enoughResourcesListener);
+        resourceService.myResources.removeListener(resourceMapChangeListener);
+        resourceService.myDevCards.removeListener(devCardMapChangeListener);
+        resourceService.notEnoughResources.removeListener(enoughResourcesListener);
     }
 
     public void render() {
@@ -81,7 +82,7 @@ public class IngamePlayerResourcesController {
         enoughResourcesListener = (observable, oldValue, newValue) -> {
             if (newValue.equals(true)) {
                 showMissingResources();
-                gameService.notEnoughRessources.set(false);
+                resourceService.notEnoughResources.set(false);
             }
         };
 
@@ -111,10 +112,10 @@ public class IngamePlayerResourcesController {
             }
         };
 
-        gameService.myResources.addListener(resourceMapChangeListener);
-        gameService.myDevCards.addListener(devCardMapChangeListener);
-        gameService.notEnoughRessources.addListener(enoughResourcesListener);
-        this.resourceAnimationController = new ResourceAnimationController(root, gameService);
+        resourceService.myResources.addListener(resourceMapChangeListener);
+        resourceService.myDevCards.addListener(devCardMapChangeListener);
+        resourceService.notEnoughResources.addListener(enoughResourcesListener);
+        this.resourceAnimationController = new ResourceAnimationController(root, gameService, resourceService);
     }
 
     private void setImages() {
@@ -130,10 +131,8 @@ public class IngamePlayerResourcesController {
         Iterator<String> devIter = devStrings.iterator();
         Iterator<String> devCountIter = devStrings.iterator();
 
-        resourceImageMap = new HashMap<>();
         resourceLabelMap = new HashMap<>();
         resourcePaneMap = new HashMap<>();
-        devImageMap = new HashMap<>();
         devLabelMap = new HashMap<>();
         devPaneMap = new HashMap<>();
 
@@ -146,9 +145,8 @@ public class IngamePlayerResourcesController {
                     String url = String.format("images/card_%s.png", iter.next());
                     Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
                     ImageView view = (ImageView) node;
-                    resourceImageMap.put(res, view);
-                    resourcePaneMap.put(res, pane);
                     view.setImage(img);
+                    resourcePaneMap.put(res, pane);
                 } else if (id.endsWith("Count")) {
                     Label resouceCount = (Label) node;
                     resourceLabelMap.put(resIterLabels.next(), resouceCount);
@@ -157,10 +155,9 @@ public class IngamePlayerResourcesController {
                     String url = String.format("images/card_%s.png", devCard);
                     Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
                     ImageView view = (ImageView) node;
-                    devImageMap.put(devCard, view);
-                    devPaneMap.put(devCard, pane);
                     view.setImage(img);
                     view.setScaleY(1.25);
+                    devPaneMap.put(devCard, pane);
                 } else if (id.endsWith("Label")) {
                     Label devCount = (Label) node;
                     devLabelMap.put(devCountIter.next(), devCount);
@@ -201,8 +198,8 @@ public class IngamePlayerResourcesController {
     }
 
     private void showMissingResources() {
-        Map<String, Integer> missingResources = gameService.missingResources;
-        ObservableMap<String, Integer> resources = gameService.myResources;
+        Map<String, Integer> missingResources = resourceService.missingResources;
+        ObservableMap<String, Integer> resources = resourceService.myResources;
         System.out.println(missingResources);
         missingResources.keySet().forEach(s -> {
             Integer delta = missingResources.get(s);

@@ -26,18 +26,12 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import javax.inject.Provider;
 import java.util.List;
-import java.util.Map;
-
-import static de.uniks.pioneers.GameConstants.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,7 +82,10 @@ class IngameScreenControllerTest extends ApplicationTest {
     SpeechService speechService;
 
     @Spy
-    GameService gameService = new GameService(gameApiService, userService, ingameService);
+    ResourceService resourceService = new ResourceService();
+
+    @Spy
+    GameService gameService = new GameService(gameApiService, userService, ingameService, resourceService);
 
     @Mock
     StylesService stylesService;
@@ -128,8 +125,6 @@ class IngameScreenControllerTest extends ApplicationTest {
 
         ingameService.game = new SimpleObjectProperty<>();
         ingameService.game.set(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null));
-        gameService.myResources.putAll(Map.of(WOOL, 1, GRAIN, 1, ORE, 1));
-        when(gameService.checkDevCard()).thenReturn(false);
         gameService.me = "000";
         userService.setCurrentUser(new User("000", "test", "online", ""));
 
@@ -161,7 +156,7 @@ class IngameScreenControllerTest extends ApplicationTest {
         SVGPath houseSVG = lookup("#houseSVG").query();
         SVGPath citySVG = lookup("#citySVG").query();
 
-        ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, ingameService, gameService);
+        ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, ingameService, new ResourceService());
 
         streetSVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
@@ -185,11 +180,11 @@ class IngameScreenControllerTest extends ApplicationTest {
 
         hammerPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(hammerPane.getStyle(), "-fx-border-width: 3; -fx-border-color: lightgreen");
-        assertEquals(ingameScreenController.ingameDevelopmentCardController.leftPane.isVisible(), true);
-        assertEquals(ingameScreenController.ingameDevelopmentCardController.rightPane.isVisible(), true);
+        assertTrue(ingameScreenController.ingameDevelopmentCardController.leftPane.isVisible());
+        assertTrue(ingameScreenController.ingameDevelopmentCardController.rightPane.isVisible());
         rightPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(hammerPane.getStyle(), "-fx-border-width: 1; -fx-border-color: black");
-        assertEquals(ingameScreenController.ingameDevelopmentCardController.leftPane.isVisible(), false);
-        assertEquals(ingameScreenController.ingameDevelopmentCardController.rightPane.isVisible(), false);
+        assertFalse(ingameScreenController.ingameDevelopmentCardController.leftPane.isVisible());
+        assertFalse(ingameScreenController.ingameDevelopmentCardController.rightPane.isVisible());
     }
 }

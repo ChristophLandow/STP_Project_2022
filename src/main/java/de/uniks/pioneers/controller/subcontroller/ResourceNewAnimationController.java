@@ -1,6 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.ResourceService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -13,12 +13,12 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class ResourceNewAnimationController {
     private final Pane root;
-    private final GameService gameService;
+    private final ResourceService resourceService;
     private int ore, lumber, brick, wool, grain;
 
-    public ResourceNewAnimationController(Pane root, GameService gameService) {
+    public ResourceNewAnimationController(Pane root, ResourceService resourceService) {
         this.root = root;
-        this.gameService = gameService;
+        this.resourceService = resourceService;
     }
 
     public void setResourceCounts(int ore, int lumber, int brick, int wool, int grain) {
@@ -148,15 +148,15 @@ public class ResourceNewAnimationController {
         Platform.runLater(() -> root.getChildren().remove(card));
 
         if (resNumber == 1) {
-            gameService.updateResources(ORE, ore);
+            resourceService.updateResources(ORE, ore);
         } else if (resNumber == 2) {
-            gameService.updateResources(LUMBER, lumber);
+            resourceService.updateResources(LUMBER, lumber);
         } else if (resNumber == 3) {
-            gameService.updateResources(BRICK, brick);
+            resourceService.updateResources(BRICK, brick);
         } else if (resNumber == 4) {
-            gameService.updateResources(WOOL, wool);
+            resourceService.updateResources(WOOL, wool);
         } else if (resNumber == 5) {
-            gameService.updateResources(GRAIN, grain);
+            resourceService.updateResources(GRAIN, grain);
         }
     }
 }

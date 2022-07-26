@@ -5,10 +5,7 @@ import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.RemainingBuildings;
 import de.uniks.pioneers.model.Resources;
-import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.GameStorage;
-import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -50,6 +47,9 @@ class BuildingPointControllerTest extends ApplicationTest {
     GameService gameService;
 
     @Mock
+    ResourceService resourceService;
+
+    @Mock
     Pane fieldPane;
 
     @Mock
@@ -89,7 +89,7 @@ class BuildingPointControllerTest extends ApplicationTest {
         gameStorage.remainingBuildings.put(ROAD, 15);
         gameStorage.remainingBuildings.put(SETTLEMENT, 5);
         gameStorage.remainingBuildings.put(CITY, 4);
-        when(gameService.checkResourcesSettlement()).thenReturn(true);
+        when(resourceService.checkResourcesSettlement()).thenReturn(true);
 
         assertTrue(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
     }

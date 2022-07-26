@@ -1,8 +1,8 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.dto.CreateMoveDto;
-import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.ResourceService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,10 +18,10 @@ public class IngameDevelopmentCardController {
     public final ImageView leftView;
     public final ImageView rightView;
     public final IngameService ingameService;
-    public final GameService gameService;
+    public final ResourceService resourceService;
     public final CompositeDisposable disposable = new CompositeDisposable();
 
-    public IngameDevelopmentCardController(Pane hammerPane, Pane leftPane, Pane rightPane, ImageView hammerImageView, ImageView leftView, ImageView rightView, IngameService ingameService, GameService gameService) {
+    public IngameDevelopmentCardController(Pane hammerPane, Pane leftPane, Pane rightPane, ImageView hammerImageView, ImageView leftView, ImageView rightView, IngameService ingameService, ResourceService resourceService) {
         this.hammerPane = hammerPane;
         this.leftPane = leftPane;
         this.rightPane = rightPane;
@@ -29,7 +29,7 @@ public class IngameDevelopmentCardController {
         this.leftView = leftView;
         this.rightView = rightView;
         this.ingameService = ingameService;
-        this.gameService = gameService;
+        this.resourceService = resourceService;
 
         hammerPane.setOnMouseClicked(this::onHammerClicked);
         rightPane.setOnMouseClicked(this::onRightPaneClicked);
@@ -42,7 +42,7 @@ public class IngameDevelopmentCardController {
 
     private void onRightPaneClicked(MouseEvent mouseEvent) {
         System.out.println(ingameService.game.get()._id());
-        if(gameService.checkDevCard()) {
+        if(resourceService.checkDevCard()) {
             disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto())
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)

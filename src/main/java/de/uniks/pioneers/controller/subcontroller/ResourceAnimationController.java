@@ -4,6 +4,7 @@ import de.uniks.pioneers.model.DevelopmentCard;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.ResourceService;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -30,15 +31,23 @@ public class ResourceAnimationController {
     private Player valueAdded;
     private Player valueRemoved;
     private boolean me;
-    private int knightOld, roadOld, plentyOld, monopolyOld, vpointOld ,unknownOld;
-    private int knightNew, roadNew, plentyNew, monopolyNew, vpointNew ,unknownNew;
+    private int knightOld;
+    private int roadOld;
+    private int plentyOld;
+    private int monopolyOld;
+    private int vpointOld;
+    private int knightNew;
+    private int roadNew;
+    private int plentyNew;
+    private int monopolyNew;
+    private int vpointNew;
 
-    public ResourceAnimationController(Pane root, GameService gameService) {
+    public ResourceAnimationController(Pane root, GameService gameService, ResourceService resourceService) {
         this.gameService = gameService;
-        this.resourceNewAnimationController = new ResourceNewAnimationController(root, gameService);
-        this.resourceRemovedAnimationController = new ResourceRemovedAnimationController(root, gameService, this);
-        this.devCardNewAnimationController = new DevCardNewAnimationController(root, gameService);
-        this.devCardRemovedAnimationController = new DevCardRemovedAnimationController(root, gameService);
+        this.resourceNewAnimationController = new ResourceNewAnimationController(root, resourceService);
+        this.resourceRemovedAnimationController = new ResourceRemovedAnimationController(root, resourceService, this);
+        this.devCardNewAnimationController = new DevCardNewAnimationController(root, resourceService);
+        this.devCardRemovedAnimationController = new DevCardRemovedAnimationController(root, resourceService);
         this.me = false;
 
         this.addPlayerListener();
@@ -158,7 +167,7 @@ public class ResourceAnimationController {
         plentyNew = 0;
         monopolyNew = 0;
         vpointNew = 0;
-        unknownNew = 0;
+        int unknownNew = 0;
 
         for(DevelopmentCard devCard : devCardsNew) {
             switch (devCard.type()) {
@@ -180,7 +189,7 @@ public class ResourceAnimationController {
         plentyOld = 0;
         monopolyOld = 0;
         vpointOld = 0;
-        unknownOld = 0;
+        int unknownOld = 0;
 
         for(DevelopmentCard devCard : devCardsOld) {
             switch (devCard.type()) {

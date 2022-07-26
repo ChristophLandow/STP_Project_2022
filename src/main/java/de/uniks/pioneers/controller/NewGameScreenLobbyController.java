@@ -67,6 +67,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject UserService userService;
     @Inject GameStorage gameStorage;
     @Inject GameService gameService;
+    @Inject ResourceService resourceService;
 
     private final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final SimpleStringProperty password = new SimpleStringProperty();
@@ -209,7 +210,7 @@ public class NewGameScreenLobbyController implements Controller {
     public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius) {
         if(!rejoin) {
             gameStorage.resetRemainingBuildings();
-            gameService.resetMyResources();
+            resourceService.resetMyResources();
 
             if(mapRadius == -1){
                 gameStorage.calcZoom(boardSizeSpinner.getValue());

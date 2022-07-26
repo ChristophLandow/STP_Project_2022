@@ -5,7 +5,6 @@ import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,7 +13,6 @@ import javafx.collections.ObservableMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.Map;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
@@ -33,11 +31,7 @@ public class GameService {
     public String me;
     private final UserService userService;
     private final IngameService ingameService;
-
-    public ObservableMap<String, Integer> myResources = FXCollections.observableHashMap();
-    public ObservableMap<String, Integer> myDevCards = FXCollections.observableHashMap();
-    public java.util.Map<String, Integer> missingResources = new HashMap<>();
-    public SimpleBooleanProperty notEnoughRessources = new SimpleBooleanProperty();
+    public ResourceService resourceService;
     public int victoryPoints;
     public boolean wonGame;
     public SimpleStringProperty moveAction;
@@ -46,10 +40,11 @@ public class GameService {
     EventListener eventListener;
 
     @Inject
-    public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService) {
+    public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService, ResourceService resourceService) {
         this.gameApiService = gameApiService;
         this.userService = userService;
         this.ingameService = ingameService;
+        this.resourceService = resourceService;
     }
 
     public Observable<Game> deleteGame(String gameId) {
@@ -165,8 +160,8 @@ public class GameService {
                     // thats why myResourcs = players.get(me).resources.createMap leads to
                     // horrible malfunction for every listener, even added after the appointment
                     if(!userService.isSpectator()) {
-                        myResources.putAll(players.get(me).resources().normalize().createObservableMap());
-                        myDevCards.putAll(getDevCardMap(players.get(me).developmentCards()));
+                        resourceService.myResources.putAll(players.get(me).resources().normalize().createObservableMap());
+                        resourceService.myDevCards.putAll(resourceService.getDevCardMap(players.get(me).developmentCards()));
                     }
                 }, Throwable::printStackTrace));
     }
@@ -219,103 +214,6 @@ public class GameService {
                 || checkBuildingSpot(uploadCoords[0], uploadCoords[1] + 1, uploadCoords[2] - 1, 6);
     }
 
-    public void updateResources(String type, int amount) {
-        myResources.replace(type, myResources.get(type), amount);
-    }
-
-    public void updateDevCards(String type, int amount) {
-        myDevCards.replace(type, myDevCards.get(type), amount);
-    }
-
-    private void calcMissingRessources(Map<String, Integer> cost) {
-        missingResources = new HashMap<>();
-        cost.keySet().forEach(s -> missingResources.put(s, myResources.get(s) - cost.get(s)));
-    }
-
-    public boolean checkRoad() {
-        boolean enoughRessources = (myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1);
-
-        if (enoughRessources) {
-            notEnoughRessources.set(false);
-            return true;
-        } else {
-            Map<String, Integer> cost = Map.of(BRICK, 1, LUMBER, 1);
-            calcMissingRessources(cost);
-            notEnoughRessources.set(true);
-            return false;
-        }
-    }
-
-    public boolean checkDevCard() {
-        boolean enoughRessources = (myResources.get(WOOL) > 0 && myResources.get(GRAIN) > 0 && myResources.get(ORE) > 0);
-
-        if(enoughRessources) {
-            notEnoughRessources.set(false);
-            return true;
-        } else {
-            Map<String, Integer> cost = Map.of(WOOL, 1, GRAIN, 1, ORE, 1);
-            calcMissingRessources(cost);
-            notEnoughRessources.set(true);
-            return false;
-        }
-    }
-
-    public boolean checkResourcesSettlement() {
-        boolean enoughRessources = (myResources.get(LUMBER) >= 1 && myResources.get(BRICK) >= 1
-                && myResources.get(GRAIN) >= 1 && myResources.get(WOOL) >= 1);
-
-        if (enoughRessources) {
-            notEnoughRessources.set(false);
-            return true;
-        } else {
-            Map<String, Integer> cost = Map.of(BRICK, 1, LUMBER, 1, GRAIN, 1, WOOL, 1);
-            calcMissingRessources(cost);
-            notEnoughRessources.set(true);
-            return false;
-        }
-    }
-
-    public boolean checkCity() {
-        boolean enoughRessources = (myResources.get(ORE) >= 3 && myResources.get(GRAIN) >= 2);
-
-        if (enoughRessources) {
-            notEnoughRessources.set(false);
-            return true;
-        } else {
-            Map<String, Integer> cost = Map.of(ORE, 3, GRAIN, 2);
-            calcMissingRessources(cost);
-            notEnoughRessources.set(true);
-            return false;
-        }
-    }
-
-    public int getRessourcesSize() {
-        Resources ingameResources = players.get(me).resources();
-        int result = 0;
-
-        if (ingameResources.grain() != null) {
-            result += ingameResources.grain();
-        }
-
-        if (ingameResources.brick() != null) {
-            result += ingameResources.brick();
-        }
-
-        if (ingameResources.ore() != null) {
-            result += ingameResources.ore();
-        }
-
-        if (ingameResources.lumber() != null) {
-            result += ingameResources.lumber();
-        }
-
-        if (ingameResources.wool() != null) {
-            result += ingameResources.wool();
-        }
-
-        return result;
-    }
-
     public void setMembers(ObservableList<Member> lobbyMembers) {
         this.lobbyMembers = lobbyMembers;
     }
@@ -330,40 +228,5 @@ public class GameService {
 
     public Game getGame() {
         return game.get();
-    }
-
-    public void resetMyResources() {
-        myResources = FXCollections.observableHashMap();
-        myDevCards = FXCollections.observableHashMap();
-        notEnoughRessources = new SimpleBooleanProperty();
-    }
-
-    public HashMap<String, Integer> getDevCardMap(List<DevelopmentCard> devCards) {
-        HashMap<String, Integer> devCardMap = new HashMap<>();
-        int knight = 0;
-        int road = 0;
-        int plenty = 0;
-        int monopoly = 0;
-        int vpoint = 0;
-        int unknown = 0;
-
-        for(DevelopmentCard devCard : devCards) {
-            switch (devCard.type()) {
-                case "knight" -> knight += 1;
-                case "road-building" -> road += 1;
-                case "year-of-plenty" -> plenty += 1;
-                case "monopoly" -> monopoly += 1;
-                case "victory-point" -> vpoint += 1;
-                case "unknown" -> unknown += 1;
-            }
-        }
-
-        devCardMap.put("knight", knight);
-        devCardMap.put("road", road);
-        devCardMap.put("plenty", plenty);
-        devCardMap.put("monopoly", monopoly);
-        devCardMap.put("vpoint", vpoint);
-
-        return devCardMap;
     }
 }

@@ -7,6 +7,7 @@ import de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUp
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.ResourceService;
 import de.uniks.pioneers.services.TimerService;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -27,7 +28,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -36,45 +36,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TradePopUpController implements Controller {
-    @FXML
-    public AnchorPane root;
-    @FXML
-    public HBox subRoot;
-    @FXML
-    public VBox tradeBox;
-    @FXML
-    public HBox timerBox;
-    @FXML
-    public Label timer;
-    @FXML
-    public HBox offerBox;
-    @FXML
-    public Label offer;
-    @FXML
-    public HBox offerImages;
-    @FXML
-    public HBox getBox;
-    @FXML
-    public Label get;
-    @FXML
-    public HBox tradeButtons;
-    @FXML
-    public Button cancel;
-    @FXML
-    public Button offerToPlayers;
-    @FXML
-    public Button tradeWithBank;
-    @FXML
-    public VBox playerListBox;
-    @FXML
-    public ListView<Node> playerList;
-    @FXML
-    public HBox spinnerBoxOffer;
-    @FXML
-    public HBox spinnerBoxGet;
-    @FXML
-    public HBox getImages;
-
+    @FXML public AnchorPane root;
+    @FXML public HBox subRoot;
+    @FXML public VBox tradeBox;
+    @FXML public HBox timerBox;
+    @FXML public Label timer;
+    @FXML public HBox offerBox;
+    @FXML public Label offer;
+    @FXML public HBox offerImages;
+    @FXML public HBox getBox;
+    @FXML public Label get;
+    @FXML public HBox tradeButtons;
+    @FXML public Button cancel;
+    @FXML public Button offerToPlayers;
+    @FXML public Button tradeWithBank;
+    @FXML public VBox playerListBox;
+    @FXML public ListView<Node> playerList;
+    @FXML public HBox spinnerBoxOffer;
+    @FXML public HBox spinnerBoxGet;
+    @FXML public HBox getImages;
     @FXML public Spinner<Integer> brickOffer;
     @FXML public Spinner<Integer> woolOffer;
     @FXML public Spinner<Integer> lumberOffer;
@@ -83,6 +63,7 @@ public class TradePopUpController implements Controller {
 
     private final IngameService ingameService;
     private final GameService gameService;
+    private final ResourceService resourceService;
     private final TimerService timerService;
     private EventHandler<MouseEvent> bankHandler;
     private EventHandler<MouseEvent> playerHandler;
@@ -90,7 +71,6 @@ public class TradePopUpController implements Controller {
     private final Stage primaryStage;
     private final Stage tradeStage;
     private final Node tradePane;
-
     private ListChangeListener<Move> acceptedTradeListener;
     private Map<String, TradePopUpPlayerListElementController> playerElements;
 
@@ -98,9 +78,10 @@ public class TradePopUpController implements Controller {
     Provider<TradePopUpPlayerListElementController> elementControllerProvider;
 
     @Inject
-    public TradePopUpController(IngameService ingameService, GameService gameService, TimerService timerService, App app) {
+    public TradePopUpController(IngameService ingameService, GameService gameService, ResourceService resourceService, TimerService timerService, App app) {
         this.ingameService = ingameService;
         this.gameService = gameService;
+        this.resourceService = resourceService;
         this.timerService = timerService;
 
         // setup stages
@@ -167,11 +148,11 @@ public class TradePopUpController implements Controller {
 
         // setup eventHandler for trade with player
         playerHandler = event -> {
-            if (woolOffer.getValue() > gameService.myResources.get("wool") ||
-                brickOffer.getValue() > gameService.myResources.get("brick") ||
-                grainOffer.getValue() > gameService.myResources.get("grain") ||
-                oreOffer.getValue() > gameService.myResources.get("ore") ||
-                lumberOffer.getValue() > gameService.myResources.get("lumber")) {
+            if (woolOffer.getValue() > resourceService.myResources.get("wool") ||
+                brickOffer.getValue() > resourceService.myResources.get("brick") ||
+                grainOffer.getValue() > resourceService.myResources.get("grain") ||
+                oreOffer.getValue() > resourceService.myResources.get("ore") ||
+                lumberOffer.getValue() > resourceService.myResources.get("lumber")) {
                     handleError();
             } else {
                 ingameService.tradeWithPlayers();
@@ -274,7 +255,6 @@ public class TradePopUpController implements Controller {
     }
 
     private class TradeSpinnerFactory extends SpinnerValueFactory<Integer> {
-
         private final IngameService ingameService;
         private final Pair<String, String> types;
 
