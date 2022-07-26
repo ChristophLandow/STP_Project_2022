@@ -45,7 +45,12 @@ public class PrefService {
         preferences.put(LEAVE_GAME, id);
     }
     public void saveCustomMapOnLeave(String id){
-        preferences.put("MapID", id);
+        if(id == null){
+            preferences.put("MapID", "");
+        }
+        else{
+            preferences.put("MapID", id);
+        }
     }
 
     public void saveMapRadiusOnLeave(int mapRadius) {
