@@ -5,13 +5,12 @@ import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.ExpectedMove;
+import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.services.*;
 import javafx.beans.property.SimpleBooleanProperty;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -29,7 +28,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.List;
+import java.util.Map;
 
+import static de.uniks.pioneers.GameConstants.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -118,6 +121,11 @@ class IngameScreenControllerTest extends ApplicationTest {
         when(rulesScreenControllerProvider.get()).thenReturn(rulesController);
         when(ingameService.getExpectedMove()).thenReturn(new ExpectedMove("build", List.of("000", "001")));
         when(tradePopUpControllerProvider.get()).thenReturn(tradePopUpController);
+
+        ingameService.game = new SimpleObjectProperty<>();
+        ingameService.game.set(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null));
+        gameService.myResources.putAll(Map.of(WOOL, 1, GRAIN, 1, ORE, 1));
+        when(gameService.checkDevCard()).thenReturn(false);
         gameService.me = "000";
         userService.setCurrentUser(new User("000", "test", "online", ""));
 
@@ -142,10 +150,14 @@ class IngameScreenControllerTest extends ApplicationTest {
         Pane settlementFrame = lookup("#settlementFrame").query();
         Pane cityFrame = lookup("#cityFrame").query();
         Pane tradePane = lookup("#tradePane").query();
+        Pane hammerPane = lookup("#hammerPane").query();
+        Pane rightPane = lookup("#rightPane").query();
 
         SVGPath streetSVG = lookup("#streetSVG").query();
         SVGPath houseSVG = lookup("#houseSVG").query();
         SVGPath citySVG = lookup("#citySVG").query();
+
+        ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, ingameService, gameService);
 
         streetSVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
@@ -166,5 +178,14 @@ class IngameScreenControllerTest extends ApplicationTest {
         verify(tradePopUpController).show();
         verify(stylesService).setStyleSheets(any(), anyString(), anyString());
         verify(timerService).setTimeLabel(any());
+
+        hammerPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        assertEquals(hammerPane.getStyle(), "-fx-border-width: 3; -fx-border-color: lightgreen");
+        assertEquals(ingameScreenController.ingameDevelopmentCardController.leftPane.isVisible(), true);
+        assertEquals(ingameScreenController.ingameDevelopmentCardController.rightPane.isVisible(), true);
+        rightPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        assertEquals(hammerPane.getStyle(), "-fx-border-width: 1; -fx-border-color: black");
+        assertEquals(ingameScreenController.ingameDevelopmentCardController.leftPane.isVisible(), false);
+        assertEquals(ingameScreenController.ingameDevelopmentCardController.rightPane.isVisible(), false);
     }
 }

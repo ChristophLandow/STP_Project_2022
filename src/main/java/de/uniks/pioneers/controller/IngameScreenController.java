@@ -92,6 +92,7 @@ public class IngameScreenController implements Controller {
     private IngamePlayerController ingamePlayerController;
     private final ChangeListener<Boolean> finishedMapRenderListener;
     private TradeOfferPopUpController tradeOfferPopUpController;
+    public IngameDevelopmentCardController ingameDevelopmentCardController;
 
 
     @Inject
@@ -258,7 +259,7 @@ public class IngameScreenController implements Controller {
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
 
-        new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, gameService);
+        ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, gameService);
     }
 
     private void renderBuilding(Building building) {
