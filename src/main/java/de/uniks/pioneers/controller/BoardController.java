@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static de.uniks.pioneers.GameConstants.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 
 public class BoardController {
 
@@ -52,10 +54,13 @@ public class BoardController {
 
     public void buildBoardUI() {
         BoardGenerator generator = new BoardGenerator();
-        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap(), this.gameStorage.getHexScale());
-        List<HexTile> edges = generator.generateEdges(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
-        List<HexTile> corners = generator.generateCorners(2 * gameStorage.getMapRadius() + 1, gameStorage.getHexScale());
-        List<HexTile> harbors = generator.generateHarbors(this.gameStorage.getHarbors(), this.gameStorage.getHexScale());
+        double hexScale = this.gameStorage.getHexScale();
+        List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap(), hexScale);
+        List<HexTile> edges = generator.generateEdges(2 * gameStorage.getMapRadius() + 1, hexScale);
+        List<HexTile> corners = generator.generateCorners(2 * gameStorage.getMapRadius() + 1, hexScale);
+        List<HexTile> harbors = generator.generateHarbors(this.gameStorage.getHarbors(), hexScale);
+
+        removeUnusedPoints(tiles, edges, corners, hexScale);
 
         if(gameStorage.getMapRadius() > 4) {
             this.hextileRenderThread = new Thread(() -> {
@@ -114,6 +119,48 @@ public class BoardController {
             hextileRenderThread.start();
         }
 
+    }
+
+    private void removeUnusedPoints(List<HexTile> tiles, List<HexTile> edges, List<HexTile> corners, double hexScale){
+        edges.removeIf(edge -> {
+            for(HexTile tile: tiles){
+                double[][] edgeCoords = new double[6][2];
+                edgeCoords[0] = new double[]{tile.x + (sqrt(3)/4) * hexScale, tile.y + 0.75 * hexScale};
+                edgeCoords[1] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  + 0};
+                edgeCoords[2] = new double[]{tile.x + (sqrt(3)/4) * hexScale, tile.y - 0.75 * hexScale};
+                edgeCoords[3] = new double[]{tile.x - (sqrt(3)/4) * hexScale, tile.y - 0.75 * hexScale};
+                edgeCoords[4] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  + 0};
+                edgeCoords[5] = new double[]{tile.x - (sqrt(3)/4) * hexScale, tile.y + 0.75 * hexScale};
+
+                for(int i = 0; i < 6; i++) {
+                    if(abs(edge.x - edgeCoords[i][0]) < 1 && abs(edge.y - edgeCoords[i][1]) < 1 ) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        });
+
+        corners.removeIf(corner -> {
+            for(HexTile tile: tiles){
+                double[][] cornerCoords = new double[6][2];
+                cornerCoords[0] = new double[]{tile.x + 0, tile.y + 1 * hexScale};
+                cornerCoords[1] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  + 0.5 * hexScale};
+                cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  - 0.5 * hexScale};
+                cornerCoords[3] = new double[]{tile.x - 0, tile.y - 1 * hexScale};
+                cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  - 0.5 * hexScale};
+                cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  + 0.5 * hexScale};
+
+                for(int i = 0; i < 6; i++) {
+                    if(abs(corner.x - cornerCoords[i][0]) < 1 && abs(corner.y - cornerCoords[i][1]) < 1 ) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        });
     }
 
     private void loadHexagon(HexTile hexTile){

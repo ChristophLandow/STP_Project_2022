@@ -88,8 +88,14 @@ public class NewGameScreenLobbyController implements Controller {
 
     @Override
     public void init() {
+        NewGameLobbySpinnerController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
+        newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
+        newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
+        newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
+        newGameLobbySpinnerController.init();
+
         newGameLobbyReadyController = new NewGameLobbyReadyController();
-        newGameLobbyReadyController.init(this, spectatorCheckBox, playerEntries, colorPickerController, clientReadyLabel, clientReadyBox, readyButton, startGameButton, spectatorImageView, boardSizeSpinner, victoryPointSpinner, newGameLobbyService, userService);
+        newGameLobbyReadyController.init(this, spectatorCheckBox, playerEntries, colorPickerController, clientReadyLabel, clientReadyBox, readyButton, startGameButton, spectatorImageView, newGameLobbySpinnerController, newGameLobbyService, userService);
         newGameLobbyUserController = new NewGameLobbyUserController();
         newGameLobbyUserController.init(this, playerEntries, newGameLobbyService, userService, userBox, lobbyScreenControllerProvider, eventListener);
 
@@ -153,12 +159,6 @@ public class NewGameScreenLobbyController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        NewGameLobbySpinnerController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
-        newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
-        newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
-        newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
-        newGameLobbySpinnerController.init();
-
         if(!currentUser._id().equals(game.get().owner())){
             boardSizeSpinner.setVisible(false);
             boardSizeLabel.setVisible(false);
@@ -206,18 +206,18 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius) {
+    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius, boolean customMap) {
         if(!rejoin) {
             gameStorage.resetRemainingBuildings();
 
             if(mapRadius == -1){
-                gameStorage.calcZoom(boardSizeSpinner.getValue());
+                gameStorage.calcZoom(boardSizeSpinner.getValue(), customMap);
             }
             else{
-                gameStorage.calcZoom(mapRadius);
+                gameStorage.calcZoom(mapRadius, customMap);
             }
         } else {
-            gameStorage.calcZoom(mapRadius);
+            gameStorage.calcZoom(mapRadius, customMap);
         }
         if(game.owner().equals(userService.getCurrentUser()._id())) {
             gameService.victoryPoints = victoryPointSpinner.getValue();

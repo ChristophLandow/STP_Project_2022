@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -12,6 +13,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
+import javax.inject.Inject;
 import java.util.Map;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -28,14 +30,15 @@ public class NewGameLobbyReadyController {
     private Game game;
     private Button readyButton;
     private ImageView spectatorImageView;
-    private Spinner<Integer> boardSizeSpinner;
-    private Spinner<Integer> victoryPointSpinner;
+    private NewGameLobbySpinnerController spinnerController;
     private boolean clientReady = false;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    @Inject MapBrowserService mapBrowserService;
+
     public void init(NewGameScreenLobbyController newGameScreenLobbyController, CheckBox spectatorCheckBox, Map<String, PlayerEntryController> playerEntries,
                      ColorPickerController colorPickerController, Label clientReadyLabel, HBox clientReadyBox, Button readyButton, Button startButton,
-                     ImageView spectatorImageView, Spinner<Integer> boardSizeSpinner, Spinner<Integer> victoryPointSpinner, NewGameLobbyService newGameLobbyService, UserService userService) {
+                     ImageView spectatorImageView, NewGameLobbySpinnerController spinnerController, NewGameLobbyService newGameLobbyService, UserService userService) {
         this.newGameLobbyService = newGameLobbyService;
         this.userService = userService;
         this.screenController = newGameScreenLobbyController;
@@ -47,8 +50,7 @@ public class NewGameLobbyReadyController {
         this.game = newGameScreenLobbyController.getGame();
         this.readyButton = readyButton;
         this.spectatorImageView = spectatorImageView;
-        this.boardSizeSpinner = boardSizeSpinner;
-        this.victoryPointSpinner = victoryPointSpinner;
+        this.spinnerController = spinnerController;
 
         readyButton.setOnAction(this::onSetReadyButton);
         startButton.setOnAction(this::startGame);
@@ -119,14 +121,14 @@ public class NewGameLobbyReadyController {
     private void startGame(ActionEvent actionEvent) {
         // check if all users are ready
         if (allUsersReady()) {
-            disposable.add(newGameLobbyService.updateGame(game, screenController.getPassword(), true, boardSizeSpinner.getValueFactory().getValue(),
-                            victoryPointSpinner.getValueFactory().getValue(), null, true, 0)
+            disposable.add(newGameLobbyService.updateGame(game, screenController.getPassword(), true, spinnerController.getMapSize(),
+                            spinnerController.getVictoryPoints(), spinnerController.getMapTemplateID(), true, 0)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)
                     .subscribe(response -> {
                         screenController.setGame(response);
                         screenController.toIngame(this.game, newGameLobbyService.getUsers().values().stream().toList(), colorPickerController.getColor(),
-                                false, boardSizeSpinner.getValueFactory().getValue());
+                                false, spinnerController.getMapSize(), spinnerController.getMapTemplateID() != null);
                     }, Throwable::printStackTrace));
         }
     }
