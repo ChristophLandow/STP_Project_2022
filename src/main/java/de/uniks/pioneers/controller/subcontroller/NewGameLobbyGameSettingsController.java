@@ -32,27 +32,27 @@ public class NewGameLobbyGameSettingsController implements Controller {
         victoryPointSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3,15,10));
         victoryPointSpinner.editorProperty().get().setAlignment(Pos.CENTER);
 
-        mapTemplateSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(mapBrowserService.getMapNames()));
-        mapTemplateSpinner.editorProperty().get().setAlignment(Pos.CENTER);
-        mapTemplateSpinner.getValueFactory().setValue("Default");
+//        mapTemplateSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(mapBrowserService.getMapNames()));
+//        mapTemplateSpinner.editorProperty().get().setAlignment(Pos.CENTER);
+//        mapTemplateSpinner.getValueFactory().setValue("Default");
 
-        Node buttonIncrement = mapTemplateSpinner.getChildrenUnmodifiable().get(1);
-        buttonIncrement.setOnMouseClicked((event)-> {
-            indexOfSpinner++;
+//        Node buttonIncrement = mapTemplateSpinner.getChildrenUnmodifiable().get(1);
+//        buttonIncrement.setOnMouseClicked((event)-> {
+//            indexOfSpinner++;
+//
+//            if(indexOfSpinner >= mapBrowserService.getMapNames().size()){
+//                indexOfSpinner = mapBrowserService.getMapNames().size()-1;
+//            }
+//        });
 
-            if(indexOfSpinner >= mapBrowserService.getMapNames().size()){
-                indexOfSpinner = mapBrowserService.getMapNames().size()-1;
-            }
-        });
-
-        Node buttonDecrement = mapTemplateSpinner.getChildrenUnmodifiable().get(2);
-        buttonDecrement.setOnMouseClicked((event)-> {
-            indexOfSpinner--;
-
-            if(indexOfSpinner < -1){
-                indexOfSpinner = -1;
-            }
-        });
+//        Node buttonDecrement = mapTemplateSpinner.getChildrenUnmodifiable().get(2);
+//        buttonDecrement.setOnMouseClicked((event)-> {
+//            indexOfSpinner--;
+//
+//            if(indexOfSpinner < -1){
+//                indexOfSpinner = -1;
+//            }
+//        });
     }
 
     @Override
