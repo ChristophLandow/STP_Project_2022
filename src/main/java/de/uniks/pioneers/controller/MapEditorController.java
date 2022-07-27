@@ -55,7 +55,6 @@ public class MapEditorController implements Controller{
 
     private final MapService mapService;
 
-    private final UserService userService;
 
     @Inject
     Provider<MapBrowserController> mapBrowserControllerProvider;
@@ -73,7 +72,6 @@ public class MapEditorController implements Controller{
 
         this.editorManager = editorManager;
         this.mapService = mapService;
-        this.userService = userService;
         this.app = app;
         init();
 
@@ -141,35 +139,9 @@ public class MapEditorController implements Controller{
     public void toMaps(){
     }
     public void save(ActionEvent event){
-        //TODO: get the actual Mapdetails
-        /*List<TileTemplate> tiles = new ArrayList<>();
-        tiles.add(new TileTemplate(0, 0, 0, "desert", 12));
-        List<HarborTemplate> harbors = new ArrayList<>();
-        harbors.add(new HarborTemplate(0, 0, 0, "grain", 1));
-        if (mapService.getCurrentMap() != null) {
-            if (mapService.getCurrentMap().createdBy().equals(userService.getCurrentUser()._id())) {
-                mapService.saveMap(tiles, harbors)
-                        .observeOn(FX_SCHEDULER)
-                        .doOnError(err -> handleSaveError())
-                        .subscribe();
-            } else {
-                //TODO: create the map
-                mapService.createMap("Testus-Maximus", null, tiles, harbors)
-                        .observeOn(FX_SCHEDULER)
-                        .doOnError(err -> handleSaveError())
-                        .subscribe();
-                System.out.println("nicht deine Map");
-            }*/
         mapService.updateOrCreateMap();
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         this.app.show(mapBrowserController);
-        /*} else {
-            mapService.createMap("Testus-Maximus-neu", null, tiles, harbors)
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(err -> handleSaveError())
-                    .subscribe();
-            System.out.println("neue Map erstellt");
-        }*/
     }
 
 
