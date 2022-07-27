@@ -18,6 +18,7 @@ public class NewGameLobbyGameSettingsController implements Controller {
     private final MapBrowserService mapBrowserService;
     private Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
     private ComboBox<Text> mapComboBox;
+    Text defaultMap = new Text("default");
 
     @Inject
     public NewGameLobbyGameSettingsController(MapBrowserService mapBrowserService) {
@@ -40,7 +41,7 @@ public class NewGameLobbyGameSettingsController implements Controller {
             element.setId(map._id());
             mapComboBox.getItems().add(element);
         }
-        mapComboBox.setValue(new Text("Default"));
+        mapComboBox.setValue(defaultMap);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class NewGameLobbyGameSettingsController implements Controller {
     }
 
     public String getMapTemplateID(){
-        if (mapComboBox.getSelectionModel().getSelectedIndex() == 0) {
+        if (mapComboBox.getValue().equals(defaultMap)) {
             // default map
             return null;
         }
@@ -62,7 +63,7 @@ public class NewGameLobbyGameSettingsController implements Controller {
     }
 
     public int getMapSize(){
-        if(mapComboBox.getSelectionModel().getSelectedIndex() == 0) {
+        if(mapComboBox.getValue().equals(defaultMap)) {
             // get size for default map
             return boardSizeSpinner.getValueFactory().getValue();
         }
