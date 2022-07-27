@@ -34,22 +34,22 @@ public class JoinGamePopUpController{
     private final CompositeDisposable disposable = new CompositeDisposable();
     private LobbyScreenController lobbyScreenController;
     private String randomColor;
-    private final EventHandlerService eventHandlerService;
-    public JoinGamePopUpController(EventHandlerService eventHandlerService) {
-        this.eventHandlerService = eventHandlerService;
+    private EventHandlerService eventHandlerService;
+    public JoinGamePopUpController() {
     }
 
-    public void init(App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game) {
+    public void init(App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game, EventHandlerService eventHandlerService) {
         this.newGameLobbyService = newGameLobbyService;
         this.game = game;
         this.lobbyScreenController = lobbyScreenController;
         this.randomColor = this.getRandomColor();
         this.app = app;
+        this.eventHandlerService = eventHandlerService;
         wrongPasswordLabel.visibleProperty().set(false);
         BooleanBinding invalid = Bindings.equal(passwordInputField.textProperty(), "");
         joinButton.disableProperty().bind(invalid);
         Node passwordInputNode = this.passwordInputField;
-        eventHandlerService.setEnterEventHandler(passwordInputNode, this.joinButton);
+        this.eventHandlerService.setEnterEventHandler(passwordInputNode, this.joinButton);
     }
 
     public void joinGame() {
