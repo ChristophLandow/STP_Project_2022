@@ -37,9 +37,6 @@ public class DiscardResourcesController implements Initializable, Controller {
     @FXML private Spinner<Integer> PolarBearSpinner;
     @FXML private Spinner<Integer> IceSpinner;
     @FXML private Spinner<Integer> WaleSpinner;
-
-
-
     @Inject
     IngameService ingameService;
     @Inject
@@ -58,9 +55,7 @@ public class DiscardResourcesController implements Initializable, Controller {
     private final ArrayList<Spinner<Integer>> spinnerLIst = new ArrayList<>();
 
     @Inject
-    public DiscardResourcesController() {
-
-    }
+    public DiscardResourcesController() {}
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
