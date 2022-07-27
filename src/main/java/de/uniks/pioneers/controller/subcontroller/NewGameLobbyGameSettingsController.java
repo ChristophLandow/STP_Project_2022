@@ -1,26 +1,29 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class NewGameLobbyGameSettingsController implements Controller {
+    @Inject MapBrowserService mapBrowserService;
 
     private Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
-    private Spinner<String> mapTemplateSpinner;
-    private final MapBrowserService mapBrowserService;
+    private ComboBox<Text> mapComboBox;
 
     private int indexOfSpinner = -1;
 
     @Inject
-    public NewGameLobbyGameSettingsController(MapBrowserService mapBrowserService) {
-        this.mapBrowserService = mapBrowserService;
+    public NewGameLobbyGameSettingsController() {
     }
 
     @Override
@@ -32,27 +35,13 @@ public class NewGameLobbyGameSettingsController implements Controller {
         victoryPointSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3,15,10));
         victoryPointSpinner.editorProperty().get().setAlignment(Pos.CENTER);
 
-//        mapTemplateSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(mapBrowserService.getMapNames()));
-//        mapTemplateSpinner.editorProperty().get().setAlignment(Pos.CENTER);
-//        mapTemplateSpinner.getValueFactory().setValue("Default");
-
-//        Node buttonIncrement = mapTemplateSpinner.getChildrenUnmodifiable().get(1);
-//        buttonIncrement.setOnMouseClicked((event)-> {
-//            indexOfSpinner++;
-//
-//            if(indexOfSpinner >= mapBrowserService.getMapNames().size()){
-//                indexOfSpinner = mapBrowserService.getMapNames().size()-1;
-//            }
-//        });
-
-//        Node buttonDecrement = mapTemplateSpinner.getChildrenUnmodifiable().get(2);
-//        buttonDecrement.setOnMouseClicked((event)-> {
-//            indexOfSpinner--;
-//
-//            if(indexOfSpinner < -1){
-//                indexOfSpinner = -1;
-//            }
-//        });
+        // load maps into comboBox
+        List<MapTemplate> maps = mapBrowserService.getMaps();
+        for (MapTemplate map : maps) {
+            Text element = new Text(map.name());
+            element.setId(map._id());
+            mapComboBox.getItems().add(element);
+        }
     }
 
     @Override
@@ -95,7 +84,7 @@ public class NewGameLobbyGameSettingsController implements Controller {
         this.victoryPointSpinner = victoryPointSpinner;
     }
 
-    public void setMapTemplateSpinner(Spinner<String> mapTemplateSpinner) {
-        this.mapTemplateSpinner = mapTemplateSpinner;
+    public void setMapComboBox(ComboBox<Text> mapComboBox) {
+        this.mapComboBox = mapComboBox;
     }
 }

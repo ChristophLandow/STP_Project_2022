@@ -39,11 +39,11 @@ public class MapBrowserService {
     }
 
     private void initMapListener(){
-        disposable.add(mapApiService.getMaps().observeOn(FX_SCHEDULER).subscribe((mapTemplates) -> {
+        disposable.add(mapApiService.getMaps().subscribe((mapTemplates) -> {
             maps.setAll(mapTemplates);
-            for(MapTemplate map : maps){
-                mapNames.add(map.name());
-            }
+//            for(MapTemplate map : maps){
+//                mapNames.add(map.name());
+//            }
         }));
 
         disposable.add(eventListener.listen("maps.*.*", MapTemplate.class)

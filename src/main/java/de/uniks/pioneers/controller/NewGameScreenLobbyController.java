@@ -5,6 +5,7 @@ import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
@@ -29,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
@@ -54,6 +56,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public CheckBox spectatorCheckBox;
     @FXML public Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
     @FXML public Spinner<String> mapTemplateSpinner;
+    @FXML public ComboBox<Text> mapComboBox;
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject GameChatController gameChatController;
@@ -95,7 +98,7 @@ public class NewGameScreenLobbyController implements Controller {
         NewGameLobbyGameSettingsController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
         newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
         newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
-        newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
+        newGameLobbySpinnerController.setMapComboBox(mapComboBox);
         newGameLobbySpinnerController.init();
 
         newGameLobbyReadyController = new NewGameLobbyReadyController();
