@@ -497,6 +497,12 @@ public class TestModule {
                 MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
                 return Observable.just(mapTemplate);
             }
+
+            @Override
+            public Observable<MapTemplate> deleteMap(String id) {
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                return Observable.just(mapTemplate);
+            }
         };
     }
 
