@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class NewGameLobbyGameSettingsController implements Controller {
-    @Inject MapBrowserService mapBrowserService;
+    private final MapBrowserService mapBrowserService;
 
     private Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
     private ComboBox<Text> mapComboBox;
@@ -23,7 +23,8 @@ public class NewGameLobbyGameSettingsController implements Controller {
     private int indexOfSpinner = -1;
 
     @Inject
-    public NewGameLobbyGameSettingsController() {
+    public NewGameLobbyGameSettingsController(MapBrowserService mapBrowserService) {
+        this.mapBrowserService = mapBrowserService;
     }
 
     @Override
@@ -36,12 +37,14 @@ public class NewGameLobbyGameSettingsController implements Controller {
         victoryPointSpinner.editorProperty().get().setAlignment(Pos.CENTER);
 
         // load maps into comboBox
+        mapComboBox.getItems().add(new Text("Default"));
         List<MapTemplate> maps = mapBrowserService.getMaps();
         for (MapTemplate map : maps) {
             Text element = new Text(map.name());
             element.setId(map._id());
             mapComboBox.getItems().add(element);
         }
+        mapComboBox.getSelectionModel().selectFirst();
     }
 
     @Override

@@ -72,6 +72,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject GameStorage gameStorage;
     @Inject GameService gameService;
     @Inject ResourceService resourceService;
+    @Inject MapBrowserService mapBrowserService;
 
     private final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final SimpleStringProperty password = new SimpleStringProperty();
