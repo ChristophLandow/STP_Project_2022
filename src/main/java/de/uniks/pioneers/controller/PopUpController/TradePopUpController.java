@@ -141,7 +141,7 @@ public class TradePopUpController implements Controller {
         spinnerBoxGet.getChildren().forEach(node -> setupSpinner((Spinner) node));
 
         // setup eventHandler for trade with bank
-        bankHandler = event -> ingameService.tradeWithBank();
+        bankHandler = event -> ingameService.tradeWithBank(this);
 
         // setup eventHandler for trade with player
         playerHandler = event -> {

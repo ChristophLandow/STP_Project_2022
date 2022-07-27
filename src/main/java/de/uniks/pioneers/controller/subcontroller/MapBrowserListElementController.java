@@ -5,6 +5,7 @@ import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -23,6 +24,7 @@ public class MapBrowserListElementController {
     private final MapTemplate map;
     private final UserService userService;
     private final PrefService prefService;
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private Button voteButton;
     private ImageView voteButtonImageView;
@@ -43,16 +45,25 @@ public class MapBrowserListElementController {
         voteButtonImageView = new ImageView();
         voteButtonImageView.setFitHeight(30);
         voteButtonImageView.setFitWidth(30);
+        Image trash = new Image(Objects.requireNonNull(getClass().getResource("trash.png")).toString());
         thumbDown = new Image(Objects.requireNonNull(getClass().getResource("ThumbUp_NotFilled.png")).toString());
         thumbUp = new Image(Objects.requireNonNull(getClass().getResource("ThumbUp_Filled.png")).toString());
+        
         voteButton.setOnAction(this::vote);
-        if (prefService.getVoteButtonState(map._id())) {
+        if (this.map.createdBy().equals(userService.getCurrentUser()._id())) {
+            voteButtonImageView.setImage(trash);
+            voteButton.setOnAction(this::delete);
+        } else if (prefService.getVoteButtonState(map._id())) {
             voteButtonImageView.setImage(thumbUp);
-            voteButton.setGraphic(voteButtonImageView);
         } else {
             voteButtonImageView.setImage(thumbDown);
-            voteButton.setGraphic(voteButtonImageView);
         }
+        voteButton.setGraphic(voteButtonImageView);
+    }
+
+    private void delete(ActionEvent actionEvent) {
+        disposable.add(mapBrowserService.deleteMap(map._id())
+                .subscribe());
     }
 
     public void vote(ActionEvent actionEvent) {

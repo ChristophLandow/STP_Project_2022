@@ -29,10 +29,16 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MapBrowserControllerTest extends ApplicationTest {
+    List<TileTemplate> tiles = new ArrayList<>();
+    List<HarborTemplate> harbors = new ArrayList<>();
+
+    MapTemplate mapDummy1 = new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",7,tiles, harbors);
+    MapTemplate mapDummy2 = new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors);
 
     @Spy
     App app = new App(null);
@@ -71,12 +77,13 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage){
+        when(userService.getCurrentUser()).thenReturn(new User("1234", "me", "online", null));
         when(mapListControllerProvider.get()).thenReturn(mapListController);
         when(mapDetailsControllerProvider.get()).thenReturn(mapDetailsController);
 
         ArrayList<MapTemplate> returnValue = new ArrayList<>();
-        returnValue.add(new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",7,null, null));
-        returnValue.add(new MapTemplate("yesterday", "today", "map123", "map", null, "1234", 3, null, null));
+        returnValue.add(mapDummy1);
+        returnValue.add(mapDummy2);
 
         List<MapTemplate> maps = new ArrayList<>();
         when(mapBrowserService.getUpdateMaps()).thenReturn(FXCollections.observableArrayList(maps));
@@ -89,12 +96,9 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
     @Test
     public void updateMapDetails() {
-        List<TileTemplate> tiles = new ArrayList<>();
-        List<HarborTemplate> harbors = new ArrayList<>();
-
         when(userService.getUserById("1234")).thenReturn(Observable.just(new User("1234", "me", "online", null)));
-        when(mapBrowserService.getMap("map456")).thenReturn(Observable.just(new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",0,tiles, harbors)));
-        when(mapBrowserService.getMap("map123")).thenReturn(Observable.just(new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors)));
+        when(mapBrowserService.getMap("map456")).thenReturn(Observable.just(mapDummy1));
+        when(mapBrowserService.getMap("map123")).thenReturn(Observable.just(mapDummy2));
 
         // select map123
         type(KeyCode.DOWN);
@@ -105,6 +109,16 @@ public class MapBrowserControllerTest extends ApplicationTest {
         FxAssert.verifyThat("#createdByOutputText", TextMatchers.hasText("me"));
         FxAssert.verifyThat("#lastUpdatedOutputText", TextMatchers.hasText("2022-07-24, 14:47"));
         FxAssert.verifyThat("#votesOutputText", TextMatchers.hasText("3"));
+    }
+
+    @Test
+    public void deleteMap() {
+        when(mapBrowserService.deleteMap("map456")).thenReturn(Observable.just(mapDummy1));
+
+        write("\t");
+        type(KeyCode.SPACE);
+
+        verify(mapBrowserService).deleteMap("map456");
     }
 
     @Test

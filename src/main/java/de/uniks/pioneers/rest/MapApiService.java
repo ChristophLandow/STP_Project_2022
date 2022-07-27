@@ -4,6 +4,7 @@ import de.uniks.pioneers.dto.CreateMapTemplateDto;
 import de.uniks.pioneers.dto.UpdateMapTemplateDto;
 import de.uniks.pioneers.model.MapTemplate;
 import io.reactivex.rxjava3.core.Observable;
+import retrofit2.http.DELETE;
 import retrofit2.http.*;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface MapApiService {
     @PATCH("maps/{id}")
     Observable<MapTemplate> updateMap(@Path("id") String id, @Body UpdateMapTemplateDto updateMapTemplateDto);
 
+
+    @DELETE("maps/{id}")
+    Observable<MapTemplate> deleteMap(@Path("id") String id);
 }
