@@ -89,7 +89,7 @@ public class GameListElementController implements Controller {
                     leaveGameController.loadLeavedGame(leavedGame);
                 } else {
                     //join game
-                    final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/JoinGamePopUp.fxml"));
+                    FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/JoinGamePopUp.fxml"));
                     Parent node = null;
                     try {
                         node = loader.load();

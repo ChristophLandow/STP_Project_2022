@@ -3,12 +3,13 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.RobberService;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -247,6 +248,10 @@ public class HexTileController {
 
     public Circle getView() {
         return view;
+    }
+
+    public Point2D getCenter(){
+        return new Point2D(tile.x + this.fieldPane.getPrefWidth()/2, -tile.y + this.fieldPane.getPrefHeight()/2);
     }
 
     public void setRobberService(RobberService robberService) {

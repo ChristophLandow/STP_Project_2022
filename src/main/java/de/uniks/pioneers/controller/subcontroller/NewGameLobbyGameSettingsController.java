@@ -75,12 +75,7 @@ public class NewGameLobbyGameSettingsController implements Controller {
     }
 
     public int getMapSize(){
-        if(indexOfSpinner == -1) {
-            return boardSizeSpinner.getValueFactory().getValue();
-        }
-        else{
-            return 0;
-        }
+        return boardSizeSpinner.getValueFactory().getValue();
     }
 
     public int getVictoryPoints(){

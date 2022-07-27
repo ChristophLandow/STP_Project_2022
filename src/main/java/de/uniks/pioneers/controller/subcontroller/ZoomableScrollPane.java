@@ -3,13 +3,18 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.MapRenderService;
 import javafx.application.Platform;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
 import javax.inject.Inject;
@@ -27,6 +32,8 @@ public class ZoomableScrollPane {
     private final MapRenderService mapRenderService;
     private double mapWidth;
     private double mapHeight;
+    private double fieldPaneMoveCenterX;
+    private double fieldPaneMoveCenterY;
 
     @Inject
     ZoomableScrollPane(GameStorage gameStorage, MapRenderService mapRenderService){
@@ -42,9 +49,9 @@ public class ZoomableScrollPane {
 
         resizeMap();
 
-        this.gameStorage.getResizePaneForCustomMap().addListener(((observable, oldValue, newValue) -> {
-            if(newValue){
-                resizeMap();
+        mapRenderService.isFinishedLoading().addListener(((observable, oldValue, newValue) -> {
+            if(newValue && gameStorage.isCustomMap()){
+                this.centerMap();
             }
         }));
 
@@ -152,5 +159,48 @@ public class ZoomableScrollPane {
 
         this.canvas.setHeight(mapHeight);
         this.canvas.setWidth(mapWidth);
+    }
+
+    private void centerMap(){
+        Point2D startVal = mapRenderService.getTileControllers().get(0).getCenter();
+        Point2D topLeft = startVal;
+        Point2D topRight = startVal;
+        Point2D bottomLeft = startVal;
+        Point2D bottomRight = startVal;
+
+        for(HexTileController hexTileController : mapRenderService.getTileControllers()){
+            Point2D viewPos = hexTileController.getCenter();
+
+            if(viewPos.getY() < topLeft.getY()){
+                topLeft = new Point2D(topLeft.getX(), viewPos.getY());
+                topRight = new Point2D(topRight.getX(), viewPos.getY());
+            }
+
+            if(viewPos.getY() > bottomLeft.getY()){
+                bottomLeft = new Point2D(bottomLeft.getX(), viewPos.getY());
+                bottomRight = new Point2D(bottomRight.getX(), viewPos.getY());
+            }
+
+            if(viewPos.getX() < topLeft.getX()){
+                topLeft = new Point2D(viewPos.getX(), topLeft.getY());
+                bottomLeft = new Point2D(viewPos.getX(), bottomLeft.getY());
+            }
+
+            if(viewPos.getX() > topRight.getX()){
+                topRight = new Point2D(viewPos.getX(), topRight.getY());
+                bottomRight = new Point2D(viewPos.getX(), bottomRight.getY());
+            }
+        }
+
+        Point2D center = new Point2D(topLeft.getX() + (topRight.getX()-topLeft.getX())/2, topLeft.getY() + (bottomLeft.getY()-topLeft.getY())/2);
+        Point2D paneCenter = new Point2D(fieldPane.getLayoutX() + fieldPane.getWidth()/2, fieldPane.getLayoutY() + fieldPane.getHeight()/2);
+
+        fieldPaneMoveCenterX = (paneCenter.getX() - center.getX());
+        fieldPaneMoveCenterY = (paneCenter.getY() - center.getY());
+
+        for(Node n : fieldPane.getChildren()){
+            n.setLayoutX(n.getLayoutX() + fieldPaneMoveCenterX);
+            n.setLayoutY(n.getLayoutY() + fieldPaneMoveCenterY);
+        }
     }
 }

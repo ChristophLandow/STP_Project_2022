@@ -28,8 +28,6 @@ public class GameStorage {
     private double zoomedIn = 1.4;
     private double zoomedOut = 1;
     public String selectedBuilding = "";
-
-    public SimpleBooleanProperty resizePaneForCustomMap = new SimpleBooleanProperty(false);
     public ObservableMap<String, Integer> remainingBuildings = FXCollections.observableHashMap();
 
     @Inject
@@ -65,8 +63,8 @@ public class GameStorage {
         return this.zoomedOut;
     }
 
-    public SimpleBooleanProperty getResizePaneForCustomMap(){
-        return this.resizePaneForCustomMap;
+    public boolean isCustomMap() {
+        return customMap;
     }
 
     public void setMap(List<Tile> map) {
@@ -81,8 +79,15 @@ public class GameStorage {
         this.harbors = harbors;
     }
 
+    public void setZoomedIn(double zoomedIn) {
+        this.zoomedIn = zoomedIn;
+    }
+
+    public void setZoomedOut(double zoomedOut) {
+        this.zoomedOut = zoomedOut;
+    }
+
     public void calcZoom(int mapRadius, boolean customMap){
-        resizePaneForCustomMap.set(false);
         this.customMap = customMap;
 
         if(customMap){
@@ -142,7 +147,6 @@ public class GameStorage {
             mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y + hexScale;
         }
         this.zoomedOut = (MAP_HEIGHT / mapHeight);
-        resizePaneForCustomMap.set(true);
     }
 
     public void addToTradeOptions(String tradeOption) {
