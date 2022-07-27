@@ -19,6 +19,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.*;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -105,23 +106,29 @@ public class MapEditorController implements Controller{
 
     private void display(int size){
 
-        System.out.println(this.tiles.size());
-        System.out.println(this.frame.size());
-        System.out.println(this.tileViews.size());
-
         double scale = 100.0/size;
 
         this.frame = this.boardGenerator.buildEditorFrame(size, scale);
 
         this.scrollPaneAnchorPane.getChildren().removeAll(this.tileViews);
         this.tileViews.clear();
+        this.selection = "";
 
         for(HexTile hexTile : this.frame){
 
+            int harborOption = 0;
+            int harborSide = 0;
+            String harborType = "";
             for(EditTile oldTile : this.tiles){
+                oldTile.makeVivible(false);
                 if((oldTile.hexTile.q == hexTile.q) & (oldTile.hexTile.r == hexTile.r) & (oldTile.hexTile.s == hexTile.s)){
                     hexTile.type = oldTile.hexTile.type;
                     hexTile.number = oldTile.hexTile.number;
+                    this.selection = oldTile.currentHarborType;
+                    harborOption = oldTile.currentHarborOption;
+                    harborSide = oldTile.currentHarborSide;
+                    harborType = oldTile.currentHarborType;
+                    oldTile.destroy();
                     this.tiles.remove(oldTile);
                     break;
                 }
@@ -152,7 +159,6 @@ public class MapEditorController implements Controller{
 
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + hexTile.number + ".png")).toString());
                 numberView.setImage(image);
-                numberView.toFront();
             }
 
             tile.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2);
@@ -160,14 +166,24 @@ public class MapEditorController implements Controller{
 
             this.scrollPaneAnchorPane.getChildren().add(tile);
             this.scrollPaneAnchorPane.getChildren().add(numberView);
+            tile.toBack();
+            numberView.toFront();
             this.tileViews.add(tile);
 
-            this.tiles.add(new EditTile(hexTile, tile, numberView, this));
+            EditTile newTile = new EditTile(hexTile, tile, numberView, this);
+            if(!this.selection.equals("")){
+                newTile.currentHarborOption = harborOption;
+                newTile.currentHarborSide = harborSide;
+                newTile.currentHarborType = harborType;
+                newTile.prepareHarborOptions();
+                newTile.renderHarbor();}
+            this.tiles.add(newTile);
         }
 
         this.sizeSpinner.toFront();
         this.buttonSave.toFront();
         this.buttonToMaps.toFront();
+        this.selection = "";
     }
 
     public void toMaps(){
