@@ -4,9 +4,9 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.MapDetailsController;
 import de.uniks.pioneers.controller.subcontroller.MapListController;
+import de.uniks.pioneers.services.MapService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
-import de.uniks.pioneers.services.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,10 +54,13 @@ public class MapBrowserController implements Controller {
     private final StylesService stylesService;
     private MapListController mapListController;
 
+    private final MapService mapService;
+
     @Inject
-    public MapBrowserController(App app, StylesService stylesService){
+    public MapBrowserController(App app, StylesService stylesService, MapService mapService){
         this.app = app;
         this.stylesService = stylesService;
+        this.mapService = mapService;
     }
 
     @Override
@@ -110,6 +113,8 @@ public class MapBrowserController implements Controller {
     }
 
     public void createNewMap(ActionEvent actionEvent) {
+        // set current map to null to create a new one and don't update the selected
+        mapService.setCurrentMap(null);
         MapEditorController mapEditorController = mapEditorControllerProvider.get();
         this.app.show(mapEditorController);
     }
