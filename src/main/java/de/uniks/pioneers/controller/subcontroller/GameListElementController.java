@@ -6,6 +6,7 @@ import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
 import javafx.beans.property.SimpleObjectProperty;
@@ -94,7 +95,7 @@ public class GameListElementController implements Controller {
                     try {
                         node = loader.load();
                         JoinGamePopUpController joinGamePopUpController = loader.getController();
-                        joinGamePopUpController.init(this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get());
+                        joinGamePopUpController.init(this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get(), new EventHandlerService());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

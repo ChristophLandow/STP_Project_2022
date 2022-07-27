@@ -468,9 +468,9 @@ public class TestModule {
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
                 if(dto.building() != null) {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner(), null));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner(), dto.developmentCard()));
                 } else {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner(), null));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner(), dto.developmentCard()));
                 }
             }
 
@@ -494,6 +494,12 @@ public class TestModule {
 
             @Override
             public Observable<MapTemplate> getMap(String id) {
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                return Observable.just(mapTemplate);
+            }
+
+            @Override
+            public Observable<MapTemplate> deleteMap(String id) {
                 MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
                 return Observable.just(mapTemplate);
             }
