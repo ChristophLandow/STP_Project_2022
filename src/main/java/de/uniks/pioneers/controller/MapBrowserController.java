@@ -38,6 +38,7 @@ public class MapBrowserController implements Controller {
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<MapListController> mapListControllerProvider;
     @Inject Provider<MapDetailsController> mapDetailsControllerProvider;
+    @Inject Provider<MapEditorController> mapEditorControllerProvider;
     @Inject PrefService prefService;
 
     @FXML private final App app;
@@ -96,9 +97,12 @@ public class MapBrowserController implements Controller {
     }
 
     public void editMap(ActionEvent actionEvent) {
+
     }
 
     public void createNewMap(ActionEvent actionEvent) {
+        MapEditorController mapEditorController = mapEditorControllerProvider.get();
+        this.app.show(mapEditorController);
     }
 
     public void leaveToLobby(ActionEvent actionEvent) {
