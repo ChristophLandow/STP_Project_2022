@@ -16,7 +16,6 @@ import java.util.List;
 
 public class NewGameLobbyGameSettingsController implements Controller {
     private final MapBrowserService mapBrowserService;
-
     private Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
     private ComboBox<Text> mapComboBox;
 
