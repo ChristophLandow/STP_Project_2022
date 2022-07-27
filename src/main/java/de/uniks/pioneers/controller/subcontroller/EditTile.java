@@ -56,6 +56,7 @@ public class EditTile {
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + this.hexTile.number + ".png")).toString());
                 this.numberView.setImage(image);
                 this.numberView.toFront();
+                System.out.println(this.numberView.isVisible());
                 return;
             }
             if(this.mapEditorController.selection.contains("harbour")){
@@ -147,11 +148,11 @@ public class EditTile {
         this.harbourView.setImage(null);}
         }
 
-        public void makeVivible(boolean visiblility){
+        public void makeVisible(boolean visibility){
             if(this.numberView != null){
-                this.numberView.setVisible(visiblility);}
+                this.numberView.setVisible(visibility);}
             if(this.harbourView != null){
-                this.harbourView.setVisible(visiblility);}
+                this.harbourView.setVisible(visibility);}
         }
 
     }
