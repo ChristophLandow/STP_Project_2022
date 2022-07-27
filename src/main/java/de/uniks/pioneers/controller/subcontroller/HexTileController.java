@@ -112,7 +112,6 @@ public class HexTileController {
         for(int i = 0; i < 6; i++) {
             for(StreetPointController streetPoint : streetPointControllers) {
                 if(abs(streetPoint.tile.x - edgeCoords[i][0]) < 1 && abs(streetPoint.tile.y - edgeCoords[i][1]) < 1 ) {
-
                     switch (i) {
                         case 0 -> {
                             streetPoint.uploadCoords[0] = tile.q + 1;
@@ -161,14 +160,16 @@ public class HexTileController {
     // interconnects street and building controllers
     public void link(){
         for(int i = 0; i < 6; i++){
-            if(!this.corners[i].adjacentStreets.contains(this.edges[i])){
-                this.corners[i].adjacentStreets.add(this.edges[i]);
-                this.edges[i].adjacentBuildings.add(this.corners[i]);
-            }
+            if(edges[i] != null && corners[i] != null) {
+                if (!this.corners[i].adjacentStreets.contains(this.edges[i])) {
+                    this.corners[i].adjacentStreets.add(this.edges[i]);
+                    this.edges[i].adjacentBuildings.add(this.corners[i]);
+                }
 
-            if(!this.corners[i].adjacentStreets.contains(this.edges[((i-1)+6)%6])){
-                this.corners[i].adjacentStreets.add(this.edges[((i-1)+6)%6]);
-                this.edges[((i-1)+6)%6].adjacentBuildings.add(this.corners[i]);
+                if (!this.corners[i].adjacentStreets.contains(this.edges[((i - 1) + 6) % 6])) {
+                    this.corners[i].adjacentStreets.add(this.edges[((i - 1) + 6) % 6]);
+                    this.edges[((i - 1) + 6) % 6].adjacentBuildings.add(this.corners[i]);
+                }
             }
         }
     }

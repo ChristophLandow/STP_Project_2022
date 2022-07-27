@@ -3,6 +3,7 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.model.Harbor;
 import de.uniks.pioneers.model.Tile;
 import de.uniks.pioneers.ws.EventListener;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
@@ -19,12 +20,16 @@ public class GameStorage {
     private List<Tile> map;
     private List<Harbor> harbors;
     public List<String> tradeOptions = new ArrayList<>();
+
+    private boolean customMap;
     private int mapRadius;
     private  double hexScale = 75;
     private double hexRadiusFactor = 3;
     private double zoomedIn = 1.4;
     private double zoomedOut = 1;
     public String selectedBuilding = "";
+
+    public SimpleBooleanProperty resizePaneForCustomMap = new SimpleBooleanProperty(false);
     public ObservableMap<String, Integer> remainingBuildings = FXCollections.observableHashMap();
 
     @Inject
@@ -60,15 +65,30 @@ public class GameStorage {
         return this.zoomedOut;
     }
 
+    public SimpleBooleanProperty getResizePaneForCustomMap(){
+        return this.resizePaneForCustomMap;
+    }
+
     public void setMap(List<Tile> map) {
         this.map = map;
+
+        if(customMap){
+            calcMapSize();
+        }
     }
 
     public void setHarbors(List<Harbor> harbors) {
         this.harbors = harbors;
     }
 
-    public void calcZoom(int mapRadius){
+    public void calcZoom(int mapRadius, boolean customMap){
+        resizePaneForCustomMap.set(false);
+        this.customMap = customMap;
+
+        if(customMap){
+            mapRadius = 25;
+        }
+
         this.mapRadius = mapRadius;
         hexRadiusFactor = 5;
 
@@ -98,6 +118,31 @@ public class GameStorage {
         if(mapRadius >= 4){
             this.zoomedIn = 0.7;
         }
+    }
+
+    private void calcMapSize(){
+        int newMapRadius = 0;
+
+        for(Tile tile : map){
+            int maxVal = Math.max(Math.abs(tile.x()), Math.abs(tile.y()));
+            maxVal = Math.max(maxVal, Math.abs(tile.z()));
+
+            if(maxVal > newMapRadius){
+                newMapRadius = maxVal;
+            }
+        }
+
+        this.mapRadius = newMapRadius;
+
+        double hexagonHeight = 2 * hexScale;
+        double mapHeight;
+        if (mapRadius % 2 == 0) {
+            mapHeight = (mapRadius + 1) * hexagonHeight + mapRadius * hexScale + MAP_PADDING_Y + hexScale;
+        } else {
+            mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y + hexScale;
+        }
+        this.zoomedOut = (MAP_HEIGHT / mapHeight);
+        resizePaneForCustomMap.set(true);
     }
 
     public void addToTradeOptions(String tradeOption) {

@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -62,11 +63,12 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject PrefService prefService;
     @Inject EventListener eventListener;
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
-    @Inject Provider<NewGameLobbySpinnerController> newGameLobbySpinnerControllerProvider;
+    @Inject Provider<NewGameLobbyGameSettingsController> newGameLobbySpinnerControllerProvider;
     @Inject NewGameLobbyService newGameLobbyService;
     @Inject UserService userService;
     @Inject GameStorage gameStorage;
     @Inject GameService gameService;
+    @Inject ResourceService resourceService;
 
     private final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final SimpleStringProperty password = new SimpleStringProperty();
@@ -79,17 +81,25 @@ public class NewGameScreenLobbyController implements Controller {
     private NewGameLobbyUserController newGameLobbyUserController;
 
     private final StylesService stylesService;
+    private final EventHandlerService eventHandlerService;
 
     @Inject
-    public NewGameScreenLobbyController(App app, StylesService stylesService) {
+    public NewGameScreenLobbyController(App app, StylesService stylesService, EventHandlerService eventHandlerService) {
         this.app = app;
         this.stylesService = stylesService;
+        this.eventHandlerService = eventHandlerService;
     }
 
     @Override
     public void init() {
+        NewGameLobbyGameSettingsController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
+        newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
+        newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
+        newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
+        newGameLobbySpinnerController.init();
+
         newGameLobbyReadyController = new NewGameLobbyReadyController();
-        newGameLobbyReadyController.init(this, spectatorCheckBox, playerEntries, colorPickerController, clientReadyLabel, clientReadyBox, readyButton, startGameButton, spectatorImageView, boardSizeSpinner, victoryPointSpinner, newGameLobbyService, userService);
+        newGameLobbyReadyController.init(this, spectatorCheckBox, playerEntries, colorPickerController, clientReadyLabel, clientReadyBox, readyButton, startGameButton, spectatorImageView, newGameLobbySpinnerController, newGameLobbyService, userService);
         newGameLobbyUserController = new NewGameLobbyUserController();
         newGameLobbyUserController.init(this, playerEntries, newGameLobbyService, userService, userBox, lobbyScreenControllerProvider, eventListener);
 
@@ -153,18 +163,14 @@ public class NewGameScreenLobbyController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        NewGameLobbySpinnerController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
-        newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
-        newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
-        newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
-        newGameLobbySpinnerController.init();
-
         if(!currentUser._id().equals(game.get().owner())){
             boardSizeSpinner.setVisible(false);
             boardSizeLabel.setVisible(false);
             victoryPointsLabel.setVisible(false);
             victoryPointSpinner.setVisible(false);
         }
+        Node messageTextNode = this.messageText;
+        eventHandlerService.setEnterEventHandler(messageTextNode, this.sendButton);
     }
 
     private void openRules(MouseEvent mouseEvent) {
@@ -206,18 +212,19 @@ public class NewGameScreenLobbyController implements Controller {
         return view;
     }
 
-    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius) {
+    public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius, boolean customMap) {
         if(!rejoin) {
             gameStorage.resetRemainingBuildings();
+            resourceService.resetMyResources();
 
             if(mapRadius == -1){
-                gameStorage.calcZoom(boardSizeSpinner.getValue());
+                gameStorage.calcZoom(boardSizeSpinner.getValue(), customMap);
             }
             else{
-                gameStorage.calcZoom(mapRadius);
+                gameStorage.calcZoom(mapRadius, customMap);
             }
         } else {
-            gameStorage.calcZoom(mapRadius);
+            gameStorage.calcZoom(mapRadius, customMap);
         }
         if(game.owner().equals(userService.getCurrentUser()._id())) {
             gameService.victoryPoints = victoryPointSpinner.getValue();

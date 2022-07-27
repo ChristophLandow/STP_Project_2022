@@ -64,8 +64,9 @@ public class LeaveGameController {
         this.gameChatController = gameChatController;
     }
 
-    public void saveLeavedGame(String gameID, int mapRadius, List<User> users, String myColor) {
+    public void saveLeavedGame(String gameID, String mapID, int mapRadius, List<User> users, String myColor) {
         prefService.saveGameOnLeave(gameID);
+        prefService.saveCustomMapOnLeave(mapID);
         prefService.saveMapRadiusOnLeave(mapRadius);
         this.leavedWithButton = true;
         this.users = users;
@@ -75,8 +76,9 @@ public class LeaveGameController {
     public boolean loadLeavedGame(Game leavedGame) {
         if(leavedGame != null) {
             int mapRadius = prefService.getSavedMapRadius();
+            boolean customMap = prefService.getCustomMapID() != null;
             if(leavedWithButton) {
-                return toIngameScreen(leavedGame, myColor, true, mapRadius);
+                return toIngameScreen(leavedGame, myColor, true, mapRadius, customMap);
             } else {
                 disposable.add(newGameLobbyService.getAll(leavedGame._id())
                         .observeOn(FX_SCHEDULER)
@@ -88,7 +90,7 @@ public class LeaveGameController {
                                 }
                                 users.add(userService.getUserById(member.userId()).blockingFirst());
                             }
-                            toIngameScreen(leavedGame, myColor, true, mapRadius);
+                            toIngameScreen(leavedGame, myColor, true, mapRadius, customMap);
                         }, Throwable::printStackTrace));
                 return true;
             }
@@ -96,9 +98,9 @@ public class LeaveGameController {
         return false;
     }
 
-    private boolean toIngameScreen(Game leavedGame, String myColor, boolean rejoin, int mapRadius) {
+    private boolean toIngameScreen(Game leavedGame, String myColor, boolean rejoin, int mapRadius, boolean customMap) {
         timerService.reset();
-        newGameScreenLobbyController.toIngame(leavedGame, users, myColor, rejoin, mapRadius);
+        newGameScreenLobbyController.toIngame(leavedGame, users, myColor, rejoin, mapRadius, customMap);
         return true;
     }
 
@@ -117,7 +119,7 @@ public class LeaveGameController {
                     }, Throwable::printStackTrace));
         } else {
             if(!kicked) {
-                this.saveLeavedGame(gameService.getGame()._id(), gameStorage.getMapRadius(), users, myColor);
+                this.saveLeavedGame(gameService.getGame()._id(), gameService.getGame().settings().mapTemplate(), gameStorage.getMapRadius(), users, myColor);
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Kicked by Host");
                 alert.show();

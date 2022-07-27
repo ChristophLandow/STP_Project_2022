@@ -46,7 +46,7 @@ class RobPlayerControllerTest extends ApplicationTest {
     @InjectMocks
     RobPlayerController robPlayerController;
 
-    MouseEvent leftClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+    final MouseEvent leftClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
             MouseButton.PRIMARY, 1, false, false, false,
             false, false, false, false,
             false, true, false, null);
