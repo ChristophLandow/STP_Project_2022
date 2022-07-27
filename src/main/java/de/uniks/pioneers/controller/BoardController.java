@@ -42,6 +42,8 @@ public class BoardController {
 
     private  Thread hextileRenderThread;
 
+    BoardGenerator generator = new BoardGenerator();
+
     public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game,
                            GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
         this.ingameService = ingameService;
@@ -55,7 +57,6 @@ public class BoardController {
 
 
     public void buildBoardUI() {
-        BoardGenerator generator = new BoardGenerator();
         double hexScale = this.gameStorage.getHexScale();
         List<HexTile> tiles = generator.generateTiles(this.gameStorage.getMap(), hexScale);
         List<HexTile> edges = generator.generateEdges(2 * gameStorage.getMapRadius() + 1, hexScale);
@@ -215,8 +216,8 @@ public class BoardController {
     }
 
     private void loadHarbor(HexTile harbor) {
-        ImageView imageV = getHarborImage(harbor.type);
-        this.fieldPane.getChildren().add(placeHarbor(harbor.x, harbor.y, imageV, harbor.number));
+        ImageView imageV = generator.getHarborImage(harbor.type);
+        this.fieldPane.getChildren().add(generator.placeHarbor(harbor.x, harbor.y, imageV, harbor.number, this.fieldPane.getPrefWidth(), this.fieldPane.getPrefHeight(), this.gameStorage.getHexScale()));
     }
 
     private void linkTiles(){
@@ -311,24 +312,6 @@ public class BoardController {
 
         mapRenderService.getGc().setStroke(Color.BLACK);
         mapRenderService.getGc().strokePolygon(xPoints, yPoints, 6);
-    }
-
-    private ImageView getHarborImage(String type) {
-        if (type == null) {
-            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_general.png")).toString());
-        } else if (type.equals("ore")) {
-            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_coal.png")).toString());
-        } else if (type.equals("brick")) {
-            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_iceberg.png")).toString());
-        } else if (type.equals("wool")) {
-            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_polar-bear.png")).toString());
-        } else if (type.equals("lumber")) {
-            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_fish.png")).toString());
-        } else if (type.equals("grain")) {
-            return new ImageView(Objects.requireNonNull(getClass().getResource("ingame/harbour_whale.png")).toString());
-        } else {
-            return null;
-        }
     }
 
     private ImageView placeHarbor(double x, double y, ImageView image, Integer side) {

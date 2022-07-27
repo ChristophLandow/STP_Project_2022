@@ -49,6 +49,8 @@ public class EditTile {
 
     private void place(MouseEvent mouseEvent) {
 
+        makeVisible(true);
+
         if(!this.mapEditorController.selection.equals("")) {
 
             if(this.mapEditorController.selection.endsWith("num")){
@@ -56,7 +58,6 @@ public class EditTile {
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + this.hexTile.number + ".png")).toString());
                 this.numberView.setImage(image);
                 this.numberView.toFront();
-                System.out.println(this.numberView.isVisible());
                 return;
             }
             if(this.mapEditorController.selection.contains("harbour")){

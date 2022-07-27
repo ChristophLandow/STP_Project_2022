@@ -77,6 +77,7 @@ public class MapEditorController implements Controller{
         this.sizeSpinner.setValueFactory(valueFactory);
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             display(newValue);
+            System.out.println("Spinner " + oldValue + " " + newValue);
         });
 
     }
@@ -105,6 +106,8 @@ public class MapEditorController implements Controller{
 
     private void display(int size){
 
+        System.out.println(this.tiles.size());
+
         double scale = 100.0/size;
 
         this.frame = this.boardGenerator.buildEditorFrame(size, scale);
@@ -112,17 +115,14 @@ public class MapEditorController implements Controller{
         this.scrollPaneAnchorPane.getChildren().removeAll(this.tileViews);
         this.tileViews.clear();
         this.selection = "";
-        ArrayList<EditTile> newtiles = new ArrayList<>();
 
         for(HexTile hexTile : this.frame){
 
             int harborOption = 0;
             int harborSide = 0;
             String harborType = "";
-            System.out.println(this.tiles.size());
             for(EditTile oldTile : this.tiles){
                 oldTile.makeVisible(false);
-                System.out.println("BBB");
                 if((oldTile.hexTile.q == hexTile.q) & (oldTile.hexTile.r == hexTile.r) & (oldTile.hexTile.s == hexTile.s)){
                     hexTile.type = oldTile.hexTile.type;
                     hexTile.number = oldTile.hexTile.number;
@@ -179,9 +179,8 @@ public class MapEditorController implements Controller{
                 newTile.currentHarborType = harborType;
                 newTile.prepareHarborOptions();
                 newTile.renderHarbor();}
-            newtiles.add(newTile);
+            this.tiles.add(newTile);
         }
-        this.tiles = newtiles;
 
         this.sizeSpinner.toFront();
         this.buttonSave.toFront();
