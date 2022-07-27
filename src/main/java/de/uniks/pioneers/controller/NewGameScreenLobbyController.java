@@ -5,7 +5,6 @@ import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
@@ -30,7 +29,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
@@ -55,7 +53,7 @@ public class NewGameScreenLobbyController implements Controller {
     @FXML public ImageView RulesButton, spectatorImageView, clientAvatar;
     @FXML public CheckBox spectatorCheckBox;
     @FXML public Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
-    @FXML public ComboBox<Text> mapComboBox;
+    @FXML public Spinner<String> mapTemplateSpinner;
 
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject GameChatController gameChatController;
@@ -70,7 +68,7 @@ public class NewGameScreenLobbyController implements Controller {
     @Inject UserService userService;
     @Inject GameStorage gameStorage;
     @Inject GameService gameService;
-    @Inject MapBrowserService mapBrowserService;
+    @Inject ResourceService resourceService;
 
     private final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private final SimpleStringProperty password = new SimpleStringProperty();
@@ -85,8 +83,6 @@ public class NewGameScreenLobbyController implements Controller {
     private final StylesService stylesService;
     private final EventHandlerService eventHandlerService;
 
-    private String chosenMapId;
-
     @Inject
     public NewGameScreenLobbyController(App app, StylesService stylesService, EventHandlerService eventHandlerService) {
         this.app = app;
@@ -99,7 +95,7 @@ public class NewGameScreenLobbyController implements Controller {
         NewGameLobbyGameSettingsController newGameLobbySpinnerController = newGameLobbySpinnerControllerProvider.get();
         newGameLobbySpinnerController.setVictoryPointSpinner(victoryPointSpinner);
         newGameLobbySpinnerController.setBoardSizeSpinner(boardSizeSpinner);
-        // newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
+        newGameLobbySpinnerController.setMapTemplateSpinner(mapTemplateSpinner);
         newGameLobbySpinnerController.init();
 
         newGameLobbyReadyController = new NewGameLobbyReadyController();
@@ -136,17 +132,6 @@ public class NewGameScreenLobbyController implements Controller {
         } catch (IllegalArgumentException | NullPointerException e) {
             clientAvatar.setImage(new Image(Constants.DEFAULT_AVATAR));
         }
-
-        // TODO: load map names into choice box
-        List<MapTemplate> maps = mapBrowserService.getMaps();
-        mapComboBox.getItems().add(new Text("Default"));
-        for (MapTemplate map : maps) {
-            // put map id into element to identify later
-            Text mapName = new Text(map.name());
-            mapName.setId(map._id());
-            mapComboBox.getItems().add(mapName);
-        }
-        mapComboBox.getSelectionModel().select(0);
 
         // when member count less than three games can not be started
         final BooleanBinding lessThanThree = Bindings.lessThan(memberCount, 0);
@@ -230,6 +215,7 @@ public class NewGameScreenLobbyController implements Controller {
     public void toIngame(Game game, List<User> users, String myColor, boolean rejoin, int mapRadius, boolean customMap) {
         if(!rejoin) {
             gameStorage.resetRemainingBuildings();
+            resourceService.resetMyResources();
 
             if(mapRadius == -1){
                 gameStorage.calcZoom(boardSizeSpinner.getValue(), customMap);

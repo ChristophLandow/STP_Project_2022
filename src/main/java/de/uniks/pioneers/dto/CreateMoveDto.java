@@ -26,7 +26,12 @@ public record CreateMoveDto(
     public CreateMoveDto(String action, String partner) {
         this(action, null, null, partner, null, null);
     }
+
     public CreateMoveDto(String action) {
         this(action, null, null, null, null, null);
+    }
+
+    public CreateMoveDto() {
+        this("build", null, null, null, "new", null);
     }
 }
