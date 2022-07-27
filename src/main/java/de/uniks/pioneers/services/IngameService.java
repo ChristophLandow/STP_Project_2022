@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.controller.IngameScreenController;
+import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
@@ -84,7 +85,7 @@ public class IngameService {
         }
     }
 
-    public void tradeWithBank() {
+    public void tradeWithBank(TradePopUpController tradePopUpController) {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
@@ -94,6 +95,7 @@ public class IngameService {
                     .observeOn(FX_SCHEDULER)
                     .doOnError(err -> handleHttpError())
                     .subscribe());
+            tradePopUpController.stop();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
             alert.showAndWait();
