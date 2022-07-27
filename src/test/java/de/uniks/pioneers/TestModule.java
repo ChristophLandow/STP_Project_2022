@@ -8,7 +8,9 @@ import dagger.Provides;
 import de.uniks.pioneers.dto.*;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
-import de.uniks.pioneers.services.*;
+import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.TokenStorage;
 import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.core.Observable;
@@ -18,12 +20,16 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
-import static de.uniks.pioneers.Constants.*;
-import static org.mockito.Mockito.*;
+
+import static de.uniks.pioneers.Constants.API_PREFIX;
+import static de.uniks.pioneers.Constants.BASE_URL;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Module
 public class TestModule {
@@ -34,6 +40,7 @@ public class TestModule {
     public static final PublishSubject<Event<Move>> gameMoveSubject = PublishSubject.create();
     public static final PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
     public static final PublishSubject<Event<MessageDto>> gameChatSubject = PublishSubject.create();
+    public static final PublishSubject<Event<MapTemplate>> mapTemplateSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -111,6 +118,8 @@ public class TestModule {
         when(eventListener.listen("games.000.buildings.*.*", Building.class)).thenReturn(gameBuildingSubject);
         when(eventListener.listen("games.000.state.*", State.class)).thenReturn(gameStateSubject);
         when(eventListener.listen("games.000.moves.*.*", Move.class)).thenReturn(gameMoveSubject);
+
+        when(eventListener.listen("maps.*.*", MapTemplate.class)).thenReturn(mapTemplateSubject);
 
         return eventListener;
     }
@@ -190,12 +199,12 @@ public class TestModule {
 
             @Override
             public Observable<Game> create(CreateGameDto dto) {
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(1,10)));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000",dto.name(),"000",1,false, new GameSettings(2,10, null, true, 0)));
             }
 
             @Override
             public Observable<Game> update(String id, UpdateGameDto dto) {
-                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(2,10)));
+                return Observable.just(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","000","TestUserGame","000",1,false, new GameSettings(2,10, null, true, 0)));
             }
 
             @Override
@@ -409,20 +418,20 @@ public class TestModule {
             public Observable<List<Player>> getAllPlayers(String gameId) {
                 List<Player> players = new ArrayList<>();
 
-                players.add(new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
-                players.add(new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
-                players.add(new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
-                players.add(new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0));
+                players.add(new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
+                players.add(new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
+                players.add(new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
+                players.add(new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>()));
 
                 return Observable.just(players);
             }
 
             @Override
             public Observable<Player> getPlayer(String gameId, String userId) {
-                Player player1 = new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
-                Player player2 = new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
-                Player player3 = new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
-                Player player4 = new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0);
+                Player player1 = new Player("000","000","#ff0000", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
+                Player player2 = new Player("000","001","#00ff00", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
+                Player player3 = new Player("000","002","#0000ff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
+                Player player4 = new Player("000","003","#ffffff", true,null, new Resources(0,0,0,0,0,0), new RemainingBuildings(5,4,15), 0, 0, new ArrayList<>());
 
                 if(userId.equals(player1.userId())) {
                     return Observable.just(player1);
@@ -459,15 +468,66 @@ public class TestModule {
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
                 if(dto.building() != null) {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner()));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner(), dto.developmentCard()));
                 } else {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner()));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner(), dto.developmentCard()));
                 }
             }
 
             @Override
             public Observable<Player> updatePlayer(String gameId, String userId, UpdatePlayerDto dto) {
-                return Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0));
+                return Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0, new ArrayList<>()));
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    MapApiService mapApiService() {
+        return new MapApiService() {
+            @Override
+            public Observable<List<MapTemplate>> getMaps() {
+                ArrayList<MapTemplate> returnValue = new ArrayList<>();
+                returnValue.add(new MapTemplate("","","","","","",0,null, null));
+                return Observable.just(returnValue);
+            }
+
+            @Override
+            public Observable<MapTemplate> getMap(String id) {
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                return Observable.just(mapTemplate);
+            }
+
+            @Override
+            public Observable<MapTemplate> deleteMap(String id) {
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                return Observable.just(mapTemplate);
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    VoteApiService voteApiService(){
+        return new VoteApiService() {
+            @Override
+            public Observable<Vote> createVote(String id, CreateVoteDto voteDto) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> getVotesOfMap(String id) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> getVotesOfUser(String mapId, String userId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Vote> deleteVotesOfUser(String mapId, String userId) {
+                return null;
             }
         };
     }

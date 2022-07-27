@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
-import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
@@ -14,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.text.Text;
@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,10 +37,6 @@ public class DiscardResourcesController implements Initializable, Controller {
     @FXML private Spinner<Integer> PolarBearSpinner;
     @FXML private Spinner<Integer> IceSpinner;
     @FXML private Spinner<Integer> WaleSpinner;
-
-    private final  Provider<RobberController> robberControllerProvider;
-    private final Provider<IngameScreenController> ingameScreenControllerProvider;
-
     @Inject
     IngameService ingameService;
     @Inject
@@ -52,7 +47,7 @@ public class DiscardResourcesController implements Initializable, Controller {
     RobberService robberService;
     public Integer wale;
     public Integer ice;
-    public Integer polarbear;
+    public Integer polarBear;
     public Integer fish;
     public Integer carbon;
     private Stage stage;
@@ -60,11 +55,7 @@ public class DiscardResourcesController implements Initializable, Controller {
     private final ArrayList<Spinner<Integer>> spinnerLIst = new ArrayList<>();
 
     @Inject
-    public DiscardResourcesController(Provider<IngameScreenController> ingameScreenControllerProvider, Provider<RobberController> robberControllerProvider) {
-        this.robberControllerProvider = robberControllerProvider;
-        this.ingameScreenControllerProvider = ingameScreenControllerProvider;
-
-    }
+    public DiscardResourcesController() {}
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -81,9 +72,9 @@ public class DiscardResourcesController implements Initializable, Controller {
             wale = 0;
         }
         if(ingameResources.wool() != null){
-            polarbear = ingameResources.wool();
+            polarBear = ingameResources.wool();
         } else {
-            polarbear = 0;
+            polarBear = 0;
         }
         if(ingameResources.brick() != null){
             ice = ingameResources.brick();
@@ -103,7 +94,7 @@ public class DiscardResourcesController implements Initializable, Controller {
         fishValueFactory.setValue(0);
         FishSpinner.setValueFactory(fishValueFactory);
         spinnerLIst.add(FishSpinner);
-        SpinnerValueFactory<Integer> polarbearValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,polarbear);
+        SpinnerValueFactory<Integer> polarbearValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, polarBear);
         polarbearValueFactory.setValue(0);
         PolarBearSpinner.setValueFactory(polarbearValueFactory);
         spinnerLIst.add(PolarBearSpinner);
@@ -116,7 +107,7 @@ public class DiscardResourcesController implements Initializable, Controller {
         WaleSpinner.setValueFactory(waleValueFactory);
         spinnerLIst.add(WaleSpinner);
         numeratorText.setText(Integer.toString(0));
-        denominatorText.setText(Integer.toString((fish+wale+polarbear+ice+carbon)/2));
+        denominatorText.setText(Integer.toString((fish+wale+ polarBear +ice+carbon)/2));
         for(Spinner<Integer> spinner : spinnerLIst){
             spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
                 int newNumerator = 0;
@@ -153,10 +144,6 @@ public class DiscardResourcesController implements Initializable, Controller {
         disposable.dispose();
     }
 
-    public void discardAndLeave(){
-        chooseResources();
-    }
-
     @Override
     public Parent render() {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/DiscardResourcesPopup.fxml"));
@@ -170,16 +157,22 @@ public class DiscardResourcesController implements Initializable, Controller {
         return discardView;
     }
 
-    public void chooseResources(){
-//        IngameScreenController ingameController = ingameScreenControllerProvider.get();
-        int walediscard = WaleSpinner.getValue();
+    public void discardAndLeave(){
+        int waleDiscard = WaleSpinner.getValue();
         int iceDiscard = IceSpinner.getValue();
-        int polarbearDeiscard = PolarBearSpinner.getValue();
+        int polarBearDiscard = PolarBearSpinner.getValue();
         int fishDiscard = FishSpinner.getValue();
         int carbonDiscard = CarbonSpinner.getValue();
+        int numberDiscard = waleDiscard + iceDiscard + polarBearDiscard + fishDiscard + carbonDiscard;
 
-        disposable.add(robberService.dropResources(new Resources(-walediscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarbearDeiscard))
-                .observeOn(FX_SCHEDULER).take(1).subscribe(move -> stop(),this::handleHttpError));
+        if (numberDiscard != ((fish+wale+ polarBear +ice+carbon)/2)) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You are trying to discard more or less resources than necessary!");
+            alert.showAndWait();
+        } else {
+            disposable.add(robberService.dropResources(new Resources(-waleDiscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarBearDiscard))
+                    .observeOn(FX_SCHEDULER).take(1).subscribe(move -> stop(),this::handleHttpError));
+            this.stop();
+        }
     }
 
     private  void handleHttpError(Throwable exception) throws IOException {

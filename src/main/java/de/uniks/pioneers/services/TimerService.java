@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Timer;
@@ -46,7 +47,7 @@ public class TimerService {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                CreateMoveDto moveDto = new CreateMoveDto(action, null, null, null, null);
+                CreateMoveDto moveDto = new CreateMoveDto(action, null, null, null, null, null);
                 disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {
@@ -66,7 +67,7 @@ public class TimerService {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null);
+                CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null, null);
                 disposable.add(ingameService.postMove(gameService.game.get()._id(), moveDto)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {

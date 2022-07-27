@@ -71,11 +71,11 @@
                 <VBox.margin>
                     <Insets top="-7.0"/>
                 </VBox.margin>
-                <Spinner id="packeisOffer" prefHeight="30.0" prefWidth="40.0"/>
-                <Spinner id="fellOffer" prefHeight="30.0" prefWidth="40.0"/>
-                <Spinner id="fischOffer" prefHeight="30.0" prefWidth="40.0"/>
-                <Spinner id="kohleOffer" prefHeight="30.0" prefWidth="40.0"/>
-                <Spinner id="walknochenOffer" prefHeight="30.0" prefWidth="40.0"/>
+                <Spinner fx:id="brickOffer" id="packeisOffer" prefHeight="30.0" prefWidth="40.0"/>
+                <Spinner fx:id="woolOffer" id="fellOffer" prefHeight="30.0" prefWidth="40.0"/>
+                <Spinner fx:id="lumberOffer" id="fischOffer" prefHeight="30.0" prefWidth="40.0"/>
+                <Spinner fx:id="oreOffer" id="kohleOffer" prefHeight="30.0" prefWidth="40.0"/>
+                <Spinner fx:id="grainOffer" id="walknochenOffer" prefHeight="30.0" prefWidth="40.0"/>
             </HBox>
             <HBox fx:id="getBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                   minWidth="-Infinity" prefHeight="25.0" prefWidth="330.0">

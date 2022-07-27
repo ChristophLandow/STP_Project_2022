@@ -2,14 +2,13 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.services.GameService;
-import javafx.animation.*;
+import de.uniks.pioneers.services.ResourceService;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,54 +17,46 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.util.Duration;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
 
 public class IngamePlayerResourcesController {
-    @FXML
-    public HBox resourcesHBox;
-    @FXML
-    public ImageView fischResource;
-    @FXML
-    public Label fischCount;
-    @FXML
-    public ImageView packeisResource;
-    @FXML
-    public Label packeisCount;
-    @FXML
-    public ImageView fellResource;
-    @FXML
-    public Label fellCount;
-    @FXML
-    public ImageView kohleResource;
-    @FXML
-    public Label kohleCount;
-    @FXML
-    public ImageView walknochenResource;
-    @FXML
-    public Label walknochenCount;
-    @FXML
-    public Pane root;
+    @FXML public HBox resourcesHBox;
+    @FXML public ImageView fischResource;
+    @FXML public Label fischCount;
+    @FXML public ImageView packeisResource;
+    @FXML public Label packeisCount;
+    @FXML public ImageView fellResource;
+    @FXML public Label fellCount;
+    @FXML public ImageView kohleResource;
+    @FXML public Label kohleCount;
+    @FXML public ImageView walknochenResource;
+    @FXML public Label walknochenCount;
+    @FXML public Pane root;
 
     private final GameService gameService;
-    private Map<String, ImageView> imageMap;
-    private Map<String, Label> labelMap;
+    private final ResourceService resourceService;
+    private Map<String, Label> resourceLabelMap;
+    private Map<String, Pane> resourcePaneMap;
+    private Map<String, Label> devLabelMap;
+    private Map<String, Pane> devPaneMap;
     private ChangeListener<Boolean> enoughResourcesListener;
-    private MapChangeListener<String, Integer> mapChangeListener;
+    private MapChangeListener<String, Integer> resourceMapChangeListener;
+    private MapChangeListener<String, Integer> devCardMapChangeListener;
     private ResourceAnimationController resourceAnimationController;
 
     @Inject
-    public IngamePlayerResourcesController(GameService gameService) {
+    public IngamePlayerResourcesController(GameService gameService, ResourceService resourceService) {
         this.gameService = gameService;
+        this.resourceService = resourceService;
     }
 
     public void stop() {
         //remove listeners
-        gameService.myResources.removeListener(mapChangeListener);
-        gameService.notEnoughRessources.removeListener(enoughResourcesListener);
+        resourceService.myResources.removeListener(resourceMapChangeListener);
+        resourceService.myDevCards.removeListener(devCardMapChangeListener);
+        resourceService.notEnoughResources.removeListener(enoughResourcesListener);
     }
 
     public void render() {
@@ -90,27 +81,41 @@ public class IngamePlayerResourcesController {
         // add listener to model (myResources, enoughResources)
         enoughResourcesListener = (observable, oldValue, newValue) -> {
             if (newValue.equals(true)) {
-                showMissingRessources();
-                gameService.notEnoughRessources.set(false);
+                showMissingResources();
+                resourceService.notEnoughResources.set(false);
             }
         };
 
-        mapChangeListener = change -> {
+        resourceMapChangeListener = change -> {
             String type = change.getKey();
             if (change.wasAdded() && change.wasRemoved()) {
                 if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
-                    invokeElement(type, change.getValueAdded());
+                    invokeResourceElement(type, change.getValueAdded());
                 } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
-                    revokeElement(type);
+                    revokeResourceElement(type);
                 } else {
-                    mutateElement(type, change.getValueAdded());
+                    mutateResourceElement(type, change.getValueAdded());
                 }
             }
         };
 
-        gameService.myResources.addListener(mapChangeListener);
-        gameService.notEnoughRessources.addListener(enoughResourcesListener);
-        this.resourceAnimationController = new ResourceAnimationController(root, gameService, this);
+        devCardMapChangeListener = change -> {
+            String type = change.getKey();
+            if (change.wasAdded() && change.wasRemoved()) {
+                if (change.getValueAdded() > 0 && change.getValueRemoved() == 0) {
+                    invokeDevCardElement(type, change.getValueAdded());
+                } else if (change.getValueAdded() == 0 && change.getValueRemoved() > 0) {
+                    revokeDevCardElement(type);
+                } else {
+                    mutateDevCardElement(type, change.getValueAdded());
+                }
+            }
+        };
+
+        resourceService.myResources.addListener(resourceMapChangeListener);
+        resourceService.myDevCards.addListener(devCardMapChangeListener);
+        resourceService.notEnoughResources.addListener(enoughResourcesListener);
+        this.resourceAnimationController = new ResourceAnimationController(root, gameService, resourceService);
     }
 
     private void setImages() {
@@ -121,112 +126,97 @@ public class IngamePlayerResourcesController {
         List<String> resStrings = List.of("lumber", "brick", "wool", "ore", "grain");
         Iterator<String> resIter = resStrings.iterator();
         Iterator<String> resIterLabels = resStrings.iterator();
-        imageMap = new HashMap<>();
-        labelMap = new HashMap<>();
 
-        resourcesHBox.getChildren().forEach(node -> {
-            String id = node.getId();
-            if (id.endsWith("Ressource")) {
-                String url = String.format("images/card_%s.png", iter.next());
-                Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
-                ImageView view = (ImageView) node;
-                imageMap.put(resIter.next(), view);
-                view.setImage(img);
-            } else {
-                Label resouceCount = (Label) node;
-                labelMap.put(resIterLabels.next(), resouceCount);
-            }
+        List<String> devStrings = List.of("knight", "road", "plenty", "monopoly", "vpoint");
+        Iterator<String> devIter = devStrings.iterator();
+        Iterator<String> devCountIter = devStrings.iterator();
+
+        resourceLabelMap = new HashMap<>();
+        resourcePaneMap = new HashMap<>();
+        devLabelMap = new HashMap<>();
+        devPaneMap = new HashMap<>();
+
+        resourcesHBox.getChildren().forEach(paneNode -> {
+            Pane pane = (Pane) paneNode;
+            pane.getChildren().forEach(node -> {
+                String id = node.getId();
+                if (id.endsWith("Ressource")) {
+                    String res = resIter.next();
+                    String url = String.format("images/card_%s.png", iter.next());
+                    Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
+                    ImageView view = (ImageView) node;
+                    view.setImage(img);
+                    resourcePaneMap.put(res, pane);
+                } else if (id.endsWith("Count")) {
+                    Label resouceCount = (Label) node;
+                    resourceLabelMap.put(resIterLabels.next(), resouceCount);
+                } else if (id.endsWith("Card")) {
+                    String devCard = devIter.next();
+                    String url = String.format("images/card_%s.png", devCard);
+                    Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
+                    ImageView view = (ImageView) node;
+                    view.setImage(img);
+                    view.setScaleY(1.25);
+                    devPaneMap.put(devCard, pane);
+                } else if (id.endsWith("Label")) {
+                    Label devCount = (Label) node;
+                    devLabelMap.put(devCountIter.next(), devCount);
+                }
+            });
         });
         resourcesHBox.getChildren().clear();
     }
 
-    private void invokeElement(String type, Integer valueAdded) {
-        ImageView img = imageMap.get(type);
-        Label lbl = labelMap.get(type);
-        resourcesHBox.getChildren().add(img);
-        resourcesHBox.getChildren().add(lbl);
-        double x = img.getLayoutX();
-        double y = img.getLayoutY();
-        lbl.setLayoutX(x);
-        lbl.setLayoutY(y);
+    private void invokeResourceElement(String type, Integer valueAdded) {
+        Label lbl = resourceLabelMap.get(type);
+        resourcesHBox.getChildren().add(resourcePaneMap.get(type));
         lbl.setText(String.valueOf(valueAdded));
     }
 
-    private void revokeElement(String type) {
-        ImageView img = imageMap.get(type);
-        Label lbl = labelMap.get(type);
-        resourcesHBox.getChildren().remove(img);
-        resourcesHBox.getChildren().remove(lbl);
+    private void revokeResourceElement(String type) {
+        resourcesHBox.getChildren().remove(resourcePaneMap.get(type));
     }
 
-    private void mutateElement(String type, Integer valueAdded) {
-        Label lbl = labelMap.get(type);
+    private void mutateResourceElement(String type, Integer valueAdded) {
+        Label lbl = resourceLabelMap.get(type);
         lbl.setText(String.valueOf(valueAdded));
     }
 
-    private void showMissingRessources() {
+    private void invokeDevCardElement(String type, Integer valueAdded) {
+        Label lbl = devLabelMap.get(type);
+        resourcesHBox.getChildren().add(devPaneMap.get(type));
+        lbl.setText(String.valueOf(valueAdded));
+    }
 
-        Map<String, Integer> missingResources = gameService.missingResources;
-        ObservableMap<String, Integer> resources = gameService.myResources;
+    private void revokeDevCardElement(String type) {
+        resourcesHBox.getChildren().remove(devPaneMap.get(type));
+    }
+
+    private void mutateDevCardElement(String type, Integer valueAdded) {
+        Label lbl = devLabelMap.get(type);
+        lbl.setText(String.valueOf(valueAdded));
+    }
+
+    private void showMissingResources() {
+        Map<String, Integer> missingResources = resourceService.missingResources;
+        ObservableMap<String, Integer> resources = resourceService.myResources;
         missingResources.keySet().forEach(s -> {
             Integer delta = missingResources.get(s);
             Integer oldValue = resources.getOrDefault(s, 0);
             if (delta < 0) {
-                ImageView node = imageMap.get(s);
-                Label label = labelMap.get(s);
+                Pane pane = resourcePaneMap.get(s);
+                Label label = resourceLabelMap.get(s);
                 Paint color = label.textFillProperty().get();
                 label.setText(String.valueOf(missingResources.get(s)));
                 label.setTextFill(Color.RED);
-                if (resourcesHBox.getChildren().contains(node)) {
-                    textFillAnimation(node, label, oldValue, color);
+                if (resourcesHBox.getChildren().contains(pane)) {
+                    resourceAnimationController.textFillAnimation(pane, label, oldValue, color, resourcesHBox);
                 } else {
-                    Platform.runLater(() -> addFadingIn(node, label, resourcesHBox));
-                    textFillAnimation(node, label, oldValue, color);
+                    Platform.runLater(() -> resourceAnimationController.addFadingIn(pane, resourcesHBox));
+                    resourceAnimationController.textFillAnimation(pane, label, oldValue, color, resourcesHBox);
                 }
             }
         });
-    }
-
-    public void addFadingIn(Node node, Label label, HBox parent) {
-                FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-                parent.getChildren().add(node);
-                parent.getChildren().add(label);
-                double x = node.getLayoutX();
-                double y = node.getLayoutY();
-                label.setLayoutX(x);
-                label.setLayoutY(y);
-                transition.setFromValue(0);
-                transition.setToValue(1);
-                transition.setInterpolator(Interpolator.EASE_IN);
-                transition.setOnFinished(finish -> removeFadingOut(node));
-    }
-
-    public void removeFadingOut(Node node) {
-                FadeTransition transition = new FadeTransition(Duration.millis(1500), node);
-                transition.setFromValue(1);
-                transition.setToValue(0);
-                transition.setInterpolator(Interpolator.EASE_OUT);
-                transition.play();
-    }
-
-    private void textFillAnimation(ImageView node, Label label, Integer oldValue, Paint color) {
-        label.setTranslateX(-19);
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0)),
-                new KeyFrame(Duration.seconds(1.5))
-        );
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(e -> {
-            if (oldValue == 0) {
-                resourcesHBox.getChildren().remove(node);
-                resourcesHBox.getChildren().remove(label);
-            }
-            label.setTranslateX(-14);
-            label.setText(String.valueOf(oldValue));
-            label.setTextFill(color);
-        });
-        timeline.play();
     }
 }
 

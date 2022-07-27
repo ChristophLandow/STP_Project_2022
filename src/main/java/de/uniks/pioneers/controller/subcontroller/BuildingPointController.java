@@ -6,10 +6,7 @@ import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Harbor;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.GameStorage;
-import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -22,6 +19,7 @@ import javafx.scene.robot.Robot;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
+
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -30,6 +28,7 @@ import static de.uniks.pioneers.GameConstants.*;
 public class BuildingPointController {
     public Pane fieldPane;
     private final GameService gameService;
+    private final ResourceService resourceService;
     public Circle view;
     public Circle eventView;
     private final IngameService ingameService;
@@ -44,14 +43,13 @@ public class BuildingPointController {
     public final ArrayList<StreetPointController> adjacentStreets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private Building building = null;
-
     private User owner = null;
     public SVGPath displayedBuilding = null;
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, GameService gameService, String gameId,
                                    Pane fieldPane, GameStorage gameStorage,
-                                   UserService userService) {
+                                   UserService userService, ResourceService resourceService) {
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
@@ -60,6 +58,7 @@ public class BuildingPointController {
         this.gameId = gameId;
         this.fieldPane = fieldPane;
         this.gameService = gameService;
+        this.resourceService = resourceService;
         this.eventView = new Circle();
         this.eventView.setLayoutX(view.getLayoutX());
         this.eventView.setLayoutY(view.getLayoutY());
@@ -96,7 +95,7 @@ public class BuildingPointController {
         CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], buildingType);
         checkTradeOptions();
         if(gameId != null) {
-            disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, newBuilding))
+            disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, null, newBuilding))
                     .observeOn(FX_SCHEDULER)
                     .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
         }
@@ -164,7 +163,7 @@ public class BuildingPointController {
             gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
-                if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && gameService.checkResourcesSettlement()) {
+                if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && resourceService.checkResourcesSettlement()) {
                     for (StreetPointController street : adjacentStreets) {
                         for (BuildingPointController building : street.getAdjacentBuildings()) {
                             if (building != this) {
@@ -181,7 +180,7 @@ public class BuildingPointController {
                     }
                 }
             } else {
-                if (gameStorage.remainingBuildings.get(CITY) > 0 && gameService.checkCity()) {
+                if (gameStorage.remainingBuildings.get(CITY) > 0 && resourceService.checkCity()) {
                     if (this.building != null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())) {
                         gameStorage.remainingBuildings.put(CITY, gameStorage.remainingBuildings.get(CITY) - 1);
                         build();
@@ -198,11 +197,9 @@ public class BuildingPointController {
         Point2D mousePos = new Robot().getMousePosition();
 
         Bounds viewBounds = view.localToScreen(view.getBoundsInLocal());
-        Point2D viewPos = null;
+        Point2D viewPos = new Point2D(0,0);
         if(viewBounds != null) {
             viewPos =  new Point2D(viewBounds.getMinX() + viewBounds.getWidth()/2, viewBounds.getMinY() + viewBounds.getHeight()/2);
-        } else {
-            viewPos = new Point2D(0,0);
         }
 
         //Check if mouse is in eventView

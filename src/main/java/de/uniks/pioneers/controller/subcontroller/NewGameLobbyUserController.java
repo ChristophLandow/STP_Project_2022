@@ -11,9 +11,10 @@ import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+
 import javax.inject.Provider;
 import java.util.Map;
 
@@ -125,7 +126,8 @@ public class NewGameLobbyUserController {
                         screenController.setMemberCount(screenController.getGame().members());
                         if (gameEvent.event().endsWith(".updated") && gameEvent.data().started()) {
                             screenController.toIngame(screenController.getGame(), newGameLobbyService.getUsers().values().stream().toList(),
-                                    screenController.getColorPickerController().getColor(), false, gameEvent.data().settings().mapRadius());
+                                    screenController.getColorPickerController().getColor(), false, gameEvent.data().settings().mapRadius(),
+                                    gameEvent.data().settings().mapTemplate() != null);
                         } else if (gameEvent.event().endsWith(".deleted")) {
                             screenController.getApp().show(screenController.getLobbyScreenController());
                             screenController.stop();

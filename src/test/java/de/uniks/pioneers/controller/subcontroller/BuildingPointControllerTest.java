@@ -1,11 +1,11 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.model.*;
-import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.GameStorage;
-import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.model.Building;
+import de.uniks.pioneers.model.Player;
+import de.uniks.pioneers.model.RemainingBuildings;
+import de.uniks.pioneers.model.Resources;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -23,8 +23,9 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import java.util.ArrayList;
+
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.CITY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -44,6 +45,9 @@ class BuildingPointControllerTest extends ApplicationTest {
 
     @Mock
     GameService gameService;
+
+    @Mock
+    ResourceService resourceService;
 
     @Mock
     Pane fieldPane;
@@ -85,14 +89,14 @@ class BuildingPointControllerTest extends ApplicationTest {
         gameStorage.remainingBuildings.put(ROAD, 15);
         gameStorage.remainingBuildings.put(SETTLEMENT, 5);
         gameStorage.remainingBuildings.put(CITY, 4);
-        when(gameService.checkResourcesSettlement()).thenReturn(true);
+        when(resourceService.checkResourcesSettlement()).thenReturn(true);
 
         assertTrue(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
     }
 
     @Test
     void placeBuilding() {
-        when(ingameService.getPlayer("000", "000")).thenReturn(Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0)));
+        when(ingameService.getPlayer("000", "000")).thenReturn(Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0, new ArrayList<>())));
         buildingPointController.fieldPane = new Pane();
         buildingPointController.view = new Circle();
 

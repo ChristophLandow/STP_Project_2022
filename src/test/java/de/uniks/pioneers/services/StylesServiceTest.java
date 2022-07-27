@@ -1,11 +1,7 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.App;
-import de.uniks.pioneers.Constants;
-import de.uniks.pioneers.controller.LoginScreenController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static de.uniks.pioneers.Constants.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,5 +43,20 @@ class StylesServiceTest {
         stylesService.setStyleSheets(style, "test", "testDark");
         assertTrue(style.contains(STYLE_GLOBAL_DARK));
         assertTrue(style.contains("testDark"));
+    }
+
+    @Test
+    void settingsSetStyleSheets() {
+        ObservableList<String> style = FXCollections.observableArrayList();
+        stylesService.setStyleSheets(style, null, null, true, false);
+        assertTrue(style.contains(STYLE_GLOBAL));
+        stylesService.setStyleSheets(style, null, null, false, true);
+        assertTrue(style.contains(STYLE_GLOBAL_DARK));
+        stylesService.setStyleSheets(style, "test", "testDark", false, true);
+        assertTrue(style.contains(STYLE_GLOBAL_DARK));
+        assertTrue(style.contains("testDark"));
+        stylesService.setStyleSheets(style, "test", "testDark", true, false);
+        assertTrue(style.contains(STYLE_GLOBAL));
+        assertTrue(style.contains("test"));
     }
 }

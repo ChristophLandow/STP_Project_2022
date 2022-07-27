@@ -13,9 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.*;
-import static de.uniks.pioneers.GameConstants.*;
+import static de.uniks.pioneers.GameConstants.FEMALE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,7 +80,7 @@ class PrefServiceTest {
 
     @Test
     void getSavedGame() {
-        when(gameApiService.getGame(anyString())).thenReturn(Observable.just(new Game("yesterday", "now", "test", "testGame", "me", 2, true, new GameSettings(2,2))));
+        when(gameApiService.getGame(anyString())).thenReturn(Observable.just(new Game("yesterday", "now", "test", "testGame", "me", 2, true, new GameSettings(2,2, null, true, 0))));
         when(preferences.get(anyString(),anyString())).thenReturn("test");
         Game game = prefService.getSavedGame();
         assertEquals("test", game._id());

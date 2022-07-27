@@ -1,0 +1,17 @@
+#MapHBox {
+    -fx-background-color: #717988;
+}
+
+#mapListView {
+    -fx-background-color: #717988;
+}
+
+#VoteButton{
+    -fx-background-radius: 20px;
+    -fx-background-color: #156EAD;
+}
+
+.label {
+    -fx-background-color: #717988;
+    -fx-text-fill: WHITE;
+}

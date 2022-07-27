@@ -12,10 +12,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
 
-import static de.uniks.pioneers.Constants.*;
+import static de.uniks.pioneers.Constants.API_PREFIX;
+import static de.uniks.pioneers.Constants.BASE_URL;
 
 @Module
 public class MainModule {
@@ -102,4 +104,14 @@ public class MainModule {
     PioneersApiService pioneersApiService(Retrofit retrofit) {
         return  retrofit.create(PioneersApiService.class);
     }
+
+    @Provides
+    @Singleton
+    MapApiService mapApiService(Retrofit retrofit) {
+        return  retrofit.create(MapApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    VoteApiService voteApiService(Retrofit retrofit) { return retrofit.create(VoteApiService.class);}
 }

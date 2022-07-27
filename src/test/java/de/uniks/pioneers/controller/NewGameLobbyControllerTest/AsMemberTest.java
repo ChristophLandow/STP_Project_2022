@@ -4,16 +4,13 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.NewGameScreenLobbyController;
 import de.uniks.pioneers.controller.subcontroller.ColorPickerController;
 import de.uniks.pioneers.controller.subcontroller.GameChatController;
+import de.uniks.pioneers.controller.subcontroller.NewGameLobbyGameSettingsController;
 import de.uniks.pioneers.controller.subcontroller.NewGameLobbyReadyController;
 import de.uniks.pioneers.dto.Event;
-import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.NewGameLobbyService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.StylesService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
@@ -31,6 +28,7 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
+import javax.inject.Provider;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -68,11 +66,20 @@ class AsMemberTest extends ApplicationTest {
     @Mock
     NewGameLobbyReadyController newGameLobbyReadyController;
 
+    @Mock(name = "newGameLobbySpinnerControllerProvider")
+    Provider<NewGameLobbyGameSettingsController> newGameLobbySpinnerControllerProvider;
+
+    @Mock
+    NewGameLobbyGameSettingsController newGameLobbySpinnerController;
+
     @Spy
     App app = new App(null);
 
     @Mock(name = "gameChatController")
     GameChatController gameChatController;
+
+    @Mock
+    EventHandlerService eventHandlerService;
 
     @InjectMocks
     NewGameScreenLobbyController newGameScreenLobbyController;
@@ -123,6 +130,8 @@ class AsMemberTest extends ApplicationTest {
         when(eventListener.listen(patternToObserveGame, Game.class)).thenReturn(Observable.just(new Event<>("games.3.updated", testGame)));
         when(newGameLobbyService.getMembers()).thenReturn(FXCollections.observableArrayList());
 
+        when(newGameLobbySpinnerControllerProvider.get()).thenReturn(newGameLobbySpinnerController);
+
         newGameScreenLobbyController.setPassword("12345678");
         newGameScreenLobbyController.setGame(testGame);
         app.start(stage);
@@ -167,6 +176,7 @@ class AsMemberTest extends ApplicationTest {
         verify(eventListener).listen(patternToObserveUserJoining, User.class);
         verify(eventListener).listen(patternToObserveGameMembers, Member.class);
         verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
+        verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
 
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));

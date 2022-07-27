@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.controller.IngameScreenController;
+import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.dto.UpdatePlayerDto;
 import de.uniks.pioneers.model.*;
@@ -12,11 +13,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
 
@@ -25,7 +28,7 @@ public class IngameService {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final PioneersApiService pioneersApiService;
     private final GameStorage gameStorage;
-    public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
+    public SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     final private SimpleObjectProperty<ExpectedMove> currentExpectedMove = new SimpleObjectProperty<>();
 
     private java.util.Map<String, Integer> trade = new HashMap<>();
@@ -82,7 +85,7 @@ public class IngameService {
         }
     }
 
-    public void tradeWithBank() {
+    public void tradeWithBank(TradePopUpController tradePopUpController) {
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
@@ -90,11 +93,9 @@ public class IngameService {
         if (checkTradeOptions(offer)) {
             disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer, BANK_ID))
                     .observeOn(FX_SCHEDULER)
-                    .doOnError(e -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong!");
-                        alert.showAndWait();
-                    })
+                    .doOnError(err -> handleHttpError())
                     .subscribe());
+            tradePopUpController.stop();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Something went wrong, please check the resource types and amounts!");
             alert.showAndWait();
@@ -106,7 +107,7 @@ public class IngameService {
 
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(BUILD, offer))
                 .observeOn(FX_SCHEDULER)
-                .doOnError(Throwable::printStackTrace)
+                .doOnError(err -> handleHttpError())
                 .subscribe()
         );
     }
@@ -224,5 +225,13 @@ public class IngameService {
 
     public IngameScreenController getActualIngameController(){
         return this.actualIngameController;
+    }
+
+    public void handleHttpError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText("Trading Error");
+        alert.setContentText("Something went wrong, please check your resources!");
+        alert.showAndWait();
     }
 }

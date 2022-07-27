@@ -25,15 +25,16 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static de.uniks.pioneers.Constants.ALT;
+import static de.uniks.pioneers.Constants.STRG;
 import static org.junit.jupiter.api.Assertions.*;
-import static de.uniks.pioneers.Constants.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SettingsScreenControllerTest extends ApplicationTest {
 
-    ArrayList<Character> inputs = new ArrayList<>();
-    ArrayList<KeyCode> outputs = new ArrayList<>();
+    final ArrayList<Character> inputs = new ArrayList<>();
+    final ArrayList<KeyCode> outputs = new ArrayList<>();
     @Spy
     App app = new App(null);
 

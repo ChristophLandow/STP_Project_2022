@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.LoginResult;
+import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.LoginService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextMatchers;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +34,10 @@ class LoginScreenControllerTest extends ApplicationTest {
 
     @Mock
     StylesService stylesService;
+
+    @Mock
+    EventHandlerService eventHandlerService;
+
     @InjectMocks
     LoginScreenController loginScreenController;
     @Override

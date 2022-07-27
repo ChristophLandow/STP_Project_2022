@@ -23,7 +23,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -80,6 +79,9 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
     @Mock
     StylesService stylesService;
+
+    @Mock
+    EventHandlerService eventHandlerService;
 
     @InjectMocks
     LobbyScreenController lobbyScreenController;

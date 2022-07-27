@@ -3,11 +3,13 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -32,16 +34,22 @@ public class JoinGamePopUpController{
     private final CompositeDisposable disposable = new CompositeDisposable();
     private LobbyScreenController lobbyScreenController;
     private String randomColor;
+    private EventHandlerService eventHandlerService;
+    public JoinGamePopUpController() {
+    }
 
-    public void init(App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game) {
+    public void init(App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game, EventHandlerService eventHandlerService) {
         this.newGameLobbyService = newGameLobbyService;
         this.game = game;
         this.lobbyScreenController = lobbyScreenController;
         this.randomColor = this.getRandomColor();
         this.app = app;
+        this.eventHandlerService = eventHandlerService;
         wrongPasswordLabel.visibleProperty().set(false);
         BooleanBinding invalid = Bindings.equal(passwordInputField.textProperty(), "");
         joinButton.disableProperty().bind(invalid);
+        Node passwordInputNode = this.passwordInputField;
+        this.eventHandlerService.setEnterEventHandler(passwordInputNode, this.joinButton);
     }
 
     public void joinGame() {

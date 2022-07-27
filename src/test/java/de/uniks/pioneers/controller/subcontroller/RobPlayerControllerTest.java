@@ -27,8 +27,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class RobPlayerControllerTest extends ApplicationTest {
@@ -44,7 +46,7 @@ class RobPlayerControllerTest extends ApplicationTest {
     @InjectMocks
     RobPlayerController robPlayerController;
 
-    MouseEvent leftClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+    final MouseEvent leftClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
             MouseButton.PRIMARY, 1, false, false, false,
             false, false, false, false,
             false, true, false, null);
@@ -58,7 +60,7 @@ class RobPlayerControllerTest extends ApplicationTest {
         RobDto robMove = new RobDto(0,0,0,"player1");
 
         when(robberService.getRobbingCandidates()).thenReturn(robbingCandidates);
-        when(robberService.robPlayer("player1")).thenReturn(Observable.just(new Move("", "","1", "u","rob",0, null, robMove, null, "")));
+        when(robberService.robPlayer("player1")).thenReturn(Observable.just(new Move("", "","1", "u","rob",0, null, robMove, null, "", null)));
 
         app.start(stage);
         app.show(robPlayerController);

@@ -20,8 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -29,7 +28,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static de.uniks.pioneers.Constants.*;
+import static de.uniks.pioneers.Constants.CHAT_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class ChatController implements Controller {
     @FXML public Button sendButton;
@@ -51,6 +51,7 @@ public class ChatController implements Controller {
     private final ListChangeListener<ChatTabController> listChangeListener = c -> sendButtonBinding();
     private String currentGroupId;
     private final Timer timer = new Timer();
+    private final EventHandlerService eventHandlerService;
 
     @Inject
     PrefService prefService;
@@ -59,7 +60,7 @@ public class ChatController implements Controller {
     public ChatController(App app, MessageService messageService, UserService userService,
                           StylesService stylesService, EventListener eventListener, GroupService groupService,
                           Provider<LobbyScreenController> lobbyScreenControllerProvider,
-                          Provider<ChatUserlistController> userlistControllerProvider) {
+                          Provider<ChatUserlistController> userlistControllerProvider, EventHandlerService eventHandlerService) {
         this.app = app;
         this.messageService = messageService;
         this.userService = userService;
@@ -68,6 +69,7 @@ public class ChatController implements Controller {
         this.eventListener = eventListener;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.userlistControllerProvider = userlistControllerProvider;
+        this.eventHandlerService = eventHandlerService;
     }
 
     @Override
@@ -114,8 +116,8 @@ public class ChatController implements Controller {
         this.sendButton.setDefaultButton(true);
         Node textFieldNode = this.messageTextField;
         Node sendButtonNode = this.sendButton;
-        setEventHandler(textFieldNode);
-        setEventHandler(sendButtonNode);
+        eventHandlerService.setEnterEventHandler(textFieldNode, this.sendButton);
+        eventHandlerService.setEnterEventHandler(sendButtonNode, this.sendButton);
 
         this.messageService.increaseOpenChatCounter();
         this.messageService.increaseOpenChatCounter();
@@ -209,15 +211,6 @@ public class ChatController implements Controller {
                         .subscribe(result -> this.messageTextField.clear()));
             }
         }
-    }
-
-    private void setEventHandler(Node root) {
-        root.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode().equals(KeyCode.ENTER)) {
-                sendButton.fire();
-                event.consume();
-            }
-        });
     }
 
     public void setCurrentGroupId(String groupId) {
