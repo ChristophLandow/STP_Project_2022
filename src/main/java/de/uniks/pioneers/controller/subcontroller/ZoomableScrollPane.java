@@ -3,18 +3,14 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.MapRenderService;
 import javafx.application.Platform;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
 import javax.inject.Inject;

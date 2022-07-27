@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-
 <HBox fx:id="gameBoxRoot" maxHeight="30.0" maxWidth="280.0" minHeight="30.0" minWidth="280.0"
       onMouseClicked="#doubleClicked" prefHeight="30.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/18"
       xmlns:fx="http://javafx.com/fxml/1"

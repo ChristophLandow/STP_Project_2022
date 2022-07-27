@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
-
 <HBox fx:id="playerEntry" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="319.0"
       xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.pioneers.controller.subcontroller.PlayerEntryController">

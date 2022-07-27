@@ -3,13 +3,13 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.RobberService;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
