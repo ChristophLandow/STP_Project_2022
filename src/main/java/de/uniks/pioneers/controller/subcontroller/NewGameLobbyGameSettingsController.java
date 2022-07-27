@@ -20,8 +20,6 @@ public class NewGameLobbyGameSettingsController implements Controller {
     private Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
     private ComboBox<Text> mapComboBox;
 
-    private int indexOfSpinner = -1;
-
     @Inject
     public NewGameLobbyGameSettingsController(MapBrowserService mapBrowserService) {
         this.mapBrowserService = mapBrowserService;
@@ -37,14 +35,13 @@ public class NewGameLobbyGameSettingsController implements Controller {
         victoryPointSpinner.editorProperty().get().setAlignment(Pos.CENTER);
 
         // load maps into comboBox
-        mapComboBox.getItems().add(new Text("Default"));
         List<MapTemplate> maps = mapBrowserService.getMaps();
         for (MapTemplate map : maps) {
             Text element = new Text(map.name());
             element.setId(map._id());
             mapComboBox.getItems().add(element);
         }
-        mapComboBox.getSelectionModel().selectFirst();
+        mapComboBox.setValue(new Text("Default"));
     }
 
     @Override
@@ -58,21 +55,19 @@ public class NewGameLobbyGameSettingsController implements Controller {
     }
 
     public String getMapTemplateID(){
-        if(indexOfSpinner == -1){
+        if (mapComboBox.getSelectionModel().getSelectedIndex() == 0) {
+            // default map
             return null;
         }
-        else{
-            return mapBrowserService.getMaps().get(indexOfSpinner)._id();
-        }
+        return mapComboBox.getSelectionModel().getSelectedItem().getId();
     }
 
     public int getMapSize(){
-        if(indexOfSpinner == -1) {
+        if(mapComboBox.getSelectionModel().getSelectedIndex() == 0) {
+            // get size for default map
             return boardSizeSpinner.getValueFactory().getValue();
         }
-        else{
-            return 0;
-        }
+        return 0;
     }
 
     public int getVictoryPoints(){
@@ -90,4 +85,5 @@ public class NewGameLobbyGameSettingsController implements Controller {
     public void setMapComboBox(ComboBox<Text> mapComboBox) {
         this.mapComboBox = mapComboBox;
     }
+
 }
