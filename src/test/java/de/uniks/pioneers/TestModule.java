@@ -468,9 +468,9 @@ public class TestModule {
             @Override
             public Observable<Move> postMove(String gameId, CreateMoveDto dto) {
                 if(dto.building() != null) {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner(), null));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, dto.building().type(), dto.rob(), dto.resources(), dto.partner(), dto.developmentCard()));
                 } else {
-                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner(), null));
+                    return Observable.just(new Move("000", "2022-06-09T15:11:51.795Z", "000", "000", dto.action(), 1, null, dto.rob(), dto.resources(), dto.partner(), dto.developmentCard()));
                 }
             }
 

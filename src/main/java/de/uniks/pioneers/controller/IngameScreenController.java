@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -42,7 +41,7 @@ import static de.uniks.pioneers.Constants.INGAME_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameScreenController implements Controller {
-    @FXML public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane;
+    @FXML public Pane fieldPane, root, turnPane, roadFrame, settlementFrame, cityFrame, situationPane, hammerPane, leftPane, rightPane;
     @FXML public AnchorPane scrollAnchorPane;
     @FXML public ScrollPane fieldScrollPane, chatScrollPane, userScrollPane;
     @FXML public SVGPath streetSVG, houseSVG, citySVG;
@@ -50,7 +49,7 @@ public class IngameScreenController implements Controller {
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
     @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
-    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView;
+    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView, leftView, rightView;
     @FXML public ListView<Node> playerListView;
     @FXML public Rectangle downRectangle, upRectangle;
     @FXML public Canvas mapCanvas;
@@ -78,6 +77,7 @@ public class IngameScreenController implements Controller {
     public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
     private List<User> users;
     private final GameStorage gameStorage;
+    private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
     private final IngameService ingameService;
     private final UserService userService;
@@ -92,14 +92,16 @@ public class IngameScreenController implements Controller {
     private IngamePlayerController ingamePlayerController;
     private final ChangeListener<Boolean> finishedMapRenderListener;
     private TradeOfferPopUpController tradeOfferPopUpController;
+    public IngameDevelopmentCardController ingameDevelopmentCardController;
 
 
     @Inject
-    public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService,
+    public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
                                   GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService) {
         this.app = app;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
+        this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
         this.userService = userService;
         this.gameService = gameService;
@@ -108,7 +110,7 @@ public class IngameScreenController implements Controller {
         this.speechService = speechService;
         this.stylesService = stylesService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
-        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, resourceService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
             if (mapRenderService.isFinishedLoading().get()) Platform.runLater(this::initWhenMapFinishedRendering);
@@ -256,6 +258,8 @@ public class IngameScreenController implements Controller {
         // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
+
+        ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, resourceService);
     }
 
     private void renderBuilding(Building building) {

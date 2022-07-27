@@ -4,10 +4,7 @@ import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.GameStorage;
-import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.MapRenderService;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -28,6 +25,7 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class StreetPointController {
     private final GameService gameService;
+    private final ResourceService resourceService;
     private final IngameService ingameService;
 
     private final GameStorage gameStorage;
@@ -43,8 +41,9 @@ public class StreetPointController {
     private String action;
 
     @Inject
-    public StreetPointController(GameService gameService, IngameService ingameService, GameStorage gameStorage, MapRenderService mapRenderService) {
+    public StreetPointController(GameService gameService, ResourceService resourceService, IngameService ingameService, GameStorage gameStorage, MapRenderService mapRenderService) {
         this.gameService = gameService;
+        this.resourceService = resourceService;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
         this.mapRenderService = mapRenderService;
@@ -81,7 +80,7 @@ public class StreetPointController {
         if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
             valid = checkBuildings();
         } else {
-            if (gameStorage.remainingBuildings.get(ROAD) >= 1 && gameService.checkRoad()) {
+            if (gameStorage.remainingBuildings.get(ROAD) >= 1 && resourceService.checkRoad()) {
                 valid = checkRoads() || checkBuildings();
             }else {
                 valid = false;

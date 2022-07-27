@@ -6,7 +6,7 @@ public class GameConstants {
     //Map
     public static final double MAP_X = 18;
     public static final double MAP_Y = 15;
-    public static final double MAP_WIDTH = 715;
+    public static final double MAP_WIDTH = 878;
     public static final double MAP_HEIGHT = 631;
 
     public static final double MAP_PADDING_X = 120;
