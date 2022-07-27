@@ -1,6 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.ResourceService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -13,12 +13,12 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class ResourceNewAnimationController {
     private final Pane root;
-    private final GameService gameService;
+    private final ResourceService resourceService;
     private int ore, lumber, brick, wool, grain;
 
-    public ResourceNewAnimationController(Pane root, GameService gameService) {
+    public ResourceNewAnimationController(Pane root, ResourceService resourceService) {
         this.root = root;
-        this.gameService = gameService;
+        this.resourceService = resourceService;
     }
 
     public void setResourceCounts(int ore, int lumber, int brick, int wool, int grain) {
@@ -38,15 +38,15 @@ public class ResourceNewAnimationController {
     }
 
     public void newResourceCardAnimationOne(ImageView card, int counter, int resNumber) {
-        card.setLayoutX(10);
+        card.setLayoutX(180);
         card.setLayoutY(-100);
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter * 1500L) - 1500);
+                Thread.sleep((counter * 1000L) - 1000);
                 Platform.runLater(() -> root.getChildren().add(card));
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(250), card);
                 st.setFromX(0f);
                 st.setFromY(0f);
                 st.setByX(0.2f);
@@ -62,7 +62,7 @@ public class ResourceNewAnimationController {
     public void newResourceCardAnimationTwo(ImageView card, int resNumber) {
         new Thread(() -> {
             try {
-                Thread.sleep(500);
+                Thread.sleep(250);
 
                 ScaleTransition st = new ScaleTransition(new Duration(500), card);
                 st.setFromX(0.2f);
@@ -83,14 +83,14 @@ public class ResourceNewAnimationController {
     }
 
     public void newTradeResourceCardAnimationOne(ImageView card, int counter, int resNumber) {
-        card.setLayoutX(575);
+        card.setLayoutX(738);
         card.setLayoutY(74);
         card.setScaleX(0.37f);
         card.setScaleY(0.37f);
 
         new Thread(() -> {
             try {
-                Thread.sleep((counter * 1500L) - 1500);
+                Thread.sleep((counter * 1000L) - 1000);
                 Platform.runLater(() -> root.getChildren().add(card));
 
                 FadeTransition ft = new FadeTransition(Duration.millis(100), card);
@@ -106,15 +106,15 @@ public class ResourceNewAnimationController {
 
     public void newTradeResourceCardAnimationTwo(ImageView card, int resNumber) {
         new Thread(() -> {
-            ScaleTransition st = new ScaleTransition(new Duration(500), card);
+            ScaleTransition st = new ScaleTransition(new Duration(350), card);
             st.setFromX(0.37f);
             st.setFromY(0.37f);
             st.setToX(0.2f);
             st.setToY(0.2f);
             st.play();
 
-            TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
-            tt.setToX(-565);
+            TranslateTransition tt = new TranslateTransition(Duration.millis(350), card);
+            tt.setToX(-557);
             tt.setToY(-174);
             tt.setOnFinished(t -> newTradeResourceCardAnimationThree(card, resNumber));
             tt.play();
@@ -124,17 +124,17 @@ public class ResourceNewAnimationController {
     public void newTradeResourceCardAnimationThree(ImageView card, int resNumber) {
         new Thread(() -> {
             try {
-                Thread.sleep(400);
+                Thread.sleep(250);
 
-                ScaleTransition st = new ScaleTransition(new Duration(500), card);
+                ScaleTransition st = new ScaleTransition(new Duration(300), card);
                 st.setFromX(0.2f);
                 st.setFromY(0.2f);
                 st.setToX(0.06f);
                 st.setToY(0.06f);
                 st.play();
 
-                TranslateTransition tt = new TranslateTransition(Duration.millis(500), card);
-                tt.setToX(-565);
+                TranslateTransition tt = new TranslateTransition(Duration.millis(300), card);
+                tt.setToX(-557);
                 tt.setToY(235);
                 tt.setOnFinished(t -> newAfterAnimation(card, resNumber));
                 tt.play();
@@ -148,15 +148,15 @@ public class ResourceNewAnimationController {
         Platform.runLater(() -> root.getChildren().remove(card));
 
         if (resNumber == 1) {
-            gameService.updateResources(ORE, ore);
+            resourceService.updateResources(ORE, ore);
         } else if (resNumber == 2) {
-            gameService.updateResources(LUMBER, lumber);
+            resourceService.updateResources(LUMBER, lumber);
         } else if (resNumber == 3) {
-            gameService.updateResources(BRICK, brick);
+            resourceService.updateResources(BRICK, brick);
         } else if (resNumber == 4) {
-            gameService.updateResources(WOOL, wool);
+            resourceService.updateResources(WOOL, wool);
         } else if (resNumber == 5) {
-            gameService.updateResources(GRAIN, grain);
+            resourceService.updateResources(GRAIN, grain);
         }
     }
 }
