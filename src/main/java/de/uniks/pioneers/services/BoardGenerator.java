@@ -104,8 +104,6 @@ public class BoardGenerator {
 
     public ImageView placeHarbor(double x, double y, ImageView image, int side, double width, double height, double scale) {
 
-        System.out.println(side);
-
         double x_plus = x + width / 2 - scale / 2 + 0.75 * scale;
         double x_minus = x + width / 2 - scale / 2 - 0.75 * scale;
         double y_plus = -y + height / 2 - scale / 2 + 1.25 * scale;

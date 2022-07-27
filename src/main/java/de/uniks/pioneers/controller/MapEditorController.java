@@ -106,8 +106,6 @@ public class MapEditorController implements Controller{
 
     private void display(int size){
 
-        System.out.println(this.tiles.size());
-
         double scale = 100.0/size;
 
         this.frame = this.boardGenerator.buildEditorFrame(size, scale);
@@ -173,7 +171,7 @@ public class MapEditorController implements Controller{
             this.tileViews.add(tile);
 
             EditTile newTile = new EditTile(hexTile, tile, numberView, this);
-            if(!this.selection.equals("")){
+            if(harborSide != 0){
                 newTile.currentHarborOption = harborOption;
                 newTile.currentHarborSide = harborSide;
                 newTile.currentHarborType = harborType;

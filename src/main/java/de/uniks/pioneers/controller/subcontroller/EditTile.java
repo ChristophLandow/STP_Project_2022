@@ -18,7 +18,7 @@ public class EditTile {
 
     ImageView numberView;
 
-    ImageView harbourView;
+    ImageView harbourView = new ImageView();
 
     MapEditorController mapEditorController;
 
@@ -104,10 +104,12 @@ public class EditTile {
             }
             ImageView image = this.mapEditorController.boardGenerator.getHarborImage(harborType);
 
+            System.out.println(this.currentHarborSide);
             this.harbourView = this.mapEditorController.boardGenerator.placeHarbor(this.hexTile.x, this.hexTile.y, image, this.currentHarborSide,
                     this.mapEditorController.scrollPaneAnchorPane.getPrefWidth(),
                     this.mapEditorController.scrollPaneAnchorPane.getPrefHeight(),
                     this.hexTile.scale);
+            System.out.println("harborview "+ this.harbourView);
             this.mapEditorController.scrollPaneAnchorPane.getChildren().add(this.harbourView);
 
         }
@@ -143,10 +145,8 @@ public class EditTile {
             }
         }
         public void destroy(){
-        if(this.numberView != null){
-        this.numberView.setImage(null);}
-        if(this.harbourView != null){
-        this.harbourView.setImage(null);}
+        if(this.numberView != null){this.numberView.setImage(null);}
+        if(this.harbourView != null){this.harbourView.setImage(null);}
         }
 
         public void makeVisible(boolean visibility){
