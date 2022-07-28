@@ -75,6 +75,8 @@ public class BuildingPointController {
 
     public void addEventArea() {
         this.eventView.setId(uploadCoords[0] + "," + uploadCoords[1] + "," + uploadCoords[2] + "," + uploadCoords[3]);
+        this.eventView.setLayoutX(view.getLayoutX());
+        this.eventView.setLayoutY(view.getLayoutY());
         this.fieldPane.getChildren().add(eventView);
     }
 
@@ -105,6 +107,7 @@ public class BuildingPointController {
         node.setOnMouseClicked(null);
         node.setOnMouseEntered(null);
         node.setOnMouseExited(null);
+        undye(null);
 
         this.view.setFill(STANDARD_COLOR);
         if (this.building != null) {

@@ -17,10 +17,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.*;
-import static de.uniks.pioneers.GameConstants.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static de.uniks.pioneers.GameConstants.RANDOM;
 
 
 public class MapEditorController implements Controller{
