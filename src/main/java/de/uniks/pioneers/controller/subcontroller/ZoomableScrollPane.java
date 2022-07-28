@@ -4,7 +4,6 @@ import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.MapRenderService;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -12,9 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 import javax.inject.Inject;
@@ -214,7 +211,5 @@ public class ZoomableScrollPane {
 
         gameStorage.setZoomedOut(Math.min(MAP_HEIGHT/fieldPane.getPrefHeight(), MAP_WIDTH/fieldPane.getPrefWidth()));
         zoomOut();
-
-        //Center the fieldPane
     }
 }

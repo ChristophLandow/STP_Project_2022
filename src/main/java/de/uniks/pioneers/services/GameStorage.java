@@ -78,10 +78,6 @@ public class GameStorage {
         this.harbors = harbors;
     }
 
-    public void setZoomedIn(double zoomedIn) {
-        this.zoomedIn = zoomedIn;
-    }
-
     public void setZoomedOut(double zoomedOut) {
         this.zoomedOut = zoomedOut;
     }
