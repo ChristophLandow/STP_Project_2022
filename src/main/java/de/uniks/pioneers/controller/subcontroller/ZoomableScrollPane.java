@@ -200,6 +200,9 @@ public class ZoomableScrollPane {
         double fieldPaneMoveChildrenX = (fieldPane.getLayoutX() + MAP_PADDING_X * 3 + gameStorage.getHexScale()- topLeft.getX());
         double fieldPaneMoveChildrenY = (fieldPane.getLayoutY() + MAP_PADDING_Y * 3 + gameStorage.getHexScale() - topLeft.getY());
 
+        gameStorage.setFieldPaneMoveChildrenX(fieldPaneMoveChildrenX);
+        gameStorage.setFieldPaneMoveChildrenY(fieldPaneMoveChildrenY);
+
         for(Node n : fieldPane.getChildren()){
             n.setLayoutX(n.getLayoutX() + fieldPaneMoveChildrenX);
             n.setLayoutY(n.getLayoutY() + fieldPaneMoveChildrenY);

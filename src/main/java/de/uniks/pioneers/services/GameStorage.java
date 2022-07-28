@@ -26,6 +26,9 @@ public class GameStorage {
     private double hexRadiusFactor = 3;
     private double zoomedIn = 1.4;
     private double zoomedOut = 1;
+
+    private double fieldPaneMoveChildrenX;
+    private double fieldPaneMoveChildrenY;
     public String selectedBuilding = "";
     public ObservableMap<String, Integer> remainingBuildings = FXCollections.observableHashMap();
 
@@ -62,6 +65,14 @@ public class GameStorage {
         return this.zoomedOut;
     }
 
+    public double getFieldPaneMoveChildrenX() {
+        return fieldPaneMoveChildrenX;
+    }
+
+    public double getFieldPaneMoveChildrenY() {
+        return fieldPaneMoveChildrenY;
+    }
+
     public boolean isCustomMap() {
         return customMap;
     }
@@ -80,6 +91,14 @@ public class GameStorage {
 
     public void setZoomedOut(double zoomedOut) {
         this.zoomedOut = zoomedOut;
+    }
+
+    public void setFieldPaneMoveChildrenX(double fieldPaneMoveChildrenX) {
+        this.fieldPaneMoveChildrenX = fieldPaneMoveChildrenX;
+    }
+
+    public void setFieldPaneMoveChildrenY(double fieldPaneMoveChildrenY) {
+        this.fieldPaneMoveChildrenY = fieldPaneMoveChildrenY;
     }
 
     public void calcZoom(int mapRadius, boolean customMap){
