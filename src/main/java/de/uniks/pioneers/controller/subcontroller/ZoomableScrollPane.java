@@ -3,6 +3,8 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.MapRenderService;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -10,7 +12,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 import javax.inject.Inject;
@@ -23,13 +27,13 @@ public class ZoomableScrollPane {
     private AnchorPane anchorPane;
     private Canvas canvas;
     private Pane fieldPane;
+    private InvalidationListener scrollPaneListener;
     final private Scale fieldScale = new Scale();
     private final GameStorage gameStorage;
     private final MapRenderService mapRenderService;
     private double mapWidth;
     private double mapHeight;
-    private double fieldPaneMoveCenterX;
-    private double fieldPaneMoveCenterY;
+    private boolean setScrollPaneListener;
 
     @Inject
     ZoomableScrollPane(GameStorage gameStorage, MapRenderService mapRenderService){
@@ -53,6 +57,8 @@ public class ZoomableScrollPane {
 
         this.fieldPane.getTransforms().add(fieldScale);
         this.mapRenderService.setGc(canvas.getGraphicsContext2D());
+
+        setScrollPaneListener = false;
     }
 
     public void render(){
@@ -63,11 +69,12 @@ public class ZoomableScrollPane {
         addMouseScrolling(anchorPane);
 
         Platform.runLater(mapRenderService::checkPoints);
-        this.anchorPane.heightProperty().addListener(observable -> scrollPane.setVvalue(0.5));
-        this.anchorPane.widthProperty().addListener(observable -> {
+
+        this.scrollPaneListener = observable -> {
+            scrollPane.setVvalue(0.5);
             scrollPane.setHvalue(0.5);
             Platform.runLater(mapRenderService::checkPoints);
-        });
+        };
     }
 
     public void zoomIn(){
@@ -93,6 +100,9 @@ public class ZoomableScrollPane {
 
             if(gameStorage.getMapRadius() < 2){
                 paddingTop = (MAP_HEIGHT - (gameStorage.getZoomedOut()*mapHeight))/2 + 2;
+            }
+            else if(gameStorage.isCustomMap()){
+                paddingLeft = 0;
             }
 
             fieldPane.setLayoutX(paddingLeft);
@@ -124,6 +134,12 @@ public class ZoomableScrollPane {
                         zoomOut();
                     } else {
                         zoomIn();
+
+                        if(!setScrollPaneListener){
+                            setScrollPaneListener = true;
+                            this.anchorPane.heightProperty().addListener(scrollPaneListener);
+                            this.anchorPane.widthProperty().addListener(scrollPaneListener);
+                        }
                     }
                 }
 
@@ -158,10 +174,9 @@ public class ZoomableScrollPane {
     }
 
     private void centerMap(){
+        //Find out top left and bottom right hex tile position
         Point2D startVal = mapRenderService.getTileControllers().get(0).getCenter();
         Point2D topLeft = startVal;
-        Point2D topRight = startVal;
-        Point2D bottomLeft = startVal;
         Point2D bottomRight = startVal;
 
         for(HexTileController hexTileController : mapRenderService.getTileControllers()){
@@ -169,34 +184,37 @@ public class ZoomableScrollPane {
 
             if(viewPos.getY() < topLeft.getY()){
                 topLeft = new Point2D(topLeft.getX(), viewPos.getY());
-                topRight = new Point2D(topRight.getX(), viewPos.getY());
             }
 
-            if(viewPos.getY() > bottomLeft.getY()){
-                bottomLeft = new Point2D(bottomLeft.getX(), viewPos.getY());
+            if(viewPos.getY() > bottomRight.getY()){
                 bottomRight = new Point2D(bottomRight.getX(), viewPos.getY());
             }
 
             if(viewPos.getX() < topLeft.getX()){
                 topLeft = new Point2D(viewPos.getX(), topLeft.getY());
-                bottomLeft = new Point2D(viewPos.getX(), bottomLeft.getY());
             }
 
-            if(viewPos.getX() > topRight.getX()){
-                topRight = new Point2D(viewPos.getX(), topRight.getY());
+            if(viewPos.getX() > bottomRight.getX()){
                 bottomRight = new Point2D(viewPos.getX(), bottomRight.getY());
             }
         }
 
-        Point2D center = new Point2D(topLeft.getX() + (topRight.getX()-topLeft.getX())/2, topLeft.getY() + (bottomLeft.getY()-topLeft.getY())/2);
-        Point2D paneCenter = new Point2D(fieldPane.getLayoutX() + fieldPane.getWidth()/2, fieldPane.getLayoutY() + fieldPane.getHeight()/2);
-
-        fieldPaneMoveCenterX = (paneCenter.getX() - center.getX());
-        fieldPaneMoveCenterY = (paneCenter.getY() - center.getY());
+        //Move fieldPane children to top left corner
+        double fieldPaneMoveChildrenX = (fieldPane.getLayoutX() + MAP_PADDING_X * 3 + gameStorage.getHexScale()- topLeft.getX());
+        double fieldPaneMoveChildrenY = (fieldPane.getLayoutY() + MAP_PADDING_Y * 3 + gameStorage.getHexScale() - topLeft.getY());
 
         for(Node n : fieldPane.getChildren()){
-            n.setLayoutX(n.getLayoutX() + fieldPaneMoveCenterX);
-            n.setLayoutY(n.getLayoutY() + fieldPaneMoveCenterY);
+            n.setLayoutX(n.getLayoutX() + fieldPaneMoveChildrenX);
+            n.setLayoutY(n.getLayoutY() + fieldPaneMoveChildrenY);
         }
+
+        //Reset fieldPane size
+        fieldPane.setPrefWidth((bottomRight.getX() - topLeft.getX()) + (MAP_PADDING_X * 3 + gameStorage.getHexScale())*2);
+        fieldPane.setPrefHeight((bottomRight.getY() - topLeft.getY()) + (MAP_PADDING_Y * 3 + gameStorage.getHexScale())*2);
+
+        gameStorage.setZoomedOut(Math.min(MAP_HEIGHT/fieldPane.getPrefHeight(), MAP_WIDTH/fieldPane.getPrefWidth()));
+        zoomOut();
+
+        //Center the fieldPane
     }
 }
