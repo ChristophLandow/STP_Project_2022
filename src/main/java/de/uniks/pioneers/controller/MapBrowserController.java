@@ -40,21 +40,19 @@ public class MapBrowserController implements Controller {
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<MapListController> mapListControllerProvider;
     @Inject Provider<MapDetailsController> mapDetailsControllerProvider;
-
-    @Inject
-    Provider<MapEditorController> mapEditorControllerProvider;
-
+    @Inject Provider<MapEditorController> mapEditorControllerProvider;
     @Inject PrefService prefService;
 
     @FXML private final App app;
-    @FXML
-    Button mapBrowserCreateButton;
-    @FXML
-    Button editMapButton;
+    private LobbyScreenController lobbyScreenController;
     private final StylesService stylesService;
     private MapListController mapListController;
 
     private final MapService mapService;
+    @FXML
+    Button mapBrowserCreateButton;
+    @FXML
+    Button editMapButton;
 
     @Inject
     public MapBrowserController(App app, StylesService stylesService, MapService mapService){
