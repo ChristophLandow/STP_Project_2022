@@ -107,6 +107,7 @@ public class BuildingPointController {
         node.setOnMouseClicked(null);
         node.setOnMouseEntered(null);
         node.setOnMouseExited(null);
+        undye(null);
 
         this.view.setFill(STANDARD_COLOR);
         if (this.building != null) {
