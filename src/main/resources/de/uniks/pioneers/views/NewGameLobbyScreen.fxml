@@ -100,17 +100,17 @@
                </VBox.margin>
              </HBox>
              <HBox prefHeight="43.0" prefWidth="349.0">
-                 <Label fx:id="boardSizeLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="134.0" text="Map:">
+                 <Label fx:id="boardSizeLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="67.0" text="Map:">
                     <font>
                         <Font size="16.0" />
                     </font>
                  </Label>
                  <Spinner fx:id="boardSizeSpinner" prefHeight="25.0" prefWidth="73.0" />
-               <Spinner fx:id="mapTemplateSpinner" prefHeight="25.0" prefWidth="130.0">
+               <ComboBox fx:id="mapComboBox" prefHeight="26.0" prefWidth="198.0">
                   <HBox.margin>
-                     <Insets left="13.0" />
+                     <Insets left="20.0" />
                   </HBox.margin>
-               </Spinner>
+               </ComboBox>
                <VBox.margin>
                   <Insets top="-9.0" />
                </VBox.margin>
