@@ -100,6 +100,7 @@ class ZoomableScrollPaneTest extends ApplicationTest {
         //double fieldPaneWidth = fieldPane.getPrefWidth();
         //double fieldPaneHeight = fieldPane.getPrefHeight();
         WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#timeLabel") != null);
         WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> !((Label) lookup("#timeLabel").query()).getText().equals(""));
 
         //Check if centerMap() from ZoomableScrollPane was called
