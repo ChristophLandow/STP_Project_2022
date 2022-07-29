@@ -14,8 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Circle;
-import javafx.scene.transform.Affine;
-import javafx.scene.transform.Rotate;
+import javafx.scene.shape.Rectangle;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class StreetPointController {
     private final IngameService ingameService;
 
     private final GameStorage gameStorage;
-    private final MapRenderService mapRenderService;
     private Pane fieldPane;
     public HexTile tile;
     private Circle view;
@@ -41,12 +39,11 @@ public class StreetPointController {
     private String action;
 
     @Inject
-    public StreetPointController(GameService gameService, ResourceService resourceService, IngameService ingameService, GameStorage gameStorage, MapRenderService mapRenderService) {
+    public StreetPointController(GameService gameService, ResourceService resourceService, IngameService ingameService, GameStorage gameStorage) {
         this.gameService = gameService;
         this.resourceService = resourceService;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
-        this.mapRenderService = mapRenderService;
     }
 
     public void post(HexTile tile, Circle view, Pane fieldPane) {
@@ -71,6 +68,8 @@ public class StreetPointController {
 
     public void addEventArea() {
         this.eventView.setId(uploadCoords[0] + "," + uploadCoords[1] + "," + uploadCoords[2] + "," + uploadCoords[3]);
+        this.eventView.setLayoutX(view.getLayoutX());
+        this.eventView.setLayoutY(view.getLayoutY());
         this.fieldPane.getChildren().add(eventView);
     }
 
@@ -130,30 +129,31 @@ public class StreetPointController {
     public void renderRoad(Building building) {
         if(this.view.getRadius() != 0) {
             Player player = gameService.players.get(building.owner());
-            double centerX = tile.x + this.fieldPane.getPrefWidth() / 2;
-            double centerY = -tile.y + this.fieldPane.getPrefHeight() / 2;
-
             double streetWidth = this.gameStorage.getHexScale() / 1.25;
             double streetHeight = this.gameStorage.getHexScale() / 8.3;
 
-            mapRenderService.getGc().save();
+            Rectangle street = new Rectangle(view.getLayoutX() - streetWidth/2,view.getLayoutY()- streetHeight/2,streetWidth,streetHeight);
+            street.setFill(Paint.valueOf(player.color()));
 
             if (building.side() == 3) {
-                mapRenderService.getGc().transform(new Affine(new Rotate(90, centerX, centerY)));
+                street.setRotate(90);
             } else if (building.side() == 7) {
-                mapRenderService.getGc().transform(new Affine(new Rotate(30, centerX, centerY)));
+                street.setRotate(30);
             } else {
-                mapRenderService.getGc().transform(new Affine(new Rotate(-30, centerX, centerY)));
+                street.setRotate(-30);
             }
 
-            mapRenderService.getGc().setFill(Paint.valueOf(player.color()));
-            mapRenderService.getGc().fillRect(centerX - streetWidth / 2, centerY - streetHeight / 2, streetWidth, streetHeight);
-
-            mapRenderService.getGc().restore();
+            fieldPane.getChildren().add(street);
 
             this.reset(this.eventView);
             this.view.setVisible(false);
             this.view.setRadius(0);
+
+            for(BuildingPointController bpController:adjacentBuildings){
+                if(bpController.displayedBuilding != null){
+                    bpController.displayedBuilding.toFront();
+                }
+            }
         }
     }
 

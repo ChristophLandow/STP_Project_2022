@@ -3,7 +3,6 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.model.Harbor;
 import de.uniks.pioneers.model.Tile;
 import de.uniks.pioneers.ws.EventListener;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
@@ -27,9 +26,10 @@ public class GameStorage {
     private double hexRadiusFactor = 3;
     private double zoomedIn = 1.4;
     private double zoomedOut = 1;
-    public String selectedBuilding = "";
 
-    public SimpleBooleanProperty resizePaneForCustomMap = new SimpleBooleanProperty(false);
+    private double fieldPaneMoveChildrenX;
+    private double fieldPaneMoveChildrenY;
+    public String selectedBuilding = "";
     public ObservableMap<String, Integer> remainingBuildings = FXCollections.observableHashMap();
 
     @Inject
@@ -65,8 +65,16 @@ public class GameStorage {
         return this.zoomedOut;
     }
 
-    public SimpleBooleanProperty getResizePaneForCustomMap(){
-        return this.resizePaneForCustomMap;
+    public double getFieldPaneMoveChildrenX() {
+        return fieldPaneMoveChildrenX;
+    }
+
+    public double getFieldPaneMoveChildrenY() {
+        return fieldPaneMoveChildrenY;
+    }
+
+    public boolean isCustomMap() {
+        return customMap;
     }
 
     public void setMap(List<Tile> map) {
@@ -81,8 +89,19 @@ public class GameStorage {
         this.harbors = harbors;
     }
 
+    public void setZoomedOut(double zoomedOut) {
+        this.zoomedOut = zoomedOut;
+    }
+
+    public void setFieldPaneMoveChildrenX(double fieldPaneMoveChildrenX) {
+        this.fieldPaneMoveChildrenX = fieldPaneMoveChildrenX;
+    }
+
+    public void setFieldPaneMoveChildrenY(double fieldPaneMoveChildrenY) {
+        this.fieldPaneMoveChildrenY = fieldPaneMoveChildrenY;
+    }
+
     public void calcZoom(int mapRadius, boolean customMap){
-        resizePaneForCustomMap.set(false);
         this.customMap = customMap;
 
         if(customMap){
@@ -142,7 +161,6 @@ public class GameStorage {
             mapHeight = mapRadius * hexagonHeight + (mapRadius + 1) * hexScale + hexScale + MAP_PADDING_Y + hexScale;
         }
         this.zoomedOut = (MAP_HEIGHT / mapHeight);
-        resizePaneForCustomMap.set(true);
     }
 
     public void addToTradeOptions(String tradeOption) {

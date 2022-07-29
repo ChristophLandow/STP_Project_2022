@@ -5,7 +5,6 @@ import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.Game;
-import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.Member;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
