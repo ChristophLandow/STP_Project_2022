@@ -95,6 +95,7 @@ class ZoomableScrollPaneTest extends ApplicationTest {
         //IngameScreen
         WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#fieldPane") != null);
         WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#fieldPane").query().isVisible());
+        sleep(300);
         Pane fieldPane = lookup("#fieldPane").query();
         double fieldPaneWidth = fieldPane.getPrefWidth();
         double fieldPaneHeight = fieldPane.getPrefHeight();
