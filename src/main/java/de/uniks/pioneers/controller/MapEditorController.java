@@ -4,8 +4,6 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
-import de.uniks.pioneers.model.HarborTemplate;
-import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.services.MapService;
 import de.uniks.pioneers.services.UserService;
@@ -13,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -74,16 +71,17 @@ public class MapEditorController implements Controller{
 
     private final App app;
 
+    private final Provider<MapBrowserController> mapBrowserControllerProvider;
+
 
 
     @Inject
-    public MapEditorController(EditorManager editorManager, MapService mapService, UserService userService, App app){
+    public MapEditorController(MapService mapService, App app, Provider<MapBrowserController> mapBrowserControllerProvider){
 
-        this.editorManager = editorManager;
         this.mapService = mapService;
         this.app = app;
+        this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.boardGenerator = new BoardGenerator();
-        init();
 
     }
 
@@ -161,7 +159,7 @@ public class MapEditorController implements Controller{
                     (-Math.sqrt(3)/2)*scale,-0.5*scale,
                     (-Math.sqrt(3)/2)*scale,0.5*scale);
 
-            if(hexTile.type != ""){
+            if(!hexTile.type.equals("")){
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + hexTile.type + ".png")).toString());
 
                 tile.setFill(new ImagePattern(image));
@@ -208,7 +206,7 @@ public class MapEditorController implements Controller{
     public void toMaps(){
     }
     public void save(ActionEvent event){
-        mapService.updateOrCreateMap();
+        mapService.updateOrCreateMap(tiles);
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         this.app.show(mapBrowserController);
     }
@@ -336,11 +334,4 @@ public class MapEditorController implements Controller{
         this.selection = "harbour_ore";
     }
 
-    private void handleSaveError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error Dialog");
-        alert.setHeaderText("Map-Saving-Error");
-        alert.setContentText("You need to create this map first");
-        alert.showAndWait();
-    }
 }
