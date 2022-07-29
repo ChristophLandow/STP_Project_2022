@@ -11,6 +11,7 @@ import de.uniks.pioneers.model.GameSettings;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.Member;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
@@ -94,12 +95,11 @@ class ZoomableScrollPaneTest extends ApplicationTest {
         //IngameScreen
         WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#fieldPane") != null);
         WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#fieldPane").query().isVisible());
-        //sleep(500);
         Pane fieldPane = lookup("#fieldPane").query();
         double fieldPaneWidth = fieldPane.getPrefWidth();
         double fieldPaneHeight = fieldPane.getPrefHeight();
         WaitForAsyncUtils.waitForFxEvents();
-        sleep(1000);
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> !((Label) lookup("#timeLabel").query()).getText().equals(""));
 
         //Check if centerMap() from ZoomableScrollPane was called
         assertNotEquals(fieldPaneWidth, fieldPane.getPrefWidth());
