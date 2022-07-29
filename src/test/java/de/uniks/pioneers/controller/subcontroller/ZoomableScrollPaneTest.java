@@ -79,7 +79,6 @@ class ZoomableScrollPaneTest extends ApplicationTest {
         write("\t\t\t");
         type(KeyCode.SPACE);
         type(KeyCode.DOWN);
-        sleep(1000);
         write("\t\t");
         type(KeyCode.ENTER);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "003", "A", "Hallo Test Test")));
