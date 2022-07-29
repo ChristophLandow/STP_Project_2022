@@ -290,7 +290,7 @@ public class BoardController {
         mapRenderService.getGc().drawImage(image, layoutX - hexagonWidth/2, layoutY - hexagonHeight/2, hexagonWidth, hexagonHeight);
 
         //Render number image
-        if(!type.equals("desert")) {
+        if(!type.equals("desert") && number >= 2) {
             String numberURL = "ingame/tile_" + number + ".png";
             Image numberImg = new Image(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
 
