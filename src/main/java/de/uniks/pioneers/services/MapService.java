@@ -66,14 +66,12 @@ public class MapService {
                         .observeOn(FX_SCHEDULER)
                         .doOnError(err -> handleSaveError())
                         .subscribe();
-                System.out.println("nicht deine Map");
             }
         } else {
             this.createMap("Testus-Maximus-ultra-deluxe", null, "kein Bock auf Beschriebung", tileTemplates, harbors)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(err -> handleSaveError())
                     .subscribe();
-            System.out.println("neue Map erstellt");
         }
     }
 
