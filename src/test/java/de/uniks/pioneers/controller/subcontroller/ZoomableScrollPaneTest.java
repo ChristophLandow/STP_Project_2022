@@ -99,14 +99,15 @@ class ZoomableScrollPaneTest extends ApplicationTest {
         //Pane fieldPane = lookup("#fieldPane").query();
         //double fieldPaneWidth = fieldPane.getPrefWidth();
         //double fieldPaneHeight = fieldPane.getPrefHeight();
-        WaitForAsyncUtils.waitForFxEvents();
-        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#timeLabel") != null);
-        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> !((Label) lookup("#timeLabel").query()).getText().equals(""));
+        //WaitForAsyncUtils.waitForFxEvents();
+        //WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#timeLabel") != null);
+        //WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> !((Label) lookup("#timeLabel").query()).getText().equals(""));
 
         //Check if centerMap() from ZoomableScrollPane was called
         //assertNotEquals(fieldPaneWidth, fieldPane.getPrefWidth());
         //assertNotEquals(fieldPaneHeight, fieldPane.getPrefHeight());
 
+        sleep(2000);
         Pane fieldPane = lookup("#fieldPane").query();
         Scale fieldScale = (Scale) fieldPane.getTransforms().get(0);
         assertNotEquals(fieldScale.getX(), 1);
