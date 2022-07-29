@@ -23,6 +23,9 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -39,7 +42,7 @@ class ZoomableScrollPaneTest extends ApplicationTest {
 
     @Test
     public void
-    test() {
+    test() throws TimeoutException {
         //LoginScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("TestUser\t");
@@ -79,8 +82,9 @@ class ZoomableScrollPaneTest extends ApplicationTest {
         write("\t\t\t");
         type(KeyCode.SPACE);
         type(KeyCode.DOWN);
-        sleep(1000);
         write("\t\t");
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> !lookup("#readyButton").query().isDisable());
+
         type(KeyCode.ENTER);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "003", "A", "Hallo Test Test")));
         write("\t");
@@ -88,7 +92,9 @@ class ZoomableScrollPaneTest extends ApplicationTest {
         type(KeyCode.ENTER);
 
         //IngameScreen
-        sleep(300);
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#fieldPane") != null);
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#fieldPane").query().isVisible());
+        //sleep(500);
         Pane fieldPane = lookup("#fieldPane").query();
         double fieldPaneWidth = fieldPane.getPrefWidth();
         double fieldPaneHeight = fieldPane.getPrefHeight();
