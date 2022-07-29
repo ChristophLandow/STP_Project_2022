@@ -4,17 +4,12 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.DaggerTestComponent;
 import de.uniks.pioneers.MainComponent;
 import de.uniks.pioneers.TestModule;
-import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.GameSettings;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.Member;
-import de.uniks.pioneers.rest.MapApiService;
-import de.uniks.pioneers.services.GameStorage;
-import io.reactivex.rxjava3.core.Observable;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -22,17 +17,13 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
-import org.testfx.matcher.control.TextMatchers;
 import org.testfx.util.WaitForAsyncUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.testfx.api.FxAssert.verifyThat;
 
 @ExtendWith(MockitoExtension.class)
