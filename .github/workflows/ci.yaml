@@ -19,7 +19,7 @@ jobs:
           java-version: 17
           java-package: jdk
       - name: Set up fontconfig
-        run: apt-get -y update && apt-get -y install fontconfig libpangoft2-1.0-0
+        run: sudo apt-get -y update && sudo apt-get -y install fontconfig libpangoft2-1.0-0
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
