@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
@@ -53,6 +54,14 @@ public class EditTile {
         makeVisible(true);
 
         if(!this.mapEditorController.selection.equals("")) {
+
+            if(this.mapEditorController.selection.equals("DELETE")){
+                this.view.setFill(Paint.valueOf("#2D9BE7"));
+                this.view.setStroke(Paint.valueOf("#000000"));
+                this.hexTile.type = "";
+
+                return;
+            }
 
             if(this.mapEditorController.selection.endsWith("num")){
                 this.hexTile.number = Integer.parseInt(this.mapEditorController.selection.replace("num", ""));

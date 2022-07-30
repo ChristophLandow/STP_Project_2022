@@ -204,6 +204,8 @@ public class MapEditorController implements Controller{
     }
 
     public void toMaps(){
+        MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
+        this.app.show(mapBrowserController);
     }
     public void save(ActionEvent event){
         mapService.updateOrCreateMap(tiles);
@@ -334,4 +336,10 @@ public class MapEditorController implements Controller{
         this.selection = "harbour_ore";
     }
 
+    public void selectDelete(ActionEvent actionEvent) {
+        this.selection = "DELETE";
+    }
+
+    public void randomize(ActionEvent actionEvent) {
+    }
 }
