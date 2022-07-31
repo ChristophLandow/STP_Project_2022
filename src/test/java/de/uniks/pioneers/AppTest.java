@@ -92,7 +92,7 @@ class AppTest extends ApplicationTest {
 
         //NewGameLobbyScreen
         WaitForAsyncUtils.waitForFxEvents();
-        verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame "));
+        verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame"));
         verifyThat("#passwordLabel", LabeledMatchers.hasText("12345678"));
         TestModule.gameMemberSubject.onNext(new Event<>(".created", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "001", false, "#ffffff", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".created", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "002", false, "#000000", false)));
