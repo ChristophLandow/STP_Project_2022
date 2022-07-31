@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import de.uniks.pioneers.services.MapService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.image.Image;
@@ -31,10 +32,13 @@ public class MapDetailsController {
     private final MapBrowserService mapBrowserService;
     private final UserService userService;
 
+    private final MapService mapService;
+
     @Inject
-    public MapDetailsController(MapBrowserService mapBrowserService, UserService userService) {
+    public MapDetailsController(MapBrowserService mapBrowserService, UserService userService, MapService mapService) {
         this.mapBrowserService = mapBrowserService;
         this.userService = userService;
+        this.mapService = mapService;
     }
 
     public MapDetailsController setMapPreviewPane(Pane mapPreviewPane) {
@@ -54,6 +58,9 @@ public class MapDetailsController {
     }
 
     private void setLabels(MapTemplate mapTemplate) {
+        //set current map
+        mapService.setCurrentMap(mapTemplate);
+        //set Labels
         lastUpdatedOutputText.setText(toDateTimeString(mapTemplate.updatedAt()));
         votesOutputText.setText(String.valueOf(mapTemplate.votes()));
         tilesOutputText.setText(String.valueOf(mapTemplate.tiles().size()));
