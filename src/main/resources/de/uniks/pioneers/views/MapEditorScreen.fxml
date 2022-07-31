@@ -74,52 +74,52 @@
             <Circle fx:id="Circle10" fill="DODGERBLUE" layoutX="157.0" layoutY="71.0" onMouseClicked="#select10" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
             <Circle fx:id="Circle11" fill="DODGERBLUE" layoutX="195.0" layoutY="71.0" onMouseClicked="#select11" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
             <Circle fx:id="Circle12" fill="DODGERBLUE" layoutX="233.0" layoutY="71.0" onMouseClicked="#select12" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
-            <Text layoutX="115.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2" textOrigin="CENTER">
+            <Text layoutX="115.0" layoutY="28.0" onMouseClicked="#select2" strokeType="OUTSIDE" strokeWidth="0.0" text="2" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="152.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3" textOrigin="CENTER">
+            <Text layoutX="152.0" layoutY="28.0" onMouseClicked="#select3" strokeType="OUTSIDE" strokeWidth="0.0" text="3" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="190.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4" textOrigin="CENTER">
+            <Text layoutX="190.0" layoutY="28.0" onMouseClicked="#select4" strokeType="OUTSIDE" strokeWidth="0.0" text="4" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="228.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textOrigin="CENTER">
+            <Text layoutX="228.0" layoutY="28.0" onMouseClicked="#select5" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="37.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="6" textOrigin="CENTER">
+            <Text layoutX="37.0" layoutY="71.0" onMouseClicked="#select6" strokeType="OUTSIDE" strokeWidth="0.0" text="6" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="76.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="8" textOrigin="CENTER">
+            <Text layoutX="76.0" layoutY="71.0" onMouseClicked="#select8" strokeType="OUTSIDE" strokeWidth="0.0" text="8" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="115.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="9" textOrigin="CENTER">
+            <Text layoutX="115.0" layoutY="71.0" onMouseClicked="#select9" strokeType="OUTSIDE" strokeWidth="0.0" text="9" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="147.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10" textOrigin="CENTER">
+            <Text layoutX="147.0" layoutY="71.0" onMouseClicked="#select10" strokeType="OUTSIDE" strokeWidth="0.0" text="10" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="185.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textOrigin="CENTER">
+            <Text layoutX="185.0" layoutY="71.0" onMouseClicked="#select11" strokeType="OUTSIDE" strokeWidth="0.0" text="11" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="223.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="12" textOrigin="CENTER">
+            <Text layoutX="223.0" layoutY="71.0" onMouseClicked="#select12" strokeType="OUTSIDE" strokeWidth="0.0" text="12" textOrigin="CENTER">
                <font>
                   <Font size="18.0" />
                </font>

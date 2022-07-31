@@ -32,6 +32,8 @@ public class EditTile {
     public int currentHarborSide = 0;
     public String currentHarborType = "";
 
+    public boolean active = true;
+
     public EditTile(HexTile hexTile, Polygon view, ImageView numberView, MapEditorController mapEditorController){
 
         this.hexTile = hexTile;
@@ -47,6 +49,13 @@ public class EditTile {
     private void init(){
 
         this.view.setOnMouseClicked(this::place);
+        this.numberView.setOnMouseClicked(this::numberClicked);
+    }
+
+    private void numberClicked(MouseEvent mouseEvent) {
+        if(this.mapEditorController.selection.equals("DELETE")){this.numberView.setImage(null);}
+        else{place(null);}
+
     }
 
     public void place(MouseEvent mouseEvent) {
