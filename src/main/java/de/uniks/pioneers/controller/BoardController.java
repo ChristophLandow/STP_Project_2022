@@ -34,6 +34,7 @@ public class BoardController {
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
     private final IngameService ingameService;
+    private final IngameSelectController ingameSelectController;
     private final GameService gameService;
     private final UserService userService;
     private final ResourceService resourceService;
@@ -44,9 +45,10 @@ public class BoardController {
 
     BoardGenerator generator = new BoardGenerator();
 
-    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game,
+    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game, IngameSelectController ingameSelectController,
                            GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
         this.ingameService = ingameService;
+        this.ingameSelectController = ingameSelectController;
         this.gameService = gameService;
         this.userService = userService;
         this.gameStorage = gameStorage;
@@ -211,7 +213,7 @@ public class BoardController {
         circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
         circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
         this.fieldPane.getChildren().add(circ);
-        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService, this.resourceService);
+        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.ingameSelectController, this.userService, this.resourceService);
         this.buildingControllers.add(newbuildingPointController);
     }
 
@@ -270,7 +272,7 @@ public class BoardController {
     public void enableStreetPoints(String action) {
         for (StreetPointController controller : streetPointControllerHashMap.values()) {
             controller.setAction(action);
-            controller.init();
+            controller.init(ingameSelectController);
         }
     }
     public void enableBuildingPoints(String action) {

@@ -11,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Objects;
@@ -22,7 +21,6 @@ import static de.uniks.pioneers.GameConstants.FOUNDING_ROLL;
 import static de.uniks.pioneers.GameConstants.ROLL;
 
 public class DiceSubcontroller {
-
     @Inject
     Provider<RobberController> robberControllerProvider;
     private ImageView leftDiceView;
