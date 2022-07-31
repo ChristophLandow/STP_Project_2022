@@ -6,7 +6,6 @@ import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.services.MapService;
-import de.uniks.pioneers.services.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +20,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;

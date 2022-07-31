@@ -169,7 +169,6 @@ public class IngamePlayerResourcesController {
     }
 
     private void invokeResourceElement(String type, Integer valueAdded) {
-        System.out.println(type + " " + valueAdded);
         Label lbl = resourceLabelMap.get(type);
         resourcesHBox.getChildren().add(resourcePaneMap.get(type));
         lbl.setText(String.valueOf(valueAdded));
