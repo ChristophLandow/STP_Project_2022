@@ -129,6 +129,8 @@ public class MapEditorController implements Controller{
         this.tileViews.clear();
         this.selection = "";
 
+        for(EditTile oldTile : this.tiles){oldTile.active = false;}
+
         for(HexTile hexTile : this.frame){
 
             int harborOption = 0;
@@ -150,7 +152,7 @@ public class MapEditorController implements Controller{
             }
 
             Polygon tile = new Polygon();
-            tile.getPoints().addAll(0.0*scale, 1.0*scale,
+            tile.getPoints().addAll(0.0*scale, scale,
                     (Math.sqrt(3)/2)*scale,0.5*scale,
                     (Math.sqrt(3)/2)*scale,-0.5*scale,
                     0.0*scale,-1.0*scale,
@@ -166,10 +168,10 @@ public class MapEditorController implements Controller{
                 tile.setStroke(Paint.valueOf("#000000"));
             }
             ImageView numberView = new ImageView();
-            numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 335);
-            numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 335);
-            numberView.setScaleX(0.03);
-            numberView.setScaleY(0.03);
+            numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 33);
+            numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 33);
+            numberView.setScaleX(scale*0.01);
+            numberView.setScaleY(scale*0.01);
             if(hexTile.number != 0){
 
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + hexTile.number + ".png")).toString());
@@ -202,6 +204,8 @@ public class MapEditorController implements Controller{
     }
 
     public void toMaps(){
+        MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
+        this.app.show(mapBrowserController);
     }
     public void save(ActionEvent event){
         mapService.updateOrCreateMap(tiles);
@@ -209,7 +213,29 @@ public class MapEditorController implements Controller{
         this.app.show(mapBrowserController);
     }
 
+    public void randomize(ActionEvent actionEvent) {
+        for(EditTile tile : this.tiles){
+            if(tile.active){
+                if(tile.hexTile.number == 0){
+                    this.selection = randomNumber();
+                    tile.place(null);}
+                if(tile.hexTile.type.equals("")){
+                    this.selection = randomType();
+                    tile.place(null);}}
+            this.selection = "";
+        }
+    }
 
+    private String randomNumber(){
+        String[] numbers = {"2num", "3num", "4num", "5num", "6num", "8num", "9num", "10num", "11num", "12num"};
+        return numbers[(int) (Math.random()*numbers.length)];
+    }
+    private String randomType(){
+        String[] types = {"fields", "hills", "forest", "pasture", "mountains", "desert"};
+        return types[(int) (Math.random()*types.length)];
+    }
+
+//-----SELECTION METHODS-----
     public void selectWhale(MouseEvent mouseEvent) {
         this.selection = "fields";
         resetSelection();
@@ -330,6 +356,10 @@ public class MapEditorController implements Controller{
 
     public void selectHarborCoal(MouseEvent mouseEvent) {
         this.selection = "harbour_ore";
+    }
+
+    public void selectDelete(ActionEvent actionEvent) {
+        this.selection = "DELETE";
     }
 
 }
