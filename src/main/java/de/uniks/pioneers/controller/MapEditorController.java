@@ -213,7 +213,7 @@ public class MapEditorController implements Controller{
         this.app.show(mapBrowserController);
     }
 
-
+//-----SELECTION METHODS-----
     public void selectWhale(MouseEvent mouseEvent) {
         this.selection = "fields";
         resetSelection();
@@ -341,5 +341,24 @@ public class MapEditorController implements Controller{
     }
 
     public void randomize(ActionEvent actionEvent) {
+        for(EditTile tile : this.tiles){
+            if(tile.hexTile.number == 0){
+                this.selection = randomNumber();
+                tile.place(null);}
+            if(tile.hexTile.type == ""){
+                this.selection = randomType();
+                tile.place(null);}
+            this.selection = "";
+        }
+
+    }
+
+    private String randomNumber(){
+        String[] numbers = {"2num", "3num", "4num", "5num", "6num", "8num", "9num", "10num", "11num", "12num"};
+        return numbers[(int) (Math.random()*numbers.length)];
+    }
+    private String randomType(){
+        String[] types = {"fields", "hills", "forest", "pasture", "mountains", "desert"};
+        return types[(int) (Math.random()*types.length)];
     }
 }

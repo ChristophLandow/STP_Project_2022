@@ -49,7 +49,7 @@ public class EditTile {
         this.view.setOnMouseClicked(this::place);
     }
 
-    private void place(MouseEvent mouseEvent) {
+    public void place(MouseEvent mouseEvent) {
 
         makeVisible(true);
 
