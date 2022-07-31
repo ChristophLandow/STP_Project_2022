@@ -100,7 +100,7 @@
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="21.0" layoutY="2959.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically." wrappingWidth="756.205078125">
+         <Text layoutX="21.0" layoutY="2959.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically. ToDo" wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
