@@ -143,7 +143,13 @@ public class IngamePlayerListElementController {
 
     private void setDataToElement(Player valueAdded) {
         Resources resources = valueAdded.resources();
-        int resourceCount = resources.brick() + resources.grain() + resources.ore() + resources.lumber() + resources.wool();
+        int resourceCount;
+
+        if(valueAdded.userId().equals(userService.getCurrentUser()._id())) {
+            resourceCount = resources.brick() + resources.grain() + resources.ore() + resources.lumber() + resources.wool();
+        } else {
+            resourceCount = resources.unknown();
+        }
 
         if (valueAdded.remainingBuildings().city()==0){
             cityCount.setTextFill(Color.RED);

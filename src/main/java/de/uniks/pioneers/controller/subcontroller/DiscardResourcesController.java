@@ -127,6 +127,8 @@ public class DiscardResourcesController implements Initializable, Controller {
         this.stage.setTitle("Discard resource cards");
         Scene scene = new Scene(node);
         this.stage.setScene(scene);
+        this.stage.setOnCloseRequest(event -> event.consume());
+
         if(prefService.getDarkModeState()){
             scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DiscardResourcesPopup.css")));
             scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css");
@@ -134,6 +136,7 @@ public class DiscardResourcesController implements Initializable, Controller {
             scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css")));
             scene.getStylesheets().add("/de/uniks/pioneers/styles/DiscardResourcesPopup.css");
         }
+
         this.stage.show();
     }
 
