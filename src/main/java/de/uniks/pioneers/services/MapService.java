@@ -1,7 +1,6 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.controller.subcontroller.EditTile;
-import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.dto.CreateMapTemplateDto;
 import de.uniks.pioneers.dto.UpdateMapTemplateDto;
 import de.uniks.pioneers.model.HarborTemplate;
@@ -10,7 +9,7 @@ import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.rest.MapApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Alert;
-import javafx.scene.shape.Polygon;
+
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -79,7 +78,7 @@ public class MapService {
     public List<TileTemplate> getTiles(List<EditTile> editTiles) {
         List<TileTemplate> tiles = new ArrayList<>();
         for (EditTile et : editTiles) {
-            if (!et.hexTile.type.equals("")) {
+            if (!et.hexTile.type.equals("") && et.active) {
                 int x = et.hexTile.q;
                 int y = et.hexTile.r;
                 int z = et.hexTile.s;
@@ -96,7 +95,7 @@ public class MapService {
         List<HarborTemplate> harbors = new ArrayList<>();
         for (EditTile et : editTiles) {
             //check if there is a harbor
-            if (!et.currentHarborType.equals("")){
+            if (!et.currentHarborType.equals("") && et.active){
                 int x = et.hexTile.q;
                 int y = et.hexTile.r;
                 int z = et.hexTile.s;
