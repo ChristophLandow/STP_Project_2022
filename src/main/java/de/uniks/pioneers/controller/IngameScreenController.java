@@ -94,7 +94,7 @@ public class IngameScreenController implements Controller {
     private final ChangeListener<Boolean> finishedMapRenderListener;
     private TradeOfferPopUpController tradeOfferPopUpController;
     public IngameDevelopmentCardController ingameDevelopmentCardController;
-    private IngameSelectController ingameSelectController;
+    public IngameSelectController ingameSelectController;
 
 
     @Inject
