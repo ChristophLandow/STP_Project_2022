@@ -8,6 +8,7 @@ import java.util.List;
 public record CreateMapTemplateDto(
         String name,
         String icon,
+        String description,
         List<TileTemplate> tiles,
         List<HarborTemplate> harbors
 ) {
