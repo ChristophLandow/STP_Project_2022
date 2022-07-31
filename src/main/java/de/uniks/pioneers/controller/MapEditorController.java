@@ -6,7 +6,6 @@ import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.services.MapService;
-import de.uniks.pioneers.services.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +20,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -154,7 +152,7 @@ public class MapEditorController implements Controller{
             }
 
             Polygon tile = new Polygon();
-            tile.getPoints().addAll(0.0*scale, 1.0*scale,
+            tile.getPoints().addAll(0.0*scale, scale,
                     (Math.sqrt(3)/2)*scale,0.5*scale,
                     (Math.sqrt(3)/2)*scale,-0.5*scale,
                     0.0*scale,-1.0*scale,
@@ -221,12 +219,11 @@ public class MapEditorController implements Controller{
                 if(tile.hexTile.number == 0){
                     this.selection = randomNumber();
                     tile.place(null);}
-                if(tile.hexTile.type == ""){
+                if(tile.hexTile.type.equals("")){
                     this.selection = randomType();
                     tile.place(null);}}
             this.selection = "";
         }
-
     }
 
     private String randomNumber(){
