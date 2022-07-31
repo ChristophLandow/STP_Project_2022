@@ -1,11 +1,12 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.controller.subcontroller.IngameDevelopmentCardController;
+import de.uniks.pioneers.controller.subcontroller.IngameSelectController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Timer;
@@ -26,18 +27,25 @@ public class TimerService {
     private long remainingTime;
     private long remainingTurnTime;
     private int remainingTradeTime;
-
     private final IngameService ingameService;
     private final GameService gameService;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private TimerTask countdownTimerTask;
     private TimerTask buildTimerTask;
     private TimerTask tradeCountdownTimerTask;
+    private IngameSelectController ingameSelectController;
+    private IngameDevelopmentCardController ingameDevelopmentCardController;
 
     @Inject
     public TimerService(IngameService ingameService, GameService gameService) {
         this.ingameService = ingameService;
         this.gameService = gameService;
+    }
+
+    public void init(IngameSelectController ingameSelectController, IngameDevelopmentCardController ingameDevelopmentCardController) {
+
+        this.ingameSelectController = ingameSelectController;
+        this.ingameDevelopmentCardController = ingameDevelopmentCardController;
     }
 
     public boolean timeUp() { return timeUp; }
@@ -72,6 +80,8 @@ public class TimerService {
                         .observeOn(FX_SCHEDULER)
                         .subscribe(move -> {
                             timeUp = true;
+                            ingameSelectController.resetSelect();
+                            ingameDevelopmentCardController.resetSelect();
                             this.cancel();
                             reset();
                             Alert alert = new Alert(Alert.AlertType.WARNING);

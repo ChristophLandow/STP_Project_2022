@@ -37,8 +37,10 @@ public class IngameDevelopmentCardController {
     }
 
     private void onHammerClicked(MouseEvent mouseEvent) {
-        changeVisibility();
-        changeHammerBorder();
+        if(ingameService.getExpectedMove().action().equals("build")) {
+            changeVisibility();
+            changeHammerBorder();
+        }
     }
 
 
@@ -71,5 +73,11 @@ public class IngameDevelopmentCardController {
         } else {
             hammerPane.setStyle("-fx-border-width: 1; -fx-border-color: black");
         }
+    }
+
+    public void resetSelect() {
+        hammerPane.setStyle("-fx-border-width: 1; -fx-border-color: black");
+        leftPane.setVisible(false);
+        rightPane.setVisible(false);
     }
 }

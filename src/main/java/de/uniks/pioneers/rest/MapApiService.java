@@ -4,7 +4,6 @@ import de.uniks.pioneers.dto.CreateMapTemplateDto;
 import de.uniks.pioneers.dto.UpdateMapTemplateDto;
 import de.uniks.pioneers.model.MapTemplate;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.DELETE;
 import retrofit2.http.*;
 
 import java.util.List;

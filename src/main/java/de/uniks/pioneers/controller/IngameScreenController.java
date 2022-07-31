@@ -94,6 +94,7 @@ public class IngameScreenController implements Controller {
     private final ChangeListener<Boolean> finishedMapRenderListener;
     private TradeOfferPopUpController tradeOfferPopUpController;
     public IngameDevelopmentCardController ingameDevelopmentCardController;
+    public IngameSelectController ingameSelectController;
 
 
     @Inject
@@ -111,7 +112,8 @@ public class IngameScreenController implements Controller {
         this.speechService = speechService;
         this.stylesService = stylesService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
-        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, resourceService, mapRenderService);
+        this.ingameSelectController = new IngameSelectController();
+        this.boardController = new BoardController(ingameService, userService, game, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
             if (mapRenderService.isFinishedLoading().get()) Platform.runLater(this::initWhenMapFinishedRendering);
@@ -157,7 +159,7 @@ public class IngameScreenController implements Controller {
         gameService.game.set(game.get());
 
         // init game chat controller
-        gameChatController.setChatScrollPane(this.chatScrollPane);
+        gameChatController.setChatScrollPane(this.chatScrollPane, true);
         gameChatController.setMessageText(this.sendMessageField);
         gameChatController.setMessageBox(this.messageVBox);
         gameChatController.setGame(this.game.get());
@@ -166,7 +168,7 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        new IngameSelectController(gameStorage, roadFrame, settlementFrame, cityFrame, streetSVG, houseSVG, citySVG);
+        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
 
         this.mapRenderService.isFinishedLoading().addListener(finishedMapRenderListener);
@@ -184,8 +186,9 @@ public class IngameScreenController implements Controller {
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService, robberService, speechService);
-
+        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, resourceService);
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController);
+        this.timerService.init(ingameSelectController, ingameDevelopmentCardController);
         // init game attributes and event listeners
         gameService.initGame();
 
@@ -259,8 +262,6 @@ public class IngameScreenController implements Controller {
         // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
-
-        ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, resourceService);
     }
 
     private void renderBuilding(Building building) {

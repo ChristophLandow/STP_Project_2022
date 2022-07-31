@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.GRAIN;
 
 @Singleton
 public class ResourceService {

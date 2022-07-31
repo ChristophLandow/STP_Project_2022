@@ -25,6 +25,7 @@ public class IngameStateController {
     private final UserService userService;
     private final IngameService ingameService;
     private final TimerService timerService;
+    private final IngameSelectController ingameSelectController;
     private final MapRenderService mapRenderService;
     private final BoardController boardController;
     private final Pane turnPane;
@@ -32,17 +33,19 @@ public class IngameStateController {
     private final Label situationLabel;
     private final DiceSubcontroller diceSubcontroller;
     private final Game game;
+    private final IngameDevelopmentCardController ingameDevelopmentCardController;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final RobberService robberService;
     private final SpeechService speechService;
 
     public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane,
-                                 ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game,
-                                 MapRenderService mapRenderService, RobberService robberService, SpeechService speechService) {
+                                 ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, IngameSelectController ingameSelectController,
+                                 MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, IngameDevelopmentCardController ingameDevelopmentCardController) {
         this.userService = userService;
         this.ingameService = ingameService;
         this.timerService = timerService;
+        this.ingameSelectController = ingameSelectController;
         this.mapRenderService = mapRenderService;
         this.robberService = robberService;
         this.speechService = speechService;
@@ -52,6 +55,7 @@ public class IngameStateController {
         this.situationLabel = situationLabel;
         this.diceSubcontroller = diceSubcontroller;
         this.game = game;
+        this.ingameDevelopmentCardController = ingameDevelopmentCardController;
     }
 
     public void handleGameState(State currentState) {
@@ -128,6 +132,8 @@ public class IngameStateController {
     }
 
     private void endTurn(MouseEvent mouseEvent) {
+        ingameSelectController.resetSelect();
+        ingameDevelopmentCardController.resetSelect();
         final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null, null);
         disposable.add(ingameService.postMove(game._id(), moveDto)
                 .observeOn(FX_SCHEDULER)

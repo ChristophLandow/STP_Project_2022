@@ -18,7 +18,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-
 import javax.inject.Inject;
 import java.util.ArrayList;
 
@@ -31,6 +30,7 @@ public class StreetPointController {
     private final IngameService ingameService;
 
     private final GameStorage gameStorage;
+    private IngameSelectController ingameSelectController;
     private Pane fieldPane;
     public HexTile tile;
     private Circle view;
@@ -61,8 +61,9 @@ public class StreetPointController {
         this.eventView.setOpacity(0);
     }
 
-    public void init() {
+    public void init(IngameSelectController ingameSelectController) {
         checkIfMouseInsideView();
+        this.ingameSelectController = ingameSelectController;
 
         this.eventView.setOnMouseClicked(this::placeStreet);
         this.eventView.setOnMouseEntered(this::dye);
@@ -84,7 +85,7 @@ public class StreetPointController {
         } else {
             if (gameStorage.remainingBuildings.get(ROAD) >= 1 && resourceService.checkRoad()) {
                 valid = checkRoads() || checkBuildings();
-            }else {
+            } else {
                 valid = false;
             }
         }
@@ -99,6 +100,8 @@ public class StreetPointController {
                         fieldPane.getChildren().forEach(this::reset);
                     }));
         }
+
+        ingameSelectController.resetSelect();
     }
 
     private boolean checkBuildings() {
@@ -111,7 +114,7 @@ public class StreetPointController {
         }
     }
 
-    private Boolean checkRoads() {
+    public Boolean checkRoads() {
         if (uploadCoords[3] == 3) {
             return gameService.isValidFromThree(this.uploadCoords);
         } else if (uploadCoords[3] == 7) {
