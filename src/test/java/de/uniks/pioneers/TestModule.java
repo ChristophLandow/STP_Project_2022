@@ -488,6 +488,9 @@ public class TestModule {
             @Override
             public Observable<List<MapTemplate>> getMaps() {
                 ArrayList<MapTemplate> returnValue = new ArrayList<>();
+
+                returnValue.add(new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null));
+
                 returnValue.add(new MapTemplate("","","","","","",0,null, null));
                 return Observable.just(returnValue);
             }
