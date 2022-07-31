@@ -41,7 +41,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     public void
-    test() throws TimeoutException {
+    test() {
         //LoginScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("TestUser\t");
