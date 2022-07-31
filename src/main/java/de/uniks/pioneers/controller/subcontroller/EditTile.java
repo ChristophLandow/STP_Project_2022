@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class EditTile {
     public int currentHarborSide = 0;
     public String currentHarborType = "";
 
+    public boolean active = true;
+
     public EditTile(HexTile hexTile, Polygon view, ImageView numberView, MapEditorController mapEditorController){
 
         this.hexTile = hexTile;
@@ -46,13 +49,28 @@ public class EditTile {
     private void init(){
 
         this.view.setOnMouseClicked(this::place);
+        this.numberView.setOnMouseClicked(this::numberClicked);
     }
 
-    private void place(MouseEvent mouseEvent) {
+    private void numberClicked(MouseEvent mouseEvent) {
+        if(this.mapEditorController.selection.equals("DELETE")){this.numberView.setImage(null);}
+        else{place(null);}
+
+    }
+
+    public void place(MouseEvent mouseEvent) {
 
         makeVisible(true);
 
         if(!this.mapEditorController.selection.equals("")) {
+
+            if(this.mapEditorController.selection.equals("DELETE")){
+                this.view.setFill(Paint.valueOf("#2D9BE7"));
+                this.view.setStroke(Paint.valueOf("#000000"));
+                this.hexTile.type = "";
+
+                return;
+            }
 
             if(this.mapEditorController.selection.endsWith("num")){
                 this.hexTile.number = Integer.parseInt(this.mapEditorController.selection.replace("num", ""));

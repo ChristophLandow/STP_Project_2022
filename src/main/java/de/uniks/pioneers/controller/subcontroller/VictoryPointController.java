@@ -48,6 +48,7 @@ public class VictoryPointController {
     }
 
     public void showVictoryPopUp(String winner) {
+
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/VictoryPopUp.fxml"));
         loader.setControllerFactory(c -> this);
         Parent view = null;
@@ -56,14 +57,12 @@ public class VictoryPointController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         stage = new Stage();
         stage.setOnCloseRequest(c -> onContinueClicked());
         stage.setTitle(winner + " wins!");
         assert view != null;
         Scene scene = new Scene(view);
         stage.setScene(scene);
-
         stage.show();
     }
 
@@ -169,5 +168,17 @@ public class VictoryPointController {
     public void onContinueClicked() {
         leaveGameController.leaveAfterVictory();
         stage.close();
+    }
+
+    public Stage getStage(){
+        return this.stage;
+    }
+
+    public Pane getRoot(){
+        return this.root;
+    }
+
+    public void setRoot(Pane pane){
+        this.root = pane;
     }
 }
