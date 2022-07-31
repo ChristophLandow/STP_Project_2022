@@ -46,49 +46,49 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         write("TestUser\t");
         write("12345678\t\t\t");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //SignUpScreen
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#textFieldUserName", TextInputControlMatchers.hasText("TestUser"));
         verifyThat("#passwordField", TextInputControlMatchers.hasText("12345678"));
         write("\t\t12345678\t\t\t");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //Dialog
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat(".information", Node::isVisible);
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //LoginScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("\t12345678\t");
         verifyThat("#textFieldUserName", TextInputControlMatchers.hasText("TestUser"));
         verifyThat("#passwordField", TextInputControlMatchers.hasText("12345678"));
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
         write("\t");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //LobbyScreen
         WaitForAsyncUtils.waitForFxEvents();
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //EditProfileScreen
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#usernameLabel", TextMatchers.hasText("TestUser"));
         write("\t\t\t\t\t");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //LobbyScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("\t\t");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
         clickOn("#gameNameTextField");
         write("TestGame\t");
         verifyThat("#gameNameTextField", TextInputControlMatchers.hasText("TestGame"));
         write("12345678\t\t");
         verifyThat("#passwordTextField", TextInputControlMatchers.hasText("12345678"));
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
 
         //NewGameLobbyScreen
         WaitForAsyncUtils.waitForFxEvents();
@@ -105,21 +105,20 @@ class AppTest extends ApplicationTest {
         write("\t\t\t");
         type(KeyCode.SPACE);
         type(KeyCode.DOWN);
-        write("\tHallo Test Test\t");
-        type(KeyCode.ENTER);
+        write("\t\tHallo Test Test\t");
+        type(KeyCode.SPACE);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "003", "A", "Hallo Test Test")));
         write("\t");
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
+        type(KeyCode.SPACE);
 
         //IngameScreen
         WaitForAsyncUtils.waitForFxEvents();
         sleep(1000);
         write("\t\t\tHallo Test");
-        type(KeyCode.ENTER);
+        type(KeyCode.SPACE);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "004", "A", "Hallo Test Test")));
         WaitForAsyncUtils.waitForFxEvents();
-        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#rulesButton") != null);
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#settingsButton");
