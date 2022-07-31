@@ -19,13 +19,9 @@ jobs:
           java-version: 17
           java-package: jdk
       - name: Set up fontconfig
-        run: apt-get -y update && apt-get -y install fontconfig libpangoft2-1.0-0
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+        run: sudo apt-get -y update && sudo apt-get -y install fontconfig libpangoft2-1.0-0
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
       - name: Build with Gradle
         run: ./gradlew build test jacocoTestReport
       - name: Publish Coverage to Pages

@@ -1,9 +1,13 @@
 package de.uniks.pioneers.controller;
 
+import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.BoardGenerator;
+import de.uniks.pioneers.services.MapService;
+import de.uniks.pioneers.services.UserService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +23,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +58,7 @@ public class MapEditorController implements Controller{
     @FXML
     Spinner<Integer> sizeSpinner;
 
+    private final MapService mapService;
     public BoardGenerator boardGenerator;
 
     public List<EditTile> tiles = new ArrayList<>();
@@ -63,11 +69,18 @@ public class MapEditorController implements Controller{
 
     public String selection = "";
 
+    private final App app;
+
+    private final Provider<MapBrowserController> mapBrowserControllerProvider;
+
 
 
     @Inject
-    public MapEditorController(){
+    public MapEditorController(MapService mapService, App app, Provider<MapBrowserController> mapBrowserControllerProvider){
 
+        this.mapService = mapService;
+        this.app = app;
+        this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.boardGenerator = new BoardGenerator();
 
     }
@@ -146,7 +159,7 @@ public class MapEditorController implements Controller{
                     (-Math.sqrt(3)/2)*scale,-0.5*scale,
                     (-Math.sqrt(3)/2)*scale,0.5*scale);
 
-            if(hexTile.type != ""){
+            if(!hexTile.type.equals("")){
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + hexTile.type + ".png")).toString());
 
                 tile.setFill(new ImagePattern(image));
@@ -192,7 +205,11 @@ public class MapEditorController implements Controller{
 
     public void toMaps(){
     }
-    public void save(){}
+    public void save(ActionEvent event){
+        mapService.updateOrCreateMap(tiles);
+        MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
+        this.app.show(mapBrowserController);
+    }
 
 
     public void selectWhale(MouseEvent mouseEvent) {
@@ -316,4 +333,5 @@ public class MapEditorController implements Controller{
     public void selectHarborCoal(MouseEvent mouseEvent) {
         this.selection = "harbour_ore";
     }
+
 }

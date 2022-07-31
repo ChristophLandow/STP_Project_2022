@@ -7,10 +7,7 @@ import de.uniks.pioneers.model.HarborTemplate;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.MapBrowserService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.StylesService;
-import de.uniks.pioneers.services.UserService;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.collections.FXCollections;
 import javafx.scene.input.KeyCode;
@@ -29,8 +26,8 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MapBrowserControllerTest extends ApplicationTest {
@@ -63,6 +60,9 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    MapService mapService;
 
     @InjectMocks
     MapDetailsController mapDetailsController;
@@ -99,6 +99,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
         when(userService.getUserById("1234")).thenReturn(Observable.just(new User("1234", "me", "online", null)));
         when(mapBrowserService.getMap("map456")).thenReturn(Observable.just(mapDummy1));
         when(mapBrowserService.getMap("map123")).thenReturn(Observable.just(mapDummy2));
+        doNothing().when(mapService).setCurrentMap(any());
 
         // select map123
         type(KeyCode.DOWN);
