@@ -58,6 +58,9 @@ class BuildingPointControllerTest extends ApplicationTest {
     @Mock
     UserService userService;
 
+    @Mock
+    IngameSelectController ingameSelectController;
+
     @InjectMocks
     BuildingPointController buildingPointController;
 
@@ -91,7 +94,7 @@ class BuildingPointControllerTest extends ApplicationTest {
         gameStorage.remainingBuildings.put(CITY, 4);
         when(resourceService.checkResourcesSettlement()).thenReturn(true);
 
-        assertTrue(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
+        assertFalse(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
     }
 
     @Test

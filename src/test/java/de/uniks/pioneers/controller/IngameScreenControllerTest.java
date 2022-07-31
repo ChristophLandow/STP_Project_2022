@@ -17,7 +17,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,12 +25,14 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+
 import javax.inject.Provider;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -105,7 +106,7 @@ class IngameScreenControllerTest extends ApplicationTest {
     @Mock
     TradeOfferPopUpController tradeOfferPopUpController;
 
-    @Mock
+    @Spy
     IngameSelectController ingameSelectController;
 
     @Mock
@@ -152,26 +153,26 @@ class IngameScreenControllerTest extends ApplicationTest {
         Pane hammerPane = lookup("#hammerPane").query();
         Pane rightPane = lookup("#rightPane").query();
 
-        SVGPath streetSVG = lookup("#streetSVG").query();
-        SVGPath houseSVG = lookup("#houseSVG").query();
-        SVGPath citySVG = lookup("#citySVG").query();
-
+        gameStorage.selectedBuilding = "";
+        ingameSelectController = new IngameSelectController();
+        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
+        ingameScreenController.ingameSelectController = ingameSelectController;
         ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, ingameService, new ResourceService());
 
-        streetSVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
-        assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
+        roadFrame.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(144,238,144)));
         assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
         assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
 
-        houseSVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        settlementFrame.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
+        assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(144,238,144)));
         assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
 
-        citySVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        cityFrame.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
         assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
+        assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(144,238,144)));
 
         tradePane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         verify(tradePopUpController).show();

@@ -15,7 +15,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -23,16 +26,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javax.inject.Inject;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class GameChatController {
-
-    @Inject
-    PrefService prefService;
+    @Inject PrefService prefService;
     private ScrollPane chatScrollPane;
     private VBox messageBox;
     private TextField messageText;
@@ -45,6 +47,7 @@ public class GameChatController {
     private IngameScreenController ingameScreenController;
     private Game game;
     private List<User> users;
+    private boolean ingame;
 
     @Inject
     public GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService) {
@@ -131,12 +134,15 @@ public class GameChatController {
         ImageView avatarView = new ImageView(userImage);
         avatarView.setFitHeight(25);
         avatarView.setFitWidth(25);
-        Label textLabel = new Label(user.name() + ": " + message.body());
+
+        Text messageText = new Text(user.name() + ": " + message.body());
+        messageText.setFont(new Font(16));
+        TextFlow textFlow = new TextFlow(messageText);
+
         if(prefService.getDarkModeState()){
-            textLabel.setId("textMessage");
+            textFlow.setId("textMessage");
         }
-        textLabel.setFont(new Font(15));
-        HBox hbox = new HBox(avatarView, textLabel);
+        HBox hbox = new HBox(avatarView, textFlow);
         hbox.setSpacing(7);
 
         this.messageBox.getChildren().add(hbox);
@@ -170,7 +176,8 @@ public class GameChatController {
         }
     }
 
-    public GameChatController setChatScrollPane(ScrollPane chatScrollPane) {
+    public GameChatController setChatScrollPane(ScrollPane chatScrollPane, boolean ingame) {
+        this.ingame = ingame;
         this.chatScrollPane = chatScrollPane;
         return this;
     }

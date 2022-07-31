@@ -4,7 +4,10 @@ import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.services.*;
+import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.GameStorage;
+import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.ResourceService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -15,7 +18,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-
 import javax.inject.Inject;
 import java.util.ArrayList;
 
@@ -28,6 +30,7 @@ public class StreetPointController {
     private final IngameService ingameService;
 
     private final GameStorage gameStorage;
+    private IngameSelectController ingameSelectController;
     private Pane fieldPane;
     public HexTile tile;
     private Circle view;
@@ -58,8 +61,9 @@ public class StreetPointController {
         this.eventView.setOpacity(0);
     }
 
-    public void init() {
+    public void init(IngameSelectController ingameSelectController) {
         checkIfMouseInsideView();
+        this.ingameSelectController = ingameSelectController;
 
         this.eventView.setOnMouseClicked(this::placeStreet);
         this.eventView.setOnMouseEntered(this::dye);
@@ -81,7 +85,7 @@ public class StreetPointController {
         } else {
             if (gameStorage.remainingBuildings.get(ROAD) >= 1 && resourceService.checkRoad()) {
                 valid = checkRoads() || checkBuildings();
-            }else {
+            } else {
                 valid = false;
             }
         }
@@ -96,6 +100,8 @@ public class StreetPointController {
                         fieldPane.getChildren().forEach(this::reset);
                     }));
         }
+
+        ingameSelectController.resetSelect();
     }
 
     private boolean checkBuildings() {
@@ -108,7 +114,7 @@ public class StreetPointController {
         }
     }
 
-    private Boolean checkRoads() {
+    public Boolean checkRoads() {
         if (uploadCoords[3] == 3) {
             return gameService.isValidFromThree(this.uploadCoords);
         } else if (uploadCoords[3] == 7) {

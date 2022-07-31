@@ -2,6 +2,7 @@ package de.uniks.pioneers;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import de.uniks.pioneers.controller.IngameScreenController;
 import de.uniks.pioneers.controller.LoginScreenController;
 
 import javax.inject.Singleton;

@@ -28,8 +28,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,11 +63,12 @@ class RobPlayerControllerTest extends ApplicationTest {
 
         app.start(stage);
         app.show(robPlayerController);
+        app.getStage().setWidth(500);
+        app.getStage().setHeight(500);
     }
 
     @Test
     void test() {
-
         Pane anchorPane = lookup("#robAnchorpane").query();
         anchorPane.fireEvent(leftClick);
 
@@ -80,6 +80,8 @@ class RobPlayerControllerTest extends ApplicationTest {
         //assertTrue(playerListView.isVisible());
 
         playerListView.fireEvent(leftClick);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
         type(KeyCode.DOWN);
         type(KeyCode.SPACE);
         menuButton.fireEvent(leftClick);
