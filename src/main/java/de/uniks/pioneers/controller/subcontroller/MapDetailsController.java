@@ -54,6 +54,7 @@ public class MapDetailsController {
     }
 
     private void setLabels(MapTemplate mapTemplate) {
+        System.out.println(mapTemplate);
         lastUpdatedOutputText.setText(toDateTimeString(mapTemplate.updatedAt()));
         votesOutputText.setText(String.valueOf(mapTemplate.votes()));
         tilesOutputText.setText(String.valueOf(mapTemplate.tiles().size()));
