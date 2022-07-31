@@ -92,7 +92,7 @@ class AppTest extends ApplicationTest {
 
         //NewGameLobbyScreen
         WaitForAsyncUtils.waitForFxEvents();
-        verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame"));
+        verifyThat("#gameNameLabel", LabeledMatchers.hasText("TestGame "));
         verifyThat("#passwordLabel", LabeledMatchers.hasText("12345678"));
         TestModule.gameMemberSubject.onNext(new Event<>(".created", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "001", false, "#ffffff", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".created", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "002", false, "#000000", false)));
@@ -105,7 +105,7 @@ class AppTest extends ApplicationTest {
         write("\t\t\t");
         type(KeyCode.SPACE);
         type(KeyCode.DOWN);
-        write("\t\tHallo Test Test\t");
+        write("\tHallo Test Test\t");
         type(KeyCode.SPACE);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "003", "A", "Hallo Test Test")));
         write("\t");
