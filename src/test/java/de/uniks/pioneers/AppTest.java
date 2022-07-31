@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,9 +19,13 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import org.testfx.util.WaitForAsyncUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.testfx.api.FxAssert.verifyThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,7 +41,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     public void
-    test() {
+    test() throws TimeoutException {
         //LoginScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("TestUser\t");
@@ -97,10 +102,10 @@ class AppTest extends ApplicationTest {
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "002", true, "#000000", false)));
         TestModule.gameMemberSubject.onNext(new Event<>(".updated", new Member("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "000", "003", true, "#888888", false)));
         TestModule.mapTemplateSubject.onNext(new Event<>(".updated", new MapTemplate("","","id1","Test","","",0, null, null)));
-        write("\t\t");
+        write("\t\t\t");
+        type(KeyCode.SPACE);
         type(KeyCode.DOWN);
-        type(KeyCode.UP);
-        write("\t\tHallo Test Test\t");
+        write("\tHallo Test Test\t");
         type(KeyCode.SPACE);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "003", "A", "Hallo Test Test")));
         write("\t");
@@ -114,6 +119,7 @@ class AppTest extends ApplicationTest {
         type(KeyCode.SPACE);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "004", "A", "Hallo Test Test")));
         WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#rulesButton") != null);
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#settingsButton");
@@ -125,6 +131,11 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#leftDiceImageView");
         sleep(1000);
+
+        Pane fieldPane = lookup("#fieldPane").query();
+        Scale fieldScale = (Scale) fieldPane.getTransforms().get(0);
+        assertNotEquals(fieldScale.getX(), 1);
+        assertNotEquals(fieldScale.getY(), 1);
 
         WaitForAsyncUtils.waitForFxEvents();
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 0, 0, 0, 0, 0), new RemainingBuildings(5, 4, 15), 0, 0, new ArrayList<>())));
