@@ -41,7 +41,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     public void
-    test() {
+    test() throws TimeoutException {
         //LoginScreen
         WaitForAsyncUtils.waitForFxEvents();
         write("TestUser\t");
@@ -119,6 +119,7 @@ class AppTest extends ApplicationTest {
         type(KeyCode.SPACE);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "004", "A", "Hallo Test Test")));
         WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.waitFor(15, TimeUnit.SECONDS, () -> lookup("#rulesButton") != null);
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#settingsButton");
