@@ -50,7 +50,7 @@
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="988.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phase 1: Each player must roll the dice, the result determines the starting player. The starting player may now place an igloo and a road first, followed in turn by all other players. Here for the respective player must do nothing except click the positions on the playing field. The last player in the row may place two igloos and 2 roads, after him in reverse order all other players set can set their second igloo and road. " wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="988.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phase 1: Each player must roll the dice, the result determines the starting player. The starting player may now place an igloo and a road first, followed in turn by all other players. Here for the respective player must do nothing except click the positions on the playing field. The last player in the row may place two igloos and 2 roads, after him in reverse order all other players can set their second igloo and road. " wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
@@ -100,7 +100,7 @@
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="21.0" layoutY="2959.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically. ToDo" wrappingWidth="756.205078125">
+         <Text layoutX="21.0" layoutY="2959.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
