@@ -1,6 +1,7 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.controller.subcontroller.EditTile;
+import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.dto.CreateMapTemplateDto;
 import de.uniks.pioneers.dto.UpdateMapTemplateDto;
 import de.uniks.pioneers.model.HarborTemplate;
@@ -9,6 +10,7 @@ import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.rest.MapApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Alert;
+import javafx.scene.shape.Polygon;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -77,13 +79,15 @@ public class MapService {
     public List<TileTemplate> getTiles(List<EditTile> editTiles) {
         List<TileTemplate> tiles = new ArrayList<>();
         for (EditTile et : editTiles) {
-            int x = et.hexTile.q;
-            int y = et.hexTile.r;
-            int z = et.hexTile.s;
-            String type = et.hexTile.type;
-            int number = et.hexTile.number;
-            TileTemplate tileTemplate = new TileTemplate(x, y, z, type, number);
-            tiles.add(tileTemplate);
+            if (!et.hexTile.type.equals("")) {
+                int x = et.hexTile.q;
+                int y = et.hexTile.r;
+                int z = et.hexTile.s;
+                String type = et.hexTile.type;
+                int number = et.hexTile.number;
+                TileTemplate tileTemplate = new TileTemplate(x, y, z, type, number);
+                tiles.add(tileTemplate);
+            }
         }
         return tiles;
     }
@@ -114,7 +118,7 @@ public class MapService {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Dialog");
         alert.setHeaderText("Map-Saving-Error");
-        alert.setContentText("You need to create this map first");
+        alert.setContentText("Something went wrong");
         alert.showAndWait();
     }
 }

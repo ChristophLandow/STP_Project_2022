@@ -4,6 +4,9 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
+import de.uniks.pioneers.model.HarborTemplate;
+import de.uniks.pioneers.model.MapTemplate;
+import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.services.MapService;
 import javafx.event.ActionEvent;
@@ -114,6 +117,7 @@ public class MapEditorController implements Controller{
             return null;
         }
         init();
+        this.tiles = loadMap(2);
         display(2);
 
         return parent;
@@ -122,7 +126,6 @@ public class MapEditorController implements Controller{
     private void display(int size){
 
         double scale = 100.0/size;
-
         this.frame = this.boardGenerator.buildEditorFrame(size, scale);
 
         this.scrollPaneAnchorPane.getChildren().removeAll(this.tileViews);
@@ -151,13 +154,7 @@ public class MapEditorController implements Controller{
                 }
             }
 
-            Polygon tile = new Polygon();
-            tile.getPoints().addAll(0.0*scale, scale,
-                    (Math.sqrt(3)/2)*scale,0.5*scale,
-                    (Math.sqrt(3)/2)*scale,-0.5*scale,
-                    0.0*scale,-1.0*scale,
-                    (-Math.sqrt(3)/2)*scale,-0.5*scale,
-                    (-Math.sqrt(3)/2)*scale,0.5*scale);
+            Polygon tile = setView(scale);
 
             if(!hexTile.type.equals("")){
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + hexTile.type + ".png")).toString());
@@ -167,16 +164,7 @@ public class MapEditorController implements Controller{
                 tile.setFill(Paint.valueOf("#2D9BE7"));
                 tile.setStroke(Paint.valueOf("#000000"));
             }
-            ImageView numberView = new ImageView();
-            numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 33);
-            numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 33);
-            numberView.setScaleX(scale*0.01);
-            numberView.setScaleY(scale*0.01);
-            if(hexTile.number != 0){
-
-                Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + hexTile.number + ".png")).toString());
-                numberView.setImage(image);
-            }
+            ImageView numberView = setNumberView(hexTile, scale);
 
             tile.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2);
             tile.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2);
@@ -360,6 +348,65 @@ public class MapEditorController implements Controller{
 
     public void selectDelete(ActionEvent actionEvent) {
         this.selection = "DELETE";
+    }
+
+    public List<EditTile> loadMap(int size) {
+        MapTemplate mapTemplate = mapService.getCurrentMap();
+        List<EditTile> editTiles = new ArrayList<>();
+        if (mapTemplate == null) {
+            return editTiles;
+        }
+        double scale = 100.0/size;
+        boolean top = true;
+        Polygon tile = setView(scale);
+        //set the tiles
+        for (TileTemplate tt : mapTemplate.tiles()) {
+            HexTile hexTile = new HexTile(tt.x(), tt.y(), tt.z(), scale, top);
+            hexTile.type = tt.type();
+            hexTile.number = tt.numberToken();
+            ImageView numberView = setNumberView(hexTile, scale);
+            EditTile editTile = new EditTile(hexTile, tile, numberView, this);
+            //set the harbors
+            for (HarborTemplate ht : mapTemplate.harbors()) {
+                //check for the right harbor with the coordinates
+                if (tt.x() == ht.x() && tt.y() == ht.y() && tt.z() == ht.z()) {
+                    if (ht.type() == null) {
+                        editTile.currentHarborType = "harbour_general";
+                    } else {
+                        editTile.currentHarborType = "harbour_" + ht.type();
+                    }
+                    editTile.currentHarborSide = ht.side();
+                    editTile.currentHarborOption = 0;
+                }
+            }
+            editTiles.add(editTile);
+        }
+        return editTiles;
+    }
+
+    private ImageView setNumberView(HexTile hexTile, double scale) {
+        ImageView numberView = new ImageView();
+        numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 33);
+        numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 33);
+        numberView.setScaleX(scale*0.01);
+        numberView.setScaleY(scale*0.01);
+        if(hexTile.number != 0){
+
+            Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + hexTile.number + ".png")).toString());
+            numberView.setImage(image);
+        }
+       return numberView;
+    }
+
+    private Polygon setView(double scale) {
+        Polygon tile = new Polygon();
+        tile.getPoints().addAll(0.0*scale, 1.0*scale,
+                (Math.sqrt(3)/2)*scale,0.5*scale,
+                (Math.sqrt(3)/2)*scale,-0.5*scale,
+                0.0*scale,-1.0*scale,
+                (-Math.sqrt(3)/2)*scale,-0.5*scale,
+                (-Math.sqrt(3)/2)*scale,0.5*scale);
+        return tile;
     }
 
 }
