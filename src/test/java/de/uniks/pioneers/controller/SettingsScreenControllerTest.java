@@ -219,7 +219,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
         hotkeyController.openSettingsChoiceBox.setValue(STRG);
         hotkeyController.openRulesTextField.setText("1");
         hotkeyController.openRulesChoiceBox.setValue(STRG);
-        hotkeyController.safeHotkeys();
+        hotkeyController.saveHotkeys();
         assertNotNull(hotkeyController.tradeHotkeyController);
         assertNotNull(hotkeyController.endTurnHotkeyController);
         assertNotNull(hotkeyController.openSettingsHotkeyController);
@@ -232,7 +232,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
         hotkeyController.openSettingsTextField.setText("");
         hotkeyController.openSettingsChoiceBox.setValue("");
         hotkeyController.openRulesTextField.setText("");
-        hotkeyController.safeHotkeys();
+        hotkeyController.saveHotkeys();
         assertNull(hotkeyController.tradeHotkeyController);
         assertNull(hotkeyController.endTurnHotkeyController);
         assertNull(hotkeyController.openSettingsHotkeyController);
