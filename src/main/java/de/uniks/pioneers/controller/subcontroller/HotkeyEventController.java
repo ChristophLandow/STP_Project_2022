@@ -38,6 +38,9 @@ public class HotkeyEventController {
                         case END -> fireEndHotkey();
                         case RULES -> fireRulesHotkey();
                         case SETTINGS -> fireSettingsHotkey();
+                        case BUILDIGLOO -> fireBuildIgluHotkey();
+                        case BUILDSTREET -> fireBuildStreetHotkey();
+                        case UPGRADEIGLOO -> fireUpgradeIgluToStationHotkey();
                     }
                     ke.consume();
                 }
@@ -63,4 +66,24 @@ public class HotkeyEventController {
     private void fireRulesHotkey(){
         ingameController.toRules();
     }
+
+    private void fireBuildIgluHotkey(){
+        Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
+               1, false, false, false, false, false, false, false, false, true, false, null);
+        ingameController.settlementFrame.fireEvent(rightClick);
+    }
+
+    private void fireUpgradeIgluToStationHotkey(){
+        Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
+               1, false, false, false, false, false, false, false, false, true, false, null);
+        ingameController.cityFrame.fireEvent(rightClick);
+    }
+
+    private void fireBuildStreetHotkey(){
+        Event rightClick = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY,
+               1, false, false, false, false, false, false, false, false, true, false, null);
+        ingameController.roadFrame.fireEvent(rightClick);
+    }
+
+
 }

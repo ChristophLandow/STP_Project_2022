@@ -24,21 +24,29 @@ import static de.uniks.pioneers.Constants.*;
 
 public class HotkeyController implements Controller, Initializable {
 
-    @FXML
-    public TextField tradingTextField;
+    @FXML public TextField tradingTextField;
     @FXML public TextField endTurnTextField;
     @FXML public TextField openRulesTextField;
     @FXML public TextField openSettingsTextField;
+    @FXML public TextField buildIglooTextField;
+    @FXML public TextField buildStreetTextField;
+    @FXML public TextField upgradeIglooTextField;
     @FXML public ChoiceBox<String> tradingChoiceBox;
     @FXML public ChoiceBox<String> endTurnChoiceBox;
     @FXML public ChoiceBox<String> openRulesChoiceBox;
     @FXML public ChoiceBox<String> openSettingsChoiceBox;
+    @FXML public ChoiceBox<String> buildIglooChoiceBox;
+    @FXML public ChoiceBox<String> buildStreetChoiceBox;
+    @FXML public ChoiceBox<String> upgradeIglooChoiceBox;
     @FXML public Text ShortcutsText;
     @FXML public Text tradingText;
     @FXML public Text endTurnText;
     @FXML public Text openSettingsText;
     @FXML public Text openRulesText;
     @FXML public Text identicText;
+    @FXML public Text buildStreetText;
+    @FXML public Text upgradeIglooText;
+    @FXML private Text buildIglooText;
     private final PrefService prefService;
     private final IngameScreenController ingameController;
     private final String[] hotkeyChoiceBoxElements = {NOHOTKEY,STRG, ALT};
@@ -48,6 +56,9 @@ public class HotkeyController implements Controller, Initializable {
     public HotkeyEventController endTurnHotkeyController;
     public HotkeyEventController openSettingsHotkeyController;
     public HotkeyEventController openRulesHotkeyController;
+    public HotkeyEventController buildStreetHotkeyController;
+    public HotkeyEventController buildIglooHotkeyController;
+    public HotkeyEventController upgradeIglooHotkeyController;
     public Scene scene;
 
     public HotkeyController(Scene scene, PrefService prefService, IngameScreenController ingameController) {
@@ -70,7 +81,13 @@ public class HotkeyController implements Controller, Initializable {
         endTurnTextField.setText(prefService.getEndTextField().toString());
         openRulesTextField.setText(prefService.getRulesTextField().toString());
         openSettingsTextField.setText(prefService.getSettingsTextField().toString());
-        safeHotkeys();
+        buildIglooChoiceBox.setValue(prefService.getBuildIglooChoiceBox());
+        buildIglooTextField.setText(prefService.getBuildIglooTextField().toString());
+        upgradeIglooChoiceBox.setValue(prefService.getUpgradeIglooChoiceBox());
+        upgradeIglooTextField.setText(prefService.getUpgradeIglooTextField().toString());
+        buildStreetChoiceBox.setValue(prefService.getBuildStreetChoiceBox());
+        buildIglooTextField.setText(prefService.getBuildStreetTextField().toString());
+        saveHotkeys();
     }
 
     @Override
@@ -142,7 +159,61 @@ public class HotkeyController implements Controller, Initializable {
         };
     }
 
-    private void safeTradeHotkeys(){
+    private void saveBuildStreetHotkey(){
+        if(buildStreetTextField.getText().equals("") || buildStreetChoiceBox.getValue().equals("")){
+            buildStreetChoiceBox.setValue("");
+            buildStreetTextField.setText("");
+            prefService.deleteBuildStreetHotkey();
+        }
+        if(!buildStreetTextField.getText().equals("") && !buildStreetChoiceBox.getValue().equals("")){
+            Character buildStreetChar = prefService.saveBuildStreetTextInput(buildStreetTextField.getText()).charAt(0);
+            buildStreetHotkeyController = new HotkeyEventController(scene,ingameController);
+            hotkeyControllers.add(buildStreetHotkeyController);
+            if(prefService.saveBuildStreetChoiceBox(buildStreetChoiceBox.getValue()).equals(STRG)){
+                buildStreetHotkeyController.setHotkey(stringToKeyCode(buildStreetChar),STRG, BUILDSTREET);
+            } else {
+                buildStreetHotkeyController.setHotkey(stringToKeyCode(buildStreetChar),ALT, BUILDSTREET);
+            }
+        }
+    }
+
+    private void saveBuildIglooHotkey(){
+        if(buildIglooTextField.getText().equals("") || buildIglooChoiceBox.getValue().equals("")){
+            buildIglooChoiceBox.setValue("");
+            buildIglooTextField.setText("");
+            prefService.deleteBuildIglooHotkey();
+        }
+        if(!buildIglooTextField.getText().equals("") && !buildIglooChoiceBox.getValue().equals("")){
+            Character buildIgluChar = prefService.saveBuildIglooTextInput(buildIglooTextField.getText()).charAt(0);
+            buildIglooHotkeyController = new HotkeyEventController(scene,ingameController);
+            hotkeyControllers.add(buildIglooHotkeyController);
+            if(prefService.saveBuildIglooChoiceBox(buildIglooChoiceBox.getValue()).equals(STRG)){
+                buildIglooHotkeyController.setHotkey(stringToKeyCode(buildIgluChar),STRG, BUILDIGLOO);
+            } else {
+                buildIglooHotkeyController.setHotkey(stringToKeyCode(buildIgluChar),ALT, BUILDIGLOO);
+            }
+        }
+    }
+
+    private void upgradeIglooHotkey(){
+        if(upgradeIglooTextField.getText().equals("") || upgradeIglooChoiceBox.getValue().equals("")){
+            upgradeIglooChoiceBox.setValue("");
+            upgradeIglooTextField.setText("");
+            prefService.deleteUpgradeIglooHotkey();
+        }
+        if(!upgradeIglooTextField.getText().equals("") && !upgradeIglooChoiceBox.getValue().equals("")){
+            Character upgradeIglooChar = prefService.saveUpgradeIglooTextInput(upgradeIglooTextField.getText()).charAt(0);
+            upgradeIglooHotkeyController = new HotkeyEventController(scene,ingameController);
+            hotkeyControllers.add(upgradeIglooHotkeyController);
+            if(prefService.saveUpgradeIglooChoiceBox(upgradeIglooChoiceBox.getValue()).equals(STRG)){
+                upgradeIglooHotkeyController.setHotkey(stringToKeyCode(upgradeIglooChar),STRG, UPGRADEIGLOO);
+            } else {
+                upgradeIglooHotkeyController.setHotkey(stringToKeyCode(upgradeIglooChar),ALT, UPGRADEIGLOO);
+            }
+        }
+    }
+
+    private void saveTradeHotkeys(){
         if(tradingTextField.getText().equals("") || tradingChoiceBox.getValue().equals("")){
             tradingChoiceBox.setValue("");
             tradingTextField.setText("");
@@ -160,7 +231,7 @@ public class HotkeyController implements Controller, Initializable {
         }
     }
 
-    public void safeEndTurnHotKeys(){
+    public void saveEndTurnHotKeys(){
         if(endTurnTextField.getText().equals("") || endTurnChoiceBox.getValue().equals("")){
             endTurnTextField.setText("");
             endTurnChoiceBox.setValue("");
@@ -178,7 +249,7 @@ public class HotkeyController implements Controller, Initializable {
         }
     }
 
-    public void safeOpenSettingsHotKeys(){
+    public void saveOpenSettingsHotKeys(){
         if(openSettingsTextField.getText().equals("") || openSettingsChoiceBox.getValue().equals("")){
             openSettingsTextField.setText("");
             openSettingsChoiceBox.setValue("");
@@ -196,7 +267,7 @@ public class HotkeyController implements Controller, Initializable {
         }
     }
 
-    public void safeOpenRulesHotkeys(){
+    public void saveOpenRulesHotkeys(){
         if(openRulesTextField.getText().equals("") || openRulesChoiceBox.getValue().equals("")){
             openRulesChoiceBox.setValue("");
             openRulesTextField.setText("");
@@ -214,7 +285,7 @@ public class HotkeyController implements Controller, Initializable {
         }
     }
 
-    public void safeHotkeys() {
+    public void saveHotkeys() {
         boolean equalHotkeys = false;
         tradeHotkeyController = null;
         endTurnHotkeyController = null;
@@ -246,10 +317,13 @@ public class HotkeyController implements Controller, Initializable {
             }
             identicText.setText("");
             hotkeyControllers.clear();
-            safeTradeHotkeys();
-            safeEndTurnHotKeys();
-            safeOpenRulesHotkeys();
-            safeOpenSettingsHotKeys();
+            saveTradeHotkeys();
+            saveEndTurnHotKeys();
+            saveOpenRulesHotkeys();
+            saveOpenSettingsHotKeys();
+            saveBuildStreetHotkey();
+            saveBuildIglooHotkey();
+            upgradeIglooHotkey();
         }
     }
 }
