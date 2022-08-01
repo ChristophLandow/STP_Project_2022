@@ -127,7 +127,6 @@ public class EditTile {
             }
             ImageView image = this.mapEditorController.boardGenerator.getHarborImage(harborType);
 
-            System.out.println(this.currentHarborSide);
             this.harbourView = this.mapEditorController.boardGenerator.placeHarbor(this.hexTile.x, this.hexTile.y, image, this.currentHarborSide,
                     this.mapEditorController.scrollPaneAnchorPane.getPrefWidth(),
                     this.mapEditorController.scrollPaneAnchorPane.getPrefHeight(),
