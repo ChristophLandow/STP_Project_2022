@@ -69,7 +69,7 @@ public class HotkeyController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Collections.addAll(hotkeyChoiceBoxVariants, tradingChoiceBox,endTurnChoiceBox,openRulesChoiceBox,openSettingsChoiceBox);
+        Collections.addAll(hotkeyChoiceBoxVariants,upgradeIglooChoiceBox,buildIglooChoiceBox,buildStreetChoiceBox,tradingChoiceBox,endTurnChoiceBox,openRulesChoiceBox,openSettingsChoiceBox);
         for (ChoiceBox<String> box : hotkeyChoiceBoxVariants){
             box.getItems().addAll(hotkeyChoiceBoxElements);
         }
