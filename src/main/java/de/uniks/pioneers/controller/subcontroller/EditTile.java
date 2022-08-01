@@ -53,7 +53,9 @@ public class EditTile {
     }
 
     private void numberClicked(MouseEvent mouseEvent) {
-        if(this.mapEditorController.selection.equals("DELETE")){this.numberView.setImage(null);}
+        if(this.mapEditorController.selection.equals("DELETE")){
+            this.numberView.setImage(null);
+            this.hexTile.number = 0;}
         else{place(null);}
 
     }
@@ -73,6 +75,7 @@ public class EditTile {
             }
 
             if(this.mapEditorController.selection.endsWith("num")){
+                if(isblocked()){return;}
                 this.hexTile.number = Integer.parseInt(this.mapEditorController.selection.replace("num", ""));
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + this.hexTile.number + ".png")).toString());
                 this.numberView.setImage(image);
@@ -83,8 +86,8 @@ public class EditTile {
                 handleHarbor();
                 return;
             }
+            if(isblocked()){return;}
             Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.mapEditorController.selection + ".png")).toString());
-
             this.view.setFill(new ImagePattern(image));
             this.hexTile.type = this.mapEditorController.selection;
         }
@@ -99,6 +102,7 @@ public class EditTile {
 
         this.mapEditorController.scrollPaneAnchorPane.getChildren().remove(this.harbourView);
 
+        this.currentHarborSide = 0;
         cleanHarborOptions();
 
         this.currentHarborType = this.mapEditorController.selection;
@@ -147,7 +151,7 @@ public class EditTile {
         private void cleanHarborOptions(){
             for(EditTile tile : this.mapEditorController.tiles){
 
-                if(tile.hexTile.type.equals("")){continue;}
+                if(tile.hexTile.type.equals("") & !tile.isblocked()){continue;}
 
                 if((this.hexTile.q +1 == tile.hexTile.q) & (this.hexTile.r -1 == tile.hexTile.r)){
                     this.harbourOptions.remove(Integer.valueOf(1));}
@@ -162,6 +166,20 @@ public class EditTile {
                 if((this.hexTile.r -1 == tile.hexTile.r) & (this.hexTile.s +1 == tile.hexTile.s)){
                     this.harbourOptions.remove(Integer.valueOf(11));}
             }
+        }
+
+        public boolean isblocked() {
+            for(EditTile tile : this.mapEditorController.tiles){
+
+                if(tile.hexTile.type.equals("") & tile.hexTile.number == 0){continue;}
+                if((this.hexTile.q +1 == tile.hexTile.q) & (this.hexTile.r -1 == tile.hexTile.r) & (tile.currentHarborSide == 7)){return true;}
+                if((this.hexTile.q +1 == tile.hexTile.q) & (this.hexTile.s -1 == tile.hexTile.s) & (tile.currentHarborSide == 9)){return true;}
+                if((this.hexTile.r +1 == tile.hexTile.r) & (this.hexTile.s -1 == tile.hexTile.s) & (tile.currentHarborSide == 11)){return true;}
+                if((this.hexTile.q -1 == tile.hexTile.q) & (this.hexTile.r +1 == tile.hexTile.r) & (tile.currentHarborSide == 1)){return true;}
+                if((this.hexTile.q -1 == tile.hexTile.q) & (this.hexTile.s +1 == tile.hexTile.s) & (tile.currentHarborSide == 3)){return true;}
+                if((this.hexTile.r -1 == tile.hexTile.r) & (this.hexTile.s +1 == tile.hexTile.s) & (tile.currentHarborSide == 5)){return true;}
+            }
+            return false;
         }
         public void destroy(){
         if(this.numberView != null){this.numberView.setImage(null);}
