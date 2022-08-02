@@ -60,9 +60,6 @@ class ChatControllerTest extends ApplicationTest {
     ChatTabController chatTabController;
 
     @Mock
-    PrefService prefService;
-
-    @Mock
     EventHandlerService eventHandlerService;
 
     @InjectMocks
@@ -77,6 +74,7 @@ class ChatControllerTest extends ApplicationTest {
         app.start(stage);
         app.show(chatController);
         verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
+        verify(stylesService, atLeastOnce()).setStyleSheets(any());
     }
 
     @Test

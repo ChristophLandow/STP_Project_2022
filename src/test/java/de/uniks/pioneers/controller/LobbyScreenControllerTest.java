@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.dto.Event;
@@ -44,9 +43,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @InjectMocks
     LoginScreenController loginScreenController;
 
-    @InjectMocks
-    GameListElementController gameListElementController;
-
     @Mock(name = "userlistControllerProvider")
     Provider<LobbyUserlistController> userlistControllerProvider;
 
@@ -55,9 +51,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
     @Mock(name = "loginScreenControllerProvider")
     Provider<LoginScreenController> loginScreenControllerProvider;
-
-    @Mock(name = "gameListElementControllerProvider")
-    Provider<GameListElementController> gameListElementControllerProvider;
 
     @Mock
     EventListener eventListener;
@@ -134,5 +127,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
         //Check if logout functions were called
         verify(userService).editProfile(null,null,null,"offline");
         verify(lobbyService).logout();
+        verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
     }
 }

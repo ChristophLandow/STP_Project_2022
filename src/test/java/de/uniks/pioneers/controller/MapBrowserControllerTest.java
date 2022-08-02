@@ -39,17 +39,11 @@ public class MapBrowserControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
 
-    @Mock(name = "ingameScreenControllerProvider")
-    Provider<IngameScreenController> ingameScreenControllerProvider;
-
     @Mock(name = "mapListControllerProvider")
     Provider<MapListController> mapListControllerProvider;
 
     @Mock(name = "mapDetailsControllerProvider")
     Provider<MapDetailsController> mapDetailsControllerProvider;
-
-    @Mock
-    PrefService prefService;
 
     @Mock
     MapBrowserService mapBrowserService;
@@ -65,9 +59,6 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
     @InjectMocks
     MapDetailsController mapDetailsController;
-
-    @InjectMocks
-    IngameScreenController ingameScreenController;
 
     @InjectMocks
     MapListController mapListController;
@@ -91,6 +82,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
         app.start(stage);
         app.show(mapBrowserController);
+        verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
     }
 
     @Test

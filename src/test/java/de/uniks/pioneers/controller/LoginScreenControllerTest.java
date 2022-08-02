@@ -19,8 +19,8 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextMatchers;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LoginScreenControllerTest extends ApplicationTest {
@@ -46,6 +46,7 @@ class LoginScreenControllerTest extends ApplicationTest {
         when(prefService.recall()).thenReturn("");
         app.start(stage);
         app.show(loginScreenController);
+        verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
     }
     @Test
     public void login(){
@@ -61,6 +62,6 @@ class LoginScreenControllerTest extends ApplicationTest {
         type(KeyCode.SPACE);
 
         verify(loginService).login("Test","12345678");
-
+        verify(stylesService, atLeastOnce()).setStyleSheets(any());
     }
 }

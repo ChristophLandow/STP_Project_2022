@@ -52,9 +52,6 @@ class AsOwnerTest extends ApplicationTest {
     NewGameLobbyService newGameLobbyService;
 
     @Mock
-    PrefService prefService;
-
-    @Mock
     StylesService stylesService;
 
     @Mock
@@ -137,6 +134,8 @@ class AsOwnerTest extends ApplicationTest {
         newGameScreenLobbyController.setGame(testGame);
         app.start(stage);
         app.show(newGameScreenLobbyController);
+        verify(colorPickerController, atLeastOnce()).init(any(),any());
+        verify(gameChatController, atLeastOnce()).setChatScrollPane(any());
     }
 
     @Test

@@ -31,9 +31,6 @@ class NewGameLobbyServiceTest {
     GameMemberApiService gameMemberApiService;
 
     @Mock
-    GameApiService gameApiService;
-
-    @Mock
     MessageApiService messageApiService;
 
     @InjectMocks

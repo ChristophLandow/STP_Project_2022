@@ -132,6 +132,7 @@ class SettingsScreenControllerTest extends ApplicationTest {
         hotkeyController.openRulesChoiceBox = new ChoiceBox<>();
         hotkeyController.identicText = new Text();
         hotkeyController.scene = app.getStage().getScene();
+        verify(ingameService, atLeastOnce()).getActualIngameController();
     }
 
     @Test

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BuildingPointControllerTest extends ApplicationTest {
@@ -50,13 +50,7 @@ class BuildingPointControllerTest extends ApplicationTest {
     ResourceService resourceService;
 
     @Mock
-    Pane fieldPane;
-
-    @Mock
     GameStorage gameStorage;
-
-    @Mock
-    UserService userService;
 
     @Mock
     IngameSelectController ingameSelectController;
@@ -95,6 +89,7 @@ class BuildingPointControllerTest extends ApplicationTest {
         when(resourceService.checkResourcesSettlement()).thenReturn(true);
 
         assertFalse(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
+        verify(ingameSelectController, atLeastOnce()).resetSelect();
     }
 
     @Test
@@ -106,6 +101,7 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.placeBuilding(new Building(0,0,0, "000", 0, SETTLEMENT, "000", "000"));
         assertFalse(buildingPointController.view.isVisible());
         assertNotNull(buildingPointController.displayedBuilding);
+        verify(gameService, atLeastOnce()).getUsers();
     }
 
     @Test
