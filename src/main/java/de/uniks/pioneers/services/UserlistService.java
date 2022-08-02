@@ -58,11 +58,7 @@ public class UserlistService {
     }
 
     public boolean validUser(User user) {
-        if(user.name() == null || user._id() == null || user.status() == null) {
-            return false;
-        }
-
-        return true;
+        return user.name() != null && user._id() != null && user.status() != null;
     }
 
     public ObservableList<User> getUsers() {

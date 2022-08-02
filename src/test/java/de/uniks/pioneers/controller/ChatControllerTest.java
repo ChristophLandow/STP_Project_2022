@@ -9,14 +9,11 @@ import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
 import de.uniks.pioneers.ws.EventListener;
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.ListChangeListener;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,10 +24,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,9 +59,6 @@ class ChatControllerTest extends ApplicationTest {
     ChatTabController chatTabController;
 
     @Mock
-    PrefService prefService;
-
-    @Mock
     EventHandlerService eventHandlerService;
 
     @InjectMocks
@@ -73,189 +66,14 @@ class ChatControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
-        ObservableList<User> userList = new ObservableList<>() {
-            @Override
-            public void addListener(ListChangeListener<? super User> listener) {
-
-            }
-
-            @Override
-            public void removeListener(ListChangeListener<? super User> listener) {
-
-            }
-
-            @Override
-            public boolean addAll(User... elements) {
-                return false;
-            }
-
-            @Override
-            public boolean setAll(User... elements) {
-                return false;
-            }
-
-            @Override
-            public boolean setAll(Collection<? extends User> col) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(User... elements) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(User... elements) {
-                return false;
-            }
-
-            @Override
-            public void remove(int from, int to) {
-
-            }
-
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public @NonNull Iterator<User> iterator() {
-                return new Iterator<>() {
-                    @Override
-                    public boolean hasNext() {
-                        return false;
-                    }
-
-                    @Override
-                    public User next() {
-                        return null;
-                    }
-                };
-            }
-
-
-            @Override
-            public Object @NonNull [] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T @NonNull [] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(User user) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(@NonNull Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(@NonNull Collection<? extends User> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, @NonNull Collection<? extends User> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(@NonNull Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(@NonNull Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public User get(int index) {
-                return null;
-            }
-
-            @Override
-            public User set(int index, User element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, User element) {
-
-            }
-
-            @Override
-            public User remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<User> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<User> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<User> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-
-            @Override
-            public void addListener(InvalidationListener listener) {
-
-            }
-
-            @Override
-            public void removeListener(InvalidationListener listener) {
-
-            }
-        };
+        ObservableList<User> userList = FXCollections.observableArrayList();
         when(userlistService.getUsers()).thenReturn(userList);
         when(userlistControllerProvider.get()).thenReturn(new ChatUserlistController(userService, messageService, userlistService, eventListener));
         chatTabController.chattingWith = new User("123", "Tom", "online", null);
         app.start(stage);
         app.show(chatController);
         verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
+        verify(stylesService, atLeastOnce()).setStyleSheets(any());
     }
 
     @Test
@@ -264,13 +82,14 @@ class ChatControllerTest extends ApplicationTest {
         when(messageService.sendMessageToGroup(anyString(), any())).thenReturn(Observable.just(new MessageDto("yesterday", "now", "1234", "me", "Test!")));
         chatController.setCurrentGroupId("1234");
         chatController.messageTextField.setText("Test!");
-        chatController.send(new ActionEvent());
+        chatController.send();
         verify(messageService).sendMessageToGroup(anyString(), any());
     }
 
     @Test
     void addTab() {
         User testUser = new User("1", "Steve", "online", null);
+        when(userlistService.getCurrentUser()).thenReturn(testUser);
         ObservableList<User> userList = userlistService.getUsers();
         userList.add(testUser);
         when(messageService.getOpenChatQueue()).thenReturn(userList);

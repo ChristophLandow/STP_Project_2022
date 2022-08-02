@@ -15,7 +15,6 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -50,9 +49,6 @@ class AsMemberTest extends ApplicationTest {
 
     @Mock
     NewGameLobbyService newGameLobbyService;
-
-    @Mock
-    PrefService prefService;
 
     @Mock
     StylesService stylesService;
@@ -136,6 +132,8 @@ class AsMemberTest extends ApplicationTest {
         newGameScreenLobbyController.setGame(testGame);
         app.start(stage);
         app.show(newGameScreenLobbyController);
+        verify(colorPickerController, atLeastOnce()).init(any(),any());
+        verify(gameChatController, atLeastOnce()).setChatScrollPane(any());
     }
 
     @Test
@@ -178,7 +176,7 @@ class AsMemberTest extends ApplicationTest {
         verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
         verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
 
-        Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
+        Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton()).isEqualTo(false));
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));
     }
 

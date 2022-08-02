@@ -12,7 +12,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.robot.Robot;
@@ -65,9 +64,9 @@ public class StreetPointController {
         checkIfMouseInsideView();
         this.ingameSelectController = ingameSelectController;
 
-        this.eventView.setOnMouseClicked(this::placeStreet);
-        this.eventView.setOnMouseEntered(this::dye);
-        this.eventView.setOnMouseExited(this::undye);
+        this.eventView.setOnMouseClicked(mouseEvent1 -> placeStreet());
+        this.eventView.setOnMouseEntered(mouseEvent -> dye());
+        this.eventView.setOnMouseExited(mouseEvent -> undye());
     }
 
     public void addEventArea() {
@@ -77,7 +76,7 @@ public class StreetPointController {
         this.fieldPane.getChildren().add(eventView);
     }
 
-    public void placeStreet(MouseEvent mouseEvent) {
+    public void placeStreet() {
         boolean valid;
 
         if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
@@ -182,11 +181,11 @@ public class StreetPointController {
         }
     }
 
-    private void dye(MouseEvent mouseEvent) {
+    private void dye() {
         this.view.setFill(HOVER_COLOR);
     }
 
-    private void undye(MouseEvent mouseEvent) {
+    private void undye() {
         this.view.setFill(STANDARD_COLOR);
     }
 

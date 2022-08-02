@@ -60,3 +60,7 @@
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
+
+.text-id {
+    -fx-fill: white;
+}
