@@ -34,4 +34,8 @@ public record CreateMoveDto(
     public CreateMoveDto() {
         this("build", null, null, null, "new", null);
     }
+
+    public CreateMoveDto(String devCard, boolean yourAdvertisementCouldBeHere) {
+        this("build", null, null, null, devCard, null);
+    }
 }

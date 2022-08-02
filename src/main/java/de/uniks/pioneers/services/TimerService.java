@@ -81,7 +81,8 @@ public class TimerService {
                         .subscribe(move -> {
                             timeUp = true;
                             ingameSelectController.resetSelect();
-                            ingameDevelopmentCardController.resetSelect();
+                            ingameDevelopmentCardController.resetHammerSelection();
+                            ingameDevelopmentCardController.closeDevCardPlayStage();
                             this.cancel();
                             reset();
                             Alert alert = new Alert(Alert.AlertType.WARNING);

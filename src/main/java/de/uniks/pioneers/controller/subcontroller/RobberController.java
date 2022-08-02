@@ -9,9 +9,11 @@ import javafx.scene.Parent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
+@Singleton
 public class RobberController implements Controller {
     @Inject Provider<DiscardResourcesController> discardResourcesControllerProvider;
     @Inject Provider<RobPlayerController> robPlayerControllerProvider;
@@ -55,10 +57,8 @@ public class RobberController implements Controller {
     }
 
     private void discard() {
-        if(discardResourcesController == null) {
-            discardResourcesController = discardResourcesControllerProvider.get();
-            discardResourcesController.init();
-        }
+        discardResourcesController = discardResourcesControllerProvider.get();
+        discardResourcesController.init();
     }
 
     public void rob(){
@@ -74,7 +74,9 @@ public class RobberController implements Controller {
 
     @Override
     public void stop() {
-        this.robberService.getRobberState().removeListener(changeListener);
+        if(robberService != null) {
+            this.robberService.getRobberState().removeListener(changeListener);
+        }
 
         if(discardResourcesController != null){
             discardResourcesController.stop();

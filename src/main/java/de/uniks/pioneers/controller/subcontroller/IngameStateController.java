@@ -67,6 +67,7 @@ public class IngameStateController {
             assert move.players().get(0)!=null;
             if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
                 // enable posting move
+                System.out.println(move.action());
                 switch (move.action()) {
                     case FOUNDING_ROLL, ROLL -> {
                         this.enableRoll(move.action());
@@ -95,6 +96,7 @@ public class IngameStateController {
                     }
                     case ROB -> {
                         this.enableHexagonPoints();
+                        System.out.println(robberService.getRobberState().get());
 
                         if(robberService.getRobberState().get() != ROBBER_STEAL){
                             speechService.play(GameConstants.SPEECH_MOVE_ROBBER);
@@ -133,7 +135,8 @@ public class IngameStateController {
 
     private void endTurn(MouseEvent mouseEvent) {
         ingameSelectController.resetSelect();
-        ingameDevelopmentCardController.resetSelect();
+        ingameDevelopmentCardController.resetHammerSelection();
+        ingameDevelopmentCardController.closeDevCardPlayStage();
         final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null, null);
         disposable.add(ingameService.postMove(game._id(), moveDto)
                 .observeOn(FX_SCHEDULER)

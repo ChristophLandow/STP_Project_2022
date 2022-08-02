@@ -141,7 +141,7 @@ public class IngamePlayerResourcesController {
             Pane pane = (Pane) paneNode;
             pane.getChildren().forEach(node -> {
                 String id = node.getId();
-                if (id.endsWith("Ressource")) {
+                if (id.endsWith("Resource")) {
                     String res = resIter.next();
                     String url = String.format("images/card_%s.png", iter.next());
                     Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());
