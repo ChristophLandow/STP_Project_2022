@@ -12,7 +12,6 @@ import de.uniks.pioneers.services.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -165,8 +163,8 @@ public class LobbyScreenController implements Controller {
         userService.editProfile(null, null, null, "online")
                 .subscribe();
         // add mouse event to buttons
-        this.RulesButton.setOnMouseClicked(this::openRules);
-        this.EditProfileButton.setOnAction(this::editProfile);
+        this.RulesButton.setOnMouseClicked(mouseEvent -> openRules());
+        this.EditProfileButton.setOnAction(actionEvent -> editProfile());
     }
 
     private void setupCreateGameListener() {
@@ -189,21 +187,14 @@ public class LobbyScreenController implements Controller {
         isCreatingGame.removeListener(createGameListener);
     }
 
-    public void editProfile(ActionEvent actionEvent) {
+    public void editProfile() {
         EditProfileController editController = editProfileControllerProvider.get();
         app.show(editController);
     }
 
-    private void openRules(MouseEvent mouseEvent) {
+    private void openRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         rulesController.init();
-    }
-
-    public void logout(ActionEvent ignoredEvent) {
-        //This function is only called by the logout button
-        this.messageService.getchatUserList().clear();
-        prefService.forget();
-        logout();
     }
 
     public void logout() {
@@ -251,7 +242,7 @@ public class LobbyScreenController implements Controller {
         return this.app;
     }
 
-    public void openMapEditor(ActionEvent actionEvent) {
+    public void openMapEditor() {
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         app.show(mapBrowserController);
     }

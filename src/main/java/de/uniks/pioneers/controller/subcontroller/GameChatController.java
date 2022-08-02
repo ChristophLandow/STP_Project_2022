@@ -14,7 +14,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -59,7 +58,7 @@ public class GameChatController {
         messageBox.heightProperty().addListener(u->chatScrollPane.setVvalue(1));
 
         if (sendButton != null) {
-            sendButton.setOnAction(this::sendMessage);
+            sendButton.setOnAction(actionEvent -> sendMessage());
         } else {
             messageText.setOnKeyPressed(this::sendMessageViaEnter);
         }
@@ -156,7 +155,7 @@ public class GameChatController {
         return false;
     }
 
-    private void sendMessage(ActionEvent actionEvent) {
+    private void sendMessage() {
         String message = this.messageText.getText();
         if(!message.isEmpty()) {
             disposable.add(newGameLobbyService.sendMessage(game._id(), new CreateMessageDto(message))

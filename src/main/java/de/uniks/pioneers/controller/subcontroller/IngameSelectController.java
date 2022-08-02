@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.services.GameStorage;
 import de.uniks.pioneers.services.IngameService;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,12 +22,12 @@ public class IngameSelectController {
         this.settlementFrame = settlementFrame;
         this.cityFrame = cityFrame;
 
-        roadFrame.setOnMouseClicked(this::selectStreet);
-        settlementFrame.setOnMouseClicked(this::selectSettlement);
-        cityFrame.setOnMouseClicked(this::selectCity);
+        roadFrame.setOnMouseClicked(mouseEvent2 -> selectStreet());
+        settlementFrame.setOnMouseClicked(mouseEvent1 -> selectSettlement());
+        cityFrame.setOnMouseClicked(mouseEvent -> selectCity());
     }
 
-    public void selectStreet(MouseEvent mouseEvent) {
+    public void selectStreet() {
         if(ingameService.getExpectedMove().action().equals("build")) {
             if(!this.gameStorage.selectedBuilding.equals(ROAD)) {
                 this.gameStorage.selectedBuilding = ROAD;
@@ -41,7 +40,7 @@ public class IngameSelectController {
         }
     }
 
-    public void selectSettlement(MouseEvent mouseEvent) {
+    public void selectSettlement() {
         if(ingameService.getExpectedMove().action().equals("build")) {
             if(!this.gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 this.gameStorage.selectedBuilding = SETTLEMENT;
@@ -54,7 +53,7 @@ public class IngameSelectController {
         }
     }
 
-    public void selectCity(MouseEvent mouseEvent) {
+    public void selectCity() {
         if(ingameService.getExpectedMove().action().equals("build")) {
             if(!this.gameStorage.selectedBuilding.equals(CITY)) {
                 this.gameStorage.selectedBuilding = CITY;

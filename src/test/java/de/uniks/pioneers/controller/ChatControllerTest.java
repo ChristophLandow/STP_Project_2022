@@ -14,7 +14,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +82,7 @@ class ChatControllerTest extends ApplicationTest {
         when(messageService.sendMessageToGroup(anyString(), any())).thenReturn(Observable.just(new MessageDto("yesterday", "now", "1234", "me", "Test!")));
         chatController.setCurrentGroupId("1234");
         chatController.messageTextField.setText("Test!");
-        chatController.send(new ActionEvent());
+        chatController.send();
         verify(messageService).sendMessageToGroup(anyString(), any());
     }
 

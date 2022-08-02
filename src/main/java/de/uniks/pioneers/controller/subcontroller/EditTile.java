@@ -4,7 +4,6 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.MapEditorController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
@@ -48,17 +47,17 @@ public class EditTile {
 
     private void init(){
 
-        this.view.setOnMouseClicked(this::place);
-        this.numberView.setOnMouseClicked(this::numberClicked);
+        this.view.setOnMouseClicked(mouseEvent1 -> place());
+        this.numberView.setOnMouseClicked(mouseEvent -> numberClicked());
     }
 
-    private void numberClicked(MouseEvent mouseEvent) {
+    private void numberClicked() {
         if(this.mapEditorController.selection.equals("DELETE")){this.numberView.setImage(null);}
-        else{place(null);}
+        else{place();}
 
     }
 
-    public void place(MouseEvent mouseEvent) {
+    public void place() {
 
         makeVisible(true);
 

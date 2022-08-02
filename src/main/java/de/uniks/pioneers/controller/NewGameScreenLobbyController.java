@@ -24,7 +24,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -141,7 +140,7 @@ public class NewGameScreenLobbyController implements Controller {
         startGameButton.disableProperty().bind(lessThanThree);
 
         // add mouse event for rules button
-        this.RulesButton.setOnMouseClicked(this::openRules);
+        this.RulesButton.setOnMouseClicked(mouseEvent -> openRules());
 
         // add listener for member observable
         newGameLobbyService.getMembers().addListener((ListChangeListener<? super Member>) c -> {
@@ -176,7 +175,7 @@ public class NewGameScreenLobbyController implements Controller {
         eventHandlerService.setEnterEventHandler(messageTextNode, this.sendButton);
     }
 
-    private void openRules(MouseEvent mouseEvent) {
+    private void openRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         rulesController.init();
     }

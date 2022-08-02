@@ -15,7 +15,6 @@ import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -178,7 +177,7 @@ class AsOwnerTest extends ApplicationTest {
         verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
         verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
 
-        Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton(new ActionEvent())).isEqualTo(false));
+        Platform.runLater(() -> assertThat(newGameLobbyReadyController.onSetReadyButton()).isEqualTo(false));
         Platform.runLater(() -> assertThat(newGameLobbyReadyController.allUsersReady()).isEqualTo(false));
     }
 

@@ -5,7 +5,6 @@ import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.ResourceService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -31,12 +30,12 @@ public class IngameDevelopmentCardController {
         this.ingameService = ingameService;
         this.resourceService = resourceService;
 
-        hammerPane.setOnMouseClicked(this::onHammerClicked);
-        leftPane.setOnMouseClicked(this::onLeftPaneClicked);
-        rightPane.setOnMouseClicked(this::onRightPaneClicked);
+        hammerPane.setOnMouseClicked(mouseEvent -> onHammerClicked());
+        leftPane.setOnMouseClicked(mouseEvent -> onLeftPaneClicked());
+        rightPane.setOnMouseClicked(mouseEvent -> onRightPaneClicked());
     }
 
-    private void onHammerClicked(MouseEvent mouseEvent) {
+    private void onHammerClicked() {
         if(ingameService.getExpectedMove().action().equals("build")) {
             changeVisibility();
             changeHammerBorder();
@@ -44,13 +43,13 @@ public class IngameDevelopmentCardController {
     }
 
 
-    private void onLeftPaneClicked(MouseEvent mouseEvent) {
+    private void onLeftPaneClicked() {
         changeVisibility();
         changeHammerBorder();
     }
 
 
-    private void onRightPaneClicked(MouseEvent mouseEvent) {
+    private void onRightPaneClicked() {
         if(ingameService.getExpectedMove().action().equals("build") && resourceService.checkDevCard()) {
             disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto())
                     .observeOn(FX_SCHEDULER)
