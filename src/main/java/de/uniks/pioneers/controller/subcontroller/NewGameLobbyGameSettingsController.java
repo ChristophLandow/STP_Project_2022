@@ -17,7 +17,7 @@ public class NewGameLobbyGameSettingsController implements Controller {
     private final MapBrowserService mapBrowserService;
     private Spinner<Integer> boardSizeSpinner, victoryPointSpinner;
     private ComboBox<Text> mapComboBox;
-    Text defaultMap = new Text("default");
+    final Text defaultMap = new Text("default");
 
     @Inject
     public NewGameLobbyGameSettingsController(MapBrowserService mapBrowserService) {

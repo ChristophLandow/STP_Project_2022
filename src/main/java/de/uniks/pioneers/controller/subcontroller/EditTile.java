@@ -14,17 +14,17 @@ import java.util.Objects;
 
 public class EditTile {
 
-    public HexTile hexTile;
+    public final HexTile hexTile;
 
-    Polygon view;
+    final Polygon view;
 
-    ImageView numberView;
+    final ImageView numberView;
 
     ImageView harbourView = new ImageView();
 
-    MapEditorController mapEditorController;
+    final MapEditorController mapEditorController;
 
-    ArrayList<Integer> harbourOptions = new ArrayList<>();
+    final ArrayList<Integer> harbourOptions = new ArrayList<>();
 
     //index of the harbor position in the array list
     public int currentHarborOption = 0;

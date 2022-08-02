@@ -57,13 +57,13 @@ public class MapEditorController implements Controller{
     Spinner<Integer> sizeSpinner;
 
     private final MapService mapService;
-    public BoardGenerator boardGenerator;
+    public final BoardGenerator boardGenerator;
 
-    public List<EditTile> tiles = new ArrayList<>();
+    public final List<EditTile> tiles = new ArrayList<>();
 
     List<HexTile> frame = new ArrayList<>();
 
-    List<Polygon> tileViews = new ArrayList<>();
+    final List<Polygon> tileViews = new ArrayList<>();
 
     public String selection = "";
 
