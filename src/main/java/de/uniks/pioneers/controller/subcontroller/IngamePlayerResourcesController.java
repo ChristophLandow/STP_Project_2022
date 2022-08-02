@@ -17,10 +17,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
+
+import static de.uniks.pioneers.GameConstants.*;
 
 public class IngamePlayerResourcesController {
     @FXML public HBox resourcesHBox;
@@ -128,7 +129,7 @@ public class IngamePlayerResourcesController {
         Iterator<String> resIter = resStrings.iterator();
         Iterator<String> resIterLabels = resStrings.iterator();
 
-        List<String> devStrings = List.of("knight", "road", "plenty", "monopoly", "vpoint");
+        List<String> devStrings = List.of(DEV_KNIGHT, DEV_ROAD, DEV_PLENTY, DEV_MONOPOLY, DEV_VPOINT);
         Iterator<String> devIter = devStrings.iterator();
         Iterator<String> devCountIter = devStrings.iterator();
 

@@ -1,6 +1,7 @@
 package de.uniks.pioneers.dto;
 
 import de.uniks.pioneers.model.Resources;
+import static de.uniks.pioneers.GameConstants.BUILD;
 
 public record CreateMoveDto(
         String action,
@@ -32,10 +33,10 @@ public record CreateMoveDto(
     }
 
     public CreateMoveDto() {
-        this("build", null, null, null, "new", null);
+        this(BUILD, null, null, null, "new", null);
     }
 
     public CreateMoveDto(String devCard, boolean yourAdvertisementCouldBeHere) {
-        this("build", null, null, null, devCard, null);
+        this(BUILD, null, null, null, devCard, null);
     }
 }

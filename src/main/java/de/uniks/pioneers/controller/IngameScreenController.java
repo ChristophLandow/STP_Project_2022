@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -95,7 +94,6 @@ public class IngameScreenController implements Controller {
     private TradeOfferPopUpController tradeOfferPopUpController;
     public IngameDevelopmentCardController ingameDevelopmentCardController;
     public IngameSelectController ingameSelectController;
-
 
     @Inject
     public IngameScreenController(App app, DiceSubcontroller diceSubcontroller, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
@@ -186,7 +184,7 @@ public class IngameScreenController implements Controller {
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
-        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, robberService, ingameService, resourceService, gameService, userService, robberController);
+        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, timerService, ingameService, resourceService, gameService, userService, robberController);
         this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController);
         this.timerService.init(ingameSelectController, ingameDevelopmentCardController);
         // init game attributes and event listeners

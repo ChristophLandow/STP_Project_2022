@@ -29,7 +29,7 @@ public class IngameSelectController {
     }
 
     public void selectStreet(MouseEvent mouseEvent) {
-        if(ingameService.getExpectedMove().action().equals("build")) {
+        if(ingameService.getExpectedMove().action().equals(BUILD)) {
             if(!this.gameStorage.selectedBuilding.equals(ROAD)) {
                 this.gameStorage.selectedBuilding = ROAD;
                 this.roadFrame.setBackground(Background.fill(Color.rgb(144,238,144)));
@@ -42,7 +42,7 @@ public class IngameSelectController {
     }
 
     public void selectSettlement(MouseEvent mouseEvent) {
-        if(ingameService.getExpectedMove().action().equals("build")) {
+        if(ingameService.getExpectedMove().action().equals(BUILD)) {
             if(!this.gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 this.gameStorage.selectedBuilding = SETTLEMENT;
                 this.settlementFrame.setBackground(Background.fill(Color.rgb(144,238,144)));
@@ -55,7 +55,7 @@ public class IngameSelectController {
     }
 
     public void selectCity(MouseEvent mouseEvent) {
-        if(ingameService.getExpectedMove().action().equals("build")) {
+        if(ingameService.getExpectedMove().action().equals(BUILD)) {
             if(!this.gameStorage.selectedBuilding.equals(CITY)) {
                 this.gameStorage.selectedBuilding = CITY;
                 this.cityFrame.setBackground(Background.fill(Color.rgb(144,238,144)));

@@ -121,7 +121,7 @@ class IngameScreenControllerTest extends ApplicationTest {
         when(mapRenderService.isFinishedLoading()).thenReturn(new SimpleBooleanProperty());
         when(settingsScreenControllerProvider.get()).thenReturn(settingsScreenController);
         when(rulesScreenControllerProvider.get()).thenReturn(rulesController);
-        when(ingameService.getExpectedMove()).thenReturn(new ExpectedMove("build", List.of("000", "001")));
+        when(ingameService.getExpectedMove()).thenReturn(new ExpectedMove(BUILD, List.of("000", "001")));
         when(tradePopUpControllerProvider.get()).thenReturn(tradePopUpController);
 
         ingameService.game = new SimpleObjectProperty<>();

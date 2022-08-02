@@ -6,7 +6,6 @@ import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;

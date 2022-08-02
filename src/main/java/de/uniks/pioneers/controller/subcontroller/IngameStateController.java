@@ -67,7 +67,6 @@ public class IngameStateController {
             assert move.players().get(0)!=null;
             if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
                 // enable posting move
-                System.out.println(move.action());
                 switch (move.action()) {
                     case FOUNDING_ROLL, ROLL -> {
                         this.enableRoll(move.action());
@@ -77,14 +76,14 @@ public class IngameStateController {
                         this.enableBuildingPoints(move.action());
                         speechService.play(SPEECH_PLACE_IGLOO);
                     }
-                    case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> {
+                    case FOUNDING_ROAD_1, FOUNDING_ROAD_2, ROAD_MOVE -> {
                         this.enableStreetPoints(move.action());
                         speechService.play(SPEECH_PLACE_STREET);
                     }
                     case BUILD -> {
                         // set builder timer, in progress...
                         robberService.getRobberState().set(ROBBER_FINISHED);
-                        this.timerService.setBuildTimer(new Timer(), 120);
+                        this.timerService.setBuildTimer(new Timer());
                         this.enableEndTurn();
                         this.enableBuildingPoints(move.action());
                         this.enableStreetPoints(move.action());
@@ -151,13 +150,16 @@ public class IngameStateController {
         String playerName;
         String actionString = "";
         switch (action) {
-            case ROLL, FOUNDING_ROLL -> actionString = "roll the dice";
-            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> actionString = "place road";
-            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
+            case ROLL, FOUNDING_ROLL -> actionString = ROLL_DICE;
+            case FOUNDING_ROAD_1, FOUNDING_ROAD_2, ROAD_MOVE -> actionString = PLACE_ROAD;
+            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = PLACE_SETTLEMENT;
             case BUILD -> actionString = BUILD;
-            case ROB -> actionString = "place robber";
+            case ROB -> actionString = PLACE_ROBBER;
             case OFFER -> actionString = OFFER;
             case ACCEPT -> actionString = ACCEPT;
+            case DROP -> actionString = DROP_CARDS;
+            case MONOPOLY_MOVE -> actionString = CHOSE_MONOPOLY;
+            case PLENTY_MOVE -> actionString = CHOSE_PLENTY;
         }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {

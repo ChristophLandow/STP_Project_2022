@@ -94,7 +94,7 @@ class IngameServiceTest {
     @Test
     void postMove() {
         Resources resources = new Resources(3,3,3,2,1);
-        when(pioneersApiService.postMove(anyString(), any())).thenReturn(Observable.just(new Move("now", "12345", "123", "1234", "build", 3, "igloo", new RobDto(2,1,2,"test"), resources, "test", null)));
+        when(pioneersApiService.postMove(anyString(), any())).thenReturn(Observable.just(new Move("now", "12345", "123", "1234", BUILD, 3, "igloo", new RobDto(2,1,2,"test"), resources, "test", null)));
         CreateMoveDto move = new CreateMoveDto("test", resources, "test");
         Move result = ingameService.postMove("123", move).blockingFirst();
         assertEquals(resources, result.resources());
