@@ -8,99 +8,99 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-   <ScrollPane fx:id="rulesScrollPane" hbarPolicy="NEVER" layoutX="-8.0" pannable="true" prefHeight="600.0" prefWidth="800.0" vvalue="1.0">
+   <ScrollPane fx:id="rulesScrollPane" hbarPolicy="NEVER" layoutX="-8.0" pannable="true" prefHeight="600.0" prefWidth="800.0" styleClass="text-id" vvalue="1.0">
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="3172.0" prefWidth="809.0">
-         <Text layoutX="298.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PIONEERS">
+         <Text layoutX="298.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="PIONEERS">
             <font>
                <Font name="System Bold" size="51.0" />
             </font>
          </Text>
-         <Text layoutX="18.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The goal of the game is to have 10 victory points. Whoever reaches this number automatically wins, the players with the next highest points at this point get second and third place. The game ends. You get victory points for:" wrappingWidth="761.13671875">
+         <Text layoutX="18.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="The goal of the game is to have 10 victory points. Whoever reaches this number automatically wins, the players with the next highest points at this point get second and third place. The game ends. You get victory points for:" wrappingWidth="761.13671875">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="12.0" layoutY="432.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- 1 victory point for each iglo" wrappingWidth="760.205078125">
+         <Text layoutX="12.0" layoutY="432.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- 1 victory point for each iglo" wrappingWidth="760.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="13.0" layoutY="472.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- 2 victory points for each station" wrappingWidth="756.205078125">
+         <Text layoutX="13.0" layoutY="472.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- 2 victory points for each station" wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="13.0" layoutY="510.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- 1 victory point for each victory point event card" wrappingWidth="756.205078125">
+         <Text layoutX="13.0" layoutY="510.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- 1 victory point for each victory point event card" wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="13.0" layoutY="548.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- The first player to play more than three hunters receives the title &quot;largest hunting party&quot; and 2 victory points. If another player plays more hunters, he receives the title and the victory points." wrappingWidth="756.205078125">
+         <Text layoutX="13.0" layoutY="548.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- The first player to play more than three hunters receives the title &quot;largest hunting party&quot; and 2 victory points. If another player plays more hunters, he receives the title and the victory points." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="13.0" layoutY="614.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- The player who has the longest route on the board connected by roads built behind each other receives 2 victory points" wrappingWidth="756.205078125">
+         <Text layoutX="13.0" layoutY="614.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- The player who has the longest route on the board connected by roads built behind each other receives 2 victory points" wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="939.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The game can be divided into 2 phases: " wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="939.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="The game can be divided into 2 phases: " wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="988.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phase 1: Each player must roll the dice, the result determines the starting player. The starting player may now place an igloo and a road first, followed in turn by all other players. Here for the respective player must do nothing except click the positions on the playing field. The last player in the row may place two igloos and 2 roads, after him in reverse order all other players can set their second igloo and road. " wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="988.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Phase 1: Each player must roll the dice, the result determines the starting player. The starting player may now place an igloo and a road first, followed in turn by all other players. Here for the respective player must do nothing except click the positions on the playing field. The last player in the row may place two igloos and 2 roads, after him in reverse order all other players can set their second igloo and road. " wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="1287.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phase 2: Each player has now received the resources corresponding to his built-up fields. Now it is the turn of the players one after the other. Each turn has the same possibilities for each player: First Roll the dice. With a click on the dice, the game automatically rolls the dice and triggers a resource award or the hunter depending on the result. Now the following actions can be handled in any order and number:" wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="1287.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Phase 2: Each player has now received the resources corresponding to his built-up fields. Now it is the turn of the players one after the other. Each turn has the same possibilities for each player: First Roll the dice. With a click on the dice, the game automatically rolls the dice and triggers a resource award or the hunter depending on the result. Now the following actions can be handled in any order and number:" wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="899.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Game" wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="899.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="The Game" wrappingWidth="756.205078125">
             <font>
                <Font name="System Bold" size="24.0" />
             </font>
          </Text>
-         <Text layoutX="18.0" layoutY="274.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Victory" wrappingWidth="760.205078125">
+         <Text layoutX="18.0" layoutY="274.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Victory" wrappingWidth="760.205078125">
             <font>
                <Font name="System Bold" size="24.0" />
             </font>
          </Text>
-         <Text layoutX="13.0" layoutY="1913.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-Trade: By clicking on the Trade button, the trade popup will open and the player can either propose a trade to all other players with conditions to be chosen OR make a trade with the bank according to predefined conditions. " wrappingWidth="756.205078125">
+         <Text layoutX="13.0" layoutY="1913.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Trade: By clicking on the Trade button, the trade popup will open and the player can either propose a trade to all other players with conditions to be chosen OR make a trade with the bank according to predefined conditions. " wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="1565.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- ONLY when a 7 is rolled: Any player with more than 7 cards in hand must select excess cards. These are automatically removed. Now the active player may place the hunter. He clicks on any square to do so. The hunter is placed (made visible by a sign on the field) and players who have igloos or stations on this field do not earn any more until the hunter is removed." wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="1565.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- ONLY when a 7 is rolled: Any player with more than 7 cards in hand must select excess cards. These are automatically removed. Now the active player may place the hunter. He clicks on any square to do so. The hunter is placed (made visible by a sign on the field) and players who have igloos or stations on this field do not earn any more until the hunter is removed." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-Build: By clicking on the corresponding icon and then on the building point, each Sieleer can build igloos oder roads." wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="2240.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Build: By clicking on the corresponding icon and then on the building point, each Sieleer can build igloos oder roads." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2458.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-Buy cards: Clicking on the hammer icon will open a popup where you can choose whether you want to buy a hunter or a random development card." wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="2458.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Buy cards: Clicking on the hammer icon will open a popup where you can choose whether you want to buy a hunter or a random development card." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2702.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-Play cards: If you have a development card you can play it by clicking on it. " wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="2702.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Play cards: If you have a development card you can play it by clicking on it. " wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2742.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-Upgrade: By clicking on the station icon and then clicking on a previously built igloo, an igloo can be upgraded to a station." wrappingWidth="756.205078125">
+         <Text layoutX="14.0" layoutY="2742.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Upgrade: By clicking on the station icon and then clicking on a previously built igloo, an igloo can be upgraded to a station." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="21.0" layoutY="2959.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically." wrappingWidth="756.205078125">
+         <Text layoutX="21.0" layoutY="2959.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
@@ -140,55 +140,53 @@
          <ImageView fitHeight="61.0" fitWidth="180.0" layoutX="300.0" layoutY="1419.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/normalRoll.png" />
          </ImageView>
-         <Text layoutX="284.0" layoutY="3154.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 9 : Next Turn Button">
+         <Text layoutX="284.0" layoutY="3154.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 9 : Next Turn Button">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="248.0" layoutY="2908.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 8 : Upgrade igloo to station button">
+         <Text layoutX="248.0" layoutY="2908.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 8 : Upgrade igloo to station button">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="188.0" layoutY="2659.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 7 : Buy cards button and opening selection of cards">
+         <Text layoutX="188.0" layoutY="2659.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 7 : Buy cards button and opening selection of cards">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="239.0" layoutY="2415.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 6 : Build Igloo and build Street Button">
+         <Text layoutX="239.0" layoutY="2415.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 6 : Build Igloo and build Street Button">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="312.0" layoutY="1996.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../rules/tradeButton.png"/>
+         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="312.0" layoutY="1996.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/tradeButton.png" />
          </ImageView>
-         <Text layoutX="305.0" layoutY="2170.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 5 : Trade Button">
+         <Text layoutX="305.0" layoutY="2170.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 5 : Trade Button">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="264.0" layoutY="1863.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 4 : Field occupied by a hunter">
+         <Text layoutX="264.0" layoutY="1863.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 4 : Field occupied by a hunter">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="155.0" layoutY="1505.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 3 :Click on the dice at the beginning of the round to get resources from built-up fields." wrappingWidth="454.9716796875">
+         <Text layoutX="155.0" layoutY="1505.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 3 :Click on the dice at the beginning of the round to get resources from built-up fields." wrappingWidth="454.9716796875">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="260.0" layoutY="1219.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 2: Single dice roll to determine order">
+         <Text layoutX="260.0" layoutY="1219.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 2: Single dice roll to determine order">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <ImageView fitHeight="115.0" fitWidth="276.0" layoutX="244.0" layoutY="690.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../rules/victoryPoints.png"/>
+         <ImageView fitHeight="115.0" fitWidth="276.0" layoutX="244.0" layoutY="690.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/victoryPoints.png" />
          </ImageView>
-         <Text layoutX="124.0" layoutY="819.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Fig No. 1 :  (From left to right) Victory points and color, avatar and name, event cards, action cards, placed hunters and longest road." wrappingWidth="515.6396484375">
+         <Text layoutX="124.0" layoutY="819.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 1 :  (From left to right) Victory points and color, avatar and name, event cards, action cards, placed hunters and longest road." wrappingWidth="515.6396484375">
             <font>
                <Font size="14.0" />
             </font>

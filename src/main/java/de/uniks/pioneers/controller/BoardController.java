@@ -38,7 +38,7 @@ public class BoardController {
     private final MapRenderService mapRenderService;
     public final SimpleObjectProperty<Game> game;
     private  Thread hextileRenderThread;
-    BoardGenerator generator = new BoardGenerator();
+   final BoardGenerator generator = new BoardGenerator();
 
     public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game, IngameSelectController ingameSelectController,
                            GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
@@ -95,8 +95,6 @@ public class BoardController {
                 catch (InterruptedException ignored){}
             });
 
-            hextileRenderThread.setDaemon(true);
-            hextileRenderThread.start();
         }
         else{
             tiles.forEach(this::loadHexagon);
@@ -114,9 +112,9 @@ public class BoardController {
                 catch (InterruptedException ignored){}
             });
 
-            hextileRenderThread.setDaemon(true);
-            hextileRenderThread.start();
         }
+        hextileRenderThread.setDaemon(true);
+        hextileRenderThread.start();
 
     }
 
@@ -124,12 +122,14 @@ public class BoardController {
         edges.removeIf(edge -> {
             for(HexTile tile: tiles){
                 double[][] edgeCoords = new double[6][2];
-                edgeCoords[0] = new double[]{tile.x + (sqrt(3)/4) * hexScale, tile.y + 0.75 * hexScale};
+                double calcX4 = tile.x + (sqrt(3) / 4) * hexScale;
+                edgeCoords[0] = new double[]{calcX4, tile.y + 0.75 * hexScale};
                 edgeCoords[1] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  + 0};
-                edgeCoords[2] = new double[]{tile.x + (sqrt(3)/4) * hexScale, tile.y - 0.75 * hexScale};
-                edgeCoords[3] = new double[]{tile.x - (sqrt(3)/4) * hexScale, tile.y - 0.75 * hexScale};
+                edgeCoords[2] = new double[]{calcX4, tile.y - 0.75 * hexScale};
+                double calcX_4 = tile.x - (sqrt(3) / 4) * hexScale;
+                edgeCoords[3] = new double[]{calcX_4, tile.y - 0.75 * hexScale};
                 edgeCoords[4] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  + 0};
-                edgeCoords[5] = new double[]{tile.x - (sqrt(3)/4) * hexScale, tile.y + 0.75 * hexScale};
+                edgeCoords[5] = new double[]{calcX_4, tile.y + 0.75 * hexScale};
 
                 for(int i = 0; i < 6; i++) {
                     if(abs(edge.x - edgeCoords[i][0]) < 1 && abs(edge.y - edgeCoords[i][1]) < 1 ) {
@@ -145,11 +145,13 @@ public class BoardController {
             for(HexTile tile: tiles){
                 double[][] cornerCoords = new double[6][2];
                 cornerCoords[0] = new double[]{tile.x + 0, tile.y + 1 * hexScale};
-                cornerCoords[1] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  + 0.5 * hexScale};
-                cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  - 0.5 * hexScale};
+                double calcX2 = tile.x + (sqrt(3) / 2) * hexScale;
+                cornerCoords[1] = new double[]{calcX2, tile.y  + 0.5 * hexScale};
+                cornerCoords[2] = new double[]{calcX2, tile.y  - 0.5 * hexScale};
                 cornerCoords[3] = new double[]{tile.x - 0, tile.y - 1 * hexScale};
-                cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  - 0.5 * hexScale};
-                cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  + 0.5 * hexScale};
+                double calcX_2 = tile.x - (sqrt(3) / 2) * hexScale;
+                cornerCoords[4] = new double[]{calcX_2, tile.y  - 0.5 * hexScale};
+                cornerCoords[5] = new double[]{calcX_2, tile.y  + 0.5 * hexScale};
 
                 for(int i = 0; i < 6; i++) {
                     if(abs(corner.x - cornerCoords[i][0]) < 1 && abs(corner.y - cornerCoords[i][1]) < 1 ) {

@@ -6,7 +6,6 @@ import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,10 +48,10 @@ public class MapBrowserListElementController {
         thumbDown = new Image(Objects.requireNonNull(getClass().getResource("ThumbUp_NotFilled.png")).toString());
         thumbUp = new Image(Objects.requireNonNull(getClass().getResource("ThumbUp_Filled.png")).toString());
         
-        voteButton.setOnAction(this::vote);
+        voteButton.setOnAction(actionEvent1 -> vote());
         if (this.map.createdBy().equals(userService.getCurrentUser()._id())) {
             voteButtonImageView.setImage(trash);
-            voteButton.setOnAction(this::delete);
+            voteButton.setOnAction(actionEvent -> delete());
         } else if (prefService.getVoteButtonState(map._id())) {
             voteButtonImageView.setImage(thumbUp);
         } else {
@@ -61,12 +60,12 @@ public class MapBrowserListElementController {
         voteButton.setGraphic(voteButtonImageView);
     }
 
-    private void delete(ActionEvent actionEvent) {
+    private void delete() {
         disposable.add(mapBrowserService.deleteMap(map._id())
                 .subscribe());
     }
 
-    public void vote(ActionEvent actionEvent) {
+    public void vote() {
         CreateVoteDto voteMove = new CreateVoteDto(1);
         if(prefService.getVoteButtonState(map._id()).equals(false)){
             mapBrowserService.vote(map._id(),voteMove);

@@ -12,7 +12,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.util.Objects;
@@ -132,10 +131,10 @@ public class IngameStateController {
     }
 
     private void enableEndTurn() {
-        this.turnPane.setOnMouseClicked(this::endTurn);
+        this.turnPane.setOnMouseClicked(mouseEvent -> endTurn());
     }
 
-    private void endTurn(MouseEvent mouseEvent) {
+    private void endTurn() {
         ingameSelectController.resetSelect();
         ingameDevelopmentCardController.resetHammerSelection();
         ingameDevelopmentCardController.closeDevCardPlayStage();

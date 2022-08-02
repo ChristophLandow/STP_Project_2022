@@ -5,7 +5,6 @@ import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
 import de.uniks.pioneers.services.StylesService;
 import io.reactivex.rxjava3.core.Observable;
@@ -25,11 +24,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import java.util.ArrayList;
 
 import static de.uniks.pioneers.GameConstants.ROB;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,8 +37,6 @@ class RobPlayerControllerTest extends ApplicationTest {
     App app = new App(null);
     @Mock
     RobberService robberService;
-    @Mock
-    PrefService prefService;
     @Mock
     StylesService stylesService;
 

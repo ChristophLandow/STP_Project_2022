@@ -5,7 +5,6 @@ import de.uniks.pioneers.dto.CreateMessageDto;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.UpdateMemberDto;
 import de.uniks.pioneers.model.Member;
-import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
 import de.uniks.pioneers.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -29,9 +28,6 @@ import static org.mockito.Mockito.when;
 class NewGameLobbyServiceTest {
     @Mock
     GameMemberApiService gameMemberApiService;
-
-    @Mock
-    GameApiService gameApiService;
 
     @Mock
     MessageApiService messageApiService;

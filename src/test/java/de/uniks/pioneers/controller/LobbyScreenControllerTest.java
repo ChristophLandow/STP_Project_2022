@@ -1,7 +1,6 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.controller.subcontroller.GameListElementController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
 import de.uniks.pioneers.dto.Event;
@@ -44,9 +43,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @InjectMocks
     LoginScreenController loginScreenController;
 
-    @InjectMocks
-    GameListElementController gameListElementController;
-
     @Mock(name = "userlistControllerProvider")
     Provider<LobbyUserlistController> userlistControllerProvider;
 
@@ -55,9 +51,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
     @Mock(name = "loginScreenControllerProvider")
     Provider<LoginScreenController> loginScreenControllerProvider;
-
-    @Mock(name = "gameListElementControllerProvider")
-    Provider<GameListElementController> gameListElementControllerProvider;
 
     @Mock
     EventListener eventListener;
@@ -109,11 +102,9 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
         when(userlistService.getUsers()).thenReturn(FXCollections.observableArrayList());
         when(lobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
-        when(messageService.getchatUserList()).thenReturn(FXCollections.observableArrayList());
 
         when(userlistControllerProvider.get()).thenReturn(userlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
-        //when(gameListElementControllerProvider.get()).thenReturn(gameListElementController);
         when(loginScreenControllerProvider.get()).thenReturn(loginScreenController);
 
         //Start controller
@@ -134,5 +125,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
         //Check if logout functions were called
         verify(userService).editProfile(null,null,null,"offline");
         verify(lobbyService).logout();
+        verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
     }
 }

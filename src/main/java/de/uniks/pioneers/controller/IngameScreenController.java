@@ -157,7 +157,7 @@ public class IngameScreenController implements Controller {
         gameService.game.set(game.get());
 
         // init game chat controller
-        gameChatController.setChatScrollPane(this.chatScrollPane, true);
+        gameChatController.setChatScrollPane(this.chatScrollPane);
         gameChatController.setMessageText(this.sendMessageField);
         gameChatController.setMessageBox(this.messageVBox);
         gameChatController.setGame(this.game.get());

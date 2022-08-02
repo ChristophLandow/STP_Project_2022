@@ -12,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -61,12 +60,12 @@ public class IngameDevelopmentCardController implements Controller {
         this.robberController = robberController;
         this.devCardPlayStage = new Stage();
 
-        hammerPane.setOnMouseClicked(this::onHammerClicked);
-        leftPane.setOnMouseClicked(this::onLeftPaneClicked);
-        rightPane.setOnMouseClicked(this::onRightPaneClicked);
+        hammerPane.setOnMouseClicked(mouseEvent -> onHammerClicked());
+        leftPane.setOnMouseClicked(mouseEvent -> onLeftPaneClicked());
+        rightPane.setOnMouseClicked(mouseEvent -> onRightPaneClicked());
     }
 
-    private void onHammerClicked(MouseEvent mouseEvent) {
+    private void onHammerClicked() {
         if(ingameService.getExpectedMove().action().equals(BUILD)) {
             changeVisibility();
             changeHammerBorder();
@@ -74,13 +73,13 @@ public class IngameDevelopmentCardController implements Controller {
     }
 
 
-    private void onLeftPaneClicked(MouseEvent mouseEvent) {
+    private void onLeftPaneClicked() {
         changeVisibility();
         show();
     }
 
 
-    private void onRightPaneClicked(MouseEvent mouseEvent) {
+    private void onRightPaneClicked() {
         if(ingameService.getExpectedMove().action().equals(BUILD) && resourceService.checkDevCard()) {
             disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto())
                     .observeOn(FX_SCHEDULER)

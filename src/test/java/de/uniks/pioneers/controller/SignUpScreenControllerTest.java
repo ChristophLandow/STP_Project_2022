@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.core.Observable;
@@ -19,10 +18,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.control.TextMatchers;
 
-import javax.inject.Provider;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SignUpScreenControllerTest extends ApplicationTest {
@@ -30,13 +26,7 @@ class SignUpScreenControllerTest extends ApplicationTest {
     UserService userService;
 
     @Mock
-    PrefService prefService;
-
-    @Mock
     StylesService stylesService;
-
-    @Spy
-    Provider<LoginScreenController> loginScreenControllerProvider;
 
     @Spy
     App app = new App(null);
@@ -49,6 +39,7 @@ class SignUpScreenControllerTest extends ApplicationTest {
 
         app.start(stage);
         app.show(signUpScreenController);
+        verify(stylesService, atLeastOnce()).setStyleSheets(any(), any(), any());
     }
 
     @Test

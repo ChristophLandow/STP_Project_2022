@@ -9,7 +9,6 @@ import javafx.animation.RotateTransition;
 import javafx.collections.ListChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -61,12 +60,12 @@ public class DiceSubcontroller {
     }
 
     public void activate() {
-        this.leftDiceView.setOnMouseClicked(this::roll);
-        this.rightDiceView.setOnMouseClicked(this::roll);
+        this.leftDiceView.setOnMouseClicked(mouseEvent -> roll());
+        this.rightDiceView.setOnMouseClicked(mouseEvent -> roll());
         this.timerService.setRollTimer(this.action, new Timer());
     }
 
-    private void roll(MouseEvent mouseEvent) {
+    private void roll() {
         CreateMoveDto rollMove = new CreateMoveDto(this.action, null, null, null, null, null);
         disposable.add(ingameService.postMove(gameService.game.get()._id(), rollMove)
                 .observeOn(FX_SCHEDULER)

@@ -47,8 +47,8 @@ public class NewGameLobbyService {
         users = new HashMap<>();
     }
 
-    public Observable<LogoutResult> logout() {
-        return authApiService.logout();
+    public void logout() {
+        authApiService.logout();
     }
 
     public Observable<List<Member>> getAll(String id){
