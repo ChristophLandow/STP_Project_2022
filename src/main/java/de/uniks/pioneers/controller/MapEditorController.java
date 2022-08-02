@@ -60,7 +60,7 @@ public class MapEditorController implements Controller{
     private final MapService mapService;
     public final BoardGenerator boardGenerator;
 
-    public final List<EditTile> tiles = new ArrayList<>();
+    public List<EditTile> tiles = new ArrayList<>();
 
     List<HexTile> frame = new ArrayList<>();
 
