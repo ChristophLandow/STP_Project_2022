@@ -102,11 +102,9 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
         when(userlistService.getUsers()).thenReturn(FXCollections.observableArrayList());
         when(lobbyService.logout()).thenReturn(Observable.just(new LogoutResult()));
-        when(messageService.getchatUserList()).thenReturn(FXCollections.observableArrayList());
 
         when(userlistControllerProvider.get()).thenReturn(userlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
-        //when(gameListElementControllerProvider.get()).thenReturn(gameListElementController);
         when(loginScreenControllerProvider.get()).thenReturn(loginScreenController);
 
         //Start controller
