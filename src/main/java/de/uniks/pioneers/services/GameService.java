@@ -33,7 +33,7 @@ public class GameService {
     public String me;
     private final UserService userService;
     private final IngameService ingameService;
-    public ResourceService resourceService;
+    public final ResourceService resourceService;
     public int victoryPoints;
     public boolean wonGame;
     public SimpleStringProperty moveAction;

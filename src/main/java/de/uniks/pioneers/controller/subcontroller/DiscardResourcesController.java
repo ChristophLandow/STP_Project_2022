@@ -8,6 +8,7 @@ import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -127,7 +128,7 @@ public class DiscardResourcesController implements Initializable, Controller {
         this.stage.setTitle("Discard resource cards");
         Scene scene = new Scene(node);
         this.stage.setScene(scene);
-        this.stage.setOnCloseRequest(event -> event.consume());
+        this.stage.setOnCloseRequest(Event::consume);
 
         if(prefService.getDarkModeState()){
             scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DiscardResourcesPopup.css")));
@@ -189,6 +190,4 @@ public class DiscardResourcesController implements Initializable, Controller {
         System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 
-    public void show() {
-    }
 }

@@ -23,7 +23,6 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -119,7 +118,7 @@ public class SignUpScreenController implements Controller {
                                     .or(userNameLength.greaterThan(0).not()
                                             .or(avatarInvalid))));
 
-            this.textFieldUserName.setOnMouseClicked(this::resetStatus);
+            this.textFieldUserName.setOnMouseClicked(mouseEvent -> resetStatus());
 
             return parent;
 
@@ -157,7 +156,7 @@ public class SignUpScreenController implements Controller {
         }
     }
 
-    private void resetStatus(MouseEvent mouseEvent) {
+    private void resetStatus() {
         this.userNameStatusText.setText("");
     }
     private void resetAvatar() {

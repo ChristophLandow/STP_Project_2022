@@ -14,7 +14,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -134,7 +133,7 @@ public class EditProfileController implements Controller {
     public void stop() {
     }
 
-    public void onSaveButtonPressed(ActionEvent event) throws URISyntaxException, IOException {
+    public void onSaveButtonPressed() throws URISyntaxException, IOException {
         // set defaults
         String newUsername = null;
         String newAvatar = null;

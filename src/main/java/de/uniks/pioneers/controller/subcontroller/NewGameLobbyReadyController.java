@@ -6,7 +6,6 @@ import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -55,11 +54,11 @@ public class NewGameLobbyReadyController {
         this.spectatorImageView = spectatorImageView;
         this.spinnerController = spinnerController;
 
-        readyButton.setOnAction(this::onSetReadyButton);
-        startButton.setOnAction(this::startGame);
+        readyButton.setOnAction(actionEvent -> onSetReadyButton());
+        startButton.setOnAction(actionEvent -> startGame());
     }
 
-    public boolean onSetReadyButton(ActionEvent actionEvent) {
+    public boolean onSetReadyButton() {
         // set member "ready" true in API
         boolean difference = true;
 
@@ -121,7 +120,7 @@ public class NewGameLobbyReadyController {
         }
     }
 
-    private void startGame(ActionEvent actionEvent) {
+    private void startGame() {
         // check if all users are ready
         if (allUsersReady()) {
             disposable.add(newGameLobbyService.updateGame(game, screenController.getPassword(), true, spinnerController.getMapSize(),

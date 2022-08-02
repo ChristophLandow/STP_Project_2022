@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -185,13 +184,13 @@ public class ChatController implements Controller {
         }
     }
 
-    public void leave(ActionEvent ignoredEvent) {
+    public void leave() {
         this.messageService.getchatUserList().clear();
         LobbyScreenController lobbyController = lobbyScreenControllerProvider.get();
         app.show(lobbyController);
     }
 
-    public void send(ActionEvent ignoredEvent) {
+    public void send() {
         //Send messages
         Tab openTab = chatTabPane.getSelectionModel().getSelectedItem();
 

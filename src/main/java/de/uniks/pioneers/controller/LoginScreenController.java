@@ -19,7 +19,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -73,8 +72,8 @@ public class LoginScreenController implements Controller {
             passwordField.textProperty().bindBidirectional(password);
 
             //clear error messages on interaction with text fields
-            this.textFieldUserName.setOnMouseClicked(this::resetStatus);
-            this.passwordField.setOnMouseClicked(this::resetStatus);
+            this.textFieldUserName.setOnMouseClicked(mouseEvent -> resetStatus());
+            this.passwordField.setOnMouseClicked(mouseEvent -> resetStatus());
 
             final IntegerBinding userNameLength = Bindings.length(textFieldUserName.textProperty());
             final BooleanBinding invalid = Bindings.equal(userNameStatusText.textProperty(), passwordStatusText.textProperty()).not();
@@ -89,7 +88,7 @@ public class LoginScreenController implements Controller {
         }
     }
 
-    private void resetStatus(MouseEvent mouseEvent) {
+    private void resetStatus() {
         this.passwordStatusText.setText("");
     }
 
