@@ -30,20 +30,18 @@ public class HotkeyEventController {
         } else {
             keyComb = new KeyCodeCombination(letter, KeyCombination.ALT_DOWN);
         }
-        actualEventHandler = new EventHandler<>() {
-            public void handle(KeyEvent ke) {
-                if (keyComb.match(ke)) {
-                    switch (kind) {
-                        case TRADE -> fireTradeHotkey();
-                        case END -> fireEndHotkey();
-                        case RULES -> fireRulesHotkey();
-                        case SETTINGS -> fireSettingsHotkey();
-                        case BUILDIGLOO -> fireBuildIgluHotkey();
-                        case BUILDSTREET -> fireBuildStreetHotkey();
-                        case UPGRADEIGLOO -> fireUpgradeIgluToStationHotkey();
-                    }
-                    ke.consume();
+        actualEventHandler = ke -> {
+            if (keyComb.match(ke)) {
+                switch (kind) {
+                    case TRADE -> fireTradeHotkey();
+                    case END -> fireEndHotkey();
+                    case RULES -> fireRulesHotkey();
+                    case SETTINGS -> fireSettingsHotkey();
+                    case BUILDIGLOO -> fireBuildIgluHotkey();
+                    case BUILDSTREET -> fireBuildStreetHotkey();
+                    case UPGRADEIGLOO -> fireUpgradeIgluToStationHotkey();
                 }
+                ke.consume();
             }
         };
         scene.addEventFilter(KeyEvent.KEY_PRESSED, actualEventHandler);
