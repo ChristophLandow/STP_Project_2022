@@ -62,6 +62,9 @@ public class Constants {
     public static final String SETTINGS = "settings";
     public static final String RULES = "rules";
     public static final String NOHOTKEY = "";
+    public static final String BUILDIGLOO = "build_igloo";
+    public static final String BUILDSTREET = "build_street";
+    public static final String UPGRADEIGLOO = "upgrade";
 
     //Preferences
     public static final String REMEMBER_ME = "RememberMe";
