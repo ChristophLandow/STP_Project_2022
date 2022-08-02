@@ -8,9 +8,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-
 import java.util.ArrayList;
 import java.util.Objects;
+import static de.uniks.pioneers.EditorConstants.*;
 
 public class EditTile {
 
@@ -53,7 +53,7 @@ public class EditTile {
     }
 
     private void numberClicked(MouseEvent mouseEvent) {
-        if(this.mapEditorController.selection.equals("DELETE")){
+        if(this.mapEditorController.selection.equals(DELETE)){
             this.numberView.setImage(null);
             this.hexTile.number = 0;}
         else{place(null);}
@@ -66,7 +66,7 @@ public class EditTile {
 
         if(!this.mapEditorController.selection.equals("")) {
 
-            if(this.mapEditorController.selection.equals("DELETE")){
+            if(this.mapEditorController.selection.equals(DELETE)){
                 this.view.setFill(Paint.valueOf("#2D9BE7"));
                 this.view.setStroke(Paint.valueOf("#000000"));
                 this.hexTile.type = "";
@@ -87,7 +87,7 @@ public class EditTile {
                 return;
             }
             if(isblocked()){return;}
-            Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.mapEditorController.selection + ".png")).toString());
+            Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.mapEditorController.selection + this.mapEditorController.resMod + ".png")).toString());
             this.view.setFill(new ImagePattern(image));
             this.hexTile.type = this.mapEditorController.selection;
         }
@@ -131,7 +131,6 @@ public class EditTile {
                     this.mapEditorController.scrollPaneAnchorPane.getPrefWidth(),
                     this.mapEditorController.scrollPaneAnchorPane.getPrefHeight(),
                     this.hexTile.scale);
-            System.out.println("harborview "+ this.harbourView);
             this.mapEditorController.scrollPaneAnchorPane.getChildren().add(this.harbourView);
 
         }
