@@ -23,13 +23,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static de.uniks.pioneers.GameConstants.OFFER;
 
 public class TradePopUpController implements Controller {
     @FXML public AnchorPane root;
@@ -276,7 +277,7 @@ public class TradePopUpController implements Controller {
         }
 
         private void updateTrade(int increment) {
-            if (types.getKey().equals("Offer")) {
+            if (types.getKey().equals(OFFER)) {
                 ingameService.getOrCreateTrade(types.getValue(), -increment);
             } else {
                 ingameService.getOrCreateTrade(types.getValue(), increment);

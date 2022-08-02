@@ -34,7 +34,7 @@ public class ResourceRemovedAnimationController {
     }
 
     public void removedResourceCardAnimation(ImageView card, int counter, int resNumber, String moveAction) {
-        if(moveAction.equals("accept") || moveAction.equals("rob")) {
+        if(moveAction.equals(ACCEPT) || moveAction.equals(ROB)) {
             removedTradeResourceCardAnimationOne(card, counter, resNumber);
         } else {
             removedResourceCardAnimationOne(card, counter, resNumber);

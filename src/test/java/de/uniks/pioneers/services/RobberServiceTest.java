@@ -16,9 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
 
+import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
@@ -96,7 +96,7 @@ class RobberServiceTest {
         RobDto robInfo = new RobDto(0,0,0,"target");
 
         CreateMoveDto robMove = new CreateMoveDto(
-                GameConstants.ROB,
+                ROB,
                 robInfo,
                 null,
                 null,
@@ -108,13 +108,13 @@ class RobberServiceTest {
                 new Game("","","1","testgame","u",1, true,null));
 
         when(pioneersApiService.postMove("1", robMove)).thenReturn(
-                Observable.just(new Move("", "","1", "u","rob",0, null, robInfo, null, "", null)));
+                Observable.just(new Move("", "","1", "u",ROB,0, null, robInfo, null, "", null)));
 
         final Move robResult = robberService.robPlayer("target").blockingFirst();
 
         assertEquals(robResult.gameId(), "1");
         assertEquals(robResult.userId(), "u");
-        assertEquals(robResult.action(), "rob");
+        assertEquals(robResult.action(), ROB);
         assertEquals(robResult.roll(), 0);
         assertEquals(robResult.rob(), robInfo);
 
@@ -138,13 +138,13 @@ class RobberServiceTest {
                 new Game("","","1","testgame","u",1, true,null));
 
         when(pioneersApiService.postMove("1", dropMove)).thenReturn(
-                Observable.just(new Move("", "","1", "u","drop",0, null, null, resources, "", null)));
+                Observable.just(new Move("", "","1", "u",DROP,0, null, null, resources, "", null)));
 
         final Move dropResult = robberService.dropResources(resources).blockingFirst();
 
         assertEquals(dropResult.gameId(), "1");
         assertEquals(dropResult.userId(), "u");
-        assertEquals(dropResult.action(), "drop");
+        assertEquals(dropResult.action(), DROP);
         assertEquals(dropResult.roll(), 0);
         assertEquals(dropResult.resources(), resources);
 

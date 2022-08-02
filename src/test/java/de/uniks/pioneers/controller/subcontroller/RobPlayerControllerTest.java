@@ -28,6 +28,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
 
+import static de.uniks.pioneers.GameConstants.ROB;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -59,7 +60,7 @@ class RobPlayerControllerTest extends ApplicationTest {
         RobDto robMove = new RobDto(0,0,0,"player1");
 
         when(robberService.getRobbingCandidates()).thenReturn(robbingCandidates);
-        when(robberService.robPlayer("player1")).thenReturn(Observable.just(new Move("", "","1", "u","rob",0, null, robMove, null, "", null)));
+        when(robberService.robPlayer("player1")).thenReturn(Observable.just(new Move("", "","1", "u",ROB,0, null, robMove, null, "", null)));
 
         app.start(stage);
         app.show(robPlayerController);
