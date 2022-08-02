@@ -119,6 +119,12 @@ class SettingsScreenControllerTest extends ApplicationTest {
         when(prefService.saveRulesTextInput(any())).thenReturn("0");
         when(prefService.saveSettingsChoiceBox(any())).thenReturn(STRG);
         when(prefService.saveSettingsTextInput(any())).thenReturn("1");
+        when(prefService.saveBuildIglooChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveBuildIglooTextInput(any())).thenReturn("2");
+        when(prefService.saveBuildStreetChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveBuildStreetTextInput(any())).thenReturn("3");
+        when(prefService.saveUpgradeIglooChoiceBox(any())).thenReturn(STRG);
+        when(prefService.saveUpgradeIglooTextInput(any())).thenReturn("4");
         when(prefService.getGenderVoice()).thenReturn("female");
         app.start(stage);
         app.show(settingsScreenController);
@@ -130,6 +136,12 @@ class SettingsScreenControllerTest extends ApplicationTest {
         hotkeyController.openSettingsTextField = new TextField();
         hotkeyController.openRulesTextField = new TextField();
         hotkeyController.openRulesChoiceBox = new ChoiceBox<>();
+        hotkeyController.buildIglooTextField = new TextField();
+        hotkeyController.buildIglooChoiceBox = new ChoiceBox<>();
+        hotkeyController.buildStreetTextField = new TextField();
+        hotkeyController.buildStreetChoiceBox = new ChoiceBox<>();
+        hotkeyController.upgradeIglooTextField = new TextField();
+        hotkeyController.upgradeIglooChoiceBox = new ChoiceBox<>();
         hotkeyController.identicText = new Text();
         hotkeyController.scene = app.getStage().getScene();
     }
@@ -219,6 +231,12 @@ class SettingsScreenControllerTest extends ApplicationTest {
         hotkeyController.openSettingsChoiceBox.setValue(STRG);
         hotkeyController.openRulesTextField.setText("1");
         hotkeyController.openRulesChoiceBox.setValue(STRG);
+        hotkeyController.buildIglooTextField.setText("2");
+        hotkeyController.buildIglooChoiceBox.setValue(STRG);
+        hotkeyController.buildStreetTextField.setText("3");
+        hotkeyController.buildStreetChoiceBox.setValue(STRG);
+        hotkeyController.upgradeIglooTextField.setText("4");
+        hotkeyController.upgradeIglooChoiceBox.setValue(STRG);
         hotkeyController.saveHotkeys();
         assertNotNull(hotkeyController.tradeHotkeyController);
         assertNotNull(hotkeyController.endTurnHotkeyController);
@@ -232,6 +250,12 @@ class SettingsScreenControllerTest extends ApplicationTest {
         hotkeyController.openSettingsTextField.setText("");
         hotkeyController.openSettingsChoiceBox.setValue("");
         hotkeyController.openRulesTextField.setText("");
+        hotkeyController.buildIglooTextField.setText("");
+        hotkeyController.buildIglooChoiceBox.setValue("");
+        hotkeyController.buildStreetTextField.setText("");
+        hotkeyController.buildStreetChoiceBox.setValue("");
+        hotkeyController.upgradeIglooTextField.setText("");
+        hotkeyController.upgradeIglooChoiceBox.setValue("");
         hotkeyController.saveHotkeys();
         assertNull(hotkeyController.tradeHotkeyController);
         assertNull(hotkeyController.endTurnHotkeyController);
