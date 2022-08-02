@@ -8,7 +8,6 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.GameSettings;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
-import de.uniks.pioneers.rest.GameMemberApiService;
 import de.uniks.pioneers.services.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +22,7 @@ import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.LEAVE_GAME;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LeaveGameControllerTest {
@@ -32,9 +31,6 @@ class LeaveGameControllerTest {
 
     @Mock
     NewGameScreenLobbyController newGameScreenLobbyController;
-
-    @Mock
-    NewGameLobbyService newGameLobbyService;
 
     @Mock
     UserService userService;
@@ -59,9 +55,6 @@ class LeaveGameControllerTest {
 
     @Mock
     GameStorage gameStorage;
-
-    @Mock
-    GameMemberApiService gameMemberApiService;
 
     @Mock
     GameChatController gameChatController;
@@ -104,6 +97,7 @@ class LeaveGameControllerTest {
 
         assertFalse(leaveGameController.loadLeavedGame(null));
         assertTrue(leaveGameController.loadLeavedGame(game));
+        verify(newGameScreenLobbyController, atLeastOnce()).toIngame(any(), any(), anyString(), anyBoolean(), anyInt(), anyBoolean());
     }
 
     @Test
@@ -125,6 +119,7 @@ class LeaveGameControllerTest {
         assertEquals(prefs.get(LEAVE_GAME, ""), "123");
         assertEquals(prefs.get("MapRadius", ""), "5");
         assertEquals(userService.isSpectator(), false);
+        verify(timerService, atLeastOnce()).reset();
     }
 
     @Test
@@ -141,5 +136,6 @@ class LeaveGameControllerTest {
         assertEquals(prefs.get(LEAVE_GAME, ""), "");
         assertEquals(prefs.get("MapRadius", ""), "");
         assertEquals(userService.isSpectator(), false);
+        verify(app, atLeastOnce()).show(any());
     }
 }

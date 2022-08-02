@@ -13,9 +13,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
@@ -50,6 +48,7 @@ class LoginServiceTest {
         assertEquals(tokenStorage.getRefreshToken(), "456");
 
         verify(authApiService).login(new LoginDto("LoginServiceTestUser","12345678"));
+        verify(userService, atLeastOnce()).setCurrentUser(any());
 
     }
 
@@ -74,9 +73,5 @@ class LoginServiceTest {
 
         verify(authApiService).refresh(new RefreshDto("abc"));
 
-    }
-
-    @Test
-    void checkPassword() {
     }
 }
