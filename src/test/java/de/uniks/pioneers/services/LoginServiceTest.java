@@ -75,8 +75,4 @@ class LoginServiceTest {
         verify(authApiService).refresh(new RefreshDto("abc"));
 
     }
-
-    @Test
-    void checkPassword() {
-    }
 }

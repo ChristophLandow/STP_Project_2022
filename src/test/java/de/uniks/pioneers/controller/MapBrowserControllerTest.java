@@ -26,7 +26,6 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -120,10 +119,5 @@ public class MapBrowserControllerTest extends ApplicationTest {
         type(KeyCode.SPACE);
 
         verify(mapBrowserService).deleteMap("map456");
-    }
-
-    @Test
-    void test() {
-
     }
 }

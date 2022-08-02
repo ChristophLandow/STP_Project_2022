@@ -191,14 +191,12 @@ public class GameChatController {
         this.sendButton = sendButton;
     }
 
-    public GameChatController setGame(Game game) {
+    public void setGame(Game game) {
         this.game = game;
-        return this;
     }
 
-    public GameChatController setUsers(List<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
-        return this;
     }
 
     public void setIngameScreenController (IngameScreenController ingameScreenController) {
