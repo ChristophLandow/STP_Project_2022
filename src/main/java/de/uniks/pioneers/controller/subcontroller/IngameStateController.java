@@ -25,6 +25,7 @@ public class IngameStateController {
     private final UserService userService;
     private final IngameService ingameService;
     private final TimerService timerService;
+    private final RobberController robberController;
     private final IngameSelectController ingameSelectController;
     private final MapRenderService mapRenderService;
     private final BoardController boardController;
@@ -39,12 +40,13 @@ public class IngameStateController {
     private final RobberService robberService;
     private final SpeechService speechService;
 
-    public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane,
+    public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane, RobberController robberController,
                                  ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, IngameSelectController ingameSelectController,
                                  MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, IngameDevelopmentCardController ingameDevelopmentCardController) {
         this.userService = userService;
         this.ingameService = ingameService;
         this.timerService = timerService;
+        this.robberController = robberController;
         this.ingameSelectController = ingameSelectController;
         this.mapRenderService = mapRenderService;
         this.robberService = robberService;
@@ -106,8 +108,9 @@ public class IngameStateController {
                         ingameService.tradeIsOffered.set(true);
                         speechService.play(SPEECH_TRADEOFFER);
                     }
-                    case ACCEPT -> {
-                    }
+                    case ACCEPT -> {}
+                    case MONOPOLY_MOVE -> robberController.discardOrChoose(MONOPOLY_NUMBER);
+                    case PLENTY_MOVE -> robberController.discardOrChoose(PLENTY_NUMBER);
                 }
             }
 
@@ -158,8 +161,8 @@ public class IngameStateController {
             case OFFER -> actionString = OFFER;
             case ACCEPT -> actionString = ACCEPT;
             case DROP -> actionString = DROP_CARDS;
-            case MONOPOLY_MOVE -> actionString = CHOSE_MONOPOLY;
-            case PLENTY_MOVE -> actionString = CHOSE_PLENTY;
+            case MONOPOLY_MOVE -> actionString = CHOOSE_MONOPOLY;
+            case PLENTY_MOVE -> actionString = CHOOSE_PLENTY;
         }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {
