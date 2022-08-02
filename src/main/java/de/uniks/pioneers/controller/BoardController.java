@@ -101,8 +101,6 @@ public class BoardController {
                 catch (InterruptedException ignored){}
             });
 
-            hextileRenderThread.setDaemon(true);
-            hextileRenderThread.start();
         }
         else{
             tiles.forEach(this::loadHexagon);
@@ -120,9 +118,9 @@ public class BoardController {
                 catch (InterruptedException ignored){}
             });
 
-            hextileRenderThread.setDaemon(true);
-            hextileRenderThread.start();
         }
+        hextileRenderThread.setDaemon(true);
+        hextileRenderThread.start();
 
     }
 

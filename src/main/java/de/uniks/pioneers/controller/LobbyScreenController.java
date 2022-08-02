@@ -68,7 +68,6 @@ public class LobbyScreenController implements Controller {
     public final SimpleBooleanProperty isCreatingGame = new SimpleBooleanProperty(false);
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
-    private MapBrowserController mapBrowserController;
     private final StylesService stylesService;
 
     @Inject
@@ -134,7 +133,7 @@ public class LobbyScreenController implements Controller {
             Button cancelButton = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
             cancelButton.setText("No");
             Optional<ButtonType> option = alert.showAndWait();
-            if(option.get() == ButtonType.OK) {
+            if(option.isPresent() && option.get() == ButtonType.OK) {
                 Alert alertLoading = new Alert(Alert.AlertType.CONFIRMATION);
                 alertLoading.setTitle("Loading");
                 alertLoading.setHeaderText("Game is loading...");
@@ -253,7 +252,7 @@ public class LobbyScreenController implements Controller {
     }
 
     public void openMapEditor(ActionEvent actionEvent) {
-        mapBrowserController = mapBrowserControllerProvider.get();
+        MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         app.show(mapBrowserController);
     }
 }

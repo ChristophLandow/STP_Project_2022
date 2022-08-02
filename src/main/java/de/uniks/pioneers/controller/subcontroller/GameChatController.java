@@ -47,7 +47,6 @@ public class GameChatController {
     private IngameScreenController ingameScreenController;
     private Game game;
     private List<User> users;
-    private boolean ingame;
 
     @Inject
     public GameChatController(NewGameLobbyService newGameLobbyService, EventListener eventListener, UserService userService) {
@@ -176,25 +175,20 @@ public class GameChatController {
         }
     }
 
-    public GameChatController setChatScrollPane(ScrollPane chatScrollPane, boolean ingame) {
-        this.ingame = ingame;
+    public void setChatScrollPane(ScrollPane chatScrollPane) {
         this.chatScrollPane = chatScrollPane;
-        return this;
     }
 
-    public GameChatController setMessageBox(VBox messageBox) {
+    public void setMessageBox(VBox messageBox) {
         this.messageBox = messageBox;
-        return this;
     }
 
-    public GameChatController setMessageText(TextField messageText) {
+    public void setMessageText(TextField messageText) {
         this.messageText = messageText;
-        return this;
     }
 
-    public GameChatController setSendButton(Button sendButton) {
+    public void setSendButton(Button sendButton) {
         this.sendButton = sendButton;
-        return this;
     }
 
     public GameChatController setGame(Game game) {
@@ -207,8 +201,7 @@ public class GameChatController {
         return this;
     }
 
-    public GameChatController setIngameScreenController (IngameScreenController ingameScreenController) {
+    public void setIngameScreenController (IngameScreenController ingameScreenController) {
         this.ingameScreenController = ingameScreenController;
-        return this;
     }
 }

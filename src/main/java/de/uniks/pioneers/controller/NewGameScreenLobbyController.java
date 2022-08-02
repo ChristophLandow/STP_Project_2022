@@ -157,7 +157,7 @@ public class NewGameScreenLobbyController implements Controller {
                 .subscribe(newGameLobbyService.getMembers()::setAll, Throwable::printStackTrace));
 
         // init game chat controller
-        gameChatController.setChatScrollPane(this.chatScrollPane, false);
+        gameChatController.setChatScrollPane(this.chatScrollPane);
         gameChatController.setMessageText(this.messageText);
         gameChatController.setMessageBox(this.messageBox);
         gameChatController.setSendButton(this.sendButton);
