@@ -70,6 +70,9 @@ public class EditTile {
                 this.view.setFill(Paint.valueOf("#2D9BE7"));
                 this.view.setStroke(Paint.valueOf("#000000"));
                 this.hexTile.type = "";
+                this.harbourView.setImage(null);
+                this.currentHarborSide = 0;
+                this.currentHarborOption = 0;
 
                 return;
             }
@@ -110,13 +113,8 @@ public class EditTile {
         this.currentHarborOption = (this.currentHarborOption + 1) % this.harbourOptions.size();
         currentHarborSide = this.harbourOptions.get(this.currentHarborOption);
 
-        if(this.harbourOptions.get(this.currentHarborOption) != 0) {
-        renderHarbor();
-        }
-        else{
-            this.currentHarborType = "";
-        }
-
+        if(this.harbourOptions.get(this.currentHarborOption) != 0) {renderHarbor();}
+        else{this.currentHarborType = "";}
         }
 
         public void renderHarbor(){
@@ -136,14 +134,15 @@ public class EditTile {
         }
 
         public void prepareHarborOptions(){
-            if(this.harbourOptions.isEmpty()){
-                this.harbourOptions.add(0);
-                this.harbourOptions.add(1);
-                this.harbourOptions.add(3);
-                this.harbourOptions.add(5);
-                this.harbourOptions.add(7);
-                this.harbourOptions.add(9);
-                this.harbourOptions.add(11);}
+
+            this.harbourOptions.clear();
+            this.harbourOptions.add(0);
+            this.harbourOptions.add(1);
+            this.harbourOptions.add(3);
+            this.harbourOptions.add(5);
+            this.harbourOptions.add(7);
+            this.harbourOptions.add(9);
+            this.harbourOptions.add(11);
         }
 
         private void cleanHarborOptions(){
@@ -164,6 +163,7 @@ public class EditTile {
                 if((this.hexTile.r -1 == tile.hexTile.r) & (this.hexTile.s +1 == tile.hexTile.s)){
                     this.harbourOptions.remove(Integer.valueOf(11));}
             }
+
         }
 
         public boolean isblocked() {
