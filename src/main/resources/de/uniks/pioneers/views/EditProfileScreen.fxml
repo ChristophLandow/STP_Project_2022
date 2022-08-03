@@ -19,7 +19,7 @@
     <Button fx:id="saveLeaveButton" layoutX="419.0" layoutY="333.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" text="Save &amp; Leave" />
     <ImageView fx:id="avatarImage" fitHeight="100.0" fitWidth="100.0" layoutX="417.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" />
     <Button fx:id="uploadAvatarButton" layoutX="418.0" layoutY="214.0" mnemonicParsing="false" onAction="#uploadAvatar" text="upload avatar" />
-    <Text layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="user_394" />
+    <Text fx:id="usernameLabel" layoutX="142.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="user_394" />
     <Text fx:id="usernameStatusText" fill="RED" layoutX="36.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
     <Text fx:id="newPasswordStatusText" fill="RED" layoutX="36.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
     <Text fx:id="oldPasswordStatusText" fill="RED" layoutX="36.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="251.25439453125" />
