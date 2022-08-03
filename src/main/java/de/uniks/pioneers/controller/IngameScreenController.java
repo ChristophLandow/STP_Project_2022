@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.PopUpController.AchievementPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
@@ -69,9 +70,11 @@ public class IngameScreenController implements Controller {
     @Inject Provider<SettingsScreenController> settingsScreenControllerProvider;
     @Inject Provider<TradePopUpController> tradePopUpControllerProvider;
     @Inject Provider<TradeOfferPopUpController> tradeOfferPopUpControllerProvider;
+    @Inject Provider<AchievementPopUpController> achievementsPopUpControllerProvider;
     @Inject EventListener eventListener;
     @Inject VictoryPointController victoryPointController;
 
+    private AchievementPopUpController achievementPopUpController;
     public ZoomableScrollPane zoomableScrollPane;
     private final App app;
     private final GameService gameService;
@@ -86,6 +89,7 @@ public class IngameScreenController implements Controller {
     private final SpeechService speechService;
     private final RobberService robberService;
     private final StylesService stylesService;
+    private final AchievementService achievementService;
     private final BoardController boardController;
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -99,7 +103,8 @@ public class IngameScreenController implements Controller {
 
     @Inject
     public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
-                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService) {
+                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService,
+                                  AchievementService achievementService) {
         this.app = app;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
@@ -111,6 +116,7 @@ public class IngameScreenController implements Controller {
         this.robberService = robberService;
         this.speechService = speechService;
         this.stylesService = stylesService;
+        this.achievementService = achievementService;
         this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
         this.ingameSelectController = new IngameSelectController();
         this.boardController = new BoardController(ingameService, userService, game, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
@@ -138,8 +144,10 @@ public class IngameScreenController implements Controller {
 
         this.zoomableScrollPane = zoomableScrollPaneProvider.get();
         this.zoomableScrollPane.init(fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
-
         Platform.runLater(this.zoomableScrollPane::render);
+
+        this.achievementPopUpController = achievementsPopUpControllerProvider.get();
+        this.root.getChildren().add(this.achievementPopUpController.render());
 
         return view;
     }
@@ -167,6 +175,8 @@ public class IngameScreenController implements Controller {
         gameChatController.setIngameScreenController(this);
         gameChatController.render();
         gameChatController.init();
+
+        this.achievementPopUpController.init();
 
         ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
@@ -244,12 +254,17 @@ public class IngameScreenController implements Controller {
         gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
             if (c.getKey().equals(ROAD)) {
                 this.streetCountLabel.setText(c.getValueAdded().toString());
+                this.achievementService.incrementProgress(ROAD_ACHIEVEMENT);
             }
             if (c.getKey().equals(SETTLEMENT)) {
                 this.houseCountLabel.setText(c.getValueAdded().toString());
+                if(c.getValueRemoved() > c.getValueAdded()) {
+                    this.achievementService.incrementProgress(SETTLEMENT_ACHIEVEMENT);
+                }
             }
             if (c.getKey().equals(CITY)) {
                 this.cityCountLabel.setText(c.getValueAdded().toString());
+                this.achievementService.incrementProgress(CITY_ACHIEVEMENT);
             }
         });
 
@@ -313,6 +328,7 @@ public class IngameScreenController implements Controller {
         timerService.reset();
         mapRenderService.stop();
         boardController.stop();
+        achievementPopUpController.stop();
     }
 
     public void setUsers(List<User> users) {

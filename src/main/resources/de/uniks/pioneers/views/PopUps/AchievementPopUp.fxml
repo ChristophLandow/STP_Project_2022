@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="achievementPane" prefHeight="62.0" prefWidth="375.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.PopUpController.AchievementPopUpController">
+   <children>
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="WHITE" height="64.0" stroke="BLACK" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="2.0" styleClass="achievement-rect" width="378.0" />
+      <ImageView fitHeight="48.0" fitWidth="46.0" layoutX="41.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../achievement-award.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="titleLabel" alignment="CENTER" layoutX="97.0" layoutY="11.0" prefHeight="27.0" prefWidth="261.0" text="Title" textAlignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="descriptionLabel" alignment="CENTER" layoutX="97.0" layoutY="33.0" prefHeight="25.0" prefWidth="264.0" text="Description" textAlignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
