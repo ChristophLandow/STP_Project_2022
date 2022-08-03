@@ -96,7 +96,6 @@ public class IngameStateController {
                     }
                     case ROB -> {
                         this.enableHexagonPoints();
-                        System.out.println(robberService.getRobberState().get());
 
                         if(robberService.getRobberState().get() != ROBBER_STEAL){
                             speechService.play(GameConstants.SPEECH_MOVE_ROBBER);

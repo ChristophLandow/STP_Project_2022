@@ -113,7 +113,6 @@ public class IngameDevelopmentCardController implements Controller {
     @Override
     public void init() {
         HashMap<String, Integer> myUnlockedDevCardsMap = getUnlockedDevCardMap(gameService.players.get(userService.getCurrentUser()._id()).developmentCards());
-        System.out.println(myUnlockedDevCardsMap);
 
         if(myUnlockedDevCardsMap.get(DEV_PLENTY) > 0) {
             plentyViewMono.setVisible(false);

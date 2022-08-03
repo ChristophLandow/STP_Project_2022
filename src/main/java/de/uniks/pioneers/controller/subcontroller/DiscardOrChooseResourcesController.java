@@ -213,14 +213,13 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
         int fishCount = FishSpinner.getValue();
         int carbonCount = CarbonSpinner.getValue();
         int resourceCount = waleCount + iceCount + polarBearCount + fishCount + carbonCount;
-        Resources resources = new Resources(-waleCount, -iceCount, -carbonCount, -fishCount, -polarBearCount);
 
         if(state == DISCARD_NUMBER) {
             if (resourceCount != ((fish + wale + polarBear + ice + carbon)/2)) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "You are trying to discard more or less resources than necessary!");
                 alert.showAndWait();
             } else {
-                disposable.add(robberService.dropResources(resources)
+                disposable.add(robberService.dropResources(new Resources(-waleCount, -iceCount, -carbonCount, -fishCount, -polarBearCount))
                         .observeOn(FX_SCHEDULER)
                         .take(1)
                         .subscribe(move -> stop(),this::handleHttpError));
@@ -231,10 +230,12 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
                 Alert alert = new Alert(Alert.AlertType.WARNING, "You are trying to choose more or less resources than necessary!");
                 alert.showAndWait();
             } else if (state == MONOPOLY_NUMBER) {
-                disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(MONOPOLY_MOVE, resources))
+                disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(MONOPOLY_MOVE, new Resources((waleCount > 0) ? waleCount : null, (iceCount > 0) ? iceCount : null,
+                                (carbonCount > 0) ? carbonCount : null, (fishCount > 0) ? fishCount : null, (polarBearCount > 0) ? polarBearCount : null)))
                         .observeOn(FX_SCHEDULER)
                         .take(1)
                         .subscribe(move -> stop(),this::handleHttpError));
+
                 this.stop();
             } else if (state == PLENTY_NUMBER) {
                 disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(PLENTY_MOVE, new Resources(waleCount, iceCount, carbonCount, fishCount, polarBearCount)))
