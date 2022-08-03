@@ -79,7 +79,7 @@ public class StreetPointController {
     public void placeStreet() {
         boolean valid;
 
-        if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
+        if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2) || action.equals(ROAD_MOVE)) {
             valid = checkBuildings();
         } else {
             if (gameStorage.remainingBuildings.get(ROAD) >= 1 && resourceService.checkRoad()) {
