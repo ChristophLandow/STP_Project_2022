@@ -67,7 +67,7 @@ public class MapEditorController implements Controller{
 
     private final MapService mapService;
     public BoardGenerator boardGenerator;
-    public List<EditTile> tiles = new ArrayList<>();
+    public ArrayList<EditTile> tiles = new ArrayList<>();
     List<HexTile> frame = new ArrayList<>();
     List<Polygon> tileViews = new ArrayList<>();
     public String selection = "";
@@ -152,6 +152,7 @@ public class MapEditorController implements Controller{
                     0.0*scale,-1.0*scale,
                     (-Math.sqrt(3)/2)*scale,-0.5*scale,
                     (-Math.sqrt(3)/2)*scale,0.5*scale);
+            tile.setId(hexTile.q + "," + hexTile.r + "," + hexTile.s);
 
             if(!hexTile.type.equals("")){
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + hexTile.type + resMod + ".png")).toString());
@@ -198,6 +199,7 @@ public class MapEditorController implements Controller{
     }
 
     public void toMaps(){
+        System.out.println("ToMaps");
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         this.app.show(mapBrowserController);
     }

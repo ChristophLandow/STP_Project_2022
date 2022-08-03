@@ -191,5 +191,11 @@ public class EditTile {
                 this.harbourView.setVisible(visibility);}
         }
 
+    public String toString() {
+        return "q: " + this.hexTile.q + " " + "r: " + this.hexTile.r + " " + "s: " + this.hexTile.s + " Biome: " + this.hexTile.type + " Number: " + this.hexTile.number + " " +
+                "Harbour Side: " + this.currentHarborSide + " Harbour Type: " + this.currentHarborType + "Active: " + this.active +"\n";
     }
+
+
+}
 
