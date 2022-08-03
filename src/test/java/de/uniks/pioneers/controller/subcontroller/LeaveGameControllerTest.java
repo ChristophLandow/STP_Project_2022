@@ -82,7 +82,7 @@ class LeaveGameControllerTest {
     void saveLeavedGame() {
         Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
-        leaveGameController.saveLeavedGame("000", "111", 2, List.of(new User("000", "test1", "online", null)), "#ff0000");
+        leaveGameController.saveLeavedGame("000", List.of(new User("000", "test1", "online", null)), "#ff0000");
         assertEquals(prefs.get(LEAVE_GAME, ""), "000");
         assertEquals(prefs.get("MapRadius", ""), "2");
         assertEquals(leaveGameController.users, List.of(new User("000", "test1", "online", null)));

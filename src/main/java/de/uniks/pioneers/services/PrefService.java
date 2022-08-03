@@ -44,18 +44,6 @@ public class PrefService {
     public void saveGameOnLeave(String id) {
         preferences.put(LEAVE_GAME, id);
     }
-    public void saveCustomMapOnLeave(String id){
-        if(id == null){
-            preferences.put("MapID", "");
-        }
-        else{
-            preferences.put("MapID", id);
-        }
-    }
-
-    public void saveMapRadiusOnLeave(int mapRadius) {
-        preferences.put("MapRadius", mapRadius + "");
-    }
 
     public Game getSavedGame() {
         String leavedGameID = preferences.get(LEAVE_GAME, "");
@@ -70,27 +58,6 @@ public class PrefService {
         }
 
         return leavedGame;
-    }
-
-    public int getSavedMapRadius() {
-        String mapRadius = preferences.get("MapRadius", "");
-
-        if(!mapRadius.equals("")) {
-            return Integer.parseInt(mapRadius);
-        } else {
-            return -1;
-        }
-
-    }
-
-    public String getCustomMapID() {
-        String mapID = preferences.get("MapID", "");
-
-        if(!mapID.equals("")) {
-            return mapID;
-        } else {
-            return null;
-        }
     }
 
     public void forgetSavedGame() {
