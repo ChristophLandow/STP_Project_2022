@@ -277,7 +277,7 @@ public class TradePopUpController implements Controller {
         }
 
         private void updateTrade(int increment) {
-            if (types.getKey().equals(OFFER)) {
+            if (types.getKey().equals("Offer")) {
                 ingameService.getOrCreateTrade(types.getValue(), -increment);
             } else {
                 ingameService.getOrCreateTrade(types.getValue(), increment);
