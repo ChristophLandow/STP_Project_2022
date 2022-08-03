@@ -272,7 +272,7 @@ class GameAndResourceServiceTest {
         HashMap<String, Integer> devCardMap = resourceService.getDevCardMap(List.of(new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_PLENTY, false, false)));
         assertEquals(devCardMap.size(), 5);
         assertEquals(devCardMap.get(DEV_KNIGHT), 3);
-        assertEquals(devCardMap.get("plenty"), 1);
+        assertEquals(devCardMap.get(DEV_PLENTY), 1);
     }
 
     @Test

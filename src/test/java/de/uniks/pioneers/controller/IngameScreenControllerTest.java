@@ -9,6 +9,7 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.services.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
@@ -103,6 +104,9 @@ class IngameScreenControllerTest extends ApplicationTest {
     @Mock
     RobberController robberController;
 
+    @Mock
+    DiceSubcontroller diceSubcontroller;
+
     @Spy
     IngameSelectController ingameSelectController;
 
@@ -152,7 +156,7 @@ class IngameScreenControllerTest extends ApplicationTest {
         ingameSelectController = new IngameSelectController();
         ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
         ingameScreenController.ingameSelectController = ingameSelectController;
-        ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.getApp().getStage(), ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, timerService, ingameService, new ResourceService(), gameService, userService, robberController);
+        Platform.runLater(() -> ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.getApp().getStage(), ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, timerService, ingameService, new ResourceService(), gameService, userService, robberController));
 
         roadFrame.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(144,238,144)));
