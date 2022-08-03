@@ -10,10 +10,12 @@ import de.uniks.pioneers.services.StylesService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -25,7 +27,6 @@ import java.io.IOException;
 
 @Singleton
 public class MapBrowserController implements Controller {
-    @FXML public Pane mapPreviewPane;
     @FXML public ImageView creatorImageView;
     @FXML public Text lastUpdatedOutputText;
     @FXML public Text votesOutputText;
@@ -33,6 +34,10 @@ public class MapBrowserController implements Controller {
     @FXML public Text harborsOutputText;
     @FXML public Text mapNameOutputText;
     @FXML public Text createdByOutputText;
+    @FXML public ScrollPane previewScrollPane;
+    @FXML public AnchorPane previewAnchorPane;
+    @FXML public Pane previewPane;
+    @FXML public Canvas previewCanvas;
     @FXML ScrollPane MapListScrollPane;
     @FXML ListView<HBox> mapListView;
 
