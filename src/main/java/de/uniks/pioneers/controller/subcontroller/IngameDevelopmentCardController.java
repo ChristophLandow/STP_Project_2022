@@ -4,6 +4,7 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.DevelopmentCard;
+import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.fxml.FXML;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 import static de.uniks.pioneers.GameConstants.*;
@@ -66,7 +68,8 @@ public class IngameDevelopmentCardController implements Controller {
     }
 
     private void onHammerClicked() {
-        if(ingameService.getExpectedMove().action().equals(BUILD)) {
+        ExpectedMove expectedMove = ingameService.getExpectedMove();
+        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
             changeVisibility();
             changeHammerBorder();
         }
@@ -75,12 +78,19 @@ public class IngameDevelopmentCardController implements Controller {
 
     private void onLeftPaneClicked() {
         changeVisibility();
-        show();
+
+        ExpectedMove expectedMove = ingameService.getExpectedMove();
+        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
+            show();
+        } else {
+            changeHammerBorder();
+        }
     }
 
 
     private void onRightPaneClicked() {
-        if(ingameService.getExpectedMove().action().equals(BUILD) && resourceService.checkDevCard()) {
+        ExpectedMove expectedMove = ingameService.getExpectedMove();
+        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)  && resourceService.checkDevCard()) {
             disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto())
                     .observeOn(FX_SCHEDULER)
                     .doOnError(Throwable::printStackTrace)

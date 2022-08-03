@@ -331,7 +331,7 @@ public class IngameScreenController implements Controller {
 
     public void openTradePopUp(){
         ExpectedMove expectedMove = ingameService.getExpectedMove();
-        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)){
+        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
             speechService.play(GameConstants.SPEECH_TRADE);
             TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
             tradePopUpController.show();
