@@ -30,7 +30,7 @@ public class ResourceNewAnimationController {
     }
 
     public void newResourceCardAnimation(ImageView card, int counter, int resNumber, String moveAction) {
-        if(moveAction.equals("accept") || moveAction.equals("rob")) {
+        if(moveAction.equals(ACCEPT) || moveAction.equals(ROB)) {
             newTradeResourceCardAnimationOne(card, counter, resNumber);
         } else {
             newResourceCardAnimationOne(card, counter, resNumber);

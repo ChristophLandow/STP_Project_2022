@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -62,7 +61,7 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
     @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
-    @Inject Provider<RobberController> robberControllerProvider;
+    @Inject RobberController robberController;
     @Inject LeaveGameController leaveGameController;
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
@@ -96,9 +95,8 @@ public class IngameScreenController implements Controller {
     public IngameDevelopmentCardController ingameDevelopmentCardController;
     public IngameSelectController ingameSelectController;
 
-
     @Inject
-    public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
+    public IngameScreenController(App app, DiceSubcontroller diceSubcontroller, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
                                   GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService) {
         this.app = app;
         this.ingameService = ingameService;
@@ -111,7 +109,7 @@ public class IngameScreenController implements Controller {
         this.robberService = robberService;
         this.speechService = speechService;
         this.stylesService = stylesService;
-        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
+        this.diceSubcontroller = diceSubcontroller;
         this.ingameSelectController = new IngameSelectController();
         this.boardController = new BoardController(ingameService, userService, game, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
 
@@ -186,8 +184,8 @@ public class IngameScreenController implements Controller {
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
-        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, resourceService);
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController);
+        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, timerService, ingameService, resourceService, gameService, userService, robberController);
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, robberController, hourglassImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController);
         this.timerService.init(ingameSelectController, ingameDevelopmentCardController);
         // init game attributes and event listeners
         gameService.initGame();
@@ -333,7 +331,7 @@ public class IngameScreenController implements Controller {
 
     public void openTradePopUp(){
         ExpectedMove expectedMove = ingameService.getExpectedMove();
-        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)){
+        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
             speechService.play(GameConstants.SPEECH_TRADE);
             TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
             tradePopUpController.show();

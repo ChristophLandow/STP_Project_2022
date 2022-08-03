@@ -18,9 +18,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
-
 import java.util.List;
 import java.util.Objects;
+
+import static de.uniks.pioneers.GameConstants.*;
 
 public class ResourceAnimationController {
     private final GameService gameService;
@@ -63,10 +64,10 @@ public class ResourceAnimationController {
         whaleView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_whale.png")).toString()));
 
         knightView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_knight.png")).toString()));
-        roadView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_road.png")).toString()));
-        plentyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_plenty.png")).toString()));
+        roadView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_road-building.png")).toString()));
+        plentyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_year-of-plenty.png")).toString()));
         monopolyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_monopoly.png")).toString()));
-        vpointView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_vpoint.png")).toString()));
+        vpointView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_victory-point.png")).toString()));
     }
 
     private void addPlayerListener() {
@@ -171,12 +172,12 @@ public class ResourceAnimationController {
 
         for(DevelopmentCard devCard : devCardsNew) {
             switch (devCard.type()) {
-                case "knight" -> knightNew += 1;
-                case "road-building" -> roadNew += 1;
-                case "year-of-plenty" -> plentyNew += 1;
-                case "monopoly" -> monopolyNew += 1;
-                case "victory-point" -> vpointNew += 1;
-                case "unknown" -> unknownNew += 1;
+                case DEV_KNIGHT -> knightNew += 1;
+                case DEV_ROAD -> roadNew += 1;
+                case DEV_PLENTY -> plentyNew += 1;
+                case DEV_MONOPOLY -> monopolyNew += 1;
+                case DEV_VPOINT -> vpointNew += 1;
+                case DEV_UNKNOWN -> unknownNew += 1;
             }
         }
 
@@ -193,12 +194,12 @@ public class ResourceAnimationController {
 
         for(DevelopmentCard devCard : devCardsOld) {
             switch (devCard.type()) {
-                case "knight" -> knightOld += 1;
-                case "road-building" -> roadOld += 1;
-                case "year-of-plenty" -> plentyOld += 1;
-                case "monopoly" -> monopolyOld += 1;
-                case "victory-point" -> vpointOld += 1;
-                case "unknown" -> unknownOld += 1;
+                case DEV_KNIGHT -> knightOld += 1;
+                case DEV_ROAD -> roadOld += 1;
+                case DEV_PLENTY -> plentyOld += 1;
+                case DEV_MONOPOLY -> monopolyOld += 1;
+                case DEV_VPOINT -> vpointOld += 1;
+                case DEV_UNKNOWN -> unknownOld += 1;
             }
         }
     }
