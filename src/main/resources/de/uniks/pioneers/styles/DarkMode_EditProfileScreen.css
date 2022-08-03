@@ -1,16 +1,4 @@
-#currentUsernameText {
-    -fx-fill: WHITE;
-}
-
-#ChangeAvatarText{
-    -fx-fill: WHITE;
-}
-
 #usernameLabel{
-    -fx-fill: WHITE;
-}
-
-#wantEditText {
     -fx-fill: WHITE;
 }
 
