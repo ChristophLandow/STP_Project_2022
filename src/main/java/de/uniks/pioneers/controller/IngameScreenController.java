@@ -147,7 +147,11 @@ public class IngameScreenController implements Controller {
         Platform.runLater(this.zoomableScrollPane::render);
 
         this.achievementPopUpController = achievementsPopUpControllerProvider.get();
-        this.root.getChildren().add(this.achievementPopUpController.render());
+
+        Node achievementPopUp = this.achievementPopUpController.render();
+        if(achievementPopUp != null) {
+            this.root.getChildren().add(achievementPopUp);
+        }
 
         return view;
     }
