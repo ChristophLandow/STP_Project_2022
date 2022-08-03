@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
+
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.NewGameScreenLobbyController">
    <VBox fx:id="vBoxRoot" prefHeight="600.0" prefWidth="800.0">
       <HBox fx:id="topLevel" prefHeight="500.0" prefWidth="800.0">
@@ -17,7 +28,7 @@
                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
              <HBox alignment="CENTER" prefHeight="49.0" prefWidth="335.0">
-                 <Label fx:id="Welcome" text="Welcome to: ">
+                 <Label text="Welcome to: ">
                     <font>
                         <Font size="20.0" />
                     </font>
@@ -32,7 +43,7 @@
                  <VBox.margin>
                      <Insets top="-11.0" />
                  </VBox.margin>
-                 <Label fx:id="ThePasswordIs" text="The password of this game is: ">
+                 <Label text="The password of this game is: ">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -74,7 +85,7 @@
                  <VBox.margin>
                      <Insets />
                  </VBox.margin>
-                 <Label fx:id="chooseColorHere" prefHeight="25.0" prefWidth="213.0" text="Choose your color here:">
+                 <Label prefHeight="25.0" prefWidth="213.0" text="Choose your color here:">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -89,7 +100,7 @@
                  </ColorPicker>
              </HBox>
              <HBox prefHeight="43.0" prefWidth="349.0">
-                 <Label fx:id="victoryPointsLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="222.0" text="Victory Points to win:">
+                 <Label alignment="TOP_LEFT" prefHeight="25.0" prefWidth="222.0" text="Victory Points to win:">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -100,7 +111,7 @@
                </VBox.margin>
              </HBox>
              <HBox prefHeight="43.0" prefWidth="349.0">
-                 <Label fx:id="boardSizeLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="67.0" text="Map:">
+                 <Label alignment="TOP_LEFT" prefHeight="25.0" prefWidth="67.0" text="Map:">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -115,7 +126,7 @@
                   <Insets top="-9.0" />
                </VBox.margin>
              </HBox>
-            <Label fx:id="yourOpponentText" prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
+            <Label prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
                <font>
                   <Font size="17.0" />
                </font>
