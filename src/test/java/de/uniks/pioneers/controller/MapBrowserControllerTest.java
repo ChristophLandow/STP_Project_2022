@@ -26,31 +26,24 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MapBrowserControllerTest extends ApplicationTest {
-    List<TileTemplate> tiles = new ArrayList<>();
-    List<HarborTemplate> harbors = new ArrayList<>();
+    final List<TileTemplate> tiles = new ArrayList<>();
+    final List<HarborTemplate> harbors = new ArrayList<>();
 
-    MapTemplate mapDummy1 = new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",7,tiles, harbors);
-    MapTemplate mapDummy2 = new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors);
+    final MapTemplate mapDummy1 = new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",7,tiles, harbors);
+    final MapTemplate mapDummy2 = new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors);
 
     @Spy
     App app = new App(null);
-
-    @Mock(name = "ingameScreenControllerProvider")
-    Provider<IngameScreenController> ingameScreenControllerProvider;
 
     @Mock(name = "mapListControllerProvider")
     Provider<MapListController> mapListControllerProvider;
 
     @Mock(name = "mapDetailsControllerProvider")
     Provider<MapDetailsController> mapDetailsControllerProvider;
-
-    @Mock
-    PrefService prefService;
 
     @Mock
     MapBrowserService mapBrowserService;
@@ -66,9 +59,6 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
     @InjectMocks
     MapDetailsController mapDetailsController;
-
-    @InjectMocks
-    IngameScreenController ingameScreenController;
 
     @InjectMocks
     MapListController mapListController;
@@ -92,6 +82,7 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
         app.start(stage);
         app.show(mapBrowserController);
+        verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
     }
 
     @Test
@@ -120,10 +111,5 @@ public class MapBrowserControllerTest extends ApplicationTest {
         type(KeyCode.SPACE);
 
         verify(mapBrowserService).deleteMap("map456");
-    }
-
-    @Test
-    void test() {
-
     }
 }

@@ -9,7 +9,6 @@ import de.uniks.pioneers.controller.subcontroller.SpeechSettingsController;
 import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -175,7 +174,7 @@ public class SettingsScreenController implements Controller, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         musicChoiceBox.getItems().addAll(songNameList);
-        musicChoiceBox.setOnAction(this::setMusic);
+        musicChoiceBox.setOnAction(actionEvent -> setMusic());
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double musicVolume = volumeSlider.getValue();
             if(mediaPlayer != null) {
@@ -184,7 +183,7 @@ public class SettingsScreenController implements Controller, Initializable {
         });
     }
 
-    private void setMusic(ActionEvent actionEvent) {
+    private void setMusic() {
         //if a song is played actualy..
         if(mediaPlayer != null) {
             mediaPlayer.stop();
@@ -256,7 +255,7 @@ public class SettingsScreenController implements Controller, Initializable {
     }
 
     public void safe() {
-        hotkeyController.safeHotkeys();
+        hotkeyController.saveHotkeys();
         speechSettingsController.saveSettings();
     }
 }

@@ -30,10 +30,7 @@ import javax.inject.Provider;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class IngameScreenControllerTest extends ApplicationTest {
@@ -101,16 +98,10 @@ class IngameScreenControllerTest extends ApplicationTest {
     TimerService timerService;
 
     @Mock
-    PrefService prefService;
-
-    @Mock
     TradeOfferPopUpController tradeOfferPopUpController;
 
     @Spy
     IngameSelectController ingameSelectController;
-
-    @Mock
-    IngameStateController ingameStateController;
 
     @InjectMocks
     IngameScreenController ingameScreenController;
@@ -131,6 +122,7 @@ class IngameScreenControllerTest extends ApplicationTest {
 
         app.start(stage);
         app.show(ingameScreenController);
+        verify(gameChatController, atLeastOnce()).setChatScrollPane(any());
     }
 
     @Test
@@ -178,6 +170,8 @@ class IngameScreenControllerTest extends ApplicationTest {
         verify(tradePopUpController).show();
         verify(stylesService).setStyleSheets(any(), anyString(), anyString());
         verify(timerService).setTimeLabel(any());
+        verify(speechService, atLeastOnce()).play(anyString());
+        verify(tradeOfferPopUpController, atLeastOnce()).stop();
 
         hammerPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(hammerPane.getStyle(), "-fx-border-width: 3; -fx-border-color: lightgreen");

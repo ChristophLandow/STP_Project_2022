@@ -1,12 +1,8 @@
-#Headline {
-    -fx-fill: white;
-}
-
 #userNameStatusText{
     -fx-fill: RED;
 }
 
-passwordStatusText{
+#passwordStatusText{
     -fx-fill: RED;
 }
 
