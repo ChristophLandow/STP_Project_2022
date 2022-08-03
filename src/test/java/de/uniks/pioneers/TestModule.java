@@ -546,5 +546,26 @@ public class TestModule {
             }
         };
     }
+
+    @Provides
+    @Singleton
+    AchievementsApiService achievementsApiService(){
+        return new AchievementsApiService() {
+            @Override
+            public Observable<List<Achievement>> getUserAchievements(String userId) {
+                return null;
+            }
+
+            @Override
+            public Observable<Achievement> addAchievement(String userId, String id, CreateAchievementDto dto) {
+                return null;
+            }
+
+            @Override
+            public Observable<Achievement> updateAchievement(String userId, String id, UpdateAchievementDto dto) {
+                return null;
+            }
+        };
+    }
 }
 
