@@ -30,8 +30,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static de.uniks.pioneers.GameConstants.OFFER;
-
 public class TradePopUpController implements Controller {
     @FXML public AnchorPane root;
     @FXML public HBox subRoot;
