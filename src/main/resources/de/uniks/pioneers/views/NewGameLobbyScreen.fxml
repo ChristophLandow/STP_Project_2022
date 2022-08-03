@@ -100,7 +100,7 @@
                  </ColorPicker>
              </HBox>
              <HBox prefHeight="43.0" prefWidth="349.0">
-                 <Label alignment="TOP_LEFT" prefHeight="25.0" prefWidth="222.0" text="Victory Points to win:">
+                 <Label fx:id="victoryPointsLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="222.0" text="Victory Points to win:">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -111,7 +111,7 @@
                </VBox.margin>
              </HBox>
              <HBox prefHeight="43.0" prefWidth="349.0">
-                 <Label alignment="TOP_LEFT" prefHeight="25.0" prefWidth="67.0" text="Map:">
+                 <Label fx:id="boardSizeLabel" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="67.0" text="Map:">
                     <font>
                         <Font size="16.0" />
                     </font>
