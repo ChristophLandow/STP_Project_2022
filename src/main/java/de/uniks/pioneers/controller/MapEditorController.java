@@ -91,7 +91,6 @@ public class MapEditorController implements Controller{
         this.sizeSpinner.setValueFactory(valueFactory);
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             display(newValue);
-            System.out.println("Spinner " + oldValue + " " + newValue);
         });
 
     }

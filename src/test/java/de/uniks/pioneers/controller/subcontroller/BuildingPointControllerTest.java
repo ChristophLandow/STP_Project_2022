@@ -80,7 +80,7 @@ class BuildingPointControllerTest extends ApplicationTest {
 
     @Test
     void checkPosition() {
-        buildingPointController.setAction("build");
+        buildingPointController.setAction(BUILD);
         gameStorage.selectedBuilding = SETTLEMENT;
         gameStorage.remainingBuildings = FXCollections.observableHashMap();
         gameStorage.remainingBuildings.put(ROAD, 15);

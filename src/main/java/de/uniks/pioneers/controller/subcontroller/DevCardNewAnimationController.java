@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
+import static de.uniks.pioneers.GameConstants.*;
+
 public class DevCardNewAnimationController {
     private final Pane root;
     private final ResourceService resourceService;
@@ -75,15 +77,15 @@ public class DevCardNewAnimationController {
         Platform.runLater(() -> root.getChildren().remove(card));
 
         if (devCardNumber == 1) {
-            resourceService.updateDevCards("knight", knight);
+            resourceService.updateDevCards(DEV_KNIGHT, knight);
         } else if (devCardNumber == 2) {
-            resourceService.updateDevCards("road", road);
+            resourceService.updateDevCards(DEV_ROAD, road);
         } else if (devCardNumber == 3) {
-            resourceService.updateDevCards("plenty", plenty);
+            resourceService.updateDevCards(DEV_PLENTY, plenty);
         } else if (devCardNumber == 4) {
-            resourceService.updateDevCards("monopoly", monopoly);
+            resourceService.updateDevCards(DEV_MONOPOLY, monopoly);
         } else if (devCardNumber == 5) {
-            resourceService.updateDevCards("vpoint", vpoint);
+            resourceService.updateDevCards(DEV_VPOINT, vpoint);
         }
     }
 }

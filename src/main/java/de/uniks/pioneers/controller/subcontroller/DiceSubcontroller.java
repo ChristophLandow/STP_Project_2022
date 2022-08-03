@@ -12,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Objects;
 import java.util.Timer;
 
@@ -21,8 +20,6 @@ import static de.uniks.pioneers.GameConstants.FOUNDING_ROLL;
 import static de.uniks.pioneers.GameConstants.ROLL;
 
 public class DiceSubcontroller {
-    @Inject
-    Provider<RobberController> robberControllerProvider;
     private ImageView leftDiceView;
     private ImageView rightDiceView;
     private String action;
@@ -30,18 +27,17 @@ public class DiceSubcontroller {
     private final IngameService ingameService;
     private final GameService gameService;
     private final TimerService timerService;
-    private final RobberService robberService;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private RobberController robberController;
+    private final RobberController robberController;
     
     @Inject
-    public DiceSubcontroller(Provider<RobberController> robberControllerProvider, IngameService ingameService, GameService gameService, PrefService prefService,
+    public DiceSubcontroller(RobberController robberController, IngameService ingameService, GameService gameService,
                              TimerService timerService, RobberService robberService) {
-        this.robberControllerProvider = robberControllerProvider;
+        this.robberController = robberController;
+        this.robberController.setRobberService(robberService);
         this.ingameService = ingameService;
         this.gameService = gameService;
         this.timerService = timerService;
-        this.robberService = robberService;
     }
     
     public void init() {
@@ -54,11 +50,7 @@ public class DiceSubcontroller {
                         showRolledNumber(move.action(), move.roll());
 
                         if(move.roll() == 7){
-                            if(this.robberController != null) {
-                                this.robberController.stop();
-                            }
-                            this.robberController = robberControllerProvider.get();
-                            this.robberController.setRobberService(robberService);
+                            this.robberController.stop();
                             this.robberController.init();
                         }
                     }

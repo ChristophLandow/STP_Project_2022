@@ -17,10 +17,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
+
+import static de.uniks.pioneers.GameConstants.*;
 
 public class IngamePlayerResourcesController {
     @FXML public HBox resourcesHBox;
@@ -128,7 +129,7 @@ public class IngamePlayerResourcesController {
         Iterator<String> resIter = resStrings.iterator();
         Iterator<String> resIterLabels = resStrings.iterator();
 
-        List<String> devStrings = List.of("knight", "road", "plenty", "monopoly", "vpoint");
+        List<String> devStrings = List.of(DEV_KNIGHT, DEV_ROAD, DEV_PLENTY, DEV_MONOPOLY, DEV_VPOINT);
         Iterator<String> devIter = devStrings.iterator();
         Iterator<String> devCountIter = devStrings.iterator();
 
@@ -141,7 +142,7 @@ public class IngamePlayerResourcesController {
             Pane pane = (Pane) paneNode;
             pane.getChildren().forEach(node -> {
                 String id = node.getId();
-                if (id.endsWith("Ressource")) {
+                if (id.endsWith("Resource")) {
                     String res = resIter.next();
                     String url = String.format("images/card_%s.png", iter.next());
                     Image img = new Image(Objects.requireNonNull(getClass().getResource(url)).toString());

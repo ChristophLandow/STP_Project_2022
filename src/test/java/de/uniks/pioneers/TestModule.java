@@ -20,7 +20,6 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,7 @@ import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.API_PREFIX;
 import static de.uniks.pioneers.Constants.BASE_URL;
+import static de.uniks.pioneers.GameConstants.FOUNDING_ROLL;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -450,7 +450,7 @@ public class TestModule {
                 ArrayList<String> players = new ArrayList<>();
                 players.add("000");
                 ArrayList<ExpectedMove> expectedMoves = new ArrayList<>();
-                expectedMoves.add(new ExpectedMove("founding-roll",players));
+                expectedMoves.add(new ExpectedMove(FOUNDING_ROLL,players));
 
                 return Observable.just(new State("2022-06-09T15:11:51.795Z","000", expectedMoves, null));
             }
