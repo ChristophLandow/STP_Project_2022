@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
+import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.IngameService;
@@ -206,28 +207,38 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
     }
 
     public void discardOrChoose(){
-        int waleDiscard = WaleSpinner.getValue();
-        int iceDiscard = IceSpinner.getValue();
-        int polarBearDiscard = PolarBearSpinner.getValue();
-        int fishDiscard = FishSpinner.getValue();
-        int carbonDiscard = CarbonSpinner.getValue();
-        int numberDiscard = waleDiscard + iceDiscard + polarBearDiscard + fishDiscard + carbonDiscard;
+        int waleCount = WaleSpinner.getValue();
+        int iceCount = IceSpinner.getValue();
+        int polarBearCount = PolarBearSpinner.getValue();
+        int fishCount = FishSpinner.getValue();
+        int carbonCount = CarbonSpinner.getValue();
+        int resourceCount = waleCount + iceCount + polarBearCount + fishCount + carbonCount;
 
         if(state == DISCARD_NUMBER) {
-            if (numberDiscard != ((fish + wale + polarBear + ice + carbon)/2)) {
+            if (resourceCount != ((fish + wale + polarBear + ice + carbon)/2)) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "You are trying to discard more or less resources than necessary!");
                 alert.showAndWait();
             } else {
-                disposable.add(robberService.dropResources(new Resources(-waleDiscard, -iceDiscard, -carbonDiscard, -fishDiscard, -polarBearDiscard))
-                        .observeOn(FX_SCHEDULER).take(1).subscribe(move -> stop(),this::handleHttpError));
+                disposable.add(robberService.dropResources(new Resources(-waleCount, -iceCount, -carbonCount, -fishCount, -polarBearCount))
+                        .observeOn(FX_SCHEDULER)
+                        .take(1)
+                        .subscribe(move -> stop(),this::handleHttpError));
                 this.stop();
             }
         } else {
-            if (numberDiscard != state) {
+            if (resourceCount != state) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "You are trying to choose more or less resources than necessary!");
                 alert.showAndWait();
             } else {
-                //move
+                String action = MONOPOLY_MOVE;
+                if(state == PLENTY_NUMBER) {
+                    action = PLENTY_MOVE;
+                }
+
+                disposable.add(ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(action, new Resources(waleCount, iceCount, carbonCount, fishCount, polarBearCount)))
+                        .observeOn(FX_SCHEDULER)
+                        .take(1)
+                        .subscribe(move -> stop(),this::handleHttpError));
                 this.stop();
             }
         }
