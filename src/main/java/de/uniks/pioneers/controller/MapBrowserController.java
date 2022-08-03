@@ -87,7 +87,8 @@ public class MapBrowserController implements Controller {
                 .setHarborsOutputText(harborsOutputText)
                 .setMapNameOutputText(mapNameOutputText)
                 .setCreatedByOutputText(createdByOutputText)
-                .setCreatorImageView(creatorImageView);
+                .setCreatorImageView(creatorImageView)
+                .setPreviewElements(previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
     }
 
     @Override

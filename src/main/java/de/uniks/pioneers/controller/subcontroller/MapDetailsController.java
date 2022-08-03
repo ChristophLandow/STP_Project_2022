@@ -5,8 +5,11 @@ import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.MapService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -19,7 +22,6 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 @Singleton
 public class MapDetailsController {
 
-    private Pane mapPreviewPane; // need it later for the map preview
     private ImageView creatorImageView;
     private Text lastUpdatedOutputText;
     private Text votesOutputText;
@@ -33,6 +35,10 @@ public class MapDetailsController {
     private final UserService userService;
 
     private final MapService mapService;
+    private ScrollPane previewScrollPane;
+    private AnchorPane previewAnchorPane;
+    private Pane previewPane;
+    private Canvas previewCanvas;
 
     @Inject
     public MapDetailsController(MapBrowserService mapBrowserService, UserService userService, MapService mapService) {
@@ -41,13 +47,16 @@ public class MapDetailsController {
         this.mapService = mapService;
     }
 
-    public MapDetailsController setMapPreviewPane(Pane mapPreviewPane) {
-        this.mapPreviewPane = mapPreviewPane;
-        return this;
+    public void setPreviewElements(ScrollPane scrollPane, AnchorPane anchorPane, Pane pane, Canvas canvas) {
+        this.previewScrollPane = scrollPane;
+        this.previewAnchorPane = anchorPane;
+        this.previewPane = pane;
+        this.previewCanvas = canvas;
     }
 
-    public void setCreatorImageView(ImageView creatorImageView) {
+    public MapDetailsController setCreatorImageView(ImageView creatorImageView) {
         this.creatorImageView = creatorImageView;
+        return this;
     }
 
     // update details when new map is clicked
@@ -76,6 +85,11 @@ public class MapDetailsController {
                     }
                 })
         );
+
+        showPreview(mapTemplate);
+    }
+
+    private void showPreview(MapTemplate mapTemplate) {
     }
 
     private String toDateTimeString(String timeString) {
