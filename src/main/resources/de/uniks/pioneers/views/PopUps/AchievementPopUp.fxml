@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
 <AnchorPane fx:id="achievementPane" prefHeight="62.0" prefWidth="375.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.PopUpController.AchievementPopUpController">
    <children>
       <Rectangle arcHeight="50.0" arcWidth="50.0" fill="WHITE" height="64.0" stroke="BLACK" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="2.0" styleClass="achievement-rect" width="378.0" />

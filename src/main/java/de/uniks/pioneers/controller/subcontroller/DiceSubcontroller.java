@@ -10,6 +10,7 @@ import javafx.collections.ListChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Objects;

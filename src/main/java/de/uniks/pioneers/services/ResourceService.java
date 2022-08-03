@@ -4,6 +4,7 @@ import de.uniks.pioneers.model.DevelopmentCard;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;

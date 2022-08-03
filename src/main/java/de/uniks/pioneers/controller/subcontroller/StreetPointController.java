@@ -17,6 +17,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+
 import javax.inject.Inject;
 import java.util.ArrayList;
 

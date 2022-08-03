@@ -1,10 +1,8 @@
 package de.uniks.pioneers.services;
 
-import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.dto.CreateAchievementDto;
 import de.uniks.pioneers.dto.UpdateAchievementDto;
 import de.uniks.pioneers.model.Achievement;
-import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.rest.AchievementsApiService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -16,10 +14,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Objects;
+import java.util.TimeZone;
 
-import static de.uniks.pioneers.GameConstants.*;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class AchievementService {

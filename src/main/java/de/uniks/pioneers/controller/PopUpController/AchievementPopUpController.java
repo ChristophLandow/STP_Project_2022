@@ -1,12 +1,10 @@
 package de.uniks.pioneers.controller.PopUpController;
 
-import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.services.AchievementService;
 import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -37,8 +35,6 @@ public class AchievementPopUpController implements Controller {
     public void init() {
         achievementService.getAchievements().addListener((MapChangeListener<? super String, ? super Achievement>) c -> {
             Achievement achievement = c.getValueAdded();
-            System.out.println(achievement);
-
             if(achievement.progress() == 100){
                 switch(achievement.id()){
                     case WINNER_ACHIEVEMENT -> showPopUp(WINNER_ACHIEVEMENT_TITLE, WINNER_ACHIEVEMENT_DESCRIPTION);
