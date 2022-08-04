@@ -119,7 +119,7 @@ class AppTest extends ApplicationTest {
         type(KeyCode.SPACE);
         TestModule.gameChatSubject.onNext(new Event<>(".created", new MessageDto("2022-05-18T18:12:58.114Z", "2022-05-18T18:12:58.114Z", "004", "A", "Hallo Test Test")));
         WaitForAsyncUtils.waitForFxEvents();
-        sleep(2000);
+        sleep(3000);
         clickOn("#rulesButton");
         WaitForAsyncUtils.waitForFxEvents();
         clickOn("#settingsButton");
