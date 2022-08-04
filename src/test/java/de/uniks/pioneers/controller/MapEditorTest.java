@@ -82,7 +82,7 @@ class MapEditorTest extends ApplicationTest {
         //clickOn("#sizeSpinner");
         //mapEditorController.sizeSpinner.increment();
         //mapEditorController.sizeSpinner.setEditable(true);
-        write("\t\t");
+        write("\t\t\t");
         press(KeyCode.UP);
 
 
