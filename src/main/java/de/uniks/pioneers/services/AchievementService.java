@@ -84,7 +84,7 @@ public class AchievementService {
     public void unlockAchievement(String id){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String dateString = formatter.format(new Date()).toString();
+        String dateString = formatter.format(new Date());
 
         updateAchievement(id, dateString, this.achievements.get(id).progress());
     }
