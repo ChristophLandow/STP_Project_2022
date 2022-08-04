@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
 import javax.inject.Inject;
 import java.util.List;
 
