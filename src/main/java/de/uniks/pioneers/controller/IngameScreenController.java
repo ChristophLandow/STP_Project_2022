@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.PopUpController.AchievementPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
@@ -29,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -62,16 +62,18 @@ public class IngameScreenController implements Controller {
     @Inject Provider<IngamePlayerResourcesController> resourcesControllerProvider;
     @Inject Provider<StreetPointController> streetPointControllerProvider;
     @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
-    @Inject Provider<RobberController> robberControllerProvider;
+    @Inject RobberController robberController;
     @Inject LeaveGameController leaveGameController;
     @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
     @Inject Provider<SettingsScreenController> settingsScreenControllerProvider;
     @Inject Provider<TradePopUpController> tradePopUpControllerProvider;
     @Inject Provider<TradeOfferPopUpController> tradeOfferPopUpControllerProvider;
+    @Inject Provider<AchievementPopUpController> achievementsPopUpControllerProvider;
     @Inject EventListener eventListener;
     @Inject VictoryPointController victoryPointController;
 
+    private AchievementPopUpController achievementPopUpController;
     public ZoomableScrollPane zoomableScrollPane;
     private final App app;
     private final GameService gameService;
@@ -86,6 +88,7 @@ public class IngameScreenController implements Controller {
     private final SpeechService speechService;
     private final RobberService robberService;
     private final StylesService stylesService;
+    private final AchievementService achievementService;
     private final BoardController boardController;
     private final DiceSubcontroller diceSubcontroller;
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -94,11 +97,12 @@ public class IngameScreenController implements Controller {
     private final ChangeListener<Boolean> finishedMapRenderListener;
     private TradeOfferPopUpController tradeOfferPopUpController;
     public IngameDevelopmentCardController ingameDevelopmentCardController;
-
+    public IngameSelectController ingameSelectController;
 
     @Inject
-    public IngameScreenController(App app, Provider<RobberController> robberControllerProvider, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
-                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService) {
+    public IngameScreenController(App app, DiceSubcontroller diceSubcontroller, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
+                                  GameService gameService, TimerService timerService, MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, StylesService stylesService,
+                                  AchievementService achievementService) {
         this.app = app;
         this.ingameService = ingameService;
         this.gameStorage = gameStorage;
@@ -110,8 +114,10 @@ public class IngameScreenController implements Controller {
         this.robberService = robberService;
         this.speechService = speechService;
         this.stylesService = stylesService;
-        this.diceSubcontroller = new DiceSubcontroller(robberControllerProvider, ingameService, gameService, prefService, timerService, robberService);
-        this.boardController = new BoardController(ingameService, userService, game, gameStorage, gameService, resourceService, mapRenderService);
+        this.achievementService = achievementService;
+        this.diceSubcontroller = diceSubcontroller;
+        this.ingameSelectController = new IngameSelectController();
+        this.boardController = new BoardController(ingameService, userService, game, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
             if (mapRenderService.isFinishedLoading().get()) Platform.runLater(this::initWhenMapFinishedRendering);
@@ -136,8 +142,14 @@ public class IngameScreenController implements Controller {
 
         this.zoomableScrollPane = zoomableScrollPaneProvider.get();
         this.zoomableScrollPane.init(fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
-
         Platform.runLater(this.zoomableScrollPane::render);
+
+        this.achievementPopUpController = achievementsPopUpControllerProvider.get();
+
+        Node achievementPopUp = this.achievementPopUpController.render();
+        if(achievementPopUp != null) {
+            this.root.getChildren().add(achievementPopUp);
+        }
 
         return view;
     }
@@ -166,7 +178,9 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        new IngameSelectController(gameStorage, roadFrame, settlementFrame, cityFrame, streetSVG, houseSVG, citySVG);
+        this.achievementPopUpController.init();
+
+        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
 
         this.mapRenderService.isFinishedLoading().addListener(finishedMapRenderListener);
@@ -184,8 +198,9 @@ public class IngameScreenController implements Controller {
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, hourglassImageView, situationLabel, diceSubcontroller, game.get(), mapRenderService, robberService, speechService);
-
+        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, timerService, ingameService, resourceService, gameService, userService, robberController);
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, robberController, hourglassImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController);
+        this.timerService.init(ingameSelectController, ingameDevelopmentCardController);
         // init game attributes and event listeners
         gameService.initGame();
 
@@ -241,12 +256,17 @@ public class IngameScreenController implements Controller {
         gameStorage.remainingBuildings.addListener((MapChangeListener<? super String, ? super Integer>) c -> {
             if (c.getKey().equals(ROAD)) {
                 this.streetCountLabel.setText(c.getValueAdded().toString());
+                this.achievementService.incrementProgress(ROAD_ACHIEVEMENT);
             }
             if (c.getKey().equals(SETTLEMENT)) {
                 this.houseCountLabel.setText(c.getValueAdded().toString());
+                if(c.getValueRemoved() > c.getValueAdded()) {
+                    this.achievementService.incrementProgress(SETTLEMENT_ACHIEVEMENT);
+                }
             }
             if (c.getKey().equals(CITY)) {
                 this.cityCountLabel.setText(c.getValueAdded().toString());
+                this.achievementService.incrementProgress(CITY_ACHIEVEMENT);
             }
         });
 
@@ -259,8 +279,6 @@ public class IngameScreenController implements Controller {
         // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
-
-        ingameDevelopmentCardController = new IngameDevelopmentCardController(hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, ingameService, resourceService);
     }
 
     private void renderBuilding(Building building) {
@@ -312,6 +330,7 @@ public class IngameScreenController implements Controller {
         timerService.reset();
         mapRenderService.stop();
         boardController.stop();
+        achievementPopUpController.stop();
     }
 
     public void setUsers(List<User> users) {
@@ -332,7 +351,7 @@ public class IngameScreenController implements Controller {
 
     public void openTradePopUp(){
         ExpectedMove expectedMove = ingameService.getExpectedMove();
-        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)){
+        if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
             speechService.play(GameConstants.SPEECH_TRADE);
             TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
             tradePopUpController.show();

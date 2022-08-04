@@ -5,7 +5,6 @@ import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.model.User;
-import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.RobberService;
 import de.uniks.pioneers.services.StylesService;
 import io.reactivex.rxjava3.core.Observable;
@@ -25,9 +24,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import java.util.ArrayList;
 
+import static de.uniks.pioneers.GameConstants.ROB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
@@ -38,8 +37,6 @@ class RobPlayerControllerTest extends ApplicationTest {
     App app = new App(null);
     @Mock
     RobberService robberService;
-    @Mock
-    PrefService prefService;
     @Mock
     StylesService stylesService;
 
@@ -60,15 +57,16 @@ class RobPlayerControllerTest extends ApplicationTest {
         RobDto robMove = new RobDto(0,0,0,"player1");
 
         when(robberService.getRobbingCandidates()).thenReturn(robbingCandidates);
-        when(robberService.robPlayer("player1")).thenReturn(Observable.just(new Move("", "","1", "u","rob",0, null, robMove, null, "", null)));
+        when(robberService.robPlayer("player1")).thenReturn(Observable.just(new Move("", "","1", "u",ROB,0, null, robMove, null, "", null)));
 
         app.start(stage);
         app.show(robPlayerController);
+        app.getStage().setWidth(500);
+        app.getStage().setHeight(500);
     }
 
     @Test
     void test() {
-
         Pane anchorPane = lookup("#robAnchorpane").query();
         anchorPane.fireEvent(leftClick);
 
@@ -80,6 +78,8 @@ class RobPlayerControllerTest extends ApplicationTest {
         //assertTrue(playerListView.isVisible());
 
         playerListView.fireEvent(leftClick);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
         type(KeyCode.DOWN);
         type(KeyCode.SPACE);
         menuButton.fireEvent(leftClick);

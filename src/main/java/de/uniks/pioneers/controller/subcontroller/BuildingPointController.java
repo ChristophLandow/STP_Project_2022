@@ -32,6 +32,7 @@ public class BuildingPointController {
     public Circle view;
     public Circle eventView;
     private final IngameService ingameService;
+    private final IngameSelectController ingameSelectController;
     private final UserService userService;
     private final GameStorage gameStorage;
     private final String gameId;
@@ -48,11 +49,12 @@ public class BuildingPointController {
 
     public BuildingPointController(HexTile tile, Circle view,
                                    IngameService ingameService, GameService gameService, String gameId,
-                                   Pane fieldPane, GameStorage gameStorage,
+                                   Pane fieldPane, GameStorage gameStorage, IngameSelectController ingameSelectController,
                                    UserService userService, ResourceService resourceService) {
         this.tile = tile;
         this.view = view;
         this.ingameService = ingameService;
+        this.ingameSelectController = ingameSelectController;
         this.userService = userService;
         this.gameStorage = gameStorage;
         this.gameId = gameId;
@@ -160,29 +162,34 @@ public class BuildingPointController {
     }
 
     public boolean checkPosition(MouseEvent mouseEvent) {
-        boolean valid = true;
+        boolean validPoint = true;
+        int validStreetCount = 0;
+
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
-            build();
-            gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+            for (StreetPointController street : adjacentStreets) {
+                validPoint = checkSettlementSpot(validPoint, street);
+            }
+
+            if(validPoint) {
+                build();
+                gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+            }
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && resourceService.checkResourcesSettlement()) {
                     for (StreetPointController street : adjacentStreets) {
-                        for (BuildingPointController building : street.getAdjacentBuildings()) {
-                            if (building != this) {
-                                if (building.building != null) {
-                                    valid = false;
-                                }
-                            }
+                        if (street.alreadyPlacedStreet() && gameService.checkRoadSpot(street.uploadCoords[0], street.uploadCoords[1], street.uploadCoords[2], street.uploadCoords[3])) {
+                            validStreetCount += 1;
+                            validPoint = checkSettlementSpot(validPoint, street);
                         }
                     }
-                    if(valid) {
+
+                    if(validPoint && validStreetCount > 0) {
                         build();
                         gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
-
                     }
                 }
-            } else {
+            } else if (gameStorage.selectedBuilding.equals(CITY)) {
                 if (gameStorage.remainingBuildings.get(CITY) > 0 && resourceService.checkCity()) {
                     if (this.building != null || !this.building.type().equals(SETTLEMENT) || !this.building.owner().equals(this.userService.getCurrentUser()._id())) {
                         gameStorage.remainingBuildings.put(CITY, gameStorage.remainingBuildings.get(CITY) - 1);
@@ -190,9 +197,25 @@ public class BuildingPointController {
                     }
                 }
             }
+
+            ingameSelectController.resetSelect();
         }
 
-        return valid;
+        return (validPoint && validStreetCount > 0);
+    }
+
+    public boolean checkSettlementSpot(boolean validPoint, StreetPointController street) {
+        if (validPoint) {
+            for (BuildingPointController building : street.getAdjacentBuildings()) {
+                if (building != this) {
+                    if (building.building != null) {
+                        validPoint = false;
+                    }
+                }
+            }
+        }
+
+        return validPoint;
     }
 
     private void checkIfMouseInsideView(){

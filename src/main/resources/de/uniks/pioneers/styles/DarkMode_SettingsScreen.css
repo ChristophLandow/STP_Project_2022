@@ -2,30 +2,6 @@
 	-fx-background-color:  #424242;
 }
 
-#ShortcutsText {
-	-fx-fill: rgb(255, 255, 255);
-}
-
-#Appearencetext{
-	-fx-fill: rgb(255, 255, 255);
-}
-
-#tradingText {
-	-fx-fill: rgb(255, 255, 255);
-}
-
-#endTurnText {
-	-fx-fill: rgb(255, 255, 255);
-}
-
-#openRulesText {
-	-fx-fill: rgb(255, 255, 255);
-}
-
-#openSettingsText {
-	-fx-fill: rgb(255, 255, 255);
-}
-
 #voiceOutputCheckBox{
 	-fx-text-fill: white;
 }

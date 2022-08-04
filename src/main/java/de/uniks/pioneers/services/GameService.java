@@ -10,12 +10,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.*;
+import static de.uniks.pioneers.GameConstants.BUILD;
+import static de.uniks.pioneers.GameConstants.OFFER;
 
 @Singleton
 public class GameService {
@@ -31,7 +34,7 @@ public class GameService {
     public String me;
     private final UserService userService;
     private final IngameService ingameService;
-    public ResourceService resourceService;
+    public final ResourceService resourceService;
     public int victoryPoints;
     public boolean wonGame;
     public SimpleStringProperty moveAction;

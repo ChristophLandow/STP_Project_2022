@@ -4,10 +4,8 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.MapService;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -16,13 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.api.FxRobotInterface;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.robot.Motion;
-import org.testfx.service.query.PointQuery;
-import org.testfx.util.WaitForAsyncUtils;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;

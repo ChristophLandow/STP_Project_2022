@@ -14,8 +14,10 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -23,6 +25,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -30,9 +34,7 @@ import java.util.List;
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
 public class GameChatController {
-
-    @Inject
-    PrefService prefService;
+    @Inject PrefService prefService;
     private ScrollPane chatScrollPane;
     private VBox messageBox;
     private TextField messageText;
@@ -57,7 +59,7 @@ public class GameChatController {
         messageBox.heightProperty().addListener(u->chatScrollPane.setVvalue(1));
 
         if (sendButton != null) {
-            sendButton.setOnAction(this::sendMessage);
+            sendButton.setOnAction(actionEvent -> sendMessage());
         } else {
             messageText.setOnKeyPressed(this::sendMessageViaEnter);
         }
@@ -131,12 +133,15 @@ public class GameChatController {
         ImageView avatarView = new ImageView(userImage);
         avatarView.setFitHeight(25);
         avatarView.setFitWidth(25);
-        Label textLabel = new Label(user.name() + ": " + message.body());
+
+        Text messageText = new Text(user.name() + ": " + message.body());
+        messageText.setFont(new Font(16));
+        TextFlow textFlow = new TextFlow(messageText);
+
         if(prefService.getDarkModeState()){
-            textLabel.setId("textMessage");
+            textFlow.setId("textMessage");
         }
-        textLabel.setFont(new Font(15));
-        HBox hbox = new HBox(avatarView, textLabel);
+        HBox hbox = new HBox(avatarView, textFlow);
         hbox.setSpacing(7);
 
         this.messageBox.getChildren().add(hbox);
@@ -151,7 +156,7 @@ public class GameChatController {
         return false;
     }
 
-    private void sendMessage(ActionEvent actionEvent) {
+    private void sendMessage() {
         String message = this.messageText.getText();
         if(!message.isEmpty()) {
             disposable.add(newGameLobbyService.sendMessage(game._id(), new CreateMessageDto(message))
@@ -170,38 +175,31 @@ public class GameChatController {
         }
     }
 
-    public GameChatController setChatScrollPane(ScrollPane chatScrollPane) {
+    public void setChatScrollPane(ScrollPane chatScrollPane) {
         this.chatScrollPane = chatScrollPane;
-        return this;
     }
 
-    public GameChatController setMessageBox(VBox messageBox) {
+    public void setMessageBox(VBox messageBox) {
         this.messageBox = messageBox;
-        return this;
     }
 
-    public GameChatController setMessageText(TextField messageText) {
+    public void setMessageText(TextField messageText) {
         this.messageText = messageText;
-        return this;
     }
 
-    public GameChatController setSendButton(Button sendButton) {
+    public void setSendButton(Button sendButton) {
         this.sendButton = sendButton;
-        return this;
     }
 
-    public GameChatController setGame(Game game) {
+    public void setGame(Game game) {
         this.game = game;
-        return this;
     }
 
-    public GameChatController setUsers(List<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
-        return this;
     }
 
-    public GameChatController setIngameScreenController (IngameScreenController ingameScreenController) {
+    public void setIngameScreenController (IngameScreenController ingameScreenController) {
         this.ingameScreenController = ingameScreenController;
-        return this;
     }
 }

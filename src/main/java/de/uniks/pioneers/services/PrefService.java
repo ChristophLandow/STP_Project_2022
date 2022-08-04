@@ -172,6 +172,36 @@ public class PrefService {
         return input;
     }
 
+    public String saveBuildStreetChoiceBox(String input){
+        preferences.put("buildStreetTextField", input);
+        return input;
+    }
+
+    public String saveBuildStreetTextInput(String input){
+        preferences.put("buildStreetTextField", input);
+        return input;
+    }
+
+    public String saveBuildIglooChoiceBox(String input){
+        preferences.put("buildIglooTextField", input);
+        return input;
+    }
+
+    public String saveBuildIglooTextInput(String input){
+        preferences.put("buildIglooTextField", input);
+        return input;
+    }
+
+    public String saveUpgradeIglooChoiceBox(String input){
+        preferences.put("upgradeIglooTextField", input);
+        return input;
+    }
+
+    public String saveUpgradeIglooTextInput(String input){
+        preferences.put("upgradeIglooTextField", input);
+        return input;
+    }
+
     public String getTradeChoiceBox(){
         return preferences.get("tradeChoiceBox", "");
     }
@@ -181,6 +211,42 @@ public class PrefService {
             return Character.MIN_VALUE;
         } else {
             return preferences.get("tradeTextField", "").charAt(0);
+        }
+    }
+
+    public String getBuildStreetChoiceBox(){
+        return preferences.get("buildStreetChoiceBox", "");
+    }
+
+    public Character getBuildStreetTextField(){
+        if(preferences.get("buildStreetTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("buildStreetTextField", "").charAt(0);
+        }
+    }
+
+    public String getBuildIglooChoiceBox(){
+        return preferences.get("buildIgluChoiceBox", "");
+    }
+
+    public Character getBuildIglooTextField(){
+        if(preferences.get("buildIgluTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("buildIgluTextField", "").charAt(0);
+        }
+    }
+
+    public String getUpgradeIglooChoiceBox(){
+        return preferences.get("upgradedIgluChoiceBox", "");
+    }
+
+    public Character getUpgradeIglooTextField(){
+        if(preferences.get("upgradeIgluTextField", "").equals("")){
+            return Character.MIN_VALUE;
+        } else {
+            return preferences.get("upgradeIgluTextField", "").charAt(0);
         }
     }
 
@@ -239,6 +305,21 @@ public class PrefService {
     public void deleteRulesHotkey(){
         preferences.put("rulesTextField", "");
         preferences.put("rulesChoiceBox", "");
+    }
+
+    public void deleteBuildStreetHotkey(){
+        preferences.put("buildStreetTextField", "");
+        preferences.put("buildStreetChoiceBox", "");
+    }
+
+    public void deleteBuildIglooHotkey(){
+        preferences.put("buildIglooTextField", "");
+        preferences.put("buildIglooChoiceBox", "");
+    }
+
+    public void deleteUpgradeIglooHotkey(){
+        preferences.put("upgradeIglooTextField", "");
+        preferences.put("upgradeIglooChoiceBox", "");
     }
 
     public void setVoteButtonState(String mapId, String state){

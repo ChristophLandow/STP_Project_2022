@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +22,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class BoardController {
-
     public Pane fieldPane;
-
     public Provider<StreetPointController> streetPointControllerProvider;
     private final GameStorage gameStorage;
     private final ArrayList<BuildingPointController> buildingControllers = new ArrayList<>();
@@ -34,19 +31,19 @@ public class BoardController {
     private final ArrayList<StreetPointController> streetPointControllers = new ArrayList<>();
     public final ArrayList<HexTileController> tileControllers = new ArrayList<>();
     private final IngameService ingameService;
+    private final IngameSelectController ingameSelectController;
     private final GameService gameService;
     private final UserService userService;
     private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
     public final SimpleObjectProperty<Game> game;
-
     private  Thread hextileRenderThread;
+   final BoardGenerator generator = new BoardGenerator();
 
-    BoardGenerator generator = new BoardGenerator();
-
-    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game,
+    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game, IngameSelectController ingameSelectController,
                            GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
         this.ingameService = ingameService;
+        this.ingameSelectController = ingameSelectController;
         this.gameService = gameService;
         this.userService = userService;
         this.gameStorage = gameStorage;
@@ -54,7 +51,6 @@ public class BoardController {
         this.mapRenderService = mapRenderService;
         this.game = game;
     }
-
 
     public void buildBoardUI() {
         double hexScale = this.gameStorage.getHexScale();
@@ -99,8 +95,6 @@ public class BoardController {
                 catch (InterruptedException ignored){}
             });
 
-            hextileRenderThread.setDaemon(true);
-            hextileRenderThread.start();
         }
         else{
             tiles.forEach(this::loadHexagon);
@@ -118,9 +112,9 @@ public class BoardController {
                 catch (InterruptedException ignored){}
             });
 
-            hextileRenderThread.setDaemon(true);
-            hextileRenderThread.start();
         }
+        hextileRenderThread.setDaemon(true);
+        hextileRenderThread.start();
 
     }
 
@@ -128,12 +122,14 @@ public class BoardController {
         edges.removeIf(edge -> {
             for(HexTile tile: tiles){
                 double[][] edgeCoords = new double[6][2];
-                edgeCoords[0] = new double[]{tile.x + (sqrt(3)/4) * hexScale, tile.y + 0.75 * hexScale};
+                double calcX4 = tile.x + (sqrt(3) / 4) * hexScale;
+                edgeCoords[0] = new double[]{calcX4, tile.y + 0.75 * hexScale};
                 edgeCoords[1] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  + 0};
-                edgeCoords[2] = new double[]{tile.x + (sqrt(3)/4) * hexScale, tile.y - 0.75 * hexScale};
-                edgeCoords[3] = new double[]{tile.x - (sqrt(3)/4) * hexScale, tile.y - 0.75 * hexScale};
+                edgeCoords[2] = new double[]{calcX4, tile.y - 0.75 * hexScale};
+                double calcX_4 = tile.x - (sqrt(3) / 4) * hexScale;
+                edgeCoords[3] = new double[]{calcX_4, tile.y - 0.75 * hexScale};
                 edgeCoords[4] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  + 0};
-                edgeCoords[5] = new double[]{tile.x - (sqrt(3)/4) * hexScale, tile.y + 0.75 * hexScale};
+                edgeCoords[5] = new double[]{calcX_4, tile.y + 0.75 * hexScale};
 
                 for(int i = 0; i < 6; i++) {
                     if(abs(edge.x - edgeCoords[i][0]) < 1 && abs(edge.y - edgeCoords[i][1]) < 1 ) {
@@ -149,11 +145,13 @@ public class BoardController {
             for(HexTile tile: tiles){
                 double[][] cornerCoords = new double[6][2];
                 cornerCoords[0] = new double[]{tile.x + 0, tile.y + 1 * hexScale};
-                cornerCoords[1] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  + 0.5 * hexScale};
-                cornerCoords[2] = new double[]{tile.x + (sqrt(3)/2) * hexScale, tile.y  - 0.5 * hexScale};
+                double calcX2 = tile.x + (sqrt(3) / 2) * hexScale;
+                cornerCoords[1] = new double[]{calcX2, tile.y  + 0.5 * hexScale};
+                cornerCoords[2] = new double[]{calcX2, tile.y  - 0.5 * hexScale};
                 cornerCoords[3] = new double[]{tile.x - 0, tile.y - 1 * hexScale};
-                cornerCoords[4] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  - 0.5 * hexScale};
-                cornerCoords[5] = new double[]{tile.x - (sqrt(3)/2) * hexScale, tile.y  + 0.5 * hexScale};
+                double calcX_2 = tile.x - (sqrt(3) / 2) * hexScale;
+                cornerCoords[4] = new double[]{calcX_2, tile.y  - 0.5 * hexScale};
+                cornerCoords[5] = new double[]{calcX_2, tile.y  + 0.5 * hexScale};
 
                 for(int i = 0; i < 6; i++) {
                     if(abs(corner.x - cornerCoords[i][0]) < 1 && abs(corner.y - cornerCoords[i][1]) < 1 ) {
@@ -211,7 +209,7 @@ public class BoardController {
         circ.setLayoutX(corner.x + this.fieldPane.getPrefWidth() / 2);
         circ.setLayoutY(-corner.y + this.fieldPane.getPrefHeight() / 2);
         this.fieldPane.getChildren().add(circ);
-        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.userService, this.resourceService);
+        BuildingPointController newbuildingPointController = new BuildingPointController(corner, circ, ingameService, this.gameService, game.get()._id(), this.fieldPane, this.gameStorage, this.ingameSelectController, this.userService, this.resourceService);
         this.buildingControllers.add(newbuildingPointController);
     }
 
@@ -270,7 +268,7 @@ public class BoardController {
     public void enableStreetPoints(String action) {
         for (StreetPointController controller : streetPointControllerHashMap.values()) {
             controller.setAction(action);
-            controller.init();
+            controller.init(ingameSelectController);
         }
     }
     public void enableBuildingPoints(String action) {
@@ -290,7 +288,7 @@ public class BoardController {
         mapRenderService.getGc().drawImage(image, layoutX - hexagonWidth/2, layoutY - hexagonHeight/2, hexagonWidth, hexagonHeight);
 
         //Render number image
-        if(!type.equals("desert")) {
+        if(!type.equals("desert") && number >= 2) {
             String numberURL = "ingame/tile_" + number + ".png";
             Image numberImg = new Image(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
 

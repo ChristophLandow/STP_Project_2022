@@ -7,7 +7,6 @@ import de.uniks.pioneers.controller.subcontroller.MapListController;
 import de.uniks.pioneers.services.MapService;
 import de.uniks.pioneers.services.PrefService;
 import de.uniks.pioneers.services.StylesService;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -105,19 +104,19 @@ public class MapBrowserController implements Controller {
         return mapBrowserView;
     }
 
-    public void editMap(ActionEvent actionEvent) {
+    public void editMap() {
         MapEditorController mapEditorController = mapEditorControllerProvider.get();
         this.app.show(mapEditorController);
     }
 
-    public void createNewMap(ActionEvent actionEvent) {
+    public void createNewMap() {
         // set current map to null to create a new one and don't update the selected
         mapService.setCurrentMap(null);
         MapEditorController mapEditorController = mapEditorControllerProvider.get();
         this.app.show(mapEditorController);
     }
 
-    public void leaveToLobby(ActionEvent actionEvent) {
+    public void leaveToLobby() {
         LobbyScreenController lobbyScreenController = lobbyScreenControllerProvider.get();
         this.app.show(lobbyScreenController);
     }

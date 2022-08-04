@@ -4,12 +4,14 @@ import de.uniks.pioneers.dto.CreateBuildingDto;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.services.*;
+import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.GameStorage;
+import de.uniks.pioneers.services.IngameService;
+import de.uniks.pioneers.services.ResourceService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.robot.Robot;
@@ -28,6 +30,7 @@ public class StreetPointController {
     private final IngameService ingameService;
 
     private final GameStorage gameStorage;
+    private IngameSelectController ingameSelectController;
     private Pane fieldPane;
     public HexTile tile;
     private Circle view;
@@ -58,12 +61,13 @@ public class StreetPointController {
         this.eventView.setOpacity(0);
     }
 
-    public void init() {
+    public void init(IngameSelectController ingameSelectController) {
         checkIfMouseInsideView();
+        this.ingameSelectController = ingameSelectController;
 
-        this.eventView.setOnMouseClicked(this::placeStreet);
-        this.eventView.setOnMouseEntered(this::dye);
-        this.eventView.setOnMouseExited(this::undye);
+        this.eventView.setOnMouseClicked(mouseEvent1 -> placeStreet());
+        this.eventView.setOnMouseEntered(mouseEvent -> dye());
+        this.eventView.setOnMouseExited(mouseEvent -> undye());
     }
 
     public void addEventArea() {
@@ -73,15 +77,21 @@ public class StreetPointController {
         this.fieldPane.getChildren().add(eventView);
     }
 
-    public void placeStreet(MouseEvent mouseEvent) {
+    public void placeStreet() {
         boolean valid;
 
         if (action.equals(FOUNDING_ROAD_1) || action.equals(FOUNDING_ROAD_2)) {
             valid = checkBuildings();
+        } else if(action.equals(ROAD_MOVE)) {
+            if (gameStorage.remainingBuildings.get(ROAD) >= 1) {
+                valid = checkRoads() || checkBuildings();
+            } else {
+                valid = false;
+            }
         } else {
             if (gameStorage.remainingBuildings.get(ROAD) >= 1 && resourceService.checkRoad()) {
                 valid = checkRoads() || checkBuildings();
-            }else {
+            } else {
                 valid = false;
             }
         }
@@ -96,6 +106,8 @@ public class StreetPointController {
                         fieldPane.getChildren().forEach(this::reset);
                     }));
         }
+
+        ingameSelectController.resetSelect();
     }
 
     private boolean checkBuildings() {
@@ -108,7 +120,7 @@ public class StreetPointController {
         }
     }
 
-    private Boolean checkRoads() {
+    public Boolean checkRoads() {
         if (uploadCoords[3] == 3) {
             return gameService.isValidFromThree(this.uploadCoords);
         } else if (uploadCoords[3] == 7) {
@@ -176,11 +188,11 @@ public class StreetPointController {
         }
     }
 
-    private void dye(MouseEvent mouseEvent) {
+    private void dye() {
         this.view.setFill(HOVER_COLOR);
     }
 
-    private void undye(MouseEvent mouseEvent) {
+    private void undye() {
         this.view.setFill(STANDARD_COLOR);
     }
 

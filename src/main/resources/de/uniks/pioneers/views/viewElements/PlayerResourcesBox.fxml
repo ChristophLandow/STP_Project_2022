@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <HBox fx:id="resourcesHBox" alignment="CENTER_LEFT" maxWidth="466.0" minWidth="466.0" prefHeight="60.0" prefWidth="466.0" spacing="10.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController">
    <Pane fx:id="fischPane">
       <children>
-          <ImageView id="fischRessource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <ImageView id="fischResource" fx:id="fischResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
           <Label id="fischCount" fx:id="fischCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
               <font>
                 <Font name="System Bold" size="14.0" />
@@ -20,7 +18,7 @@
    </Pane>
    <Pane fx:id="packeisPane">
       <children>
-          <ImageView id="packeisRessource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <ImageView id="packeisResource" fx:id="packeisResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
           <Label id="packeisCount" fx:id="packeisCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
               <font>
                 <Font name="System Bold" size="14.0" />
@@ -30,7 +28,7 @@
    </Pane>
    <Pane fx:id="fellPane">
       <children>
-          <ImageView id="fellRessource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <ImageView id="fellResource" fx:id="fellResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
           <Label id="fellCount" fx:id="fellCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4">
               <font>
                 <Font name="System Bold" size="14.0" />
@@ -40,7 +38,7 @@
    </Pane>
    <Pane fx:id="kohlePane">
       <children>
-          <ImageView id="kohleRessource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <ImageView id="kohleResource" fx:id="kohleResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
           <Label id="kohleCount" fx:id="kohleCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4">
               <font>
                 <Font name="System Bold" size="14.0" />
@@ -50,7 +48,7 @@
    </Pane>
    <Pane fx:id="walknochenPane">
       <children>
-          <ImageView id="walknochenRessource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <ImageView id="walknochenResource" fx:id="walknochenResource" fitHeight="53.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
           <Label id="walknochenCount" fx:id="walknochenCount" alignment="CENTER_RIGHT" ellipsisString="" layoutX="15.0" minWidth="20.0" prefWidth="20.0" text="4" textFill="WHITE">
               <font>
                 <Font name="System Bold" size="14.0" />

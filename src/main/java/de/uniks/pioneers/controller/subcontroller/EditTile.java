@@ -4,7 +4,6 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.MapEditorController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
@@ -14,17 +13,17 @@ import static de.uniks.pioneers.EditorConstants.*;
 
 public class EditTile {
 
-    public HexTile hexTile;
+    public final HexTile hexTile;
 
-    Polygon view;
+    final Polygon view;
 
-    ImageView numberView;
+    final ImageView numberView;
 
     ImageView harbourView = new ImageView();
 
-    MapEditorController mapEditorController;
+    final MapEditorController mapEditorController;
 
-    ArrayList<Integer> harbourOptions = new ArrayList<>();
+    final ArrayList<Integer> harbourOptions = new ArrayList<>();
 
     //index of the harbor position in the array list
     public int currentHarborOption = 0;
@@ -48,19 +47,19 @@ public class EditTile {
 
     private void init(){
 
-        this.view.setOnMouseClicked(this::place);
-        this.numberView.setOnMouseClicked(this::numberClicked);
+        this.view.setOnMouseClicked(mouseEvent1 -> place());
+        this.numberView.setOnMouseClicked(mouseEvent -> numberClicked());
     }
 
-    private void numberClicked(MouseEvent mouseEvent) {
+    private void numberClicked() {
         if(this.mapEditorController.selection.equals(DELETE)){
             this.numberView.setImage(null);
             this.hexTile.number = 0;}
-        else{place(null);}
+        else{place();}
 
     }
 
-    public void place(MouseEvent mouseEvent) {
+    public void place() {
 
         makeVisible(true);
 

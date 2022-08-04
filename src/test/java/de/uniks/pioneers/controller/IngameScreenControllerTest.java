@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.controller.PopUpController.AchievementPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
@@ -9,6 +10,7 @@ import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.services.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
@@ -17,7 +19,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,11 +29,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.List;
+
+import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class IngameScreenControllerTest extends ApplicationTest {
@@ -54,6 +54,9 @@ class IngameScreenControllerTest extends ApplicationTest {
     @Mock(name = "rulesScreenControllerProvider")
     Provider<RulesScreenController> rulesScreenControllerProvider;
 
+    @Mock(name = "AchievementPopUpController")
+    Provider<AchievementPopUpController> achievementPopUpControllerProvider;
+
     @Mock
     TradePopUpController tradePopUpController;
 
@@ -68,6 +71,9 @@ class IngameScreenControllerTest extends ApplicationTest {
 
     @Mock
     ZoomableScrollPane zoomableScrollPane;
+
+    @Mock
+    AchievementPopUpController achievementPopUpController;
 
     @Mock
     GameApiService gameApiService;
@@ -100,16 +106,16 @@ class IngameScreenControllerTest extends ApplicationTest {
     TimerService timerService;
 
     @Mock
-    PrefService prefService;
-
-    @Mock
     TradeOfferPopUpController tradeOfferPopUpController;
 
     @Mock
-    IngameSelectController ingameSelectController;
+    RobberController robberController;
 
     @Mock
-    IngameStateController ingameStateController;
+    DiceSubcontroller diceSubcontroller;
+
+    @Spy
+    IngameSelectController ingameSelectController;
 
     @InjectMocks
     IngameScreenController ingameScreenController;
@@ -120,8 +126,9 @@ class IngameScreenControllerTest extends ApplicationTest {
         when(mapRenderService.isFinishedLoading()).thenReturn(new SimpleBooleanProperty());
         when(settingsScreenControllerProvider.get()).thenReturn(settingsScreenController);
         when(rulesScreenControllerProvider.get()).thenReturn(rulesController);
-        when(ingameService.getExpectedMove()).thenReturn(new ExpectedMove("build", List.of("000", "001")));
+        when(ingameService.getExpectedMove()).thenReturn(new ExpectedMove(BUILD, List.of("000", "001")));
         when(tradePopUpControllerProvider.get()).thenReturn(tradePopUpController);
+        when(achievementPopUpControllerProvider.get()).thenReturn(achievementPopUpController);
 
         ingameService.game = new SimpleObjectProperty<>();
         ingameService.game.set(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null));
@@ -130,6 +137,7 @@ class IngameScreenControllerTest extends ApplicationTest {
 
         app.start(stage);
         app.show(ingameScreenController);
+        verify(gameChatController, atLeastOnce()).setChatScrollPane(any());
     }
 
     @Test
@@ -152,31 +160,33 @@ class IngameScreenControllerTest extends ApplicationTest {
         Pane hammerPane = lookup("#hammerPane").query();
         Pane rightPane = lookup("#rightPane").query();
 
-        SVGPath streetSVG = lookup("#streetSVG").query();
-        SVGPath houseSVG = lookup("#houseSVG").query();
-        SVGPath citySVG = lookup("#citySVG").query();
+        gameStorage.selectedBuilding = "";
+        ingameSelectController = new IngameSelectController();
+        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
+        ingameScreenController.ingameSelectController = ingameSelectController;
+        Platform.runLater(() -> ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.getApp().getStage(), ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, timerService, ingameService, new ResourceService(), gameService, userService, robberController));
 
-        ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, ingameService, new ResourceService());
-
-        streetSVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
-        assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
+        roadFrame.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(144,238,144)));
         assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
         assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
 
-        houseSVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        settlementFrame.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
+        assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(144,238,144)));
         assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
 
-        citySVG.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+        cityFrame.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(roadFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
         assertEquals(settlementFrame.getBackground(), Background.fill(Color.rgb(250,250,250)));
-        assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(0,100,0)));
+        assertEquals(cityFrame.getBackground(), Background.fill(Color.rgb(144,238,144)));
 
         tradePane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         verify(tradePopUpController).show();
         verify(stylesService).setStyleSheets(any(), anyString(), anyString());
         verify(timerService).setTimeLabel(any());
+        verify(speechService, atLeastOnce()).play(anyString());
+        verify(tradeOfferPopUpController, atLeastOnce()).stop();
 
         hammerPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         assertEquals(hammerPane.getStyle(), "-fx-border-width: 3; -fx-border-color: lightgreen");

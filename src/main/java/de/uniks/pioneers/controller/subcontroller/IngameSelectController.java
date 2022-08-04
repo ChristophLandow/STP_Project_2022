@@ -1,53 +1,75 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.services.GameStorage;
-import javafx.scene.input.MouseEvent;
+import de.uniks.pioneers.services.IngameService;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
 
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameSelectController {
-    private final GameStorage gameStorage;
-    private final Pane roadFrame;
-    private final Pane settlementFrame;
-    private final Pane cityFrame;
-    private final SVGPath streetSVG;
-    private final SVGPath houseSVG;
-    private final SVGPath citySVG;
+    private GameStorage gameStorage;
+    private IngameService ingameService;
+    private Pane roadFrame;
+    private Pane settlementFrame;
+    private Pane cityFrame;
 
-    public IngameSelectController(GameStorage gameStorage, Pane roadFrame, Pane settlementFrame, Pane cityFrame, SVGPath streetSVG, SVGPath houseSVG, SVGPath citySVG) {
+    public void init(GameStorage gameStorage, IngameService ingameService, Pane roadFrame, Pane settlementFrame, Pane cityFrame) {
         this.gameStorage = gameStorage;
+        this.ingameService = ingameService;
         this.roadFrame = roadFrame;
         this.settlementFrame = settlementFrame;
         this.cityFrame = cityFrame;
-        this.streetSVG = streetSVG;
-        this.houseSVG = houseSVG;
-        this.citySVG = citySVG;
 
-        streetSVG.setOnMouseClicked(this::selectStreet);
-        houseSVG.setOnMouseClicked(this::selectSettlement);
-        citySVG.setOnMouseClicked(this::selectCity);
+        roadFrame.setOnMouseClicked(mouseEvent2 -> selectStreet());
+        settlementFrame.setOnMouseClicked(mouseEvent1 -> selectSettlement());
+        cityFrame.setOnMouseClicked(mouseEvent -> selectCity());
     }
 
-    public void selectStreet(MouseEvent mouseEvent) {
-        this.gameStorage.selectedBuilding = ROAD;
-        this.roadFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
+    public void selectStreet() {
+        if(ingameService.getExpectedMove().action().equals(BUILD)) {
+            if(!this.gameStorage.selectedBuilding.equals(ROAD)) {
+                this.gameStorage.selectedBuilding = ROAD;
+                this.roadFrame.setBackground(Background.fill(Color.rgb(144,238,144)));
+                this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+                this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+            } else {
+                resetSelect();
+            }
+        }
+    }
+
+    public void selectSettlement() {
+        if(ingameService.getExpectedMove().action().equals(BUILD)) {
+            if(!this.gameStorage.selectedBuilding.equals(SETTLEMENT)) {
+                this.gameStorage.selectedBuilding = SETTLEMENT;
+                this.settlementFrame.setBackground(Background.fill(Color.rgb(144,238,144)));
+                this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+                this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+            } else {
+                resetSelect();
+            }
+        }
+    }
+
+    public void selectCity() {
+        if(ingameService.getExpectedMove().action().equals(BUILD)) {
+            if(!this.gameStorage.selectedBuilding.equals(CITY)) {
+                this.gameStorage.selectedBuilding = CITY;
+                this.cityFrame.setBackground(Background.fill(Color.rgb(144,238,144)));
+                this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+                this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
+            } else {
+                resetSelect();
+            }
+        }
+    }
+
+    public void resetSelect() {
+        this.gameStorage.selectedBuilding = "";
+        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
         this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-    }
-    public void selectSettlement(MouseEvent mouseEvent) {
-        this.gameStorage.selectedBuilding = SETTLEMENT;
-        this.settlementFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
-        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.cityFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-    }
-    public void selectCity(MouseEvent mouseEvent) {
-        this.gameStorage.selectedBuilding = CITY;
-        this.cityFrame.setBackground(Background.fill(Color.rgb(0,100,0)));
-        this.settlementFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
-        this.roadFrame.setBackground(Background.fill(Color.rgb(250,250,250)));
     }
 }

@@ -9,11 +9,14 @@ import javafx.scene.Parent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.DISCARD_NUMBER;
 
+@Singleton
 public class RobberController implements Controller {
-    @Inject Provider<DiscardResourcesController> discardResourcesControllerProvider;
+    @Inject Provider<DiscardOrChooseResourcesController> discardOrChooseResourcesControllerProvider;
     @Inject Provider<RobPlayerController> robPlayerControllerProvider;
     @Inject GameService gameService;
     @Inject PrefService prefService;
@@ -21,7 +24,7 @@ public class RobberController implements Controller {
     private RobberService robberService;
     @Inject MapRenderService mapRenderService;
     @Inject SpeechService speechService;
-    private DiscardResourcesController discardResourcesController;
+    private DiscardOrChooseResourcesController discardOrChooseResourcesController;
     private RobPlayerController robPlayerController;
     private final ChangeListener<Number> changeListener = (observable, oldValue, newValue) -> callNext(newValue.intValue());
 
@@ -44,7 +47,7 @@ public class RobberController implements Controller {
 
     public void callNext(int newValue) {
         if (newValue == GameConstants.ROBBER_DISCARD) {
-            discard();
+            discardOrChoose(DISCARD_NUMBER);
         }
         else if (newValue == GameConstants.ROBBER_STEAL) {
             rob();
@@ -54,11 +57,10 @@ public class RobberController implements Controller {
         }
     }
 
-    private void discard() {
-        if(discardResourcesController == null) {
-            discardResourcesController = discardResourcesControllerProvider.get();
-            discardResourcesController.init();
-        }
+    public void discardOrChoose(int state) {
+        discardOrChooseResourcesController = discardOrChooseResourcesControllerProvider.get();
+        discardOrChooseResourcesController.setState(state);
+        discardOrChooseResourcesController.init();
     }
 
     public void rob(){
@@ -74,18 +76,25 @@ public class RobberController implements Controller {
 
     @Override
     public void stop() {
-        this.robberService.getRobberState().removeListener(changeListener);
+        if(robberService != null) {
+            this.robberService.getRobberState().removeListener(changeListener);
+        }
 
-        if(discardResourcesController != null){
-            discardResourcesController.stop();
+        if(discardOrChooseResourcesController != null){
+            discardOrChooseResourcesController.stop();
         }
 
         if(robPlayerController != null){
             robPlayerController.stop();
         }
     }
+    
     @Override
     public Parent render() {
         return null;
+    }
+
+    public Provider<DiscardOrChooseResourcesController> getDiscardOrChooseResourcesControllerProvider() {
+        return discardOrChooseResourcesControllerProvider;
     }
 }

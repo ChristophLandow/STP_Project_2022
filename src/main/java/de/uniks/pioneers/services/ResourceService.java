@@ -4,6 +4,7 @@ import de.uniks.pioneers.model.DevelopmentCard;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import static de.uniks.pioneers.GameConstants.*;
-import static de.uniks.pioneers.GameConstants.GRAIN;
 
 @Singleton
 public class ResourceService {
@@ -109,20 +109,20 @@ public class ResourceService {
 
         for(DevelopmentCard devCard : devCards) {
             switch (devCard.type()) {
-                case "knight" -> knight += 1;
-                case "road-building" -> road += 1;
-                case "year-of-plenty" -> plenty += 1;
-                case "monopoly" -> monopoly += 1;
-                case "victory-point" -> vpoint += 1;
-                case "unknown" -> unknown += 1;
+                case DEV_KNIGHT -> knight += 1;
+                case DEV_ROAD -> road += 1;
+                case DEV_PLENTY -> plenty += 1;
+                case DEV_MONOPOLY -> monopoly += 1;
+                case DEV_VPOINT -> vpoint += 1;
+                case DEV_UNKNOWN -> unknown += 1;
             }
         }
 
-        devCardMap.put("knight", knight);
-        devCardMap.put("road", road);
-        devCardMap.put("plenty", plenty);
-        devCardMap.put("monopoly", monopoly);
-        devCardMap.put("vpoint", vpoint);
+        devCardMap.put(DEV_KNIGHT, knight);
+        devCardMap.put(DEV_ROAD, road);
+        devCardMap.put(DEV_PLENTY, plenty);
+        devCardMap.put(DEV_MONOPOLY, monopoly);
+        devCardMap.put(DEV_VPOINT, vpoint);
 
         return devCardMap;
     }

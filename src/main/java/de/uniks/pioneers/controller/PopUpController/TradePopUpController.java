@@ -23,7 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;

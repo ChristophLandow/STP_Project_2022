@@ -9,7 +9,7 @@
       <Insets top="30.0" />
    </padding>
    <HBox fx:id="gameNameBox" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" spacing="40.0">
-      <Label fx:id="gameNameLabel" text="name :">
+      <Label text="name :">
          <HBox.margin>
             <Insets />
          </HBox.margin>
@@ -35,7 +35,7 @@
       <VBox.margin>
          <Insets top="20.0" />
       </VBox.margin>
-      <Label fx:id="passWordLabel" text="password :">
+      <Label text="password :">
          <font>
             <Font size="18.0" />
          </font>

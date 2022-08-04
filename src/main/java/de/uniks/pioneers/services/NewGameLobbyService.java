@@ -1,7 +1,10 @@
 package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.*;
-import de.uniks.pioneers.model.*;
+import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.GameSettings;
+import de.uniks.pioneers.model.Member;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.AuthApiService;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.rest.GameMemberApiService;
@@ -47,8 +50,8 @@ public class NewGameLobbyService {
         users = new HashMap<>();
     }
 
-    public Observable<LogoutResult> logout() {
-        return authApiService.logout();
+    public void logout() {
+        authApiService.logout();
     }
 
     public Observable<List<Member>> getAll(String id){

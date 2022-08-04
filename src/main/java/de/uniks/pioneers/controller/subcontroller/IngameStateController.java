@@ -12,7 +12,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.util.Objects;
@@ -25,6 +24,8 @@ public class IngameStateController {
     private final UserService userService;
     private final IngameService ingameService;
     private final TimerService timerService;
+    private final RobberController robberController;
+    private final IngameSelectController ingameSelectController;
     private final MapRenderService mapRenderService;
     private final BoardController boardController;
     private final Pane turnPane;
@@ -32,17 +33,20 @@ public class IngameStateController {
     private final Label situationLabel;
     private final DiceSubcontroller diceSubcontroller;
     private final Game game;
+    private final IngameDevelopmentCardController ingameDevelopmentCardController;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final RobberService robberService;
     private final SpeechService speechService;
 
-    public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane,
-                                 ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game,
-                                 MapRenderService mapRenderService, RobberService robberService, SpeechService speechService) {
+    public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane, RobberController robberController,
+                                 ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, IngameSelectController ingameSelectController,
+                                 MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, IngameDevelopmentCardController ingameDevelopmentCardController) {
         this.userService = userService;
         this.ingameService = ingameService;
         this.timerService = timerService;
+        this.robberController = robberController;
+        this.ingameSelectController = ingameSelectController;
         this.mapRenderService = mapRenderService;
         this.robberService = robberService;
         this.speechService = speechService;
@@ -52,6 +56,7 @@ public class IngameStateController {
         this.situationLabel = situationLabel;
         this.diceSubcontroller = diceSubcontroller;
         this.game = game;
+        this.ingameDevelopmentCardController = ingameDevelopmentCardController;
     }
 
     public void handleGameState(State currentState) {
@@ -72,14 +77,14 @@ public class IngameStateController {
                         this.enableBuildingPoints(move.action());
                         speechService.play(SPEECH_PLACE_IGLOO);
                     }
-                    case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> {
+                    case FOUNDING_ROAD_1, FOUNDING_ROAD_2, ROAD_MOVE -> {
                         this.enableStreetPoints(move.action());
                         speechService.play(SPEECH_PLACE_STREET);
                     }
                     case BUILD -> {
                         // set builder timer, in progress...
                         robberService.getRobberState().set(ROBBER_FINISHED);
-                        this.timerService.setBuildTimer(new Timer(), 120);
+                        this.timerService.setBuildTimer(new Timer());
                         this.enableEndTurn();
                         this.enableBuildingPoints(move.action());
                         this.enableStreetPoints(move.action());
@@ -101,8 +106,9 @@ public class IngameStateController {
                         ingameService.tradeIsOffered.set(true);
                         speechService.play(SPEECH_TRADEOFFER);
                     }
-                    case ACCEPT -> {
-                    }
+                    case ACCEPT -> {}
+                    case MONOPOLY_MOVE -> robberController.discardOrChoose(MONOPOLY_NUMBER);
+                    case PLENTY_MOVE -> robberController.discardOrChoose(PLENTY_NUMBER);
                 }
             }
 
@@ -124,10 +130,13 @@ public class IngameStateController {
     }
 
     private void enableEndTurn() {
-        this.turnPane.setOnMouseClicked(this::endTurn);
+        this.turnPane.setOnMouseClicked(mouseEvent -> endTurn());
     }
 
-    private void endTurn(MouseEvent mouseEvent) {
+    private void endTurn() {
+        ingameSelectController.resetSelect();
+        ingameDevelopmentCardController.resetHammerSelection();
+        ingameDevelopmentCardController.closeDevCardPlayStage();
         final CreateMoveDto moveDto = new CreateMoveDto(BUILD, null, null, null, null, null);
         disposable.add(ingameService.postMove(game._id(), moveDto)
                 .observeOn(FX_SCHEDULER)
@@ -142,13 +151,16 @@ public class IngameStateController {
         String playerName;
         String actionString = "";
         switch (action) {
-            case ROLL, FOUNDING_ROLL -> actionString = "roll the dice";
-            case FOUNDING_ROAD_1, FOUNDING_ROAD_2 -> actionString = "place road";
-            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = "place settlement";
+            case ROLL, FOUNDING_ROLL -> actionString = ROLL_DICE;
+            case FOUNDING_ROAD_1, FOUNDING_ROAD_2, ROAD_MOVE -> actionString = PLACE_ROAD;
+            case FOUNDING_SETTLEMENT_1, FOUNDING_SETTLEMENT_2 -> actionString = PLACE_SETTLEMENT;
             case BUILD -> actionString = BUILD;
-            case ROB -> actionString = "place robber";
+            case ROB -> actionString = PLACE_ROBBER;
             case OFFER -> actionString = OFFER;
             case ACCEPT -> actionString = ACCEPT;
+            case DROP -> actionString = DROP_CARDS;
+            case MONOPOLY_MOVE -> actionString = CHOOSE_MONOPOLY;
+            case PLENTY_MOVE -> actionString = CHOOSE_PLENTY;
         }
 
         if (playerId.equals(userService.getCurrentUser()._id())) {

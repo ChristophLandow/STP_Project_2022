@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -268,10 +269,10 @@ class GameAndResourceServiceTest {
 
     @Test
     void getDevCardMap() {
-        HashMap<String, Integer> devCardMap = resourceService.getDevCardMap(List.of(new DevelopmentCard("knight", false, false), new DevelopmentCard("knight", false, false), new DevelopmentCard("knight", false, false), new DevelopmentCard("year-of-plenty", false, false)));
+        HashMap<String, Integer> devCardMap = resourceService.getDevCardMap(List.of(new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_PLENTY, false, false)));
         assertEquals(devCardMap.size(), 5);
-        assertEquals(devCardMap.get("knight"), 3);
-        assertEquals(devCardMap.get("plenty"), 1);
+        assertEquals(devCardMap.get(DEV_KNIGHT), 3);
+        assertEquals(devCardMap.get(DEV_PLENTY), 1);
     }
 
     @Test

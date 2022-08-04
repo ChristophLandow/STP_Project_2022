@@ -68,7 +68,7 @@ public class RobPlayerController implements Controller {
             Label label = new Label(u.name());
 
             HBox box = new HBox(img, label);
-            box.setOnMouseClicked(this::setNewSelectedPlayer);
+            box.setOnMouseClicked(event -> setNewSelectedPlayer());
             this.playerListView.getItems().add(box);
         }
 
@@ -95,9 +95,9 @@ public class RobPlayerController implements Controller {
 
         this.stage.show();
 
-        this.menuButton.setOnMouseClicked(this::playerListToggleVisibility);
-        this.robAnchorpane.setOnMouseClicked(this::setPlayerListInvisible);
-        this.acceptButton.setOnMouseClicked(this::okClicked);
+        this.menuButton.setOnMouseClicked(event1 -> playerListToggleVisibility());
+        this.robAnchorpane.setOnMouseClicked(event1 -> setPlayerListInvisible());
+        this.acceptButton.setOnMouseClicked(event -> okClicked());
 
         openListViewWithSpace(this.menuButton);
         choosePlayerWithSpace(this.playerListView);
@@ -111,7 +111,7 @@ public class RobPlayerController implements Controller {
         disposable.dispose();
     }
 
-    private void setNewSelectedPlayer(MouseEvent event){
+    private void setNewSelectedPlayer(){
         User u = robberService.getRobbingCandidates().get(this.playerListView.getSelectionModel().getSelectedIndex());
 
         ImageView img = new ImageView(new Image(u.avatar(), 50, 50, true, true));
@@ -121,11 +121,11 @@ public class RobPlayerController implements Controller {
         this.selectedItemBox.getChildren().addAll(img,label);
     }
 
-    private void playerListToggleVisibility(MouseEvent event){
+    private void playerListToggleVisibility(){
         this.playerListView.setVisible(!this.playerListView.isVisible());
     }
 
-    private void setPlayerListInvisible(MouseEvent event){
+    private void setPlayerListInvisible(){
         this.playerListView.setVisible(false);
     }
 
@@ -170,7 +170,7 @@ public class RobPlayerController implements Controller {
         });
     }
 
-    public void okClicked(MouseEvent event){
+    public void okClicked(){
         User userChosen = robberService.getRobbingCandidates().get(this.playerListView.getSelectionModel().getSelectedIndex());
         disposable.add(this.robberService.robPlayer(userChosen._id()).observeOn(FX_SCHEDULER).subscribe(move -> stop(), this::handleHttpError));
     }
