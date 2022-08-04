@@ -58,9 +58,7 @@ public class MapEditorController implements Controller{
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, 2);
         this.sizeSpinner.setValueFactory(valueFactory);
-        this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            display(newValue);
-        });
+        this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> display(newValue));
     }
     @Override
     public void stop() {}
