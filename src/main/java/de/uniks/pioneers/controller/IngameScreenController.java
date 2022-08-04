@@ -331,6 +331,7 @@ public class IngameScreenController implements Controller {
         mapRenderService.stop();
         boardController.stop();
         achievementPopUpController.stop();
+        achievementService.stop();
     }
 
     public void setUsers(List<User> users) {
