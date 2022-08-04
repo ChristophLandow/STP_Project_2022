@@ -253,4 +253,7 @@ public class LobbyScreenController implements Controller {
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         app.show(mapBrowserController);
     }
+
+    public void openAchievements(ActionEvent actionEvent) {
+    }
 }
