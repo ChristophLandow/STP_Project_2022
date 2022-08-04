@@ -28,50 +28,17 @@ import java.util.Objects;
 import static de.uniks.pioneers.EditorConstants.*;
 
 public class MapEditorController implements Controller{
-
-    @FXML ImageView whaleImageView;
-    @FXML ImageView iceImageView;
-    @FXML ImageView fishImageView;
-    @FXML ImageView randomImageView;
-    @FXML ImageView desertImageView;
-    @FXML ImageView icebearImageView;
-    @FXML ImageView rockImageView;
-    @FXML Circle Circle2;
-    @FXML Circle Circle3;
-    @FXML Circle Circle4;
-    @FXML Circle Circle5;
-    @FXML Circle Circle6;
-    @FXML Circle Circle8;
-    @FXML Circle Circle9;
-    @FXML Circle Circle10;
-    @FXML Circle Circle11;
-    @FXML Circle Circle12;
-    @FXML ImageView harborFish;
-    @FXML ImageView harborCoal;
-    @FXML ImageView harborIce;
-    @FXML ImageView harborPolar;
-    @FXML ImageView harborWhale;
-    @FXML ImageView harborGeneric;
-    @FXML
-    public Pane scrollPaneAnchorPane;
-    @FXML
-    Button buttonToMaps;
-    @FXML
-    Button buttonSave;
-    @FXML
-    Button deleteButton;
-    @FXML
-    Spinner<Integer> sizeSpinner;
-
+    @FXML ImageView whaleImageView, iceImageView, fishImageView, randomImageView, desertImageView, icebearImageView, rockImageView;
+    @FXML Circle Circle2, Circle3, Circle4, Circle5, Circle6, Circle8, Circle9, Circle10, Circle11, Circle12;
+    @FXML ImageView harborFish, harborCoal, harborIce, harborPolar, harborWhale, harborGeneric;
+    @FXML public Pane scrollPaneAnchorPane;
+    @FXML Button buttonToMaps, buttonSave, deleteButton;
+    @FXML Spinner<Integer> sizeSpinner;
     private final MapService mapService;
     public final BoardGenerator boardGenerator;
-
     public final ArrayList<EditTile> tiles = new ArrayList<>();
-
     List<HexTile> frame = new ArrayList<>();
-
     final List<Polygon> tileViews = new ArrayList<>();
-
     public String selection = "";
     public  String resMod = "";
     private final App app;
@@ -84,15 +51,12 @@ public class MapEditorController implements Controller{
         this.app = app;
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.boardGenerator = new BoardGenerator();
-
     }
-
     @Override
     public void init() {
 
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, 2);
-
         this.sizeSpinner.setValueFactory(valueFactory);
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             display(newValue);
@@ -115,7 +79,6 @@ public class MapEditorController implements Controller{
         display(2);
         return parent;
     }
-
     private void display(int size){
 
         if(size > 3){this.resMod = "_low";}
@@ -199,7 +162,6 @@ public class MapEditorController implements Controller{
         this.buttonToMaps.toFront();
         this.selection = "";
     }
-
     public void toMaps(){
         System.out.println("ToMaps");
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
@@ -210,7 +172,6 @@ public class MapEditorController implements Controller{
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         this.app.show(mapBrowserController);
     }
-
     public void randomize() {
         for(EditTile tile : this.tiles){
             if(tile.active){
@@ -238,43 +199,36 @@ public class MapEditorController implements Controller{
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
         this.whaleImageView.setImage(image);}
-
     public void selectIce() {
         this.selection = HILLS;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
         this.iceImageView.setImage(image);}
-
     public void selectFish() {
         this.selection = FOREST;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
         this.fishImageView.setImage(image);}
-
     public void selectRandom() {
         this.selection = RANDOM;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
         this.randomImageView.setImage(image);}
-
     public void selectPolar() {
         this.selection = PASTURE;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
         this.icebearImageView.setImage(image);}
-
     public void selectCoal() {
         this.selection = MOUNTAINS;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
         this.rockImageView.setImage(image);}
-
     public void selectDesert() {
         this.selection = DESERT;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.selection + "_selected" + ".png")).toString());
         this.desertImageView.setImage(image);}
-
     private void resetSelectionUI(){
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "fields" + ".png")).toString());
         this.whaleImageView.setImage(image);
@@ -313,95 +267,77 @@ public class MapEditorController implements Controller{
         image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_coal.png")).toString());
         this.harborCoal.setImage(image);
     }
-
     public void select2() {
         this.selection = select2;
         resetSelectionUI();
         this.Circle2.setFill(Paint.valueOf("7FE766"));}
-
     public void select3(){
         this.selection = select3;
         resetSelectionUI();
         this.Circle3.setFill(Paint.valueOf("7FE766"));}
-
     public void select4(){
         this.selection = select4;
         resetSelectionUI();
         this.Circle4.setFill(Paint.valueOf("7FE766"));}
-
     public void select5(){
         this.selection = select5;
         resetSelectionUI();
         this.Circle5.setFill(Paint.valueOf("7FE766"));}
-
     public void select6(){
         this.selection = select6;
         resetSelectionUI();
         this.Circle6.setFill(Paint.valueOf("7FE766"));}
-
     public void select8(){
         this.selection = select8;
         resetSelectionUI();
         this.Circle8.setFill(Paint.valueOf("7FE766"));}
-
     public void select9(){
         this.selection = select9;
         resetSelectionUI();
         this.Circle9.setFill(Paint.valueOf("7FE766"));}
-
     public void select10(){
         this.selection = select10;
         resetSelectionUI();
         this.Circle10.setFill(Paint.valueOf("7FE766"));}
-
     public void select11(){
         this.selection = select11;
         resetSelectionUI();
         this.Circle11.setFill(Paint.valueOf("7FE766"));}
-
     public void select12(){
         this.selection = select12;
         resetSelectionUI();
         this.Circle12.setFill(Paint.valueOf("7FE766"));}
-
     public void selectHarborGeneric() {
         this.selection = HARBOUR_GENERAL;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_general_selected.png")).toString());
         this.harborGeneric.setImage(image);}
-
     public void selectHarborFish() {
         this.selection = HARBOUR_FISH;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_fish_selected.png")).toString());
         this.harborFish.setImage(image);}
-
     public void selectHarborIce() {
         this.selection = HARBOUR_ICE;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_iceberg_selected.png")).toString());
         this.harborIce.setImage(image);}
-
     public void selectHarborPolar() {
         this.selection = HARBOUR_POLAR;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_polar-bear_selected.png")).toString());
         this.harborPolar.setImage(image);}
-
     public void selectHarborWhale() {
         this.selection = HARBOUR_WHALE;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_whale_selected.png")).toString());
         this.harborWhale.setImage(image);}
-
     public void selectHarborCoal() {
         this.selection = HARBOUR_COAL;
         resetSelectionUI();
         Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_coal_selected.png")).toString());
         this.harborCoal.setImage(image);}
-
     public void selectDelete() {
         this.selection = DELETE;
         resetSelectionUI();}
-
 }
