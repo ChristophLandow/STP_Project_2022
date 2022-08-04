@@ -36,6 +36,6 @@
     <ScrollPane fx:id="gameScrollPane" hbarPolicy="NEVER" layoutX="420.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0" style="-fx-border-color: black;">
         <ListView fx:id="listViewGames" maxWidth="280.0" minWidth="280.0" prefHeight="400.0" prefWidth="280.0" />
     </ScrollPane>
-   <Button fx:id="MapEditorButton" layoutX="560.0" layoutY="46.0" mnemonicParsing="false" onAction="#openMapEditor" prefHeight="25.0" prefWidth="64.0" text="Maps" />
-   <Button layoutX="661.0" layoutY="46.0" mnemonicParsing="false" onAction="#openAchievements" text="Achivements" />
+   <Button fx:id="MapEditorButton" layoutX="498.0" layoutY="44.0" mnemonicParsing="false" onAction="#openMapEditor" prefHeight="25.0" prefWidth="64.0" text="Maps" />
+   <Button layoutX="604.0" layoutY="46.0" mnemonicParsing="false" onAction="#openAchievements" text="Achivements" />
 </Pane>

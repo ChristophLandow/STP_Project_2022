@@ -56,6 +56,7 @@ public class LobbyScreenController implements Controller {
     @Inject NewGameLobbyService newGameLobbyService;
     @Inject Provider<CreateNewGamePopUpController> createNewGamePopUpControllerProvider;
     @Inject Provider<LobbyGameListController> lobbyGameListControllerProvider;
+    @Inject Provider<AchievementScreenController> achievementScreenControllerProvider;
 
     @Inject Provider<MapBrowserController> mapBrowserControllerProvider;
 
@@ -255,5 +256,7 @@ public class LobbyScreenController implements Controller {
     }
 
     public void openAchievements(ActionEvent actionEvent) {
+        AchievementScreenController achievementScreenController = achievementScreenControllerProvider.get();
+        app.show(achievementScreenController);
     }
 }
