@@ -1,5 +1,6 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.controller.BoardController;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
 import de.uniks.pioneers.services.MapService;
@@ -14,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -39,6 +41,8 @@ public class MapDetailsController {
     private AnchorPane previewAnchorPane;
     private Pane previewPane;
     private Canvas previewCanvas;
+
+    @Inject Provider<BoardController> boardControllerProvider;
 
     @Inject
     public MapDetailsController(MapBrowserService mapBrowserService, UserService userService, MapService mapService) {
@@ -90,6 +94,7 @@ public class MapDetailsController {
     }
 
     private void showPreview(MapTemplate mapTemplate) {
+        this.boardControllerProvider.get();
     }
 
     private String toDateTimeString(String timeString) {

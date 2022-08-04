@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,11 +38,12 @@ public class BoardController {
     private final UserService userService;
     private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
-    public final SimpleObjectProperty<Game> game;
-    private  Thread hextileRenderThread;
-   final BoardGenerator generator = new BoardGenerator();
+    public SimpleObjectProperty<Game> game;
+    private Thread hextileRenderThread;
+    final BoardGenerator generator = new BoardGenerator();
 
-    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game, IngameSelectController ingameSelectController,
+    @Inject
+    public BoardController(IngameService ingameService, UserService userService, IngameSelectController ingameSelectController,
                            GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
         this.ingameService = ingameService;
         this.ingameSelectController = ingameSelectController;
@@ -49,7 +52,6 @@ public class BoardController {
         this.gameStorage = gameStorage;
         this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
-        this.game = game;
     }
 
     public void buildBoardUI() {

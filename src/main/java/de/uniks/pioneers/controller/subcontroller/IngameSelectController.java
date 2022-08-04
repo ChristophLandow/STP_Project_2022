@@ -6,6 +6,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import javax.inject.Inject;
+
 import static de.uniks.pioneers.GameConstants.*;
 
 public class IngameSelectController {
@@ -14,6 +16,10 @@ public class IngameSelectController {
     private Pane roadFrame;
     private Pane settlementFrame;
     private Pane cityFrame;
+
+    @Inject
+    public IngameSelectController() {
+    }
 
     public void init(GameStorage gameStorage, IngameService ingameService, Pane roadFrame, Pane settlementFrame, Pane cityFrame) {
         this.gameStorage = gameStorage;

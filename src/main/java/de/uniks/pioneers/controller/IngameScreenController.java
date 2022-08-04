@@ -111,7 +111,8 @@ public class IngameScreenController implements Controller {
         this.stylesService = stylesService;
         this.diceSubcontroller = diceSubcontroller;
         this.ingameSelectController = new IngameSelectController();
-        this.boardController = new BoardController(ingameService, userService, game, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
+        this.boardController.game = game;
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
             if (mapRenderService.isFinishedLoading().get()) Platform.runLater(this::initWhenMapFinishedRendering);
