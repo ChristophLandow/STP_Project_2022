@@ -10,128 +10,123 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.AchievementScreenController">
-   <children>
-      <ImageView fitHeight="108.0" fitWidth="119.0" layoutX="357.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../achievement-award.png" />
-         </image>
-      </ImageView>
-      <HBox layoutX="15.0" layoutY="134.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
-         <children>
-            <Label prefHeight="30.0" prefWidth="208.0" text="City Planer">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label prefHeight="30.0" prefWidth="206.0" text="100 citys build">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="cityPlanerDateLabel" text="Date">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <VBox fx:id="cityPlanerBox" prefHeight="200.0" prefWidth="100.0" />
-         </children>
-         <padding>
-            <Insets left="30.0" top="25.0" />
-         </padding>
-      </HBox>
-      <Button layoutX="350.0" layoutY="551.0" mnemonicParsing="false" onAction="#toLobby" prefHeight="35.0" prefWidth="100.0" text="To Lobby" />
-      <HBox layoutX="15.0" layoutY="216.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
-         <children>
-            <Label prefHeight="30.0" prefWidth="208.0" text="Longest Road">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label prefHeight="30.0" prefWidth="206.0" text="100 roads build">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="longestRoadDateLabel" text="Date">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <VBox fx:id="longestRoadBox" prefHeight="200.0" prefWidth="100.0" />
-         </children>
-         <padding>
-            <Insets left="30.0" top="25.0" />
-         </padding>
-      </HBox>
-      <HBox layoutX="15.0" layoutY="308.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
-         <children>
-            <Label prefHeight="30.0" prefWidth="208.0" text="Sea Builder">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label prefHeight="30.0" prefWidth="206.0" text="50 harbors build">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="seaBuilderDateLabel" text="Date">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <VBox fx:id="seaBuilderBox" prefHeight="200.0" prefWidth="100.0" />
-         </children>
-         <padding>
-            <Insets left="30.0" top="25.0" />
-         </padding>
-      </HBox>
-      <HBox layoutX="16.0" layoutY="383.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
-         <children>
-            <Label prefHeight="30.0" prefWidth="208.0" text="Wild Wild West">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label prefHeight="30.0" prefWidth="206.0" text="100 settlements build">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="wildWestDateLabel" text="Date">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <VBox fx:id="wildWestBox" prefHeight="200.0" prefWidth="100.0" />
-         </children>
-         <padding>
-            <Insets left="30.0" top="25.0" />
-         </padding>
-      </HBox>
-      <HBox layoutX="16.0" layoutY="465.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
-         <children>
-            <Label prefHeight="30.0" prefWidth="208.0" text="Winner Winner, Chicken Dinner">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label prefHeight="30.0" prefWidth="206.0" text="100 games won">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="chickenDinnerDateLabel" text="Date">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <VBox fx:id="chickenDinnerBox" prefHeight="200.0" prefWidth="100.0" />
-         </children>
-         <padding>
-            <Insets left="30.0" top="25.0" />
-         </padding>
-      </HBox>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.pioneers.controller.AchievementScreenController">
+   <ImageView fitHeight="108.0" fitWidth="119.0" layoutX="357.0" layoutY="14.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@../achievement-award.png"/>
+   </ImageView>
+   <HBox layoutX="15.0" layoutY="134.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0"
+         style="-fx-border-color: BLACK;">
+      <padding>
+         <Insets left="30.0" top="25.0"/>
+      </padding>
+      <Label prefHeight="30.0" prefWidth="208.0" text="City Planer">
+         <font>
+            <Font name="System Bold" size="20.0"/>
+         </font>
+      </Label>
+      <Label prefHeight="30.0" prefWidth="206.0" text="100 citys build">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <Label fx:id="cityPlanerDateLabel" text="Date">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <VBox fx:id="cityPlanerBox" prefHeight="200.0" prefWidth="100.0"/>
+   </HBox>
+   <Button layoutX="350.0" layoutY="551.0" mnemonicParsing="false" onAction="#toLobby" prefHeight="35.0"
+           prefWidth="100.0" text="To Lobby"/>
+   <HBox layoutX="15.0" layoutY="216.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0"
+         style="-fx-border-color: BLACK;">
+      <padding>
+         <Insets left="30.0" top="25.0"/>
+      </padding>
+      <Label prefHeight="30.0" prefWidth="208.0" text="Longest Road">
+         <font>
+            <Font name="System Bold" size="20.0"/>
+         </font>
+      </Label>
+      <Label prefHeight="30.0" prefWidth="206.0" text="100 roads build">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <Label fx:id="longestRoadDateLabel" text="Date">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <VBox fx:id="longestRoadBox" prefHeight="200.0" prefWidth="100.0"/>
+   </HBox>
+   <HBox layoutX="15.0" layoutY="308.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0"
+         style="-fx-border-color: BLACK;">
+      <padding>
+         <Insets left="30.0" top="25.0"/>
+      </padding>
+      <Label prefHeight="30.0" prefWidth="208.0" text="Sea Builder">
+         <font>
+            <Font name="System Bold" size="20.0"/>
+         </font>
+      </Label>
+      <Label prefHeight="30.0" prefWidth="206.0" text="50 harbors build">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <Label fx:id="seaBuilderDateLabel" text="Date">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <VBox fx:id="seaBuilderBox" prefHeight="200.0" prefWidth="100.0"/>
+   </HBox>
+   <HBox layoutX="16.0" layoutY="383.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0"
+         style="-fx-border-color: BLACK;">
+      <padding>
+         <Insets left="30.0" top="25.0"/>
+      </padding>
+      <Label prefHeight="30.0" prefWidth="208.0" text="Wild Wild West">
+         <font>
+            <Font name="System Bold" size="20.0"/>
+         </font>
+      </Label>
+      <Label prefHeight="30.0" prefWidth="206.0" text="100 settlements build">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <Label fx:id="wildWestDateLabel" text="Date">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <VBox fx:id="wildWestBox" prefHeight="200.0" prefWidth="100.0"/>
+   </HBox>
+   <HBox layoutX="16.0" layoutY="465.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0"
+         style="-fx-border-color: BLACK;">
+      <padding>
+         <Insets left="30.0" top="25.0"/>
+      </padding>
+      <Label prefHeight="30.0" prefWidth="208.0" text="Winner Winner, Chicken Dinner">
+         <font>
+            <Font name="System Bold" size="20.0"/>
+         </font>
+      </Label>
+      <Label prefHeight="30.0" prefWidth="206.0" text="100 games won">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <Label fx:id="chickenDinnerDateLabel" text="Date">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+      <VBox fx:id="chickenDinnerBox" prefHeight="200.0" prefWidth="100.0"/>
+   </HBox>
 </AnchorPane>
