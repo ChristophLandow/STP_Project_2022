@@ -25,12 +25,12 @@
       </Label>
       <Label prefHeight="30.0" prefWidth="206.0" text="100 citys build">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="cityPlanerDateLabel" text="Date">
+      <Label fx:id="cityPlanerDateLabel" prefHeight="30.0" prefWidth="120.0" text="xx.xx.xxxx">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <VBox fx:id="cityPlanerBox" prefHeight="48.0" prefWidth="100.0">
@@ -38,7 +38,7 @@
             <Insets />
          </opaqueInsets>
          <HBox.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="15.0" left="10.0" />
          </HBox.margin></VBox>
    </HBox>
    <Button layoutX="350.0" layoutY="551.0" mnemonicParsing="false" onAction="#toLobby" prefHeight="35.0" prefWidth="100.0" text="To Lobby" />
@@ -53,17 +53,17 @@
       </Label>
       <Label prefHeight="30.0" prefWidth="206.0" text="100 roads build">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="longestRoadDateLabel" text="Date">
+      <Label fx:id="longestRoadDateLabel" prefHeight="30.0" prefWidth="120.0" text="xx.xx.xxxx">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <VBox fx:id="longestRoadBox" prefHeight="200.0" prefWidth="100.0">
          <HBox.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="15.0" left="10.0" />
          </HBox.margin></VBox>
    </HBox>
    <HBox layoutX="15.0" layoutY="300.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
@@ -77,17 +77,17 @@
       </Label>
       <Label prefHeight="30.0" prefWidth="206.0" text="50 harbors build">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="seaBuilderDateLabel" text="Date">
+      <Label fx:id="seaBuilderDateLabel" prefHeight="30.0" prefWidth="120.0" text="xx.xx.xxxx">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <VBox fx:id="seaBuilderBox" prefHeight="200.0" prefWidth="100.0">
          <HBox.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="15.0" left="10.0" />
          </HBox.margin></VBox>
    </HBox>
    <HBox layoutX="16.0" layoutY="383.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
@@ -101,17 +101,17 @@
       </Label>
       <Label prefHeight="30.0" prefWidth="206.0" text="100 settlements build">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="wildWestDateLabel" text="Date">
+      <Label fx:id="wildWestDateLabel" prefHeight="30.0" prefWidth="120.0" text="xx.xx.xxxx">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <VBox fx:id="wildWestBox" prefHeight="200.0" prefWidth="100.0">
          <HBox.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="15.0" left="10.0" />
          </HBox.margin></VBox>
    </HBox>
    <HBox layoutX="16.0" layoutY="465.0" prefHeight="75.0" prefWidth="770.0" spacing="50.0" style="-fx-border-color: BLACK;">
@@ -125,17 +125,17 @@
       </Label>
       <Label prefHeight="30.0" prefWidth="206.0" text="100 games won">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="chickenDinnerDateLabel" text="Date">
+      <Label fx:id="chickenDinnerDateLabel" prefWidth="120.0" text="xx.xx.xxxx">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <VBox fx:id="chickenDinnerBox" prefHeight="200.0" prefWidth="100.0">
          <HBox.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="15.0" left="10.0" />
          </HBox.margin></VBox>
    </HBox>
 </AnchorPane>

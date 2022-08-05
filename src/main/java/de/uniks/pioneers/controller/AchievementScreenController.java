@@ -11,15 +11,15 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 
 import static de.uniks.pioneers.GameConstants.*;
 
-@Singleton
 public class AchievementScreenController implements Controller {
 
     @FXML Label cityPlanerDateLabel;
@@ -67,8 +67,9 @@ public class AchievementScreenController implements Controller {
             } else {
                 Label statusLabel = new Label();
                 statusLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).progress() + "/ 50");
-                cityPlanerDateLabel.setText("");
-                cityPlanerBox.getChildren().add(statusLabel);
+                statusLabel.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 20));
+                seaBuilderDateLabel.setText("");
+                seaBuilderBox.getChildren().add(statusLabel);
             }
         }
     }
@@ -80,6 +81,7 @@ public class AchievementScreenController implements Controller {
         } else {
             Label statusLabel = new Label();
             statusLabel.setText(achievements.get(ROAD_ACHIEVEMENT).progress() + "/ 100");
+            statusLabel.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 20));
             dateLabel.setText("");
             box.getChildren().add(statusLabel);
         }
@@ -87,6 +89,7 @@ public class AchievementScreenController implements Controller {
 
     public void setEmptyAchievements(Label dateLabel, VBox box){
         Label statusLabel = new Label();
+        statusLabel.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 20));
         dateLabel.setText("");
         statusLabel.setText("0 / 100");
         box.getChildren().add(statusLabel);
