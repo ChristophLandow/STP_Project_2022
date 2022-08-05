@@ -5,7 +5,6 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.services.AchievementService;
 import javafx.collections.ObservableMap;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -49,22 +48,29 @@ public class AchievementScreenController implements Controller {
     @Override
     public void init() {
         achievements = achievemetService.getAchievements();
-        //set unlock dates and check-icon or unlock status
-        setAchievement(cityPlanerDateLabel, cityPlanerBox, achievements.get(CITY_ACHIEVEMENT));
-        setAchievement(longestRoadDateLabel, longestRoadBox, achievements.get(ROAD_ACHIEVEMENT));
-        setAchievement(wildWestDateLabel, wildWestBox, achievements.get(SETTLEMENT_ACHIEVEMENT));
-        setAchievement(chickenDinnerDateLabel, chickenDinnerBox, achievements.get(WINNER_ACHIEVEMENT));
-        //...for Harbor-Achievement extra, cause of lower progress lvl
-        if(achievements.get(HARBOR_ACHIEVEMENT).progress() == 50){
-            seaBuilderDateLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).unlockedAt());
-            seaBuilderBox.getChildren().add(new ImageView());
+        if(achievements.isEmpty()){
+            setEmptyAchievements(cityPlanerDateLabel,cityPlanerBox);
+            setEmptyAchievements(longestRoadDateLabel,longestRoadBox);
+            setEmptyAchievements(seaBuilderDateLabel,seaBuilderBox);
+            setEmptyAchievements(wildWestDateLabel,wildWestBox);
+            setEmptyAchievements(chickenDinnerDateLabel,chickenDinnerBox);
         } else {
-            Label statusLabel = new Label();
-            statusLabel.setText(String.valueOf(achievements.get(HARBOR_ACHIEVEMENT).progress()) + "/ 50");
-            cityPlanerDateLabel.setText("");
-            cityPlanerBox.getChildren().add(statusLabel);
+            //set unlock dates and check-icon or unlock status
+            setAchievement(cityPlanerDateLabel, cityPlanerBox, achievements.get(CITY_ACHIEVEMENT));
+            setAchievement(longestRoadDateLabel, longestRoadBox, achievements.get(ROAD_ACHIEVEMENT));
+            setAchievement(wildWestDateLabel, wildWestBox, achievements.get(SETTLEMENT_ACHIEVEMENT));
+            setAchievement(chickenDinnerDateLabel, chickenDinnerBox, achievements.get(WINNER_ACHIEVEMENT));
+            //...for Harbor-Achievement extra, cause of lower progress lvl
+            if(achievements.get(HARBOR_ACHIEVEMENT).progress() == 50){
+                seaBuilderDateLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).unlockedAt());
+                seaBuilderBox.getChildren().add(new ImageView());
+            } else {
+                Label statusLabel = new Label();
+                statusLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).progress() + "/ 50");
+                cityPlanerDateLabel.setText("");
+                cityPlanerBox.getChildren().add(statusLabel);
+            }
         }
-
     }
 
     public void setAchievement(Label dateLabel, VBox box, Achievement achievement){
@@ -77,6 +83,13 @@ public class AchievementScreenController implements Controller {
             dateLabel.setText("");
             box.getChildren().add(statusLabel);
         }
+    }
+
+    public void setEmptyAchievements(Label dateLabel, VBox box){
+        Label statusLabel = new Label();
+        dateLabel.setText("");
+        statusLabel.setText("0 / 100");
+        box.getChildren().add(statusLabel);
     }
 
     @Override
