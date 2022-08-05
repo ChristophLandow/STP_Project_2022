@@ -89,6 +89,7 @@ public class MapBrowserController implements Controller {
                 .setCreatedByOutputText(createdByOutputText)
                 .setCreatorImageView(creatorImageView)
                 .setPreviewElements(previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
+        mapDetailsController.init();
     }
 
     @Override

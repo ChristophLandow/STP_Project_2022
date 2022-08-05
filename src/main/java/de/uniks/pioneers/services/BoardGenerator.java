@@ -3,7 +3,9 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.model.Harbor;
+import de.uniks.pioneers.model.HarborTemplate;
 import de.uniks.pioneers.model.Tile;
+import de.uniks.pioneers.model.TileTemplate;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -146,5 +148,26 @@ public class BoardGenerator {
             image.rotateProperty().set(330);
         }
         return image;
+    }
+
+    public List<HexTile> generateTileTemplates(List<TileTemplate> tiles, double hexScale) {
+        List<HexTile> mapTiles = new ArrayList<>();
+        for(TileTemplate tile : tiles) {
+
+            HexTile newHexTile = new HexTile(tile.x(), tile.z(), tile.y(), hexScale, true);
+            newHexTile.setGameInfo(tile.type(), tile.numberToken());
+            mapTiles.add(newHexTile);
+        }
+        return mapTiles;
+    }
+
+    public List<HexTile> generateHarborTemplates(List<HarborTemplate> harbors, double hexScale) {
+        List<HexTile> harborList = new ArrayList<>();
+        for(HarborTemplate harbor : harbors) {
+            HexTile newHexTile = new HexTile(harbor.x(), harbor.z(), harbor.y(), hexScale, true);
+            newHexTile.setGameInfo(harbor.type(), harbor.side());
+            harborList.add(newHexTile);
+        }
+        return harborList;
     }
 }

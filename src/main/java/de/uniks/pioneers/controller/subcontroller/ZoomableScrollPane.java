@@ -31,6 +31,8 @@ public class ZoomableScrollPane {
     private double mapWidth;
     private double mapHeight;
     private boolean setScrollPaneListener;
+    private double map_padding_x, map_padding_y;
+    private double map_width, map_height;
 
     @Inject
     ZoomableScrollPane(GameStorage gameStorage, MapRenderService mapRenderService){
@@ -38,11 +40,24 @@ public class ZoomableScrollPane {
         this.mapRenderService = mapRenderService;
     }
 
-    public void init(ScrollPane scrollPane, AnchorPane anchorPane, Pane fieldPane, Canvas canvas){
+    public void init(boolean preview, ScrollPane scrollPane, AnchorPane anchorPane, Pane fieldPane, Canvas canvas){
         this.scrollPane = scrollPane;
         this.fieldPane = fieldPane;
         this.anchorPane = anchorPane;
         this.canvas = canvas;
+
+        if (preview) {
+            map_padding_x = 1000;
+            map_padding_y = 1000;
+            map_width = 20;
+            map_height = 20;
+        } else {
+            map_padding_x = MAP_PADDING_X;
+            map_padding_y = MAP_PADDING_Y;
+            map_width = MAP_WIDTH;
+            map_height = MAP_HEIGHT;
+        }
+
 
         resizeMap();
 
@@ -147,17 +162,17 @@ public class ZoomableScrollPane {
         node.setOnMouseDragged((MouseEvent e) -> mapRenderService.checkPoints());
     }
 
-    private void resizeMap(){
+    private void resizeMap() {
         double hexagonWidth = Math.sqrt(3) * gameStorage.getHexScale();
-        mapWidth = (2*gameStorage.getMapRadius() + 1) * hexagonWidth + MAP_PADDING_X + gameStorage.getHexScale();
+        mapWidth = (2*gameStorage.getMapRadius() + 1) * hexagonWidth + map_padding_x + gameStorage.getHexScale();
 
         double hexagonHeight = 2 * gameStorage.getHexScale();
 
         if(gameStorage.getMapRadius()%2 == 0){
-            mapHeight = (gameStorage.getMapRadius()+1)*hexagonHeight + gameStorage.getMapRadius()*gameStorage.getHexScale() + MAP_PADDING_Y + gameStorage.getHexScale();
+            mapHeight = (gameStorage.getMapRadius()+1)*hexagonHeight + gameStorage.getMapRadius()*gameStorage.getHexScale() + map_padding_y + gameStorage.getHexScale();
         }
         else{
-            mapHeight = gameStorage.getMapRadius()*hexagonHeight + (gameStorage.getMapRadius()+1)*gameStorage.getHexScale() + gameStorage.getHexScale() + MAP_PADDING_Y + gameStorage.getHexScale();
+            mapHeight = gameStorage.getMapRadius()*hexagonHeight + (gameStorage.getMapRadius()+1)*gameStorage.getHexScale() + gameStorage.getHexScale() + map_padding_y + gameStorage.getHexScale();
         }
 
         this.fieldPane.setPrefHeight(mapHeight);
@@ -197,8 +212,8 @@ public class ZoomableScrollPane {
         }
 
         //Move fieldPane children to top left corner
-        double fieldPaneMoveChildrenX = (fieldPane.getLayoutX() + MAP_PADDING_X * 3 + gameStorage.getHexScale()- topLeft.getX());
-        double fieldPaneMoveChildrenY = (fieldPane.getLayoutY() + MAP_PADDING_Y * 3 + gameStorage.getHexScale() - topLeft.getY());
+        double fieldPaneMoveChildrenX = (fieldPane.getLayoutX() + map_padding_x * 3 + gameStorage.getHexScale()- topLeft.getX());
+        double fieldPaneMoveChildrenY = (fieldPane.getLayoutY() + map_padding_y * 3 + gameStorage.getHexScale() - topLeft.getY());
 
         gameStorage.setFieldPaneMoveChildrenX(fieldPaneMoveChildrenX);
         gameStorage.setFieldPaneMoveChildrenY(fieldPaneMoveChildrenY);
@@ -209,10 +224,10 @@ public class ZoomableScrollPane {
         }
 
         //Reset fieldPane size
-        fieldPane.setPrefWidth((bottomRight.getX() - topLeft.getX()) + (MAP_PADDING_X * 3 + gameStorage.getHexScale())*2);
-        fieldPane.setPrefHeight((bottomRight.getY() - topLeft.getY()) + (MAP_PADDING_Y * 3 + gameStorage.getHexScale())*2);
+        fieldPane.setPrefWidth((bottomRight.getX() - topLeft.getX()) + (map_padding_x * 3 + gameStorage.getHexScale())*2);
+        fieldPane.setPrefHeight((bottomRight.getY() - topLeft.getY()) + (map_padding_y * 3 + gameStorage.getHexScale())*2);
 
-        gameStorage.setZoomedOut(Math.min(MAP_HEIGHT/fieldPane.getPrefHeight(), MAP_WIDTH/fieldPane.getPrefWidth()));
+        gameStorage.setZoomedOut(Math.min(map_height/fieldPane.getPrefHeight(), map_width/fieldPane.getPrefWidth()));
         zoomOut();
     }
 }

@@ -136,7 +136,7 @@ public class IngameScreenController implements Controller {
         this.boardController.streetPointControllerProvider = this.streetPointControllerProvider;
 
         this.zoomableScrollPane = zoomableScrollPaneProvider.get();
-        this.zoomableScrollPane.init(fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
+        this.zoomableScrollPane.init(false, fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
 
         Platform.runLater(this.zoomableScrollPane::render);
 

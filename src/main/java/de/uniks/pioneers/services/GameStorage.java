@@ -22,7 +22,7 @@ public class GameStorage {
 
     private boolean customMap;
     private int mapRadius;
-    private  double hexScale = 75;
+    private double hexScale = 75;
     private double hexRadiusFactor = 3;
     private double zoomedIn = 1.4;
     private double zoomedOut = 1;
@@ -51,6 +51,10 @@ public class GameStorage {
 
     public double getHexScale() {
         return hexScale;
+    }
+
+    public void setHexScale(double hexScale) {
+        this.hexScale = hexScale;
     }
 
     public double getHexRadiusFactor() {

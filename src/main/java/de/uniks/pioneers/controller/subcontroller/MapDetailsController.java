@@ -3,9 +3,11 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.controller.BoardController;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import de.uniks.pioneers.services.MapRenderService;
 import de.uniks.pioneers.services.MapService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -43,12 +45,29 @@ public class MapDetailsController {
     private Canvas previewCanvas;
 
     @Inject Provider<BoardController> boardControllerProvider;
+    @Inject Provider<MapRenderService> mapRenderServiceProvider;
+    @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
+    private BoardController boardController;
+    private MapRenderService mapRenderService;
+    private ZoomableScrollPane zoomPaneController;
 
     @Inject
     public MapDetailsController(MapBrowserService mapBrowserService, UserService userService, MapService mapService) {
         this.mapBrowserService = mapBrowserService;
         this.userService = userService;
         this.mapService = mapService;
+    }
+
+    public void init() {
+        this.mapRenderService = mapRenderServiceProvider.get();
+        this.zoomPaneController = zoomableScrollPaneProvider.get();
+        this.boardController = boardControllerProvider.get();
+
+        mapRenderService.setFinishedLoading(false);
+        boardController.fieldPane = this.previewPane;
+        zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
+
+        Platform.runLater(zoomPaneController::render);
     }
 
     public void setPreviewElements(ScrollPane scrollPane, AnchorPane anchorPane, Pane pane, Canvas canvas) {
@@ -94,7 +113,7 @@ public class MapDetailsController {
     }
 
     private void showPreview(MapTemplate mapTemplate) {
-        this.boardControllerProvider.get();
+        this.boardController.buildMapPreview(mapTemplate, previewPane);
     }
 
     private String toDateTimeString(String timeString) {
