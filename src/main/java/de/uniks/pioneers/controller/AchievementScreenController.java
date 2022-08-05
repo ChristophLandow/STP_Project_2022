@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -16,6 +17,7 @@ import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.io.File;
 import java.io.IOException;
 
 import static de.uniks.pioneers.GameConstants.*;
@@ -51,7 +53,7 @@ public class AchievementScreenController implements Controller {
         if(achievements.isEmpty()){
             setEmptyAchievements(cityPlanerDateLabel,cityPlanerBox);
             setEmptyAchievements(longestRoadDateLabel,longestRoadBox);
-            setEmptyAchievements(seaBuilderDateLabel,seaBuilderBox);
+            //setEmptyAchievements(seaBuilderDateLabel,seaBuilderBox);
             setEmptyAchievements(wildWestDateLabel,wildWestBox);
             setEmptyAchievements(chickenDinnerDateLabel,chickenDinnerBox);
         } else {
@@ -63,7 +65,12 @@ public class AchievementScreenController implements Controller {
             //...for Harbor-Achievement extra, cause of lower progress lvl
             if(achievements.get(HARBOR_ACHIEVEMENT).progress() == 50){
                 seaBuilderDateLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).unlockedAt());
-                seaBuilderBox.getChildren().add(new ImageView());
+                Image image = new Image("de/uniks/pioneers/checkmark.png");
+                ImageView imageView = new ImageView();
+                imageView.setFitHeight(40);
+                imageView.setFitWidth(40);
+                imageView.setImage(image);
+                seaBuilderBox.getChildren().add(imageView);
             } else {
                 Label statusLabel = new Label();
                 statusLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).progress() + "/ 50");
@@ -77,7 +84,13 @@ public class AchievementScreenController implements Controller {
     public void setAchievement(Label dateLabel, VBox box, Achievement achievement){
         if(achievement.progress() == 100){
             dateLabel.setText(achievement.unlockedAt());
-            box.getChildren().add(new ImageView());
+            Image image = new Image("de/uniks/pioneers/checkmark.png");
+            ImageView imageView = new ImageView();
+            imageView.setFitHeight(40);
+            imageView.setFitWidth(40);
+            imageView.setImage(image);
+            seaBuilderBox.getChildren().add(imageView);
+            box.getChildren().add(imageView);
         } else {
             Label statusLabel = new Label();
             statusLabel.setText(achievements.get(ROAD_ACHIEVEMENT).progress() + "/ 100");
