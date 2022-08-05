@@ -106,6 +106,9 @@ class IngameScreenControllerTest extends ApplicationTest {
     TimerService timerService;
 
     @Mock
+    AchievementService achievementService;
+
+    @Mock
     TradeOfferPopUpController tradeOfferPopUpController;
 
     @Mock
