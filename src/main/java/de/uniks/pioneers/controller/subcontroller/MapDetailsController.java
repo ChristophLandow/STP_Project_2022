@@ -65,7 +65,7 @@ public class MapDetailsController {
 
         mapRenderService.setFinishedLoading(false);
         boardController.fieldPane = this.previewPane;
-        zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
+        //zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
 
         Platform.runLater(zoomPaneController::render);
     }
@@ -113,6 +113,13 @@ public class MapDetailsController {
     }
 
     private void showPreview(MapTemplate mapTemplate) {
+        // clear recent map preview
+        this.previewPane.getChildren().clear();
+        this.previewCanvas.getGraphicsContext2D().clearRect(0,0, previewCanvas.getWidth(), previewCanvas.getHeight());
+        previewPane.getChildren().add(this.previewCanvas);
+
+        // init zoomPane
+        this.zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
         this.boardController.buildMapPreview(mapTemplate, previewPane);
     }
 
