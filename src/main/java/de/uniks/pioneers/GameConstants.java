@@ -98,4 +98,23 @@ public class GameConstants {
     public static final String ORE = "ore";
 
     public static final String RANDOM = "random";
+
+    //Achievement IDs
+    public static final String WINNER_ACHIEVEMENT = "win-game";
+    public static final String CITY_ACHIEVEMENT = "build-cities";
+    public static final String HARBOR_ACHIEVEMENT = "build-at-harbor";
+    public static final String ROAD_ACHIEVEMENT = "build-roads";
+    public static final String SETTLEMENT_ACHIEVEMENT = "build-settlements";
+
+    //Achievement title and description
+    public static final String WINNER_ACHIEVEMENT_TITLE = "Winner Winner, Chicken Dinner!";
+    public static final String WINNER_ACHIEVEMENT_DESCRIPTION = "100 games won";
+    public static final String CITY_ACHIEVEMENT_TITLE = "City Planner!";
+    public static final String CITY_ACHIEVEMENT_DESCRIPTION = "100 cities build";
+    public static final String HARBOR_ACHIEVEMENT_TITLE = "Sea Bear!";
+    public static final String HARBOR_ACHIEVEMENT_DESCRIPTION = "100 harbors build";
+    public static final String ROAD_ACHIEVEMENT_TITLE = "Longest Road!";
+    public static final String ROAD_ACHIEVEMENT_DESCRIPTION = "100 roads build";
+    public static final String SETTLEMENT_ACHIEVEMENT_TITLE = "Wild Wild West";
+    public static final String SETTLEMENT_ACHIEVEMENT_DESCRIPTION = "100 settlements build";
 }

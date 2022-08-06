@@ -7,9 +7,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-
 import java.util.ArrayList;
 import java.util.Objects;
+import static de.uniks.pioneers.EditorConstants.*;
 
 public class EditTile {
 
@@ -52,7 +52,9 @@ public class EditTile {
     }
 
     private void numberClicked() {
-        if(this.mapEditorController.selection.equals("DELETE")){this.numberView.setImage(null);}
+        if(this.mapEditorController.selection.equals(DELETE)){
+            this.numberView.setImage(null);
+            this.hexTile.number = 0;}
         else{place();}
 
     }
@@ -63,15 +65,19 @@ public class EditTile {
 
         if(!this.mapEditorController.selection.equals("")) {
 
-            if(this.mapEditorController.selection.equals("DELETE")){
+            if(this.mapEditorController.selection.equals(DELETE)){
                 this.view.setFill(Paint.valueOf("#2D9BE7"));
                 this.view.setStroke(Paint.valueOf("#000000"));
                 this.hexTile.type = "";
+                this.harbourView.setImage(null);
+                this.currentHarborSide = 0;
+                this.currentHarborOption = 0;
 
                 return;
             }
 
             if(this.mapEditorController.selection.endsWith("num")){
+                if(isblocked()){return;}
                 this.hexTile.number = Integer.parseInt(this.mapEditorController.selection.replace("num", ""));
                 Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + this.hexTile.number + ".png")).toString());
                 this.numberView.setImage(image);
@@ -82,8 +88,8 @@ public class EditTile {
                 handleHarbor();
                 return;
             }
-            Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.mapEditorController.selection + ".png")).toString());
-
+            if(isblocked()){return;}
+            Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + this.mapEditorController.selection + this.mapEditorController.resMod + ".png")).toString());
             this.view.setFill(new ImagePattern(image));
             this.hexTile.type = this.mapEditorController.selection;
         }
@@ -98,6 +104,7 @@ public class EditTile {
 
         this.mapEditorController.scrollPaneAnchorPane.getChildren().remove(this.harbourView);
 
+        this.currentHarborSide = 0;
         cleanHarborOptions();
 
         this.currentHarborType = this.mapEditorController.selection;
@@ -105,13 +112,8 @@ public class EditTile {
         this.currentHarborOption = (this.currentHarborOption + 1) % this.harbourOptions.size();
         currentHarborSide = this.harbourOptions.get(this.currentHarborOption);
 
-        if(this.harbourOptions.get(this.currentHarborOption) != 0) {
-        renderHarbor();
-        }
-        else{
-            this.currentHarborType = "";
-        }
-
+        if(this.harbourOptions.get(this.currentHarborOption) != 0) {renderHarbor();}
+        else{this.currentHarborType = "";}
         }
 
         public void renderHarbor(){
@@ -131,20 +133,21 @@ public class EditTile {
         }
 
         public void prepareHarborOptions(){
-            if(this.harbourOptions.isEmpty()){
-                this.harbourOptions.add(0);
-                this.harbourOptions.add(1);
-                this.harbourOptions.add(3);
-                this.harbourOptions.add(5);
-                this.harbourOptions.add(7);
-                this.harbourOptions.add(9);
-                this.harbourOptions.add(11);}
+
+            this.harbourOptions.clear();
+            this.harbourOptions.add(0);
+            this.harbourOptions.add(1);
+            this.harbourOptions.add(3);
+            this.harbourOptions.add(5);
+            this.harbourOptions.add(7);
+            this.harbourOptions.add(9);
+            this.harbourOptions.add(11);
         }
 
         private void cleanHarborOptions(){
             for(EditTile tile : this.mapEditorController.tiles){
 
-                if(tile.hexTile.type.equals("")){continue;}
+                if(tile.hexTile.type.equals("") & !tile.isblocked()){continue;}
 
                 if((this.hexTile.q +1 == tile.hexTile.q) & (this.hexTile.r -1 == tile.hexTile.r)){
                     this.harbourOptions.remove(Integer.valueOf(1));}
@@ -159,6 +162,21 @@ public class EditTile {
                 if((this.hexTile.r -1 == tile.hexTile.r) & (this.hexTile.s +1 == tile.hexTile.s)){
                     this.harbourOptions.remove(Integer.valueOf(11));}
             }
+
+        }
+
+        public boolean isblocked() {
+            for(EditTile tile : this.mapEditorController.tiles){
+
+                if(tile.hexTile.type.equals("") & tile.hexTile.number == 0){continue;}
+                if((this.hexTile.q +1 == tile.hexTile.q) & (this.hexTile.r -1 == tile.hexTile.r) & (tile.currentHarborSide == 7)){return true;}
+                if((this.hexTile.q +1 == tile.hexTile.q) & (this.hexTile.s -1 == tile.hexTile.s) & (tile.currentHarborSide == 9)){return true;}
+                if((this.hexTile.r +1 == tile.hexTile.r) & (this.hexTile.s -1 == tile.hexTile.s) & (tile.currentHarborSide == 11)){return true;}
+                if((this.hexTile.q -1 == tile.hexTile.q) & (this.hexTile.r +1 == tile.hexTile.r) & (tile.currentHarborSide == 1)){return true;}
+                if((this.hexTile.q -1 == tile.hexTile.q) & (this.hexTile.s +1 == tile.hexTile.s) & (tile.currentHarborSide == 3)){return true;}
+                if((this.hexTile.r -1 == tile.hexTile.r) & (this.hexTile.s +1 == tile.hexTile.s) & (tile.currentHarborSide == 5)){return true;}
+            }
+            return false;
         }
         public void destroy(){
         if(this.numberView != null){this.numberView.setImage(null);}
@@ -172,5 +190,11 @@ public class EditTile {
                 this.harbourView.setVisible(visibility);}
         }
 
+    public String toString() {
+        return "q: " + this.hexTile.q + " " + "r: " + this.hexTile.r + " " + "s: " + this.hexTile.s + " Biome: " + this.hexTile.type + " Number: " + this.hexTile.number + " " +
+                "Harbour Side: " + this.currentHarborSide + " Harbour Type: " + this.currentHarborType + "Active: " + this.active +"\n";
     }
+
+
+}
 
