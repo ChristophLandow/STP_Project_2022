@@ -4,7 +4,6 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.services.AchievementService;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,8 +21,9 @@ import javax.inject.Singleton;
 import java.io.IOException;
 
 import static de.uniks.pioneers.GameConstants.*;
-@Singleton
+
 public class AchievementScreenController implements Controller {
+
 
     @FXML Label cityPlanerDateLabel;
     @FXML Label longestRoadDateLabel;
@@ -39,6 +39,7 @@ public class AchievementScreenController implements Controller {
     private final AchievementService achievemetService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final App app;
+
     private ObservableMap<String, Achievement> achievements;
 
     @Inject
@@ -67,9 +68,16 @@ public class AchievementScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
+        //TODO das hier in einen disposable ändern den man dann mit stop auf dispose() setzt und auch in stop() dann den Boolean im service wieder auf false setzen (fasl neu geladen wird)
         achievemetService.getMapLoadedChecker().addListener((observable, oldValue, newValue) -> {
             achievements = achievemetService.getAchievements();
+            loadAchievements();
+
         });
+        return achievementsView;
+    }
+
+    public void loadAchievements(){
         if(achievements.isEmpty()){
             setEmptyAchievements(cityPlanerDateLabel,cityPlanerBox);
             setEmptyAchievements(longestRoadDateLabel,longestRoadBox);
@@ -99,7 +107,6 @@ public class AchievementScreenController implements Controller {
                 seaBuilderBox.getChildren().add(statusLabel);
             }
         }
-        return achievementsView;
     }
 
     public void setAchievement(Label dateLabel, VBox box, Achievement achievement){
