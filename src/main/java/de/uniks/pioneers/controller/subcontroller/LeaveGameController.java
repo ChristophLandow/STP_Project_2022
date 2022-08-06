@@ -28,6 +28,7 @@ public class LeaveGameController {
     private final PrefService prefService;
     private final GameService gameService;
     private final TimerService timerService;
+    private final GameStorage gameStorage;
     public List<User> users;
     private final ObservableList<Member> members;
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -42,7 +43,7 @@ public class LeaveGameController {
 
     @Inject
     public LeaveGameController(App app, NewGameScreenLobbyController newGameScreenLobbyController, NewGameLobbyService newGameLobbyService,
-                               UserService userService, PrefService prefService, GameService gameService, TimerService timerService) {
+                               UserService userService, PrefService prefService, GameService gameService, TimerService timerService, GameStorage gameStorage) {
         this.app = app;
         this.newGameScreenLobbyController = newGameScreenLobbyController;
         this.newGameLobbyService = newGameLobbyService;
@@ -50,6 +51,7 @@ public class LeaveGameController {
         this.prefService = prefService;
         this.gameService = gameService;
         this.timerService = timerService;
+        this.gameStorage = gameStorage;
         this.users = new ArrayList<>();
         this.members = FXCollections.observableArrayList();
         this.leavedWithButton = false;
@@ -62,21 +64,23 @@ public class LeaveGameController {
         this.gameChatController = gameChatController;
     }
 
-    public void saveLeavedGame(String gameID, List<User> users, String myColor) {
+    public void saveLeavedGame(String gameID, String mapID, int mapRadius, List<User> users, String myColor) {
         prefService.saveGameOnLeave(gameID);
+        prefService.saveCustomMapOnLeave(mapID);
+        prefService.saveMapRadiusOnLeave(mapRadius);
         this.leavedWithButton = true;
         this.users = users;
         this.myColor = myColor;
     }
 
-    public boolean loadLeavedGame(Game leftGame) {
-        if(leftGame != null) {
-            int mapRadius = prefService.getSavedGame().settings().mapRadius();
-            boolean customMap = prefService.getSavedGame().settings().mapTemplate() != null;
+    public boolean loadLeavedGame(Game leavedGame) {
+        if(leavedGame != null) {
+            int mapRadius = prefService.getSavedMapRadius();
+            boolean customMap = prefService.getCustomMapID() != null;
             if(leavedWithButton) {
-                return toIngameScreen(leftGame, myColor, true, mapRadius, customMap);
+                return toIngameScreen(leavedGame, myColor, true, mapRadius, customMap);
             } else {
-                disposable.add(newGameLobbyService.getAll(leftGame._id())
+                disposable.add(newGameLobbyService.getAll(leavedGame._id())
                         .observeOn(FX_SCHEDULER)
                         .subscribe(res -> {
                             this.members.addAll(res);
@@ -86,7 +90,7 @@ public class LeaveGameController {
                                 }
                                 users.add(userService.getUserById(member.userId()).blockingFirst());
                             }
-                            toIngameScreen(leftGame, myColor, true, mapRadius, customMap);
+                            toIngameScreen(leavedGame, myColor, true, mapRadius, customMap);
                         }, Throwable::printStackTrace));
                 return true;
             }
@@ -115,7 +119,7 @@ public class LeaveGameController {
                     }, Throwable::printStackTrace));
         } else {
             if(!kicked) {
-                this.saveLeavedGame(gameService.getGame()._id(), users, myColor);
+                this.saveLeavedGame(gameService.getGame()._id(), gameService.getGame().settings().mapTemplate(), gameStorage.getMapRadius(), users, myColor);
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Kicked by Host");
                 alert.show();

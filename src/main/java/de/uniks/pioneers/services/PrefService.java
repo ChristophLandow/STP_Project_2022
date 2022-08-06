@@ -6,6 +6,7 @@ import de.uniks.pioneers.rest.GameApiService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.*;
@@ -44,6 +45,13 @@ public class PrefService {
     public void saveGameOnLeave(String id) {
         preferences.put(LEAVE_GAME, id);
     }
+    public void saveCustomMapOnLeave(String id){
+        preferences.put("MapID", Objects.requireNonNullElse(id, ""));
+    }
+
+    public void saveMapRadiusOnLeave(int mapRadius) {
+        preferences.put("MapRadius", mapRadius + "");
+    }
 
     public Game getSavedGame() {
         String leavedGameID = preferences.get(LEAVE_GAME, "");
@@ -58,6 +66,27 @@ public class PrefService {
         }
 
         return leavedGame;
+    }
+
+    public int getSavedMapRadius() {
+        String mapRadius = preferences.get("MapRadius", "");
+
+        if(!mapRadius.equals("")) {
+            return Integer.parseInt(mapRadius);
+        } else {
+            return -1;
+        }
+
+    }
+
+    public String getCustomMapID() {
+        String mapID = preferences.get("MapID", "");
+
+        if(!mapID.equals("")) {
+            return mapID;
+        } else {
+            return null;
+        }
     }
 
     public void forgetSavedGame() {
@@ -223,7 +252,7 @@ public class PrefService {
 
     public Character getEndTextField(){
         if(preferences.get("endTextField", "").equals("")){
-           return Character.MIN_VALUE;
+            return Character.MIN_VALUE;
         } else {
             return preferences.get("endTextField", "").charAt(0);
         }
