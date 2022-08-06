@@ -75,7 +75,7 @@ public class BoardController {
                         Thread.sleep(0,500000);
                     }
 
-                    Thread.sleep(1000);
+                    mapRenderService.setTileControllers(this.tileControllers);
                     mapRenderService.setFinishedLoading(true);
                 }
                 catch (InterruptedException ignored){}
@@ -86,6 +86,7 @@ public class BoardController {
             mapTiles.forEach(this::loadHexagon);
             harborTiles.forEach(this::loadHarbor);
             this.hextileRenderThread = new Thread(() -> {
+                this.mapRenderService.setTileControllers(this.tileControllers);
                 mapRenderService.setFinishedLoading(true);
             });
 
@@ -207,7 +208,6 @@ public class BoardController {
     }
 
     private void loadHexagon(HexTile hexTile){
-        System.out.println("loadHexagon fieldpane.id: " + this.fieldPane.getId());
         drawCanvasHexagon(
                 new double[]{0.0, Math.sqrt(3)/2, Math.sqrt(3)/2, 0.0, -Math.sqrt(3)/2, -Math.sqrt(3)/2},
                 new double[]{1.0, 0.5, -0.5, -1.0, -0.5, 0.5},
@@ -257,7 +257,6 @@ public class BoardController {
     }
 
     private void loadHarbor(HexTile harbor) {
-        System.out.println("loadHarbor fieldpane.id: " + this.fieldPane.getId());
         ImageView imageV = generator.getHarborImage(harbor.type);
         this.fieldPane.getChildren().add(generator.placeHarbor(harbor.x, harbor.y, imageV, harbor.number, this.fieldPane.getPrefWidth(), this.fieldPane.getPrefHeight(), this.gameStorage.getHexScale()));
     }

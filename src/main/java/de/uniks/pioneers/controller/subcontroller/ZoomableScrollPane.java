@@ -49,8 +49,8 @@ public class ZoomableScrollPane {
         if (preview) {
             map_padding_x = 1000;
             map_padding_y = 1000;
-            map_width = 20;
-            map_height = 20;
+            map_width = 373.0;
+            map_height = 287.0;
         } else {
             map_padding_x = MAP_PADDING_X;
             map_padding_y = MAP_PADDING_Y;
@@ -107,11 +107,11 @@ public class ZoomableScrollPane {
             zoom(1);
             zoom(gameStorage.getZoomedOut());
 
-            double paddingLeft = (MAP_WIDTH - (gameStorage.getZoomedOut() * mapWidth)) / 2 + 1;
+            double paddingLeft = (map_width - (gameStorage.getZoomedOut() * mapWidth)) / 2 + 1;
             double paddingTop = 0;
 
             if(gameStorage.getMapRadius() < 2){
-                paddingTop = (MAP_HEIGHT - (gameStorage.getZoomedOut()*mapHeight))/2 + 2;
+                paddingTop = (map_height - (gameStorage.getZoomedOut()*mapHeight))/2 + 2;
             }
             else if(gameStorage.isCustomMap()){
                 paddingLeft = 0;
@@ -185,7 +185,8 @@ public class ZoomableScrollPane {
         this.canvas.setWidth(mapWidth);
     }
 
-    private void centerMap(){
+    private void centerMap() {
+        System.out.println("center map");
         //Find out top left and bottom right hex tile position
         Point2D startVal = mapRenderService.getTileControllers().get(0).getCenter();
         Point2D topLeft = startVal;

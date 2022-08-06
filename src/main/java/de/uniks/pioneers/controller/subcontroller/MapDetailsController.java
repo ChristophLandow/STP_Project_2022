@@ -66,8 +66,6 @@ public class MapDetailsController {
         mapRenderService.setFinishedLoading(false);
         boardController.fieldPane = this.previewPane;
         //zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
-
-        Platform.runLater(zoomPaneController::render);
     }
 
     public void setPreviewElements(ScrollPane scrollPane, AnchorPane anchorPane, Pane pane, Canvas canvas) {
@@ -120,6 +118,7 @@ public class MapDetailsController {
 
         // init zoomPane
         this.zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
+        Platform.runLater(zoomPaneController::render);
         this.boardController.buildMapPreview(mapTemplate, previewPane);
     }
 
