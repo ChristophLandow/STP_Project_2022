@@ -326,12 +326,18 @@ public class BoardController {
         //See "Size and Spacing" in the Hexagonal Grids Doku
         double hexagonWidth = Math.sqrt(3) * gameStorage.getHexScale();
         double hexagonHeight = 2 * gameStorage.getHexScale();
-        Image image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + type + ".png")).toString());
+        Image image;
+        if (type != null) {
+            image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + type + ".png")).toString());
+        } else {
+            image = new Image(Objects.requireNonNull(getClass().getResource("ingame/random.png")).toString());
+        }
+
 
         mapRenderService.getGc().drawImage(image, layoutX - hexagonWidth/2, layoutY - hexagonHeight/2, hexagonWidth, hexagonHeight);
 
         //Render number image
-        if(!type.equals("desert") && number >= 2) {
+        if(type != null && !type.equals("desert") && number >= 2) {
             String numberURL = "ingame/tile_" + number + ".png";
             Image numberImg = new Image(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
 
