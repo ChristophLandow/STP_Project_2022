@@ -23,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;

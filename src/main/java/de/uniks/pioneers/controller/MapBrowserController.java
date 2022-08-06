@@ -48,7 +48,6 @@ public class MapBrowserController implements Controller {
     @Inject PrefService prefService;
 
     @FXML private final App app;
-    private LobbyScreenController lobbyScreenController;
     private final StylesService stylesService;
     private MapListController mapListController;
 
@@ -71,14 +70,6 @@ public class MapBrowserController implements Controller {
         String styleLocalDark = "/de/uniks/pioneers/styles/DarkMode_MapBrowser.css";
         stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), styleLocal, styleLocalDark);
 
-        // init map list
-        MapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        mapListController = mapListControllerProvider.get();
-        mapListController.setMapList(mapListView);
-        mapListController.setMapListScrollPane(MapListScrollPane);
-        mapListController.init();
-        mapListController.render();
-
         // init map details
         MapDetailsController mapDetailsController = mapDetailsControllerProvider.get();
         mapDetailsController.setLastUpdatedOutputText(lastUpdatedOutputText)
@@ -90,6 +81,14 @@ public class MapBrowserController implements Controller {
                 .setCreatorImageView(creatorImageView)
                 .setPreviewElements(previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
         mapDetailsController.init();
+
+        // init map list
+        MapListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        mapListController = mapListControllerProvider.get();
+        mapListController.setMapList(mapListView);
+        mapListController.setMapListScrollPane(MapListScrollPane);
+        mapListController.init();
+        mapListController.render();
     }
 
     @Override

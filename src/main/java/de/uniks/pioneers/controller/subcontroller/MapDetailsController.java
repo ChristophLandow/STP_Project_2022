@@ -48,7 +48,6 @@ public class MapDetailsController {
     @Inject Provider<MapRenderService> mapRenderServiceProvider;
     @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
     private BoardController boardController;
-    private MapRenderService mapRenderService;
     private ZoomableScrollPane zoomPaneController;
 
     @Inject
@@ -59,13 +58,12 @@ public class MapDetailsController {
     }
 
     public void init() {
-        this.mapRenderService = mapRenderServiceProvider.get();
+        MapRenderService mapRenderService = mapRenderServiceProvider.get();
         this.zoomPaneController = zoomableScrollPaneProvider.get();
         this.boardController = boardControllerProvider.get();
 
         mapRenderService.setFinishedLoading(false);
         boardController.fieldPane = this.previewPane;
-        //zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
     }
 
     public void setPreviewElements(ScrollPane scrollPane, AnchorPane anchorPane, Pane pane, Canvas canvas) {
@@ -82,9 +80,7 @@ public class MapDetailsController {
 
     // update details when new map is clicked
     public void updateMapDetails(String mapId) {
-        disposable.add(mapBrowserService.getMap(mapId)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(this::setLabels));
+        setLabels(mapBrowserService.getMap(mapId));
     }
 
     private void setLabels(MapTemplate mapTemplate) {
