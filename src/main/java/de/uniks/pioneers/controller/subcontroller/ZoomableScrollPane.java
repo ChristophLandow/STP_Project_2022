@@ -186,7 +186,6 @@ public class ZoomableScrollPane {
     }
 
     private void centerMap() {
-        System.out.println("center map");
         //Find out top left and bottom right hex tile position
         Point2D startVal = mapRenderService.getTileControllers().get(0).getCenter();
         Point2D topLeft = startVal;
