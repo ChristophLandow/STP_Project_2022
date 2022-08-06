@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.services.AchievementService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,11 +18,11 @@ import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.io.File;
+import javax.inject.Singleton;
 import java.io.IOException;
 
 import static de.uniks.pioneers.GameConstants.*;
-
+@Singleton
 public class AchievementScreenController implements Controller {
 
     @FXML Label cityPlanerDateLabel;
@@ -49,11 +50,30 @@ public class AchievementScreenController implements Controller {
 
     @Override
     public void init() {
-        achievements = achievemetService.getAchievements();
+    }
+
+    @Override
+    public void stop() {
+    }
+
+    @Override
+    public Parent render() {
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/AchievementsScreen.fxml"));
+        loader.setControllerFactory(c->this);
+        final Parent achievementsView;
+        try {
+            achievementsView =  loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        achievemetService.getMapLoadedChecker().addListener((observable, oldValue, newValue) -> {
+            achievements = achievemetService.getAchievements();
+        });
         if(achievements.isEmpty()){
             setEmptyAchievements(cityPlanerDateLabel,cityPlanerBox);
             setEmptyAchievements(longestRoadDateLabel,longestRoadBox);
-            //setEmptyAchievements(seaBuilderDateLabel,seaBuilderBox);
+            setEmptyAchievements(seaBuilderDateLabel,seaBuilderBox);
             setEmptyAchievements(wildWestDateLabel,wildWestBox);
             setEmptyAchievements(chickenDinnerDateLabel,chickenDinnerBox);
         } else {
@@ -79,6 +99,7 @@ public class AchievementScreenController implements Controller {
                 seaBuilderBox.getChildren().add(statusLabel);
             }
         }
+        return achievementsView;
     }
 
     public void setAchievement(Label dateLabel, VBox box, Achievement achievement){
@@ -106,25 +127,6 @@ public class AchievementScreenController implements Controller {
         dateLabel.setText("");
         statusLabel.setText("0 / 100");
         box.getChildren().add(statusLabel);
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public Parent render() {
-        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/AchievementsScreen.fxml"));
-        loader.setControllerFactory(c->this);
-        final Parent achievementsView;
-        try {
-            achievementsView =  loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return achievementsView;
     }
 
     public void toLobby() {
