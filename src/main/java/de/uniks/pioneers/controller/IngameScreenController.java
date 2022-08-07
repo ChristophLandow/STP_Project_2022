@@ -144,7 +144,6 @@ public class IngameScreenController implements Controller {
 
         this.zoomableScrollPane = zoomableScrollPaneProvider.get();
         this.zoomableScrollPane.init(false, fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
-
         Platform.runLater(this.zoomableScrollPane::render);
 
         this.achievementPopUpController = achievementsPopUpControllerProvider.get();
@@ -153,7 +152,6 @@ public class IngameScreenController implements Controller {
         if(achievementPopUp != null) {
             this.root.getChildren().add(achievementPopUp);
         }
-
         return view;
     }
 
@@ -353,7 +351,7 @@ public class IngameScreenController implements Controller {
         this.boardController.buildBoardUI();
     }
 
-    public void openTradePopUp(){
+    public void openTradePopUp() {
         ExpectedMove expectedMove = ingameService.getExpectedMove();
         if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
             speechService.play(GameConstants.SPEECH_TRADE);
