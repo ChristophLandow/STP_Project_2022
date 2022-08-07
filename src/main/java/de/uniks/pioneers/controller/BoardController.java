@@ -307,6 +307,15 @@ public class BoardController {
         }
     }
 
+    public void disableBuild() {
+        for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
+            controller.reset();
+        }
+        for (StreetPointController controller : streetPointControllerHashMap.values()) {
+            controller.reset();
+        }
+    }
+
     public void drawCanvasHexagon(double[] xPoints, double[] yPoints, double layoutX, double layoutY, String type, int number){
         // Render Hex Tile image
         // See "Size and Spacing" in the Hexagonal Grids Doku

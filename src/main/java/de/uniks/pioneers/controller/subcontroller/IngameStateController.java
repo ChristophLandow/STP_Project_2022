@@ -134,6 +134,7 @@ public class IngameStateController {
     }
 
     private void endTurn() {
+        boardController.disableBuild();
         ingameSelectController.resetSelect();
         ingameDevelopmentCardController.resetHammerSelection();
         ingameDevelopmentCardController.closeDevCardPlayStage();
@@ -146,6 +147,7 @@ public class IngameStateController {
                 })
         );
     }
+
     private void setSituationLabel(String playerId, String action) {
         // set game state label
         String playerName;
@@ -190,9 +192,5 @@ public class IngameStateController {
                 }
             }
         }
-    }
-
-    public Pane getTurnPane(){
-        return this.turnPane;
     }
 }
