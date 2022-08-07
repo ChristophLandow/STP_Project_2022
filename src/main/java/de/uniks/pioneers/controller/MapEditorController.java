@@ -19,12 +19,14 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import static de.uniks.pioneers.EditorConstants.*;
 
 public class MapEditorController implements Controller{

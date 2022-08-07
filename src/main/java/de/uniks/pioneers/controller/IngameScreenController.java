@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -117,7 +118,8 @@ public class IngameScreenController implements Controller {
         this.achievementService = achievementService;
         this.diceSubcontroller = diceSubcontroller;
         this.ingameSelectController = new IngameSelectController();
-        this.boardController = new BoardController(ingameService, userService, game, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
+        this.boardController.game = game;
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
             if (mapRenderService.isFinishedLoading().get()) Platform.runLater(this::initWhenMapFinishedRendering);
@@ -141,7 +143,7 @@ public class IngameScreenController implements Controller {
         this.boardController.streetPointControllerProvider = this.streetPointControllerProvider;
 
         this.zoomableScrollPane = zoomableScrollPaneProvider.get();
-        this.zoomableScrollPane.init(fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
+        this.zoomableScrollPane.init(false, fieldScrollPane, scrollAnchorPane, fieldPane, mapCanvas);
         Platform.runLater(this.zoomableScrollPane::render);
 
         this.achievementPopUpController = achievementsPopUpControllerProvider.get();
@@ -150,7 +152,6 @@ public class IngameScreenController implements Controller {
         if(achievementPopUp != null) {
             this.root.getChildren().add(achievementPopUp);
         }
-
         return view;
     }
 
@@ -350,7 +351,7 @@ public class IngameScreenController implements Controller {
         this.boardController.buildBoardUI();
     }
 
-    public void openTradePopUp(){
+    public void openTradePopUp() {
         ExpectedMove expectedMove = ingameService.getExpectedMove();
         if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
             speechService.play(GameConstants.SPEECH_TRADE);

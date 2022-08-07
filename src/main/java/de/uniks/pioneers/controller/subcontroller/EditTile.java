@@ -7,9 +7,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+
 import java.util.ArrayList;
 import java.util.Objects;
-import static de.uniks.pioneers.EditorConstants.*;
+
+import static de.uniks.pioneers.EditorConstants.DELETE;
 
 public class EditTile {
 
