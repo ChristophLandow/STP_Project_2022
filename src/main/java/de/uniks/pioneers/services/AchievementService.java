@@ -29,6 +29,8 @@ public class AchievementService {
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final SimpleBooleanProperty checkMapLoaded =  new SimpleBooleanProperty(false);
+    private Boolean ckeckMapLoadedToo = false;
+
 
     @Inject
     public AchievementService(EventListener eventListener, UserService userService, AchievementsApiService achievementsApiService) {
@@ -53,6 +55,7 @@ public class AchievementService {
                         this.achievements.put(achievement.id(), achievement);
                     }
                 }));
+
     }
 
     public ObservableMap<String, Achievement> getAchievements(){
@@ -66,6 +69,7 @@ public class AchievementService {
         addAchievement(ROAD_ACHIEVEMENT);
         addAchievement(SETTLEMENT_ACHIEVEMENT);
         checkMapLoaded.set(true);
+        ckeckMapLoadedToo = true;
     }
 
     private void addAchievement(String id){
@@ -98,5 +102,9 @@ public class AchievementService {
 
     public SimpleBooleanProperty getMapLoadedChecker(){
         return this.checkMapLoaded;
+    }
+
+    public Boolean getChecker(){
+        return this.ckeckMapLoadedToo;
     }
 }

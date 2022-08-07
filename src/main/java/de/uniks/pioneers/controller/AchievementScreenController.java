@@ -17,7 +17,6 @@ import javafx.scene.text.FontWeight;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 
 import static de.uniks.pioneers.GameConstants.*;
@@ -39,7 +38,6 @@ public class AchievementScreenController implements Controller {
     private final AchievementService achievemetService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final App app;
-
     private ObservableMap<String, Achievement> achievements;
 
     @Inject
@@ -51,6 +49,7 @@ public class AchievementScreenController implements Controller {
 
     @Override
     public void init() {
+
     }
 
     @Override
@@ -68,44 +67,50 @@ public class AchievementScreenController implements Controller {
             e.printStackTrace();
             return null;
         }
-        //TODO das hier in einen disposable ändern den man dann mit stop auf dispose() setzt und auch in stop() dann den Boolean im service wieder auf false setzen (fasl neu geladen wird)
-        achievemetService.getMapLoadedChecker().addListener((observable, oldValue, newValue) -> {
+        achievements = achievemetService.getAchievements();
+        if(achievements.isEmpty()){
+            if(achievemetService.getChecker().equals(true)){
+                setEmptyAchievements(cityPlanerDateLabel, cityPlanerBox);
+                setEmptyAchievements(longestRoadDateLabel, longestRoadBox);
+                setEmptyAchievements(seaBuilderDateLabel, seaBuilderBox);
+                setEmptyAchievements(wildWestDateLabel, wildWestBox);
+                setEmptyAchievements(chickenDinnerDateLabel, chickenDinnerBox);
+                return achievementsView;
+            }
+        }
+        if(achievemetService.getChecker().equals(false)){
+            achievemetService.getMapLoadedChecker().addListener((mapLoadedListener, oldValue, newValue) -> {
+                achievements = achievemetService.getAchievements();
+                loadAchievements();
+            });
+        } else {
             achievements = achievemetService.getAchievements();
             loadAchievements();
-
-        });
+        }
         return achievementsView;
     }
 
     public void loadAchievements(){
-        if(achievements.isEmpty()){
-            setEmptyAchievements(cityPlanerDateLabel,cityPlanerBox);
-            setEmptyAchievements(longestRoadDateLabel,longestRoadBox);
-            setEmptyAchievements(seaBuilderDateLabel,seaBuilderBox);
-            setEmptyAchievements(wildWestDateLabel,wildWestBox);
-            setEmptyAchievements(chickenDinnerDateLabel,chickenDinnerBox);
+        //set unlock dates and check-icon or unlock status
+        setAchievement(cityPlanerDateLabel, cityPlanerBox, achievements.get(CITY_ACHIEVEMENT));
+        setAchievement(longestRoadDateLabel, longestRoadBox, achievements.get(ROAD_ACHIEVEMENT));
+        setAchievement(wildWestDateLabel, wildWestBox, achievements.get(SETTLEMENT_ACHIEVEMENT));
+        setAchievement(chickenDinnerDateLabel, chickenDinnerBox, achievements.get(WINNER_ACHIEVEMENT));
+        //...for Harbor-Achievement extra, cause of lower progress lvl
+        if(achievements.get(HARBOR_ACHIEVEMENT).progress() == 50){
+            seaBuilderDateLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).unlockedAt());
+            Image image = new Image("de/uniks/pioneers/checkmark.png");
+            ImageView imageView = new ImageView();
+            imageView.setFitHeight(40);
+            imageView.setFitWidth(40);
+            imageView.setImage(image);
+            seaBuilderBox.getChildren().add(imageView);
         } else {
-            //set unlock dates and check-icon or unlock status
-            setAchievement(cityPlanerDateLabel, cityPlanerBox, achievements.get(CITY_ACHIEVEMENT));
-            setAchievement(longestRoadDateLabel, longestRoadBox, achievements.get(ROAD_ACHIEVEMENT));
-            setAchievement(wildWestDateLabel, wildWestBox, achievements.get(SETTLEMENT_ACHIEVEMENT));
-            setAchievement(chickenDinnerDateLabel, chickenDinnerBox, achievements.get(WINNER_ACHIEVEMENT));
-            //...for Harbor-Achievement extra, cause of lower progress lvl
-            if(achievements.get(HARBOR_ACHIEVEMENT).progress() == 50){
-                seaBuilderDateLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).unlockedAt());
-                Image image = new Image("de/uniks/pioneers/checkmark.png");
-                ImageView imageView = new ImageView();
-                imageView.setFitHeight(40);
-                imageView.setFitWidth(40);
-                imageView.setImage(image);
-                seaBuilderBox.getChildren().add(imageView);
-            } else {
-                Label statusLabel = new Label();
-                statusLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).progress() + "/ 50");
-                statusLabel.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 20));
-                seaBuilderDateLabel.setText("");
-                seaBuilderBox.getChildren().add(statusLabel);
-            }
+            Label statusLabel = new Label();
+            statusLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).progress() + "/ 50");
+            statusLabel.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 20));
+            seaBuilderDateLabel.setText("");
+            seaBuilderBox.getChildren().add(statusLabel);
         }
     }
 
