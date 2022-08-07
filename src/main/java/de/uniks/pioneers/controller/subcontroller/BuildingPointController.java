@@ -166,21 +166,21 @@ public class BuildingPointController {
         int validStreetCount = 0;
 
         if (action.equals(FOUNDING_SETTLEMENT_1) || action.equals(FOUNDING_SETTLEMENT_2)) {
-            build();
-            gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+            for (StreetPointController street : adjacentStreets) {
+                validPoint = checkSettlementSpot(validPoint, street);
+            }
+
+            if(validPoint) {
+                build();
+                gameStorage.remainingBuildings.put(SETTLEMENT, gameStorage.remainingBuildings.get(SETTLEMENT) - 1);
+            }
         } else {
             if (gameStorage.selectedBuilding.equals(SETTLEMENT)) {
                 if (gameStorage.remainingBuildings.get(SETTLEMENT) > 0 && resourceService.checkResourcesSettlement()) {
                     for (StreetPointController street : adjacentStreets) {
                         if (street.alreadyPlacedStreet() && gameService.checkRoadSpot(street.uploadCoords[0], street.uploadCoords[1], street.uploadCoords[2], street.uploadCoords[3])) {
                             validStreetCount += 1;
-                            for (BuildingPointController building : street.getAdjacentBuildings()) {
-                                if (building != this) {
-                                    if (building.building != null) {
-                                        validPoint = false;
-                                    }
-                                }
-                            }
+                            validPoint = checkSettlementSpot(validPoint, street);
                         }
                     }
 
@@ -202,6 +202,20 @@ public class BuildingPointController {
         }
 
         return (validPoint && validStreetCount > 0);
+    }
+
+    public boolean checkSettlementSpot(boolean validPoint, StreetPointController street) {
+        if (validPoint) {
+            for (BuildingPointController building : street.getAdjacentBuildings()) {
+                if (building != this) {
+                    if (building.building != null) {
+                        validPoint = false;
+                    }
+                }
+            }
+        }
+
+        return validPoint;
     }
 
     private void checkIfMouseInsideView(){

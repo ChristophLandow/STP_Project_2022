@@ -20,7 +20,6 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,7 @@ import java.util.prefs.Preferences;
 
 import static de.uniks.pioneers.Constants.API_PREFIX;
 import static de.uniks.pioneers.Constants.BASE_URL;
+import static de.uniks.pioneers.GameConstants.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +41,7 @@ public class TestModule {
     public static final PublishSubject<Event<Player>> gamePlayerSubject = PublishSubject.create();
     public static final PublishSubject<Event<MessageDto>> gameChatSubject = PublishSubject.create();
     public static final PublishSubject<Event<MapTemplate>> mapTemplateSubject = PublishSubject.create();
+    public static final PublishSubject<Event<Achievement>> achievementSubject = PublishSubject.create();
 
     @Provides
     @Singleton
@@ -112,6 +113,7 @@ public class TestModule {
         when(eventListener.listen("users.001.updated", User.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("users.002.updated", User.class)).thenReturn(PublishSubject.create());
         when(eventListener.listen("users.003.updated", User.class)).thenReturn(PublishSubject.create());
+        when(eventListener.listen("users.000.achievements.*.*", Achievement.class)).thenReturn(achievementSubject);
 
         when(eventListener.listen("games.000.messages.*.*", MessageDto.class)).thenReturn(gameChatSubject);
         when(eventListener.listen("games.000.players.*.*", Player.class)).thenReturn(gamePlayerSubject);
@@ -450,7 +452,7 @@ public class TestModule {
                 ArrayList<String> players = new ArrayList<>();
                 players.add("000");
                 ArrayList<ExpectedMove> expectedMoves = new ArrayList<>();
-                expectedMoves.add(new ExpectedMove("founding-roll",players));
+                expectedMoves.add(new ExpectedMove(FOUNDING_ROLL,players));
 
                 return Observable.just(new State("2022-06-09T15:11:51.795Z","000", expectedMoves, null));
             }
@@ -543,6 +545,32 @@ public class TestModule {
             @Override
             public Observable<Vote> deleteVotesOfUser(String mapId, String userId) {
                 return null;
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    AchievementsApiService achievementsApiService(){
+        return new AchievementsApiService() {
+            @Override
+            public Observable<List<Achievement>> getUserAchievements(String userId) {
+                ArrayList<Achievement> returnValue = new ArrayList<>();
+                returnValue.add(new Achievement("","",userId,ROAD_ACHIEVEMENT,null,0));
+                returnValue.add(new Achievement("","",userId,SETTLEMENT_ACHIEVEMENT,null,0));
+                returnValue.add(new Achievement("","",userId,CITY_ACHIEVEMENT,null,0));
+
+                return Observable.just(returnValue);
+            }
+
+            @Override
+            public Observable<Achievement> addAchievement(String userId, String id, CreateAchievementDto dto) {
+                return Observable.just(new Achievement("","",userId,id,null,0));
+            }
+
+            @Override
+            public Observable<Achievement> updateAchievement(String userId, String id, UpdateAchievementDto dto) {
+                return Observable.just(new Achievement("","",userId,id,null, dto.progress()));
             }
         };
     }

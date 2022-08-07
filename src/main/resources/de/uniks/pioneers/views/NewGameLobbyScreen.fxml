@@ -17,7 +17,7 @@
                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
              <HBox alignment="CENTER" prefHeight="49.0" prefWidth="335.0">
-                 <Label fx:id="Welcome" text="Welcome to: ">
+                 <Label text="Welcome to: ">
                     <font>
                         <Font size="20.0" />
                     </font>
@@ -32,7 +32,7 @@
                  <VBox.margin>
                      <Insets top="-11.0" />
                  </VBox.margin>
-                 <Label fx:id="ThePasswordIs" text="The password of this game is: ">
+                 <Label text="The password of this game is: ">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -74,7 +74,7 @@
                  <VBox.margin>
                      <Insets />
                  </VBox.margin>
-                 <Label fx:id="chooseColorHere" prefHeight="25.0" prefWidth="213.0" text="Choose your color here:">
+                 <Label prefHeight="25.0" prefWidth="213.0" text="Choose your color here:">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -115,7 +115,7 @@
                   <Insets top="-9.0" />
                </VBox.margin>
              </HBox>
-            <Label fx:id="yourOpponentText" prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
+            <Label prefHeight="19.0" prefWidth="311.0" text="Your opponents:" wrapText="true">
                <font>
                   <Font size="17.0" />
                </font>

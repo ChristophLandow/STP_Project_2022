@@ -159,7 +159,7 @@ public class IngamePlayerListElementController {
             settlementCount.setTextFill(Color.RED);
         }
 
-        if (resourceCount>=7){
+        if (resourceCount>7){
             resourceCardsCount.setTextFill(Color.RED);
         } else {
             resourceCardsCount.setTextFill(Color.WHITE);

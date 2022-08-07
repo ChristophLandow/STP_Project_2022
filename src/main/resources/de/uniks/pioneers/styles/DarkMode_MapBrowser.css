@@ -18,27 +18,27 @@
     -fx-fill: WHITE;
 }
 
-#createdText, #createdOutputText {
+#createdOutputText {
     -fx-fill: WHITE;
 }
 
-#sizeText, #sizeOutputText{
+#sizeOutputText{
     -fx-fill: WHITE;
 }
 
-#tilesText, #tilesOutputText {
+#tilesOutputText {
     -fx-fill: WHITE;
 }
 
-#numbersText, #numbersOutputText {
+#numbersOutputText {
     -fx-fill: WHITE;
 }
 
-#harborsText, #harborsOutputText {
+#harborsOutputText {
     -fx-fill: WHITE;
 }
 
-#lastUpdatedText, #lastUpdatedOutputText{
+#lastUpdatedOutputText{
     -fx-fill: WHITE;
 }
 

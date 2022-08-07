@@ -12,6 +12,7 @@ import de.uniks.pioneers.services.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -195,6 +196,13 @@ public class LobbyScreenController implements Controller {
     private void openRules() {
         RulesScreenController rulesController = rulesScreenControllerProvider.get();
         rulesController.init();
+    }
+
+    public void logout(ActionEvent ignoredEvent) {
+        //This function is only called by the logout button
+        this.messageService.getchatUserList().clear();
+        prefService.forget();
+        logout();
     }
 
     public void logout() {

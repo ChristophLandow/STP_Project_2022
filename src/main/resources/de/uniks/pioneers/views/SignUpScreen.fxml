@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 <Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.SignUpScreenController">
    <TextField fx:id="textFieldUserName" layoutX="189.0" layoutY="70.0" prefHeight="33.0" prefWidth="235.0" promptText="User Name" />
-   <Text fx:id="Headline" layoutX="253.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" textAlignment="CENTER">
+   <Text layoutX="253.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Sign Up" textAlignment="CENTER">
       <font>
          <Font size="27.0" />
       </font>

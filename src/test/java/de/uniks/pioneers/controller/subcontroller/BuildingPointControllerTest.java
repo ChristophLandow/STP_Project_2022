@@ -80,7 +80,7 @@ class BuildingPointControllerTest extends ApplicationTest {
 
     @Test
     void checkPosition() {
-        buildingPointController.setAction("build");
+        buildingPointController.setAction(BUILD);
         gameStorage.selectedBuilding = SETTLEMENT;
         gameStorage.remainingBuildings = FXCollections.observableHashMap();
         gameStorage.remainingBuildings.put(ROAD, 15);
@@ -101,7 +101,7 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.placeBuilding(new Building(0,0,0, "000", 0, SETTLEMENT, "000", "000"));
         assertFalse(buildingPointController.view.isVisible());
         assertNotNull(buildingPointController.displayedBuilding);
-        verify(gameService, atLeastOnce()).getUsers();
+        //verify(gameService, atLeastOnce()).getUsers();
     }
 
     @Test

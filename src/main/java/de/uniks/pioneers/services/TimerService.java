@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Timer;
@@ -69,7 +70,7 @@ public class TimerService {
         timer.schedule(task, 10 * 1000);
     }
 
-    public void setBuildTimer(Timer timer, long sec) {
+    public void setBuildTimer(Timer timer) {
         this.timeUp = false;
         this.buildTimer = timer;
         TimerTask task = new TimerTask() {
@@ -81,7 +82,8 @@ public class TimerService {
                         .subscribe(move -> {
                             timeUp = true;
                             ingameSelectController.resetSelect();
-                            ingameDevelopmentCardController.resetSelect();
+                            ingameDevelopmentCardController.resetHammerSelection();
+                            ingameDevelopmentCardController.closeDevCardPlayStage();
                             this.cancel();
                             reset();
                             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -93,8 +95,16 @@ public class TimerService {
             }
         };
         this.buildTimerTask = task;
-        this.initCountdown(new Timer(), sec);
-        timer.schedule(task, sec * 1000);
+        if(remainingTurnTime < 0) {
+            this.initCountdown(new Timer(), 120);
+            timer.schedule(task, 120 * 1000);
+        } else {
+            if(remainingTurnTime < 10) {
+                remainingTurnTime += 10;
+            }
+            this.initCountdown(new Timer(), remainingTurnTime);
+            timer.schedule(task, remainingTurnTime * 1000);
+        }
     }
 
     public void setTradeTimer(Timer timer) {
@@ -106,6 +116,14 @@ public class TimerService {
         buildTimerTask.cancel();
         buildTimer.cancel();
         this.initTradeCountdown(new Timer(), tradeTime);
+    }
+
+    public void interruptBuildTimer() {
+        remainingTurnTime = this.remainingTime;
+        countdownTimerTask.cancel();
+        countdownTimer.cancel();
+        buildTimerTask.cancel();
+        buildTimer.cancel();
     }
 
     private void initTradeCountdown(Timer timer, int sec) {
@@ -147,10 +165,11 @@ public class TimerService {
         if (this.countdownTimer != null) {
             this.countdownTimer.cancel();
         }
+        remainingTurnTime = -1;
     }
 
     public void stopTrade() {
-        setBuildTimer(new Timer(), remainingTurnTime);
+        setBuildTimer(new Timer());
         ingameService.declineTrade();
         this.tradeTimer.cancel();
         this.tradeCountdownTimerTask.cancel();
