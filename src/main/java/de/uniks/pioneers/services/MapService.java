@@ -55,7 +55,7 @@ public class MapService {
         return currentMap;
     }
 
-    public void updateOrCreateMap(List<EditTile> editTiles) {
+    public void updateOrCreateMap(List<EditTile> editTiles, String name, String description) {
         List<HarborTemplate> harborTemplates = this.getHarbors(editTiles);
         List<TileTemplate> tileTemplates = this.getTiles(editTiles);
         // if the map is null, create a new one
@@ -68,13 +68,13 @@ public class MapService {
                         .subscribe();
             } else {
                 //if the map belongs to someone else, create a new one
-                this.createMap("Testus-Maximus-YEEEEE", null, "kein Bock auf Beschriebung", tileTemplates, harborTemplates)
+                this.createMap(name, null, description, tileTemplates, harborTemplates)
                         .observeOn(FX_SCHEDULER)
                         .doOnError(err -> handleSaveError())
                         .subscribe();
             }
         } else {
-            this.createMap("Testus-Maximus-ultra-deluxe", null, "kein Bock auf Beschriebung", tileTemplates, harborTemplates)
+            this.createMap(name, null, description, tileTemplates, harborTemplates)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(err -> handleSaveError())
                     .subscribe();

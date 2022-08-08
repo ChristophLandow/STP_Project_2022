@@ -9,36 +9,31 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.PopUpController.SaveMapPopUpController">
-   <children>
-      <Label contentDisplay="CENTER" prefHeight="38.0" prefWidth="563.0" text="Mapname:" wrapText="true">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <TextField fx:id="mapNameTextField" prefHeight="31.0" prefWidth="542.0" promptText="enter a name for your map" />
-      <Label prefHeight="36.0" prefWidth="550.0" text="Description:">
-         <font>
-            <Font size="21.0" />
-         </font>
-         <VBox.margin>
-            <Insets top="40.0" />
-         </VBox.margin>
-      </Label>
-      <TextArea fx:id="descriptionTextArea" prefHeight="89.0" prefWidth="549.0" promptText="enter a description for your map" />
-      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
-         <children>
-            <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel">
-               <HBox.margin>
-                  <Insets right="200.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="saveButtonPopUp" mnemonicParsing="false" text="Save" />
-         </children>
-      </HBox>
-   </children>
+<VBox fx:id="root" alignment="TOP_CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" visible="false" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.PopUpController.SaveMapPopUpController">
    <padding>
       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
    </padding>
+   <Label contentDisplay="CENTER" prefHeight="38.0" prefWidth="563.0" text="Mapname:" wrapText="true">
+      <font>
+         <Font size="21.0" />
+      </font>
+   </Label>
+   <TextField fx:id="mapNameTextField" prefHeight="31.0" prefWidth="542.0" promptText="enter a name for your map" />
+   <Label prefHeight="36.0" prefWidth="550.0" text="Description:">
+      <font>
+         <Font size="21.0" />
+      </font>
+      <VBox.margin>
+         <Insets top="40.0" />
+      </VBox.margin>
+   </Label>
+   <TextArea fx:id="descriptionTextArea" prefHeight="89.0" prefWidth="549.0" promptText="enter a description for your map" wrapText="true" />
+   <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+      <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel">
+         <HBox.margin>
+            <Insets right="200.0" />
+         </HBox.margin>
+      </Button>
+      <Button fx:id="saveButtonPopUp" mnemonicParsing="false" text="Save" />
+   </HBox>
 </VBox>

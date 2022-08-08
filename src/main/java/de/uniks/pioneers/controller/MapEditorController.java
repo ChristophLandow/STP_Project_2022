@@ -2,21 +2,24 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.PopUpController.SaveMapPopUpController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
-import de.uniks.pioneers.model.HarborTemplate;
 import de.uniks.pioneers.model.MapTemplate;
-import de.uniks.pioneers.model.TileTemplate;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.services.MapService;
+import de.uniks.pioneers.services.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
@@ -33,14 +36,21 @@ import java.util.Objects;
 import static de.uniks.pioneers.EditorConstants.*;
 
 public class MapEditorController implements Controller{
+    @FXML public AnchorPane mapEditorAnchorPane;
     @FXML ImageView whaleImageView, iceImageView, fishImageView, randomImageView, desertImageView, icebearImageView, rockImageView;
     @FXML Circle Circle2, Circle3, Circle4, Circle5, Circle6, Circle8, Circle9, Circle10, Circle11, Circle12;
     @FXML ImageView harborFish, harborCoal, harborIce, harborPolar, harborWhale, harborGeneric;
     @FXML public Pane scrollPaneAnchorPane;
     @FXML Button buttonToMaps, buttonSave, deleteButton;
     @FXML Spinner<Integer> sizeSpinner;
+
+    @Inject Provider<SaveMapPopUpController> saveMapPopUpControllerProvider;
     private final MapService mapService;
+
+    private final UserService userService;
     public final BoardGenerator boardGenerator;
+
+    private SaveMapPopUpController saveMapPopUpController;
 
     public List<EditTile> tiles = new ArrayList<>();
 
@@ -52,9 +62,10 @@ public class MapEditorController implements Controller{
     private final Provider<MapBrowserController> mapBrowserControllerProvider;
 
     @Inject
-    public MapEditorController(MapService mapService, App app, Provider<MapBrowserController> mapBrowserControllerProvider){
+    public MapEditorController(MapService mapService, UserService userService, App app, Provider<MapBrowserController> mapBrowserControllerProvider){
 
         this.mapService = mapService;
+        this.userService = userService;
         this.app = app;
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.boardGenerator = new BoardGenerator();
@@ -84,7 +95,16 @@ public class MapEditorController implements Controller{
         init();
         this.tiles = mapService.loadMap(2);
         display(2);
+
+        //add the popup to the pane
+        this.saveMapPopUpController = saveMapPopUpControllerProvider.get();
+        Node savePopUp = this.saveMapPopUpController.render();
+        if (savePopUp != null) {
+            this.mapEditorAnchorPane.getChildren().add(savePopUp);
+        }
         return parent;
+
+
     }
     private void display(int size){
 
@@ -160,9 +180,19 @@ public class MapEditorController implements Controller{
         this.app.show(mapBrowserController);
     }
     public void save(){
-        mapService.updateOrCreateMap(tiles);
-        MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
-        this.app.show(mapBrowserController);
+        MapTemplate currentMap = mapService.getCurrentMap();
+        User currentUser = userService.getCurrentUser();
+        this.saveMapPopUpController.setMapEditorController(this);
+        this.saveMapPopUpController.setTiles(tiles);
+        //check if the popup has to be opened or not
+        if (currentMap == null || !currentMap.createdBy().equals(currentUser._id())) {
+            //open popup
+            this.saveMapPopUpController.showSavePopUp();
+        } else {
+            mapService.updateOrCreateMap(tiles, currentMap.name(), currentMap.description());
+            MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
+            this.app.show(mapBrowserController);
+        }
     }
     public void randomize() {
         for(EditTile tile : this.tiles){
