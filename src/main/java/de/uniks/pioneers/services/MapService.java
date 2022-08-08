@@ -1,6 +1,8 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.controller.MapEditorController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
+import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.dto.CreateMapTemplateDto;
 import de.uniks.pioneers.dto.UpdateMapTemplateDto;
 import de.uniks.pioneers.model.HarborTemplate;
@@ -9,6 +11,8 @@ import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.rest.MapApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Alert;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Polygon;
 
 
 import javax.inject.Inject;
@@ -26,6 +30,8 @@ public class MapService {
     private MapTemplate currentMap;
 
     private final UserService userService;
+
+    private MapEditorController mapEditorController;
 
     @Inject
     public MapService(MapApiService mapApiService, UserService userService) {
@@ -112,6 +118,40 @@ public class MapService {
         return harbors;
     }
 
+    public List<EditTile> loadMap(int size) {
+        MapTemplate mapTemplate = this.getCurrentMap();
+        List<EditTile> editTiles = new ArrayList<>();
+        if (mapTemplate == null) {
+            return editTiles;
+        }
+        double scale = 100.0/size;
+        boolean top = true;
+        Polygon tile = mapEditorController.setView(scale);
+        //set the tiles
+        for (TileTemplate tt : mapTemplate.tiles()) {
+            HexTile hexTile = new HexTile(tt.x(), tt.y(), tt.z(), scale, top);
+            hexTile.type = tt.type();
+            hexTile.number = tt.numberToken();
+            ImageView numberView = mapEditorController.setNumberView(hexTile, scale);
+            EditTile editTile = new EditTile(hexTile, tile, numberView, this.mapEditorController);
+            //set the harbors
+            for (HarborTemplate ht : mapTemplate.harbors()) {
+                //check for the right harbor with the coordinates
+                if (tt.x() == ht.x() && tt.y() == ht.y() && tt.z() == ht.z()) {
+                    if (ht.type() == null) {
+                        editTile.currentHarborType = "harbour_general";
+                    } else {
+                        editTile.currentHarborType = "harbour_" + ht.type();
+                    }
+                    editTile.currentHarborSide = ht.side();
+                    editTile.currentHarborOption = 0;
+                }
+            }
+            editTiles.add(editTile);
+        }
+        return editTiles;
+    }
+
 
     private void handleSaveError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -119,5 +159,9 @@ public class MapService {
         alert.setHeaderText("Map-Saving-Error");
         alert.setContentText("Something went wrong");
         alert.showAndWait();
+    }
+
+    public void setMapEditorController(MapEditorController mapEditorController) {
+        this.mapEditorController = mapEditorController;
     }
 }

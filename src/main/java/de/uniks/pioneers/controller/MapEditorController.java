@@ -66,6 +66,7 @@ public class MapEditorController implements Controller{
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, 2);
         this.sizeSpinner.setValueFactory(valueFactory);
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> display(newValue));
+        this.mapService.setMapEditorController(this);
     }
     @Override
     public void stop() {}
@@ -81,7 +82,7 @@ public class MapEditorController implements Controller{
             return null;
         }
         init();
-        this.tiles = loadMap(2);
+        this.tiles = mapService.loadMap(2);
         display(2);
         return parent;
     }
@@ -330,45 +331,10 @@ public class MapEditorController implements Controller{
         this.harborCoal.setImage(image);}
     public void selectDelete() {
         this.selection = DELETE;
-        resetSelectionUI();}
-        this.selection = "DELETE";
+        resetSelectionUI();
     }
 
-    public List<EditTile> loadMap(int size) {
-        MapTemplate mapTemplate = mapService.getCurrentMap();
-        List<EditTile> editTiles = new ArrayList<>();
-        if (mapTemplate == null) {
-            return editTiles;
-        }
-        double scale = 100.0/size;
-        boolean top = true;
-        Polygon tile = setView(scale);
-        //set the tiles
-        for (TileTemplate tt : mapTemplate.tiles()) {
-            HexTile hexTile = new HexTile(tt.x(), tt.y(), tt.z(), scale, top);
-            hexTile.type = tt.type();
-            hexTile.number = tt.numberToken();
-            ImageView numberView = setNumberView(hexTile, scale);
-            EditTile editTile = new EditTile(hexTile, tile, numberView, this);
-            //set the harbors
-            for (HarborTemplate ht : mapTemplate.harbors()) {
-                //check for the right harbor with the coordinates
-                if (tt.x() == ht.x() && tt.y() == ht.y() && tt.z() == ht.z()) {
-                    if (ht.type() == null) {
-                        editTile.currentHarborType = "harbour_general";
-                    } else {
-                        editTile.currentHarborType = "harbour_" + ht.type();
-                    }
-                    editTile.currentHarborSide = ht.side();
-                    editTile.currentHarborOption = 0;
-                }
-            }
-            editTiles.add(editTile);
-        }
-        return editTiles;
-    }
-
-    private ImageView setNumberView(HexTile hexTile, double scale) {
+    public ImageView setNumberView(HexTile hexTile, double scale) {
         ImageView numberView = new ImageView();
         numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 33);
         numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 33);
@@ -382,9 +348,9 @@ public class MapEditorController implements Controller{
        return numberView;
     }
 
-    private Polygon setView(double scale) {
+    public Polygon setView(double scale) {
         Polygon tile = new Polygon();
-        tile.getPoints().addAll(0.0*scale, 1.0*scale,
+        tile.getPoints().addAll(0.0*scale, scale,
                 (Math.sqrt(3)/2)*scale,0.5*scale,
                 (Math.sqrt(3)/2)*scale,-0.5*scale,
                 0.0*scale,-1.0*scale,
