@@ -158,8 +158,6 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.uploadCoords = new int[]{-1, 2, -1, 0};
         buildingPointController.checkTradeOptions();
 
-        //TODO: Für jede kOMBINAION DIE LETZTEN BEIEN FUNKTIONEN AUFRUFEN
-
 
     }
 }
