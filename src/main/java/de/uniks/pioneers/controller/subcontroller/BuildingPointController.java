@@ -10,7 +10,6 @@ import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -101,15 +100,14 @@ public class BuildingPointController {
         if(gameId != null) {
             disposable.add(ingameService.postMove(gameId, new CreateMoveDto(this.action, null, null, null, null, newBuilding))
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(move -> this.fieldPane.getChildren().forEach(this::reset)));
+                    .subscribe());
         }
     }
 
-    private void reset(Node node) {
-        node.setOnMouseClicked(null);
-        node.setOnMouseEntered(null);
-        node.setOnMouseExited(null);
-        undye(null);
+    public void reset() {
+        this.view.setOnMouseClicked(null);
+        this.view.setOnMouseEntered(null);
+        this.view.setOnMouseExited(null);
 
         this.view.setFill(STANDARD_COLOR);
         if (this.building != null) {
