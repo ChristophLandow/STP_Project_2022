@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,7 +89,6 @@ class BuildingPointControllerTest extends ApplicationTest {
         gameStorage.remainingBuildings.put(SETTLEMENT, 5);
         gameStorage.remainingBuildings.put(CITY, 4);
         when(resourceService.checkResourcesSettlement()).thenReturn(true);
-
         assertFalse(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
         verify(ingameSelectController, atLeastOnce()).resetSelect();
     }
@@ -103,6 +103,19 @@ class BuildingPointControllerTest extends ApplicationTest {
         assertFalse(buildingPointController.view.isVisible());
         assertNotNull(buildingPointController.displayedBuilding);
         //verify(gameService, atLeastOnce()).getUsers();
+    }
+
+    @Test
+    void testVisible(){
+        buildingPointController.displayedBuilding = new SVGPath();
+        buildingPointController.view = new Circle();
+        buildingPointController.setVisible(true);
+        buildingPointController.displayedBuilding = null;
+        buildingPointController.setVisible(false);
+    }
+
+    @Test
+    void testCheckSettlementSpot(){
     }
 
     @Test
@@ -157,7 +170,5 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.checkTradeOptions();
         buildingPointController.uploadCoords = new int[]{-1, 2, -1, 0};
         buildingPointController.checkTradeOptions();
-
-
     }
 }
