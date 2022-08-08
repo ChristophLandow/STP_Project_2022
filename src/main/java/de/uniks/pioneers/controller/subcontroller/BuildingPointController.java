@@ -40,7 +40,7 @@ public class BuildingPointController {
     public final HexTile tile;
 
     // coordinates to be uploaded to the server as: x, y, z, side
-    public final int[] uploadCoords = new int[4];
+    public int[] uploadCoords = new int[4];
     public final ArrayList<StreetPointController> adjacentStreets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
     private Building building = null;

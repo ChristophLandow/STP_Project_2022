@@ -107,29 +107,59 @@ class BuildingPointControllerTest extends ApplicationTest {
 
     @Test
     void checkTradeOptions() {
-        Harbor testHarbor1 = new Harbor(-1,-1,2,"grain", 7);
-        Harbor testHarbor2 = new Harbor(0,-2,2,null, 5);
-        Harbor testHarbor3 = new Harbor(1,-2,1,"lumber", 5);
-        Harbor testHarbor4 = new Harbor(2,-1,-1,null, 3);
-        Harbor testHarbor5 = new Harbor(2,0,-2,"brick", 1);
-        Harbor testHarbor6 = new Harbor(1,1,-2,null, 1);
-        Harbor testHarbor7 = new Harbor(-1,2,-1,"ore", 11);
-        Harbor testHarbor8 = new Harbor(-2,2,0,null, 9);
-        Harbor testHarbor9 = new Harbor(-2,1,1,"wool", 9);
-        Harbor testHarbor10 = new Harbor(-1,-1,2,"grain", 7);
-        Harbor testHarbor11 = new Harbor(0,-2,2,null, 5);
-        Harbor testHarbor12 = new Harbor(1,-2,1,"lumber", 5);
-        Harbor testHarbor13 = new Harbor(2,-1,-1,null, 3);
-        Harbor testHarbor14 = new Harbor(2,0,-2,"brick", 1);
-        Harbor testHarbor15 = new Harbor(1,1,-2,null, 1);
-        Harbor testHarbor16 = new Harbor(-1,2,-1,"ore", 11);
-        Harbor testHarbor17 = new Harbor(-2,2,0,null, 9);
-        Harbor testHarbor18 = new Harbor(-2,1,1,"wool", 9);
-
         List<Harbor> harborList = new ArrayList<>();
-        //harborList.add(new Harbor(-1,-1,2,"grain", 7));
-        //when(gameStorage.getHarbors()).thenReturn()
-        //buildingPointController.uploadCoords = [];
+        harborList.add(new Harbor(-1,-1,2,"grain", 7));
+        harborList.add(new Harbor(0,-2,2,null, 5));
+        harborList.add(new Harbor(1,-2,1,"lumber", 5));
+        harborList.add(new Harbor(2,-1,-1,null, 3));
+        harborList.add(new Harbor(2,0,-2,"brick", 1));
+        harborList.add(new Harbor(1,1,-2,null, 1));
+        harborList.add(new Harbor(-2,1,1,"ore", 11));
+        harborList.add(new Harbor(-1,2,-1,null, 9));
+        harborList.add(new Harbor(-2,1,1,"wool", 9));
+        harborList.add(new Harbor(-1,2,-1,"grain", 7));
+        harborList.add(new Harbor(0,-2,2,null, 5));
+        harborList.add(new Harbor(2,-1,-1,"lumber", 5));
+        harborList.add(new Harbor(1,-2,1,null, 3));
+        harborList.add(new Harbor(2,0,-2,"brick", 1));
+        harborList.add(new Harbor(1,-2,1,null, 1));
+        harborList.add(new Harbor(-1,2,-1,"ore", 11));
+        harborList.add(new Harbor(-2,2,0,null, 9));
+        harborList.add(new Harbor(-2,1,1,"wool", 9));
+        when(gameStorage.getHarbors()).thenReturn(harborList);
+        //side 1
+        buildingPointController.uploadCoords = new int[]{2, 0, -2, 0};
         buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        //side 3
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        //side 5
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{0, -2, 2, 6};
+        buildingPointController.checkTradeOptions();
+        // side 7
+        buildingPointController.uploadCoords = new int[]{-1, -1, 2, 6};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{-2, 2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        // side 9
+        buildingPointController.uploadCoords = new int[]{-2, 2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{-2, 2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        // side 11
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{-1, 2, -1, 0};
+        buildingPointController.checkTradeOptions();
+
+        //TODO: Für jede kOMBINAION DIE LETZTEN BEIEN FUNKTIONEN AUFRUFEN
+
+
     }
 }
