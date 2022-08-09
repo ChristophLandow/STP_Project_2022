@@ -176,7 +176,9 @@ public class GameStorage {
             this.tradeOptions.add(tradeOption);
         }
 
-        achievementService.incrementProgress(HARBOR_ACHIEVEMENT);
+        if(achievementService != null) {
+            achievementService.incrementProgress(HARBOR_ACHIEVEMENT);
+        }
     }
 
     public void resetRemainingBuildings() {
