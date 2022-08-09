@@ -1,9 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.Resources;
-import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.UserService;
 import de.uniks.pioneers.ws.EventListener;
@@ -23,29 +21,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.GameConstants.*;
 
 public class IngamePlayerListElementController {
     @FXML public HBox playerBox;
     @FXML public Circle playerColor;
-    @FXML public ImageView playerAvatar;
-    @FXML public Label resourceCardsCount;
-    @FXML public ImageView resourceCards;
-    @FXML public Label developmentCardsCount;
-    @FXML public ImageView developmentCards;
-    @FXML public Label settlementCount;
-    @FXML public ImageView settlement;
-    @FXML public Label cityCount;
-    @FXML public ImageView city;
-    @FXML public Label playerName;
+    @FXML public ImageView playerAvatar, resourceCards, developmentCards, settlement, knight, knightGold;
+    @FXML public Label resourceCardsCount, knightCount, developmentCardsCount, settlementCount, playerName, victoryPointsLabel;
     @FXML private Player toRender;
     @FXML public ListView<Node> nodeListView;
-    @FXML public Label victoryPointsLabel;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final GameService gameService;
@@ -89,20 +78,8 @@ public class IngamePlayerListElementController {
         );
         settlementCount.setVisible(false);
         setDataToElement(toRender);
-        setImages();
         addPlayerListener();
-    }
-
-    private void setImages() {
-        // set values to gui elements
-        Image resourceImage = new Image(Objects.requireNonNull(getClass().getResource("images/card_question_mark.png")).toString());
-        resourceCards.setImage(resourceImage);
-        Image developmentImage = new Image(Objects.requireNonNull(getClass().getResource("images/card_hammer.png")).toString());
-        developmentCards.setImage(developmentImage);
-        Image cityImage = new Image(Objects.requireNonNull(getClass().getResource("images/steine_3.png")).toString());
-        city.setImage(cityImage);
-        Image settlementImage = new Image(Objects.requireNonNull(getClass().getResource("images/ruinsCorner.png")).toString());
-        settlement.setImage(settlementImage);
+        addArmyListener();
     }
 
     // have to fix style
@@ -138,6 +115,22 @@ public class IngamePlayerListElementController {
                     setDataToElement(c.getValueAdded());
                 }
             }
+            if (!toRender.userId().equals(gameService.largestArmy.get(LARGEST_ARMY).id())) {
+                knight.setVisible(true);
+                knightGold.setVisible(false);
+            }
+        });
+    }
+
+    private void addArmyListener() {
+        gameService.largestArmy.addListener((MapChangeListener<? super String, ? super LargestArmy>) c -> {
+            if (c.getValueAdded().id().equals(toRender.userId())) {
+                knight.setVisible(false);
+                knightGold.setVisible(true);
+            } else {
+                knight.setVisible(true);
+                knightGold.setVisible(false);
+            }
         });
     }
 
@@ -151,9 +144,7 @@ public class IngamePlayerListElementController {
             resourceCount = resources.unknown();
         }
 
-        if (valueAdded.remainingBuildings().city()==0){
-            cityCount.setTextFill(Color.RED);
-        }
+        knightCount.setText(String.valueOf(countArmy(valueAdded)));
 
         if (valueAdded.remainingBuildings().settlement()==0){
             settlementCount.setTextFill(Color.RED);
@@ -174,7 +165,24 @@ public class IngamePlayerListElementController {
 
         resourceCardsCount.setText(String.valueOf(resourceCount));
         developmentCardsCount.setText(String.valueOf(valueAdded.developmentCards().size()));
-        cityCount.setText(String.valueOf(4 - valueAdded.remainingBuildings().city()));
+    }
+
+    private int countArmy(Player valueAdded) {
+        List<DevelopmentCard> devCards = valueAdded.developmentCards();
+        int army = 0;
+
+        for(DevelopmentCard devCard : devCards) {
+            if(devCard.type().equals(DEV_KNIGHT) && devCard.revealed()) {
+                army += 1;
+            }
+        }
+
+        if(army >= 3 && army > gameService.largestArmy.get(LARGEST_ARMY).size()) {
+            String oldId = gameService.largestArmy.get(LARGEST_ARMY).id();
+            gameService.largestArmy.put(LARGEST_ARMY, new LargestArmy(valueAdded.userId(), oldId, army));
+        }
+
+        return army;
     }
 }
 

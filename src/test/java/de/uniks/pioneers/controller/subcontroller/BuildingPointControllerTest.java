@@ -1,10 +1,7 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.App;
-import de.uniks.pioneers.model.Building;
-import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.RemainingBuildings;
-import de.uniks.pioneers.model.Resources;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
@@ -22,8 +19,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,8 +46,8 @@ class BuildingPointControllerTest extends ApplicationTest {
     @Mock
     ResourceService resourceService;
 
-    @Mock
-    GameStorage gameStorage;
+    @Spy
+    GameStorage gameStorage = new GameStorage();
 
     @Mock
     IngameSelectController ingameSelectController;
@@ -101,11 +98,23 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.placeBuilding(new Building(0,0,0, "000", 0, SETTLEMENT, "000", "000"));
         assertFalse(buildingPointController.view.isVisible());
         assertNotNull(buildingPointController.displayedBuilding);
-        verify(gameService, atLeastOnce()).getUsers();
     }
 
     @Test
     void checkTradeOptions() {
+        List<Harbor> harbors = new ArrayList<>();
+        harbors.add(new Harbor(-1, -1, 2, "ore", 7));
+        harbors.add(new Harbor(0, -2, 2, null, 5));
+        harbors.add(new Harbor(1, -2, 1, "wool", 5));
+        harbors.add(new Harbor(2, -1, -1, null, 3));
+        harbors.add(new Harbor(2, 0, -2, "lumber", 1));
+        harbors.add(new Harbor(1, 1, -2, null, 1));
+        harbors.add(new Harbor(-1, 2, -1, "brick", 11));
+        harbors.add(new Harbor(-2, 2, 0, null, 9));
+        harbors.add(new Harbor(-2, 1, 1, "grain", 9));
+        gameStorage.setHarbors(harbors);
+
         buildingPointController.checkTradeOptions();
+        assertEquals(gameStorage.tradeOptions.size(), 0);
     }
 }

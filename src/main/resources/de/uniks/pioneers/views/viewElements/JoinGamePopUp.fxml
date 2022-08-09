@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="popUpBox" maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.JoinGamePopUpController">
-    <Pane prefHeight="200.0" prefWidth="200.0">
-        <Label fx:id="joinGameLabel" alignment="CENTER" layoutX="59.0" layoutY="19.0" prefHeight="20.0" prefWidth="180.0" text="Join Game " />
-        <TextField fx:id="passwordInputField" layoutX="59.0" layoutY="63.0" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" prefWidth="180.0" promptText="password" />
-        <Label fx:id="wrongPasswordLabel" layoutX="115.0" layoutY="88.0" text="wrong password" textFill="RED">
-            <font>
-                <Font size="10.0" />
-            </font>
-        </Label>
-        <Button fx:id="joinButton" layoutX="131.0" layoutY="125.0" mnemonicParsing="false" onAction="#joinGame" prefHeight="26.0" prefWidth="40.0" text="Join" />
-    </Pane>
+<VBox fx:id="popUpBox" alignment="CENTER" maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.JoinGamePopUpController">
+     <Label fx:id="joinGameLabel" alignment="CENTER" prefHeight="20.0" prefWidth="180.0" text="Join Game ">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Label>
+     <TextField fx:id="passwordInputField" maxHeight="28.0" minHeight="20.0" prefHeight="28.0" prefWidth="260.0" promptText="password">
+      <VBox.margin>
+         <Insets left="20.0" right="20.0" top="20.0" />
+      </VBox.margin>
+      <font>
+         <Font size="16.0" />
+      </font>
+   </TextField>
+   <HBox alignment="CENTER" prefHeight="23.0" prefWidth="300.0">
+      <children>
+           <Label fx:id="wrongPasswordLabel" text="wrong password" textFill="RED" />
+      </children>
+      <VBox.margin>
+         <Insets bottom="20.0" />
+      </VBox.margin>
+   </HBox>
+     <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinGame" prefHeight="35.0" prefWidth="70.0" text="Join">
+      <font>
+         <Font size="16.0" />
+      </font>
+   </Button>
 </VBox>

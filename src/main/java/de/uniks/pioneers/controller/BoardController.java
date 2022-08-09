@@ -37,11 +37,12 @@ public class BoardController {
     private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
     public final SimpleObjectProperty<Game> game;
+    private final RobberService robberService;
     private  Thread hextileRenderThread;
    final BoardGenerator generator = new BoardGenerator();
 
     public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game, IngameSelectController ingameSelectController,
-                           GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
+                           GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService, RobberService robberService){
         this.ingameService = ingameService;
         this.ingameSelectController = ingameSelectController;
         this.gameService = gameService;
@@ -50,6 +51,7 @@ public class BoardController {
         this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
         this.game = game;
+        this.robberService = robberService;
     }
 
     public void buildBoardUI() {
@@ -186,7 +188,7 @@ public class BoardController {
         eventHexView.setFill(Color.gray(0,0.1));
         this.fieldPane.getChildren().add(eventHexView);
 
-        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView);
+        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView, robberService);
         this.tileControllers.add(newHexTileController);
     }
 

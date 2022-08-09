@@ -28,11 +28,12 @@ public class HexTileController {
     public final StreetPointController[] edges = new StreetPointController[6];
     private RobberService robberService;
 
-    public HexTileController(Pane fieldPane, HexTile tile, Circle view, Circle eventView) {
+    public HexTileController(Pane fieldPane, HexTile tile, Circle view, Circle eventView, RobberService robberService) {
         this.fieldPane = fieldPane;
         this.tile = tile;
         this.eventView = eventView;
         this.view = view;
+        this.robberService = robberService;
         this.robber = null;
 
         this.eventView.setOpacity(0);

@@ -90,6 +90,10 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
                 carbon = 0;
             }
 
+            if((fish + wale + polarBear + ice + carbon) < 8) {
+                this.stop();
+            }
+
             SpinnerValueFactory<Integer> carbonValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, carbon);
             carbonValueFactory.setValue(0);
             CarbonSpinner.setValueFactory(carbonValueFactory);
@@ -191,6 +195,7 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
         stage.close();
         spinnerList.clear();
         disposable.dispose();
+        state = -1;
     }
 
     @Override

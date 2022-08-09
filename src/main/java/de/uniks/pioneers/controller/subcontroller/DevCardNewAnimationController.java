@@ -28,25 +28,20 @@ public class DevCardNewAnimationController {
         this.vpoint = vpoint;
     }
 
-    public void newDevCardAnimationOne(ImageView card, int counter, int devCardNumber) {
+    public void newDevCardAnimationOne(ImageView card, int devCardNumber) {
         card.setLayoutX(225);
         card.setLayoutY(0);
 
         new Thread(() -> {
-            try {
-                Thread.sleep((counter * 1000L) - 1000);
-                Platform.runLater(() -> root.getChildren().add(card));
+            Platform.runLater(() -> root.getChildren().add(card));
+            ScaleTransition st = new ScaleTransition(new Duration(250), card);
 
-                ScaleTransition st = new ScaleTransition(new Duration(250), card);
-                st.setFromX(0f);
-                st.setFromY(0f);
-                st.setByX(0.5f);
-                st.setByY(0.5f);
-                st.setOnFinished(t -> newDevCardAnimationTwo(card, devCardNumber));
-                st.play();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            st.setFromX(0f);
+            st.setFromY(0f);
+            st.setByX(0.5f);
+            st.setByY(0.5f);
+            st.setOnFinished(t -> newDevCardAnimationTwo(card, devCardNumber));
+            st.play();
         }).start();
     }
 
@@ -55,7 +50,7 @@ public class DevCardNewAnimationController {
             try {
                 Thread.sleep(500);
 
-                ScaleTransition st = new ScaleTransition(new Duration(250), card);
+                ScaleTransition st = new ScaleTransition(new Duration(500), card);
                 st.setFromX(0.5f);
                 st.setFromY(0.5f);
                 st.setToX(0.08f);
