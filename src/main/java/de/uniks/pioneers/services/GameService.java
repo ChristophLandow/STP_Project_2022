@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.BUILD;
-import static de.uniks.pioneers.GameConstants.OFFER;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
+    public ObservableMap<String, LargestArmy> largestArmy = FXCollections.observableHashMap();
     public final ObservableList<Member> members = FXCollections.observableArrayList();
     private ArrayList<User> users = new ArrayList<>();
     public ObservableList<Member> lobbyMembers;
@@ -150,6 +150,7 @@ public class GameService {
     public void loadPlayers(Game game) {
         // REST - get players from server
         players = FXCollections.observableHashMap();
+        largestArmy.put(LARGEST_ARMY, new LargestArmy("", "", 0));
 
         disposable.add(ingameService.getAllPlayers(game._id())
                 .observeOn(FX_SCHEDULER)

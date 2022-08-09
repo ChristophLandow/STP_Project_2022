@@ -163,7 +163,6 @@ public class MapEditorController implements Controller{
         this.selection = "";
     }
     public void toMaps(){
-        System.out.println("ToMaps");
         MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
         this.app.show(mapBrowserController);
     }

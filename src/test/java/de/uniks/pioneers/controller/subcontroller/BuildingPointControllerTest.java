@@ -21,10 +21,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,8 +48,8 @@ class BuildingPointControllerTest extends ApplicationTest {
     @Mock
     ResourceService resourceService;
 
-    @Mock
-    GameStorage gameStorage;
+    @Spy
+    GameStorage gameStorage = new GameStorage();
 
     @Mock
     IngameSelectController ingameSelectController;
@@ -169,5 +167,6 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.checkTradeOptions();
         buildingPointController.uploadCoords = new int[]{-1, 2, -1, 0};
         buildingPointController.checkTradeOptions();
+        assertEquals(gameStorage.tradeOptions.size(), 6);
     }
 }
