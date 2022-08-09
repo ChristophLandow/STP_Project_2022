@@ -119,7 +119,9 @@ public class LobbyScreenController implements Controller {
             System.exit(0);
         });
 
-        achievementService.initAchievementListener();
+        if(achievementService != null) {
+            achievementService.initAchievementListener();
+        }
 
         // add listener to handle stages
         setupCreateGameListener();
