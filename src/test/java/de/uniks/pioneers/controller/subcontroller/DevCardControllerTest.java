@@ -68,8 +68,11 @@ class DevCardControllerTest extends ApplicationTest {
     @Mock
     RobberService robberService;
 
+    @Mock
+    AchievementService achievementService;
+
     @Spy
-    IngameScreenController ingameScreenController = new IngameScreenController(app, diceSubcontroller, ingameService, gameStorage, userService, resourceService, gameService, timerService, mapRenderService, robberService, speechService, stylesService);
+    IngameScreenController ingameScreenController = new IngameScreenController(app, diceSubcontroller, ingameService, gameStorage, userService, resourceService, gameService, timerService, mapRenderService, robberService, speechService, stylesService, achievementService);
 
     @Spy
     IngameDevelopmentCardController ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), new Pane(), new Pane(), new Pane(), ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, timerService, ingameService, resourceService, gameService, userService, robberController, true);

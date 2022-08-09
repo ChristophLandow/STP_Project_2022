@@ -48,7 +48,6 @@ class MapEditorTest extends ApplicationTest {
         //clickOn(600, 150);
 
         clickOn("#iceImageView");
-        System.out.println(mapEditorController.selection + "selection");
         clickOn("#0,-1,1");
         clickOn("#whaleImageView");
         clickOn("#1,-1,0");
@@ -230,9 +229,6 @@ class MapEditorTest extends ApplicationTest {
 
             EditTile tileA = a.get(i);
             EditTile tileB = b.get(i);
-            //System.out.println(tileA);
-            //System.out.println(tileB);
-            //System.out.println();
             if(tileA.hexTile.q != tileB.hexTile.q){equal = false;}
             if(tileA.hexTile.r != tileB.hexTile.r){equal = false;}
             if(tileA.hexTile.s != tileB.hexTile.s){equal = false;}
