@@ -6,7 +6,6 @@ import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
-import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
