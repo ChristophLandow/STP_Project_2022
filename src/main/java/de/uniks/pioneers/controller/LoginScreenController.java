@@ -3,10 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.LoginResult;
-import de.uniks.pioneers.services.EventHandlerService;
-import de.uniks.pioneers.services.LoginService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.StylesService;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -46,11 +43,12 @@ public class LoginScreenController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final PrefService prefService;
     private final StylesService stylesService;
-
     private final EventHandlerService eventHandlerService;
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService, StylesService stylesService, EventHandlerService eventHandlerService) {
+    public LoginScreenController(App app, LoginService loginService, EventHandlerService eventHandlerService,
+                                 Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                 Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService, StylesService stylesService) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;

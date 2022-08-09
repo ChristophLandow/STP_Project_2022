@@ -32,11 +32,12 @@ public class AchievementService {
         this.eventListener = eventListener;
         this.userService = userService;
         this.achievementsApiService = achievementsApiService;
-
-        initAchievementListener();
     }
 
-    private void initAchievementListener(){
+    public void initAchievementListener(){
+        this.achievements.clear();
+        this.disposable.clear();
+
         disposable.add(achievementsApiService.getUserAchievements(userService.getCurrentUser()._id()).observeOn(FX_SCHEDULER)
                 .subscribe(serverAchievements-> {
                     serverAchievements.forEach(achievement -> this.achievements.put(achievement.id(), achievement));

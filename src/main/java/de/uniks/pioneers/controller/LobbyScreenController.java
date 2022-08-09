@@ -6,6 +6,7 @@ import de.uniks.pioneers.controller.subcontroller.CreateNewGamePopUpController;
 import de.uniks.pioneers.controller.subcontroller.LeaveGameController;
 import de.uniks.pioneers.controller.subcontroller.LobbyGameListController;
 import de.uniks.pioneers.controller.subcontroller.LobbyUserlistController;
+import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.*;
@@ -68,11 +69,13 @@ public class LobbyScreenController implements Controller {
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
     private final StylesService stylesService;
+    private final AchievementService achievementService;
 
     @Inject
-    public LobbyScreenController(App app, StylesService stylesService) {
+    public LobbyScreenController(App app, StylesService stylesService, AchievementService achievementService) {
         this.app = app;
         this.stylesService = stylesService;
+        this.achievementService = achievementService;
     }
 
     @Override
@@ -117,6 +120,8 @@ public class LobbyScreenController implements Controller {
             Platform.exit();
             System.exit(0);
         });
+
+        achievementService.initAchievementListener();
 
         // add listener to handle stages
         setupCreateGameListener();
