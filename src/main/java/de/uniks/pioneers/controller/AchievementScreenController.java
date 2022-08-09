@@ -19,6 +19,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 
+import static de.uniks.pioneers.Constants.ACHIEVEMENTS_SCREEN_TITLE;
+import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class AchievementScreenController implements Controller {
@@ -49,7 +51,7 @@ public class AchievementScreenController implements Controller {
 
     @Override
     public void init() {
-
+        app.getStage().setTitle(ACHIEVEMENTS_SCREEN_TITLE);
     }
 
     @Override
@@ -92,10 +94,10 @@ public class AchievementScreenController implements Controller {
 
     public void loadAchievements(){
         //set unlock dates and check-icon or unlock status
-        setAchievement(cityPlanerDateLabel, cityPlanerBox, achievements.get(CITY_ACHIEVEMENT));
-        setAchievement(longestRoadDateLabel, longestRoadBox, achievements.get(ROAD_ACHIEVEMENT));
-        setAchievement(wildWestDateLabel, wildWestBox, achievements.get(SETTLEMENT_ACHIEVEMENT));
-        setAchievement(chickenDinnerDateLabel, chickenDinnerBox, achievements.get(WINNER_ACHIEVEMENT));
+        setAchievement(cityPlanerDateLabel, cityPlanerBox, achievements.get(CITY_ACHIEVEMENT), CITY_ACHIEVEMENT);
+        setAchievement(longestRoadDateLabel, longestRoadBox, achievements.get(ROAD_ACHIEVEMENT), ROAD_ACHIEVEMENT);
+        setAchievement(wildWestDateLabel, wildWestBox, achievements.get(SETTLEMENT_ACHIEVEMENT), SETTLEMENT_ACHIEVEMENT);
+        setAchievement(chickenDinnerDateLabel, chickenDinnerBox, achievements.get(WINNER_ACHIEVEMENT), WINNER_ACHIEVEMENT);
         //...for Harbor-Achievement extra, cause of lower progress lvl
         if(achievements.get(HARBOR_ACHIEVEMENT).progress() == 50){
             seaBuilderDateLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).unlockedAt());
@@ -114,7 +116,7 @@ public class AchievementScreenController implements Controller {
         }
     }
 
-    public void setAchievement(Label dateLabel, VBox box, Achievement achievement){
+    public void setAchievement(Label dateLabel, VBox box, Achievement achievement, String kind){
         if(achievement.progress() == 100){
             dateLabel.setText(achievement.unlockedAt());
             Image image = new Image("de/uniks/pioneers/checkmark.png");
@@ -126,7 +128,7 @@ public class AchievementScreenController implements Controller {
             box.getChildren().add(imageView);
         } else {
             Label statusLabel = new Label();
-            statusLabel.setText(achievements.get(ROAD_ACHIEVEMENT).progress() + "/ 100");
+            statusLabel.setText(achievements.get(kind).progress() + "/ 100");
             statusLabel.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 20));
             dateLabel.setText("");
             box.getChildren().add(statusLabel);
