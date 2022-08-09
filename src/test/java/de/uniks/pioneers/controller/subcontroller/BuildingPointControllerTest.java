@@ -111,10 +111,6 @@ class BuildingPointControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testCheckSettlementSpot(){
-    }
-
-    @Test
     void checkTradeOptions() {
         List<Harbor> harborList = new ArrayList<>();
         harborList.add(new Harbor(-1,-1,2,"grain", 7));

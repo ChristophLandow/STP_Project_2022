@@ -7,6 +7,7 @@ import javafx.util.Pair;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
@@ -20,43 +21,43 @@ public class AvatarSpinnerController extends SpinnerValueFactory<Integer> {
 
     public void init(ImageView avatarImageView) {
         String elephantURL = "images/elephant.png";
-        Image image = new Image(getClass().getResource(elephantURL).toString());
+        Image image = new Image(Objects.requireNonNull(getClass().getResource(elephantURL)).toString());
         images.put(1,new Pair<>(image,elephantURL));
 
         String giraffeURL = "images/giraffe.png";
-        image = new Image(getClass().getResource(giraffeURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(giraffeURL)).toString());
         images.put(2,new Pair<>(image,giraffeURL));
 
         String hippoURL = "images/hippo.png";
-        image = new Image(getClass().getResource(hippoURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(hippoURL)).toString());
         images.put(3,new Pair<>(image,hippoURL));
 
         String monkeyURL = "images/monkey.png";
-        image = new Image(getClass().getResource(monkeyURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(monkeyURL)).toString());
         images.put(4,new Pair<>(image,monkeyURL));
 
         String pandaURL = "images/panda.png";
-        image = new Image(getClass().getResource(pandaURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(pandaURL)).toString());
         images.put(5,new Pair<>(image,pandaURL));
 
         String parrotURL = "images/parrot.png";
-        image = new Image(getClass().getResource(parrotURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(parrotURL)).toString());
         images.put(6,new Pair<>(image,parrotURL));
 
         String penguinURL = "images/penguin.png";
-        image = new Image(getClass().getResource(penguinURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(penguinURL)).toString());
         images.put(7,new Pair<>(image,penguinURL));
 
         String pigURL = "images/pig.png";
-        image = new Image(getClass().getResource(pigURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(pigURL)).toString());
         images.put(8,new Pair<>(image,pigURL));
 
         String rabbitURL = "images/rabbit.png";
-        image = new Image(getClass().getResource(rabbitURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(rabbitURL)).toString());
         images.put(9,new Pair<>(image,rabbitURL));
 
         String snakeURL = "images/snake.png";
-        image = new Image(getClass().getResource(snakeURL).toString());
+        image = new Image(Objects.requireNonNull(getClass().getResource(snakeURL)).toString());
         images.put(10,new Pair<>(image,snakeURL));
 
         this.avatarImageView = avatarImageView;

@@ -258,9 +258,6 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
         System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 
-    public void show() {
-    }
-
     public void setState(int state) {
         this.state = state;
     }

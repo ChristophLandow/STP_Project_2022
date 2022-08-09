@@ -136,7 +136,7 @@ public class LobbyGameListController {
 
     public void deleteGame(Game data) {
         //find node belonging to game and then remove it from ListView
-        List<Node> removales = (List<Node>) listViewGames.getItems().stream().toList();
+        List<Node> removales = listViewGames.getItems().stream().toList();
         removales = removales.stream().filter(game -> game.getId().equals(data._id())).toList();
         listViewGames.getItems().removeAll(removales);
     }
@@ -147,7 +147,9 @@ public class LobbyGameListController {
                 .filter(conroller -> conroller.game.get()._id().equals(game._id())).findAny().orElse(null);
 
         try {
-            gameListElementController.game.set(game);
+            if (gameListElementController != null) {
+                gameListElementController.game.set(game);
+            }
         } catch (NullPointerException ignored) {
 
         }

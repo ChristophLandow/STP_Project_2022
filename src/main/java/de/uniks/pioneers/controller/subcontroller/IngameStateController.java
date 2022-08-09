@@ -35,7 +35,6 @@ public class IngameStateController {
     private final DiceSubcontroller diceSubcontroller;
     private final Game game;
     private final IngameDevelopmentCardController ingameDevelopmentCardController;
-    private final ResourceService resourceService;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final RobberService robberService;
     private final SpeechService speechService;
@@ -61,7 +60,6 @@ public class IngameStateController {
         this.diceSubcontroller = diceSubcontroller;
         this.game = game;
         this.ingameDevelopmentCardController = ingameDevelopmentCardController;
-        this.resourceService = resourceService;
         this.nextDisabled = new SimpleBooleanProperty();
         this.addDisableListener();
 
