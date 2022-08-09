@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.controller.BoardController;
+import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.model.Game;
@@ -14,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+import javax.inject.Inject;
 import java.util.Objects;
 import java.util.Timer;
 
@@ -35,13 +37,16 @@ public class IngameStateController {
     private final Game game;
     private final IngameDevelopmentCardController ingameDevelopmentCardController;
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private final TradePopUpController tradePopUpController;
 
     private final RobberService robberService;
     private final SpeechService speechService;
 
+    @Inject
     public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane, RobberController robberController,
                                  ImageView hourglassImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, IngameSelectController ingameSelectController,
-                                 MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, IngameDevelopmentCardController ingameDevelopmentCardController) {
+                                 MapRenderService mapRenderService, RobberService robberService, SpeechService speechService, IngameDevelopmentCardController ingameDevelopmentCardController,
+                                 TradePopUpController tradePopUpController) {
         this.userService = userService;
         this.ingameService = ingameService;
         this.timerService = timerService;
@@ -57,12 +62,14 @@ public class IngameStateController {
         this.diceSubcontroller = diceSubcontroller;
         this.game = game;
         this.ingameDevelopmentCardController = ingameDevelopmentCardController;
+        this.tradePopUpController = tradePopUpController;
     }
 
     public void handleGameState(State currentState) {
         // enable corresponding user to perform their action
         if(currentState.expectedMoves().size() > 0) {
             ExpectedMove move = currentState.expectedMoves().get(0);
+            System.out.println(currentState.expectedMoves()); // TODO
             ingameService.setExpectedMove(move);
 
             assert move.players().get(0)!=null;
@@ -106,7 +113,7 @@ public class IngameStateController {
                         ingameService.tradeIsOffered.set(true);
                         speechService.play(SPEECH_TRADEOFFER);
                     }
-                    case ACCEPT -> {}
+                    case ACCEPT -> this.enableAccepting();
                     case MONOPOLY_MOVE -> robberController.discardOrChoose(MONOPOLY_NUMBER);
                     case PLENTY_MOVE -> robberController.discardOrChoose(PLENTY_NUMBER);
                 }
@@ -115,6 +122,10 @@ public class IngameStateController {
             this.setSituationLabel(move.players().get(0), move.action());
             this.placeRobber(currentState.robber(), move.action());
         }
+    }
+
+    private void enableAccepting() {
+        this.tradePopUpController.enableChoosePlayer();
     }
 
     private void enableHexagonPoints(){

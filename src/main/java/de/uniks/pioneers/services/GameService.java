@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.BUILD;
-import static de.uniks.pioneers.GameConstants.OFFER;
+import static de.uniks.pioneers.GameConstants.*;
 
 @Singleton
 public class GameService {
@@ -79,10 +78,11 @@ public class GameService {
                     final Move move = moveEvent.data();
                     if(moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
+                        System.out.println(move); // TODO
                         if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
                             ingameService.tradeOffer.set(move);
-                        } else if(move.action().equals(OFFER) && !Objects.equals(move.userId(), me)) {
-                            ingameService.tradeAccepted.add(move);
+                        } else if(move.action().equals(OFFER) && move.partner().equals(me)) {
+                            ingameService.offerMoves.add(move);
                         }
 
                         if(moveAction.get() != null && moveAction.get().equals(move.action())) {

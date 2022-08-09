@@ -34,8 +34,9 @@ public class IngameService {
     private java.util.Map<String, Integer> trade = new HashMap<>();
 
     public final SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
+    public final SimpleBooleanProperty tradeAccepted = new SimpleBooleanProperty(false);
     public final SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
-    public ObservableList<Move> tradeAccepted = FXCollections.observableArrayList();
+    public ObservableList<Move> offerMoves = FXCollections.observableArrayList();
     private IngameScreenController actualIngameController;
 
     @Inject
@@ -102,6 +103,7 @@ public class IngameService {
         }
     }
     public void tradeWithPlayers() {
+        System.out.println("Trade with players"); // TODO
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
@@ -112,7 +114,8 @@ public class IngameService {
         );
     }
 
-    public void acceptOffer() {
+    public void makeOffer() {
+        System.out.println("make offer"); // TODO
         Resources offer = tradeOffer.get().resources();
 
         int lumber = offer.lumber() == null ? 0 : offer.lumber() * -1;
@@ -134,15 +137,17 @@ public class IngameService {
         trade = new HashMap<>();
     }
 
-    public void confirmTrade(String playerId) {
+    public void acceptPartner(String playerId) {
+        System.out.println("accept partner"); // TODO
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> tradeAccepted = FXCollections.emptyObservableList())
+                .subscribe(move -> offerMoves = FXCollections.emptyObservableList())
         );
     }
 
     public void declineTrade() {
+        System.out.println("decline trade"); // TODO
         if (currentExpectedMove.get().action().equals(ACCEPT)) {
             disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT))
                     .observeOn(FX_SCHEDULER)

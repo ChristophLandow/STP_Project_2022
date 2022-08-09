@@ -6,7 +6,7 @@ import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.controller.PopUpController.ElementController.TradePopUpPlayerListElementController;
 import de.uniks.pioneers.model.Move;
 import de.uniks.pioneers.services.*;
-import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -68,7 +68,7 @@ public class TradePopUpController implements Controller {
     private final Stage tradeStage;
     private final Node tradePane;
     private final EventHandlerService eventHandlerService;
-    private ListChangeListener<Move> acceptedTradeListener;
+    private ListChangeListener<Move> offerMovesChangeListener;
     private Map<String, TradePopUpPlayerListElementController> playerElements;
 
     @Inject
@@ -167,22 +167,31 @@ public class TradePopUpController implements Controller {
         cancel.addEventHandler(MouseEvent.MOUSE_CLICKED, cancelHandler);
         tradeStage.setOnCloseRequest(event -> stop());
 
-        // add listener to accepted trade
-        acceptedTradeListener = c -> {
+        // add listener to offering partners
+        offerMovesChangeListener = c -> {
             c.next();
             if (c.wasAdded()) {
                 c.getList().forEach(s -> {
                     TradePopUpPlayerListElementController playerAccepted = playerElements.get(s.userId());
                     if(playerAccepted != null && s.resources() != null) {
                         playerAccepted.displayAcceptedMark();
-                        ingameService.confirmTrade(s.userId());
-                        Platform.runLater(this::stop);
+//                        ingameService.confirmTrade(s.userId());
+//                        Platform.runLater(this::stop);
                     }
                 });
             }
         };
 
-        ingameService.tradeAccepted.addListener(acceptedTradeListener);
+        // close trade popup when trade is complete
+        ChangeListener<Boolean> tradeAcceptedChangeListener = ((observable, oldValue, newValue) -> {
+            if (oldValue.equals(false) && newValue.equals(true)) {
+                // close trade popup when trade is complete
+                this.stop();
+            }
+        });
+
+        ingameService.offerMoves.addListener(offerMovesChangeListener);
+        ingameService.tradeAccepted.addListener(tradeAcceptedChangeListener);
 
         // init timerService
         this.timerService.setTradeTimer(new Timer());
@@ -214,7 +223,7 @@ public class TradePopUpController implements Controller {
         offerToPlayers.removeEventHandler(MouseEvent.MOUSE_CLICKED, playerHandler);
         cancel.removeEventHandler(MouseEvent.MOUSE_CLICKED, cancelHandler);
         tradePane.disableProperty().set(false);
-        ingameService.tradeAccepted.removeListener(acceptedTradeListener);
+        ingameService.offerMoves.removeListener(offerMovesChangeListener);
         this.timerService.stopTrade();
         tradeStage.close();
     }
@@ -250,6 +259,10 @@ public class TradePopUpController implements Controller {
         TradeSpinnerFactory factory = new TradeSpinnerFactory(spinnerTyp, ingameService);
         factory.setValue(0);
         spinner.setValueFactory(factory);
+    }
+
+    public void enableChoosePlayer() {
+        this.playerElements.values().forEach(TradePopUpPlayerListElementController::setCheckmarkAction);
     }
 
     private class TradeSpinnerFactory extends SpinnerValueFactory<Integer> {

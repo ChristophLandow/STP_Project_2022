@@ -124,7 +124,7 @@ public class TradeOfferPopUpController implements Controller {
 
         // add listeners for trade is offered and trade is accepted
         ingameService.tradeIsOffered.addListener(tradeOfferListener);
-        ingameService.tradeAccepted.addListener(tradeAcceptedListener);
+        // ingameService.offerMoves.addListener(tradeAcceptedListener);
     }
 
     private void show() {
@@ -202,7 +202,7 @@ public class TradeOfferPopUpController implements Controller {
         });
 
         // invoke event handlers for accept and decline trade offer
-        acceptHandler = e -> ingameService.acceptOffer();
+        acceptHandler = e -> ingameService.makeOffer();
         declineHandler = e -> { disposable.add(
                 ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(GameConstants.OFFER))
                         .observeOn(FX_SCHEDULER)
@@ -211,6 +211,8 @@ public class TradeOfferPopUpController implements Controller {
         );
             ingameService.tradeIsOffered.set(false);
         };
+
+        // decline trade when closing stage
         closeStageHandler = e -> { disposable.add(
                 ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(GameConstants.OFFER))
                         .observeOn(FX_SCHEDULER)
@@ -223,7 +225,7 @@ public class TradeOfferPopUpController implements Controller {
         // set handlers to buttons and stage
         accept.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
         decline.addEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);
-        popUpStage.setOnCloseRequest(closeStageHandler);
+        // popUpStage.setOnCloseRequest(closeStageHandler);
     }
 
     @Override
@@ -238,7 +240,7 @@ public class TradeOfferPopUpController implements Controller {
             decline.removeEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);
             popUpStage.removeEventHandler(WindowEvent.ANY, closeStageHandler);
             ingameService.tradeIsOffered.removeListener(tradeOfferListener);
-            ingameService.tradeAccepted.removeListener(tradeAcceptedListener);
+            ingameService.offerMoves.removeListener(tradeAcceptedListener);
         }catch (NullPointerException ignored){
 
         }

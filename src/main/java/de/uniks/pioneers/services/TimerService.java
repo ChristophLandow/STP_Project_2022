@@ -49,8 +49,6 @@ public class TimerService {
         this.ingameDevelopmentCardController = ingameDevelopmentCardController;
     }
 
-    public boolean timeUp() { return timeUp; }
-
     public void setRollTimer(String action, Timer timer) {
         this.buildTimer = timer;
         TimerTask task = new TimerTask() {
@@ -170,7 +168,7 @@ public class TimerService {
 
     public void stopTrade() {
         setBuildTimer(new Timer());
-        ingameService.declineTrade();
+        // ingameService.declineTrade();
         this.tradeTimer.cancel();
         this.tradeCountdownTimerTask.cancel();
         this.tradeCountdownTimer.cancel();
