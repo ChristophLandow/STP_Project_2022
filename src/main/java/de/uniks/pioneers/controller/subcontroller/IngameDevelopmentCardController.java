@@ -35,19 +35,20 @@ public class IngameDevelopmentCardController implements Controller {
     public final ImageView hammerImageView;
     public final ImageView leftView;
     public final ImageView rightView;
-    private final TimerService timerService;
+    public final TimerService timerService;
     public final IngameService ingameService;
     public final ResourceService resourceService;
     public final GameService gameService;
-    public final UserService userService;
+    public UserService userService;
     public final RobberController robberController;
 
     public final CompositeDisposable disposable = new CompositeDisposable();
-    public final Stage ingameStage, devCardPlayStage;
+    public Stage ingameStage;
+    public Stage devCardPlayStage;
     public String selectedCard = null;
 
     public IngameDevelopmentCardController(Stage ingameStage, Pane hammerPane, Pane leftPane, Pane rightPane, ImageView hammerImageView, ImageView leftView, ImageView rightView, TimerService timerService,
-                                           IngameService ingameService, ResourceService resourceService, GameService gameService, UserService userService, RobberController robberController) {
+                                           IngameService ingameService, ResourceService resourceService, GameService gameService, UserService userService, RobberController robberController, boolean test) {
         this.ingameStage = ingameStage;
         this.hammerPane = hammerPane;
         this.leftPane = leftPane;
@@ -61,11 +62,17 @@ public class IngameDevelopmentCardController implements Controller {
         this.gameService = gameService;
         this.userService = userService;
         this.robberController = robberController;
-        this.devCardPlayStage = new Stage();
+        if(!test) {
+            this.devCardPlayStage = new Stage();
+        }
 
         hammerPane.setOnMouseClicked(mouseEvent -> onHammerClicked());
         leftPane.setOnMouseClicked(mouseEvent -> onLeftPaneClicked());
         rightPane.setOnMouseClicked(mouseEvent -> onRightPaneClicked());
+    }
+
+    public void newDevCardPlayStage() {
+        this.devCardPlayStage = new Stage();
     }
 
     private void onHammerClicked() {

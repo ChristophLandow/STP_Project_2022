@@ -54,7 +54,6 @@ public class VictoryPointController {
     }
 
     public void showVictoryPopUp(String winner) {
-
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/VictoryPopUp.fxml"));
         loader.setControllerFactory(c -> this);
         Parent view = null;

@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.LobbyScreenController;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.NewGameLobbyService;
+import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -33,15 +34,17 @@ public class JoinGamePopUpController{
     private App app;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private LobbyScreenController lobbyScreenController;
+    private UserService userService;
     private String randomColor;
 
     public JoinGamePopUpController() {
     }
 
-    public void init(App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game, EventHandlerService eventHandlerService) {
+    public void init(App app, NewGameLobbyService newGameLobbyService, LobbyScreenController lobbyScreenController, Game game, EventHandlerService eventHandlerService, UserService userService) {
         this.newGameLobbyService = newGameLobbyService;
         this.game = game;
         this.lobbyScreenController = lobbyScreenController;
+        this.userService = userService;
         this.randomColor = this.getRandomColor();
         this.app = app;
         wrongPasswordLabel.visibleProperty().set(false);
@@ -52,20 +55,25 @@ public class JoinGamePopUpController{
     }
 
     public void joinGame() {
-        String password = passwordInputField.getText();
-        disposable.add(newGameLobbyService.postMember(game._id(), false, randomColor, password)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(res -> {
-                    lobbyScreenController.showNewGameLobby(game, password, randomColor);
-                    closePopUp();
-                }, throwable -> {
-                    if (throwable instanceof HttpException) {
-                        this.wrongPasswordLabel.visibleProperty().set(true);
-                    }
-                    else{
-                        throwable.printStackTrace();
-                    }
-                }));
+        if(!game.owner().equals(userService.getCurrentUser()._id())) {
+            String password = passwordInputField.getText();
+            disposable.add(newGameLobbyService.postMember(game._id(), false, randomColor, password)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(res -> {
+                        lobbyScreenController.showNewGameLobby(game, password, randomColor);
+                        closePopUp();
+                    }, throwable -> {
+                        if (throwable instanceof HttpException) {
+                            this.wrongPasswordLabel.visibleProperty().set(true);
+                        }
+                        else{
+                            throwable.printStackTrace();
+                        }
+                    }));
+        } else {
+            this.wrongPasswordLabel.setText("Cannot join your own game!");
+            this.wrongPasswordLabel.visibleProperty().set(true);
+        }
     }
 
     private void closePopUp() {

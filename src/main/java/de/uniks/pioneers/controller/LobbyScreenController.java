@@ -46,7 +46,6 @@ public class LobbyScreenController implements Controller {
     @FXML public Button NewGameButton;
 
     @Inject MessageService messageService;
-    @Inject Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject Provider<EditProfileController> editProfileControllerProvider;
     @Inject Provider<LobbyUserlistController> userlistControllerProvider;
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
@@ -219,8 +218,9 @@ public class LobbyScreenController implements Controller {
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
-        LoginScreenController loginController = loginScreenControllerProvider.get();
-        app.show(loginController);
+
+        appStage.close();
+        Platform.runLater(() -> new App().start(new Stage()));
     }
 
     public void showNewGameLobby(Game game, String password, String hexColor) {

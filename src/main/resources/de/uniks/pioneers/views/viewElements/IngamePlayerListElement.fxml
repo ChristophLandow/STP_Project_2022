@@ -1,85 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-<HBox fx:id="playerBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="40.0" prefWidth="230.0" spacing="15.0" xmlns="http://javafx.com/javafx/18"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerListElementController">
+
+<HBox fx:id="playerBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="220.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.subcontroller.IngamePlayerListElementController">
     <padding>
-        <Insets left="2.0"/>
+        <Insets left="2.0" />
     </padding>
     <VBox alignment="TOP_CENTER" minWidth="20.0" prefHeight="200.0" prefWidth="20.0">
         <Label fx:id="victoryPointsLabel" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="15">
             <font>
-                <Font name="System Bold" size="15.0"/>
+                <Font name="System Bold" size="15.0" />
             </font>
         </Label>
-        <Circle fx:id="playerColor" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE"/>
+        <Circle fx:id="playerColor" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
     </VBox>
-    <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"
-               translateY="5.0">
+    <ImageView fx:id="playerAvatar" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateY="5.0">
         <HBox.margin>
-          <Insets left="-10.0"/>
+          <Insets left="-10.0" />
         </HBox.margin>
     </ImageView>
-    <Label fx:id="playerName" alignment="CENTER" ellipsisString="" maxHeight="40.0" maxWidth="70.0" minHeight="5.0"
-           minWidth="40.0" prefHeight="5.0" prefWidth="70.0" text="kappa" translateX="-50.0" translateY="-15.0">
+    <Label fx:id="playerName" alignment="CENTER" ellipsisString="" maxHeight="40.0" maxWidth="70.0" minHeight="5.0" minWidth="40.0" prefHeight="5.0" prefWidth="70.0" text="kappa" translateX="-50.0" translateY="-15.0">
         <HBox.margin>
-          <Insets right="-45.0"/>
+          <Insets right="-45.0" />
         </HBox.margin>
     </Label>
-    <ImageView fx:id="resourceCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"
-               scaleX="4.0" scaleY="4.0" translateY="2.0">
+    <ImageView fx:id="resourceCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="4.0" scaleY="4.0" translateY="2.0">
         <HBox.margin>
-            <Insets left="5.0"/>
+            <Insets left="5.0" />
         </HBox.margin>
-        <Image url="@../../../../../../../../../../../Desktop/card_question_mark.png"/>
+        <Image url="@../../controller/ingame/card_question_mark.png" />
     </ImageView>
-    <Label fx:id="resourceCardsCount" text="4" translateX="-35.0" translateY="-12.0">
+    <Label fx:id="resourceCardsCount" alignment="CENTER_RIGHT" minWidth="13.0" text="0" translateX="-41.0" translateY="-12.0">
         <textFill>
           <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
               <stops>
                   <Stop>
                       <color>
-                          <Color red="1.0" green="1.0" blue="1.0"/>
+                          <Color red="1.0" green="1.0" blue="1.0" />
                       </color>
                   </Stop>
                   <Stop offset="1.0">
                       <color>
-                          <Color red="1.0" green="1.0" blue="1.0"/>
+                          <Color red="1.0" green="1.0" blue="1.0" />
                       </color>
                   </Stop>
               </stops>
           </RadialGradient>
         </textFill>
     </Label>
-    <ImageView fx:id="developmentCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"
-               scaleX="4.0" scaleY="4.0" translateX="-30.0" translateY="4.0">
-        <Image url="@../../../../../../../../../../../Desktop/card_hammer.png"/>
+    <ImageView fx:id="developmentCards" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="4.0" scaleY="4.0" translateX="-30.0" translateY="4.0">
+        <Image url="@../../controller/ingame/card_hammer.png" />
     </ImageView>
-    <Label fx:id="developmentCardsCount" text="2" textFill="WHITE" translateX="-65.0" translateY="-12.0"/>
-    <ImageView fx:id="city" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5"
-               scaleY="1.7" translateX="-60.0" translateY="-3.0">
-        <Image url="@../../../../../../../../../../../Desktop/steine_3.png"/>
+    <Label fx:id="developmentCardsCount" alignment="CENTER_RIGHT" minWidth="13.0" text="0" textFill="WHITE" translateX="-71.0" translateY="-12.0" />
+    <ImageView fx:id="knight" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.7" translateX="-72.0" translateY="-3.0">
+        <Image url="@../../controller/ingame/steine_3.png" />
     </ImageView>
-    <Label fx:id="cityCount" text="3" translateX="-94.0" translateY="13.0">
+    <Label fx:id="knightCount" alignment="CENTER" minWidth="15.0" text="0" translateX="-109.0" translateY="13.0">
         <font>
-          <Font size="13.0"/>
+          <Font size="13.0" />
         </font>
     </Label>
-    <ImageView fx:id="settlement" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true"
-               translateX="-80.0" translateY="-2.0">
-        <Image url="@../../../../../../../../../../../Desktop/ruinsCorner.png"/>
+    <ImageView fx:id="settlement" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="-105.0" translateY="-2.0">
+        <Image url="@../../controller/ingame/ruinsCorner.png" />
     </ImageView>
-    <Label fx:id="settlementCount" text="4" translateX="-102.0" translateY="12.0">
+    <Label fx:id="settlementCount" alignment="CENTER" minWidth="15.0" text="0" translateX="-129.0" translateY="12.0">
         <font>
-          <Font size="13.0"/>
+          <Font size="13.0" />
         </font>
     </Label>
+   <ImageView fx:id="knightGold" fitHeight="30.0" fitWidth="30.0" layoutX="227.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.7" translateX="-220.0" translateY="-3.0" visible="false">
+      <image>
+         <Image url="@../../controller/subcontroller/images/steine_3_gold.png" />
+      </image>
+   </ImageView>
 </HBox>

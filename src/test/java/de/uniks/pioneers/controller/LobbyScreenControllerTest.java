@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import javax.inject.Provider;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,17 +39,11 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @InjectMocks
     LobbyGameListController lobbyGameListController;
 
-    @InjectMocks
-    LoginScreenController loginScreenController;
-
     @Mock(name = "userlistControllerProvider")
     Provider<LobbyUserlistController> userlistControllerProvider;
 
     @Mock(name = "lobbyGameListControllerProvider")
     Provider<LobbyGameListController> lobbyGameListControllerProvider;
-
-    @Mock(name = "loginScreenControllerProvider")
-    Provider<LoginScreenController> loginScreenControllerProvider;
 
     @Mock
     EventListener eventListener;
@@ -87,10 +80,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
         LocalDateTime now = LocalDateTime.now();
         String today = dtf.format(now);
 
-
-        //Setup lobby controller API calls
-        when(prefService.recall()).thenReturn("");
-
         Game testGame = new Game(today+"T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null);
 
         when(userService.editProfile(null,null,null,"online")).thenReturn(Observable.just(new User("","","","")));
@@ -105,7 +94,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
 
         when(userlistControllerProvider.get()).thenReturn(userlistController);
         when(lobbyGameListControllerProvider.get()).thenReturn(lobbyGameListController);
-        when(loginScreenControllerProvider.get()).thenReturn(loginScreenController);
 
         //Start controller
         app.start(stage);
@@ -125,6 +113,5 @@ class LobbyScreenControllerTest extends ApplicationTest {
         //Check if logout functions were called
         verify(userService).editProfile(null,null,null,"offline");
         verify(lobbyService).logout();
-        verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
     }
 }
