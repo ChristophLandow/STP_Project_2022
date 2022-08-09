@@ -52,6 +52,7 @@ public class BoardController {
         this.gameStorage = gameStorage;
         this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
+        this.robberService = robberService;
     }
 
     public void buildMapPreview(MapTemplate mapTemplate, Pane fieldPane) {
@@ -89,7 +90,6 @@ public class BoardController {
         }
         hextileRenderThread.setDaemon(true);
         hextileRenderThread.start();
-        this.robberService = robberService;
     }
 
     public void buildBoardUI() {
