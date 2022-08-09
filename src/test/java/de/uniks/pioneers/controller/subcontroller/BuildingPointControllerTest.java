@@ -24,7 +24,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

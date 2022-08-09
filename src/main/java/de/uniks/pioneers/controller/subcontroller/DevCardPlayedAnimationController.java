@@ -60,7 +60,11 @@ public class DevCardPlayedAnimationController {
             st.setFromY(0f);
             st.setByX(0.4f);
             st.setByY(0.4f);
-            st.setOnFinished(t -> Platform.runLater(() -> root.getChildren().add(box)));
+            st.setOnFinished(t -> {
+                if(!root.getChildren().contains(box)) {
+                    Platform.runLater(() -> root.getChildren().add(box));
+                }
+            });
             st.play();
         }).start();
     }

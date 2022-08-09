@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import javax.inject.Provider;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,17 +39,11 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @InjectMocks
     LobbyGameListController lobbyGameListController;
 
-    @InjectMocks
-    LoginScreenController loginScreenController;
-
     @Mock(name = "userlistControllerProvider")
     Provider<LobbyUserlistController> userlistControllerProvider;
 
     @Mock(name = "lobbyGameListControllerProvider")
     Provider<LobbyGameListController> lobbyGameListControllerProvider;
-
-    @Mock(name = "loginScreenControllerProvider")
-    Provider<LoginScreenController> loginScreenControllerProvider;
 
     @Mock
     EventListener eventListener;

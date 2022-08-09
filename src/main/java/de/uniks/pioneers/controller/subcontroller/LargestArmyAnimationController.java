@@ -2,7 +2,6 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
