@@ -448,7 +448,6 @@ class AppTest extends ApplicationTest {
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "000", BUILD, 8, null, null, null, null, "knight")));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 5, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false)))));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "000", BUILD, 8, null, null, null, null, "knight")));
 
         // victory
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 8, 0, List.of(new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
