@@ -93,8 +93,4 @@ public class RobberController implements Controller {
     public Parent render() {
         return null;
     }
-
-    public Provider<DiscardOrChooseResourcesController> getDiscardOrChooseResourcesControllerProvider() {
-        return discardOrChooseResourcesControllerProvider;
-    }
 }

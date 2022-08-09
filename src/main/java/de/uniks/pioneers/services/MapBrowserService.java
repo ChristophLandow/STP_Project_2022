@@ -74,7 +74,6 @@ public class MapBrowserService {
     }
 
     public MapTemplate getMap(String id) {
-        System.out.println(id);
         return templateHashMap.get(id);
     }
 
