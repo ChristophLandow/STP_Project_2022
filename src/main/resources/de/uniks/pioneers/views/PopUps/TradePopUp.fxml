@@ -38,23 +38,23 @@
             </HBox>
             <HBox fx:id="offerImages" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
                   minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="330.0" spacing="5.0">
-                <ImageView fx:id="packeisResource" fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
+                <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
                            preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_carbon.png"/>
                 </ImageView>
-                <ImageView fx:id="fellResource" fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
+                <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
                            preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_ice.png"/>
                 </ImageView>
-                <ImageView fx:id="fischResource" fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
+                <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
                            preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_whale.png"/>
                 </ImageView>
-                <ImageView fx:id="kohleResource" fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
+                <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
                            preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_whale.png"/>
                 </ImageView>
-                <ImageView fx:id="walknochenResource" fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
+                <ImageView fitHeight="58.0" fitWidth="40.0" pickOnBounds="true"
                            preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_ice.png"/>
                 </ImageView>
@@ -87,23 +87,23 @@
                 <VBox.margin>
                     <Insets/>
                 </VBox.margin>
-                <ImageView id="packeisGet" fx:id="packeisResourceI" fitHeight="58.0" fitWidth="40.0"
+                <ImageView id="packeisGet" fitHeight="58.0" fitWidth="40.0"
                            pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_carbon.png"/>
                 </ImageView>
-                <ImageView id="fellGet" fx:id="fellResourceI" fitHeight="58.0" fitWidth="40.0"
+                <ImageView id="fellGet" fitHeight="58.0" fitWidth="40.0"
                            pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_fish.png"/>
                 </ImageView>
-                <ImageView id="fischGet" fx:id="fischResourceI" fitHeight="58.0" fitWidth="40.0"
+                <ImageView id="fischGet" fitHeight="58.0" fitWidth="40.0"
                            pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_polarbear.png"/>
                 </ImageView>
-                <ImageView id="kohleGet" fx:id="kohleResourceI" fitHeight="58.0" fitWidth="40.0"
+                <ImageView id="kohleGet" fitHeight="58.0" fitWidth="40.0"
                            pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/iceberg.png"/>
                 </ImageView>
-                <ImageView id="walknochenGet" fx:id="walknochenResourceI" fitHeight="58.0" fitWidth="40.0"
+                <ImageView id="walknochenGet" fitHeight="58.0" fitWidth="40.0"
                            pickOnBounds="true" preserveRatio="true">
                     <Image url="@../../../../../../../../../../../Desktop/Polar_Ressourcen_Objects/card_whale.png"/>
                 </ImageView>
