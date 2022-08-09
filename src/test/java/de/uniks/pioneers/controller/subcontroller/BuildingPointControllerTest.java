@@ -168,6 +168,6 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.checkTradeOptions();
         buildingPointController.uploadCoords = new int[]{-1, 2, -1, 0};
         buildingPointController.checkTradeOptions();
-        assertEquals(gameStorage.tradeOptions.size(), 0);
+        assertEquals(gameStorage.tradeOptions.size(), 6);
     }
 }
