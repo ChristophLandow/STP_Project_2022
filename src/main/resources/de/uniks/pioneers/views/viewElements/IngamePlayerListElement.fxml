@@ -78,9 +78,8 @@
           <Font size="13.0" />
         </font>
     </Label>
-   <ImageView fx:id="knightGold" fitHeight="30.0" fitWidth="30.0" layoutX="227.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.7" translateX="-220.0" translateY="-3.0" visible="false">
-      <image>
-         <Image url="@../../controller/subcontroller/images/steine_3_gold.png" />
-      </image>
-   </ImageView>
+    <ImageView fx:id="knightGold" fitHeight="30.0" fitWidth="30.0" layoutX="227.0" layoutY="21.0" pickOnBounds="true"
+               preserveRatio="true" scaleX="1.5" scaleY="1.7" translateX="-220.0" translateY="-3.0" visible="false">
+        <Image url="@../../controller/subcontroller/images/steine_3_gold.png"/>
+    </ImageView>
 </HBox>

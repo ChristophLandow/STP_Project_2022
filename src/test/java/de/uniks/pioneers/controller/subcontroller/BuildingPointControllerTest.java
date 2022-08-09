@@ -3,7 +3,6 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
-import de.uniks.pioneers.model.Harbor;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
