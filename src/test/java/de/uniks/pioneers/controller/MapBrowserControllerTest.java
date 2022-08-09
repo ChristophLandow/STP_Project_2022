@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.controller.subcontroller.MapDetailsController;
 import de.uniks.pioneers.controller.subcontroller.MapListController;
+import de.uniks.pioneers.controller.subcontroller.ZoomableScrollPane;
 import de.uniks.pioneers.model.HarborTemplate;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.TileTemplate;
@@ -45,6 +46,19 @@ public class MapBrowserControllerTest extends ApplicationTest {
     @Mock(name = "mapDetailsControllerProvider")
     Provider<MapDetailsController> mapDetailsControllerProvider;
 
+    @Mock(name = "boardControllerProvider")
+    Provider<BoardController> boardControllerProvider;
+
+    @Mock(name = "mapRenderServiceProvider")
+    Provider<MapRenderService> mapRenderServiceProvider;
+
+    @Mock(name = "zoomableScrollPaneProvider")
+    Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
+
+    @Mock MapRenderService mapRenderService;
+    @Mock BoardController boardController;
+    @Mock ZoomableScrollPane zoomableScrollPane;
+
     @Mock
     MapBrowserService mapBrowserService;
 
@@ -70,6 +84,13 @@ public class MapBrowserControllerTest extends ApplicationTest {
         when(userService.getCurrentUser()).thenReturn(new User("1234", "me", "online", null));
         when(mapListControllerProvider.get()).thenReturn(mapListController);
         when(mapDetailsControllerProvider.get()).thenReturn(mapDetailsController);
+        when(mapRenderServiceProvider.get()).thenReturn(mapRenderService);
+        when(boardControllerProvider.get()).thenReturn(boardController);
+        when(zoomableScrollPaneProvider.get()).thenReturn(zoomableScrollPane);
+        doNothing().when(boardController).buildMapPreview(any(), any());
+        when(userService.getUserById("1234")).thenReturn(Observable.just(new User("1234", "me", "online", null)));
+        doNothing().when(mapService).setCurrentMap(any());
+        when(mapBrowserService.getMap("map456")).thenReturn(mapDummy1);
 
         ArrayList<MapTemplate> returnValue = new ArrayList<>();
         returnValue.add(mapDummy1);
@@ -87,13 +108,9 @@ public class MapBrowserControllerTest extends ApplicationTest {
 
     @Test
     public void updateMapDetails() {
-        when(userService.getUserById("1234")).thenReturn(Observable.just(new User("1234", "me", "online", null)));
-        when(mapBrowserService.getMap("map456")).thenReturn(Observable.just(mapDummy1));
-        when(mapBrowserService.getMap("map123")).thenReturn(Observable.just(mapDummy2));
-        doNothing().when(mapService).setCurrentMap(any());
+        when(mapBrowserService.getMap("map123")).thenReturn(mapDummy2);
 
         // select map123
-        type(KeyCode.DOWN);
         type(KeyCode.DOWN);
 
         // check label contents

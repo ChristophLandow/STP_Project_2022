@@ -1,6 +1,7 @@
 package de.uniks.pioneers.dto;
 
 import de.uniks.pioneers.model.Resources;
+
 import static de.uniks.pioneers.GameConstants.BUILD;
 
 public record CreateMoveDto(

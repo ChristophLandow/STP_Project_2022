@@ -1,16 +1,23 @@
 package de.uniks.pioneers.controller.subcontroller;
 
+import de.uniks.pioneers.controller.BoardController;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.MapBrowserService;
+import de.uniks.pioneers.services.MapRenderService;
 import de.uniks.pioneers.services.MapService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.application.Platform;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -19,7 +26,6 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 @Singleton
 public class MapDetailsController {
 
-    private Pane mapPreviewPane; // need it later for the map preview
     private ImageView creatorImageView;
     private Text lastUpdatedOutputText;
     private Text votesOutputText;
@@ -33,6 +39,16 @@ public class MapDetailsController {
     private final UserService userService;
 
     private final MapService mapService;
+    private ScrollPane previewScrollPane;
+    private AnchorPane previewAnchorPane;
+    private Pane previewPane;
+    private Canvas previewCanvas;
+
+    @Inject Provider<BoardController> boardControllerProvider;
+    @Inject Provider<MapRenderService> mapRenderServiceProvider;
+    @Inject Provider<ZoomableScrollPane> zoomableScrollPaneProvider;
+    private BoardController boardController;
+    private ZoomableScrollPane zoomPaneController;
 
     @Inject
     public MapDetailsController(MapBrowserService mapBrowserService, UserService userService, MapService mapService) {
@@ -41,20 +57,30 @@ public class MapDetailsController {
         this.mapService = mapService;
     }
 
-    public MapDetailsController setMapPreviewPane(Pane mapPreviewPane) {
-        this.mapPreviewPane = mapPreviewPane;
-        return this;
+    public void init() {
+        MapRenderService mapRenderService = mapRenderServiceProvider.get();
+        this.zoomPaneController = zoomableScrollPaneProvider.get();
+        this.boardController = boardControllerProvider.get();
+
+        mapRenderService.setFinishedLoading(false);
+        boardController.fieldPane = this.previewPane;
     }
 
-    public void setCreatorImageView(ImageView creatorImageView) {
+    public void setPreviewElements(ScrollPane scrollPane, AnchorPane anchorPane, Pane pane, Canvas canvas) {
+        this.previewScrollPane = scrollPane;
+        this.previewAnchorPane = anchorPane;
+        this.previewPane = pane;
+        this.previewCanvas = canvas;
+    }
+
+    public MapDetailsController setCreatorImageView(ImageView creatorImageView) {
         this.creatorImageView = creatorImageView;
+        return this;
     }
 
     // update details when new map is clicked
     public void updateMapDetails(String mapId) {
-        disposable.add(mapBrowserService.getMap(mapId)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(this::setLabels));
+        setLabels(mapBrowserService.getMap(mapId));
     }
 
     private void setLabels(MapTemplate mapTemplate) {
@@ -76,6 +102,20 @@ public class MapDetailsController {
                     }
                 })
         );
+
+        showPreview(mapTemplate);
+    }
+
+    private void showPreview(MapTemplate mapTemplate) {
+        // clear recent map preview
+        this.previewPane.getChildren().clear();
+        this.previewCanvas.getGraphicsContext2D().clearRect(0,0, previewCanvas.getWidth(), previewCanvas.getHeight());
+        previewPane.getChildren().add(this.previewCanvas);
+
+        // init zoomPane
+        this.zoomPaneController.init(true, previewScrollPane, previewAnchorPane, previewPane, previewCanvas);
+        Platform.runLater(zoomPaneController::render);
+        this.boardController.buildMapPreview(mapTemplate, previewPane);
     }
 
     private String toDateTimeString(String timeString) {

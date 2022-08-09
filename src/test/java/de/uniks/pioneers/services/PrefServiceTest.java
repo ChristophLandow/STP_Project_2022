@@ -71,29 +71,11 @@ class PrefServiceTest {
     }
 
     @Test
-    void saveMapRadiusOnLeave() {
-        int mapRadius = 4;
-        prefService.saveMapRadiusOnLeave(mapRadius);
-        when(preferences.get(eq("MapRadius"), anyString())).thenReturn("4");
-        assertEquals("4", preferences.get("MapRadius", "test"));
-    }
-
-    @Test
     void getSavedGame() {
         when(gameApiService.getGame(anyString())).thenReturn(Observable.just(new Game("yesterday", "now", "test", "testGame", "me", 2, true, new GameSettings(2,2, null, true, 0))));
         when(preferences.get(anyString(),anyString())).thenReturn("test");
         Game game = prefService.getSavedGame();
         assertEquals("test", game._id());
-    }
-
-    @Test
-    void getSavedMapRadius() {
-        when(preferences.get(eq("MapRadius"), anyString())).thenReturn("");
-        int result = prefService.getSavedMapRadius();
-        assertEquals(-1, result);
-        when(preferences.get(eq("MapRadius"), anyString())).thenReturn("3");
-        result = prefService.getSavedMapRadius();
-        assertEquals(3, result);
     }
 
     @Test

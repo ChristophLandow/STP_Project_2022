@@ -75,6 +75,7 @@ public class MapListController implements Controller {
                 mapBrowserService.getUpdateMaps().removeAll(c.getAddedSubList());
             }
         });
+        mapList.getSelectionModel().selectFirst();
         return null;
     }
 

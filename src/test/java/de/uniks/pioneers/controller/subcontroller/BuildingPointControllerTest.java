@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
+import de.uniks.pioneers.model.Harbor;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,6 +62,7 @@ class BuildingPointControllerTest extends ApplicationTest {
     public void start(Stage stage) {
         app.start(stage);
         //app.show(buildingPointController);
+
     }
 
     @Test
@@ -84,7 +88,6 @@ class BuildingPointControllerTest extends ApplicationTest {
         gameStorage.remainingBuildings.put(SETTLEMENT, 5);
         gameStorage.remainingBuildings.put(CITY, 4);
         when(resourceService.checkResourcesSettlement()).thenReturn(true);
-
         assertFalse(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
         verify(ingameSelectController, atLeastOnce()).resetSelect();
     }
@@ -94,26 +97,76 @@ class BuildingPointControllerTest extends ApplicationTest {
         when(ingameService.getPlayer("000", "000")).thenReturn(Observable.just(new Player("000","000","#ff0000", true,1, new Resources(0,0,0,0,0,0),new RemainingBuildings(1,1,1), 0, 0, new ArrayList<>())));
         buildingPointController.fieldPane = new Pane();
         buildingPointController.view = new Circle();
-
         buildingPointController.placeBuilding(new Building(0,0,0, "000", 0, SETTLEMENT, "000", "000"));
         assertFalse(buildingPointController.view.isVisible());
         assertNotNull(buildingPointController.displayedBuilding);
+        //verify(gameService, atLeastOnce()).getUsers();
+    }
+
+    @Test
+    void testVisible(){
+        buildingPointController.displayedBuilding = new SVGPath();
+        buildingPointController.view = new Circle();
+        buildingPointController.setVisible(true);
+        buildingPointController.displayedBuilding = null;
+        buildingPointController.setVisible(false);
+    }
+
+    @Test
+    void testCheckSettlementSpot(){
     }
 
     @Test
     void checkTradeOptions() {
-        List<Harbor> harbors = new ArrayList<>();
-        harbors.add(new Harbor(-1, -1, 2, "ore", 7));
-        harbors.add(new Harbor(0, -2, 2, null, 5));
-        harbors.add(new Harbor(1, -2, 1, "wool", 5));
-        harbors.add(new Harbor(2, -1, -1, null, 3));
-        harbors.add(new Harbor(2, 0, -2, "lumber", 1));
-        harbors.add(new Harbor(1, 1, -2, null, 1));
-        harbors.add(new Harbor(-1, 2, -1, "brick", 11));
-        harbors.add(new Harbor(-2, 2, 0, null, 9));
-        harbors.add(new Harbor(-2, 1, 1, "grain", 9));
-        gameStorage.setHarbors(harbors);
-
+        List<Harbor> harborList = new ArrayList<>();
+        harborList.add(new Harbor(-1,-1,2,"grain", 7));
+        harborList.add(new Harbor(0,-2,2,null, 5));
+        harborList.add(new Harbor(1,-2,1,"lumber", 5));
+        harborList.add(new Harbor(2,-1,-1,null, 3));
+        harborList.add(new Harbor(2,0,-2,"brick", 1));
+        harborList.add(new Harbor(1,1,-2,null, 1));
+        harborList.add(new Harbor(-2,1,1,"ore", 11));
+        harborList.add(new Harbor(-1,2,-1,null, 9));
+        harborList.add(new Harbor(-2,1,1,"wool", 9));
+        harborList.add(new Harbor(-1,2,-1,"grain", 7));
+        harborList.add(new Harbor(0,-2,2,null, 5));
+        harborList.add(new Harbor(2,-1,-1,"lumber", 5));
+        harborList.add(new Harbor(1,-2,1,null, 3));
+        harborList.add(new Harbor(2,0,-2,"brick", 1));
+        harborList.add(new Harbor(1,-2,1,null, 1));
+        harborList.add(new Harbor(-1,2,-1,"ore", 11));
+        harborList.add(new Harbor(-2,2,0,null, 9));
+        harborList.add(new Harbor(-2,1,1,"wool", 9));
+        when(gameStorage.getHarbors()).thenReturn(harborList);
+        //side 1
+        buildingPointController.uploadCoords = new int[]{2, 0, -2, 0};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        //side 3
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        //side 5
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{0, -2, 2, 6};
+        buildingPointController.checkTradeOptions();
+        // side 7
+        buildingPointController.uploadCoords = new int[]{-1, -1, 2, 6};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{-2, 2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        // side 9
+        buildingPointController.uploadCoords = new int[]{-2, 2, 0, 0};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{-2, 2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        // side 11
+        buildingPointController.uploadCoords = new int[]{2, -2, 0, 6};
+        buildingPointController.checkTradeOptions();
+        buildingPointController.uploadCoords = new int[]{-1, 2, -1, 0};
         buildingPointController.checkTradeOptions();
         assertEquals(gameStorage.tradeOptions.size(), 0);
     }

@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;

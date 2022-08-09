@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.controller.PopUpController.AchievementPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
@@ -53,6 +54,9 @@ class IngameScreenControllerTest extends ApplicationTest {
     @Mock(name = "rulesScreenControllerProvider")
     Provider<RulesScreenController> rulesScreenControllerProvider;
 
+    @Mock(name = "AchievementPopUpController")
+    Provider<AchievementPopUpController> achievementPopUpControllerProvider;
+
     @Mock
     TradePopUpController tradePopUpController;
 
@@ -67,6 +71,9 @@ class IngameScreenControllerTest extends ApplicationTest {
 
     @Mock
     ZoomableScrollPane zoomableScrollPane;
+
+    @Mock
+    AchievementPopUpController achievementPopUpController;
 
     @Mock
     GameApiService gameApiService;
@@ -99,6 +106,9 @@ class IngameScreenControllerTest extends ApplicationTest {
     TimerService timerService;
 
     @Mock
+    AchievementService achievementService;
+
+    @Mock
     TradeOfferPopUpController tradeOfferPopUpController;
 
     @Mock
@@ -121,6 +131,7 @@ class IngameScreenControllerTest extends ApplicationTest {
         when(rulesScreenControllerProvider.get()).thenReturn(rulesController);
         when(ingameService.getExpectedMove()).thenReturn(new ExpectedMove(BUILD, List.of("000", "001")));
         when(tradePopUpControllerProvider.get()).thenReturn(tradePopUpController);
+        when(achievementPopUpControllerProvider.get()).thenReturn(achievementPopUpController);
 
         ingameService.game = new SimpleObjectProperty<>();
         ingameService.game.set(new Game("2022-05-18T18:12:58.114Z","2022-05-18T18:12:58.114Z","001","TestGameA","001",1,false, null));
