@@ -4,11 +4,9 @@ import de.uniks.pioneers.Main;
 import de.uniks.pioneers.controller.Controller;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.Resources;
-import de.uniks.pioneers.services.GameService;
-import de.uniks.pioneers.services.IngameService;
-import de.uniks.pioneers.services.PrefService;
-import de.uniks.pioneers.services.RobberService;
+import de.uniks.pioneers.services.*;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -55,10 +53,14 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
     private Stage stage;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final ArrayList<Spinner<Integer>> spinnerList = new ArrayList<>();
+
+    private final StylesService stylesService;
     private int state;
 
     @Inject
-    public DiscardOrChooseResourcesController() {}
+    public DiscardOrChooseResourcesController(StylesService stylesService) {
+        this.stylesService = stylesService;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -178,16 +180,8 @@ public class DiscardOrChooseResourcesController implements Initializable, Contro
 
         Scene scene = new Scene(node);
         this.stage.setScene(scene);
-        this.stage.setOnCloseRequest(event -> event.consume());
-
-        if(prefService.getDarkModeState()){
-            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DiscardResourcesPopup.css")));
-            scene.getStylesheets().add("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css");
-        } else {
-            scene.getStylesheets().removeIf((style -> style.equals("/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css")));
-            scene.getStylesheets().add("/de/uniks/pioneers/styles/DiscardResourcesPopup.css");
-        }
-
+        this.stage.setOnCloseRequest(Event::consume);
+        stylesService.setStyleSheets(scene.getStylesheets(), "/de/uniks/pioneers/styles/DiscardResourcesPopup.css", "/de/uniks/pioneers/styles/DarkMode_DiscardResourcesPopup.css");
         this.stage.show();
     }
 
