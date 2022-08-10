@@ -37,7 +37,6 @@ public class AchievementPopUpController implements Controller {
     public void init() {
         listener = c -> {
             Achievement achievement = c.getValueAdded();
-            System.out.println(achievement);
             if(achievement.progress() >= 100 && achievement.unlockedAt() == null){
                 switch(achievement.id()){
                     case WINNER_ACHIEVEMENT -> showPopUp(WINNER_ACHIEVEMENT_TITLE, WINNER_ACHIEVEMENT_DESCRIPTION);
