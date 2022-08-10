@@ -27,10 +27,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+
 import javax.inject.Provider;
 import java.util.List;
 
-import static de.uniks.pioneers.GameConstants.*;
+import static de.uniks.pioneers.GameConstants.BUILD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
