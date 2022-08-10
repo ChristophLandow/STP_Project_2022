@@ -86,7 +86,7 @@ test {
         showStackTraces = true
     }
 
-    /*systemProperties = [
+    systemProperties = [
             'java.awt.headless': 'true',
             'testfx.robot'     : 'glass',
             'testfx.headless'  : 'true',
@@ -99,7 +99,7 @@ test {
     jvmArgs += [
             '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
             '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
-    ]*/
+    ]
 }
 
 jar {
