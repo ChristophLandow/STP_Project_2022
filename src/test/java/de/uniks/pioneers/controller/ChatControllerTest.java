@@ -125,7 +125,7 @@ class ChatControllerTest extends ApplicationTest {
         when(userlistService.getCurrentUser()).thenReturn(testUser);
 
         userList.add(testUser);
-        userList.add(new User("2", "Test User", "online", null));
+        userList.add(chatTabController.chattingWith);
 
         WaitForAsyncUtils.waitForFxEvents();
 
@@ -135,7 +135,6 @@ class ChatControllerTest extends ApplicationTest {
         when(groupService.createNewGroupWithOtherUser(any())).thenReturn(Observable.just(new GroupDto("","","",null,"")));
 
         clickOn("#newUser");
-        messageService.getchatUserList().add(new User("2", "Test User", "online", null));
 
         Platform.runLater(()->{
             chatQueue.add((userList.get(1)));
@@ -146,7 +145,7 @@ class ChatControllerTest extends ApplicationTest {
         TabPane chatTabPane = lookup("#chatTabPane").query();
 
         assertNotEquals(chatTabPane.getTabs().size(), 0);
-        assertEquals(chatTabPane.getTabs().get(0).getText(), "Test User");
+        assertEquals(chatTabPane.getTabs().get(0).getText(), "Tom");
 
         clickOn("#newUser");
     }
