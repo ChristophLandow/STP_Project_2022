@@ -26,6 +26,8 @@ public class AchievementPopUpController implements Controller {
     @FXML public Label titleLabel, descriptionLabel;
     private final AchievementService achievementService;
 
+    private MapChangeListener<? super String, ? super Achievement> listener;
+
     @Inject
     public AchievementPopUpController(AchievementService achievementService){
         this.achievementService = achievementService;
@@ -33,9 +35,9 @@ public class AchievementPopUpController implements Controller {
 
     @Override
     public void init() {
-        achievementService.getAchievements().addListener((MapChangeListener<? super String, ? super Achievement>) c -> {
+        listener = c -> {
             Achievement achievement = c.getValueAdded();
-            if(achievement.progress() == 100){
+            if(achievement.progress() >= 100 && achievement.unlockedAt() == null){
                 switch(achievement.id()){
                     case WINNER_ACHIEVEMENT -> showPopUp(WINNER_ACHIEVEMENT_TITLE, WINNER_ACHIEVEMENT_DESCRIPTION);
                     case CITY_ACHIEVEMENT -> showPopUp(CITY_ACHIEVEMENT_TITLE, CITY_ACHIEVEMENT_DESCRIPTION);
@@ -43,8 +45,12 @@ public class AchievementPopUpController implements Controller {
                     case ROAD_ACHIEVEMENT -> showPopUp(ROAD_ACHIEVEMENT_TITLE, ROAD_ACHIEVEMENT_DESCRIPTION);
                     case SETTLEMENT_ACHIEVEMENT -> showPopUp(SETTLEMENT_ACHIEVEMENT_TITLE, SETTLEMENT_ACHIEVEMENT_DESCRIPTION);
                 }
+
+                achievementService.unlockAchievement(achievement.id());
             }
-        });
+        };
+
+        achievementService.getAchievements().addListener(listener);
     }
 
     @Override
@@ -111,6 +117,6 @@ public class AchievementPopUpController implements Controller {
 
     @Override
     public void stop() {
-
+        achievementService.getAchievements().removeListener(listener);
     }
 }

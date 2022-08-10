@@ -40,7 +40,10 @@ public class AchievementService {
         initAchievementListener();
     }
 
-    private void initAchievementListener(){
+    public void initAchievementListener(){
+        this.achievements.clear();
+        this.disposable.clear();
+
         disposable.add(achievementsApiService.getUserAchievements(userService.getCurrentUser()._id()).observeOn(FX_SCHEDULER)
                 .subscribe(serverAchievements-> {
                     serverAchievements.forEach(achievement -> this.achievements.put(achievement.id(), achievement));
@@ -55,7 +58,6 @@ public class AchievementService {
                         this.achievements.put(achievement.id(), achievement);
                     }
                 }));
-
     }
 
     public ObservableMap<String, Achievement> getAchievements(){
@@ -91,7 +93,7 @@ public class AchievementService {
     public void unlockAchievement(String id){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String dateString = formatter.format(new Date()).toString();
+        String dateString = formatter.format(new Date());
 
         updateAchievement(id, dateString, this.achievements.get(id).progress());
     }

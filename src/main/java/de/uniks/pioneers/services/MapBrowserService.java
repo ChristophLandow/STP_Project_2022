@@ -2,7 +2,6 @@ package de.uniks.pioneers.services;
 
 import de.uniks.pioneers.dto.CreateVoteDto;
 import de.uniks.pioneers.model.MapTemplate;
-import de.uniks.pioneers.model.Vote;
 import de.uniks.pioneers.rest.MapApiService;
 import de.uniks.pioneers.rest.VoteApiService;
 import de.uniks.pioneers.ws.EventListener;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
@@ -24,6 +24,7 @@ import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 public class MapBrowserService {
     private final ObservableList<MapTemplate> maps = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<MapTemplate> updateMaps = FXCollections.observableList(new ArrayList<>());
+    private final HashMap<String, MapTemplate> templateHashMap = new HashMap<>();
     private final ObservableList<String> mapNames = FXCollections.observableList(new ArrayList<>());
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final EventListener eventListener;
@@ -39,7 +40,12 @@ public class MapBrowserService {
     }
 
     private void initMapListener(){
-        disposable.add(mapApiService.getMaps().observeOn(FX_SCHEDULER).subscribe(maps::setAll));
+        disposable.add(mapApiService.getMaps().observeOn(FX_SCHEDULER).subscribe(mapTemplates -> {
+            maps.setAll(mapTemplates);
+            for (MapTemplate map : mapTemplates) {
+                templateHashMap.put(map._id(), map);
+            }
+        }));
 
         disposable.add(eventListener.listen("maps.*.*", MapTemplate.class)
                 .observeOn(FX_SCHEDULER)
@@ -49,13 +55,16 @@ public class MapBrowserService {
                     if(event.event().endsWith(".created")){
                         maps.add(mapTemplate);
                         mapNames.add(mapTemplate.name());
+                        templateHashMap.put(mapTemplate._id(), mapTemplate);
                     }
                     else if(event.event().endsWith(".deleted")){
                         maps.remove(mapTemplate);
                         mapNames.removeIf(mapName -> mapName.equals(mapTemplate.name()));
+                        templateHashMap.remove(mapTemplate._id());
                     }
                     else if(event.event().endsWith(".updated")){
                         updateMaps.add(mapTemplate);
+                        templateHashMap.replace(mapTemplate._id(), mapTemplate);
                     }
                 }));
     }
@@ -64,8 +73,8 @@ public class MapBrowserService {
         return maps;
     }
 
-    public Observable<MapTemplate> getMap(String id) {
-        return mapApiService.getMap(id);
+    public MapTemplate getMap(String id) {
+        return templateHashMap.get(id);
     }
 
     public Observable<MapTemplate> deleteMap(String id) {
@@ -74,10 +83,6 @@ public class MapBrowserService {
 
     public ObservableList<MapTemplate> getUpdateMaps() {
         return updateMaps;
-    }
-
-    public ObservableList<String> getMapNames() {
-        return mapNames;
     }
 
     public void stop(){
@@ -92,10 +97,6 @@ public class MapBrowserService {
         );
     }
 
-    public Observable<Vote> getVoteFromMap(String id){
-        return voteApiService.getVotesOfMap(id);
-    }
-
     public void deleteVote(String mapId, String userId){
         disposable.add(
                 voteApiService.deleteVotesOfUser(mapId,userId)
@@ -103,10 +104,6 @@ public class MapBrowserService {
                         .doOnError(this::handleHttpError)
                         .subscribe()
         );
-    }
-
-    public Observable<Vote> getVoteFromUSer(String mapId, String userId){
-         return voteApiService.deleteVotesOfUser(mapId,userId);
     }
 
     private  void handleHttpError(Throwable exception) throws IOException {

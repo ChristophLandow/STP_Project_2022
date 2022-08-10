@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.controller.subcontroller.*;
 import de.uniks.pioneers.model.Building;
 import de.uniks.pioneers.model.Game;
+import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.services.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,12 +39,14 @@ public class BoardController {
     private final UserService userService;
     private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
-    public final SimpleObjectProperty<Game> game;
+    public  SimpleObjectProperty<Game> game;
+    private final RobberService robberService;
     private  Thread hextileRenderThread;
    final BoardGenerator generator = new BoardGenerator();
 
-    public BoardController(IngameService ingameService, UserService userService, SimpleObjectProperty<Game> game, IngameSelectController ingameSelectController,
-                           GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
+    @Inject
+    public BoardController(IngameService ingameService, UserService userService, IngameSelectController ingameSelectController,
+                           GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService, RobberService robberService){
         this.ingameService = ingameService;
         this.ingameSelectController = ingameSelectController;
         this.gameService = gameService;
@@ -49,7 +54,44 @@ public class BoardController {
         this.gameStorage = gameStorage;
         this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
-        this.game = game;
+        this.robberService = robberService;
+    }
+
+    public void buildMapPreview(MapTemplate mapTemplate, Pane fieldPane) {
+        this.fieldPane = fieldPane;
+        this.gameStorage.setHexScale(20);
+        double hexScale = this.gameStorage.getHexScale();
+        List<HexTile> mapTiles = generator.generateTileTemplates(mapTemplate.tiles(), hexScale);
+        List<HexTile> harborTiles = generator.generateHarborTemplates(mapTemplate.harbors(), hexScale);
+
+        if (gameStorage.getMapRadius() > 4) {
+            this.hextileRenderThread = new Thread(() -> {
+                try {
+                    for (HexTile hexTile : mapTiles) {
+                        Platform.runLater(() -> loadHexagon(hexTile));
+                        Thread.sleep(mapRenderService.calcSleepHexagon());
+                    }
+
+                    for (HexTile harbor : harborTiles) {
+                        Platform.runLater(() -> loadHarbor(harbor));
+                        Thread.sleep(0,500000);
+                    }
+
+                    mapRenderService.setTileControllers(this.tileControllers);
+                    mapRenderService.setFinishedLoading(true);
+                } catch (InterruptedException ignored){}
+            });
+        } else {
+            mapTiles.forEach(this::loadHexagon);
+            harborTiles.forEach(this::loadHarbor);
+            this.hextileRenderThread = new Thread(() -> {
+                this.mapRenderService.setTileControllers(this.tileControllers);
+                mapRenderService.setFinishedLoading(true);
+            });
+
+        }
+        hextileRenderThread.setDaemon(true);
+        hextileRenderThread.start();
     }
 
     public void buildBoardUI() {
@@ -91,12 +133,9 @@ public class BoardController {
                     mapRenderService.setTileControllers(this.tileControllers);
                     loadSnowAnimation();
                     mapRenderService.setFinishedLoading(true);
-                }
-                catch (InterruptedException ignored){}
+                } catch (InterruptedException ignored){}
             });
-
-        }
-        else{
+        } else {
             tiles.forEach(this::loadHexagon);
             edges.forEach(this::loadEdge);
             corners.forEach(this::loadCorner);
@@ -108,19 +147,17 @@ public class BoardController {
                     mapRenderService.setTileControllers(this.tileControllers);
                     loadSnowAnimation();
                     mapRenderService.setFinishedLoading(true);
-                }
-                catch (InterruptedException ignored){}
+                } catch (InterruptedException ignored){}
             });
 
         }
         hextileRenderThread.setDaemon(true);
         hextileRenderThread.start();
-
     }
 
     private void removeUnusedPoints(List<HexTile> tiles, List<HexTile> edges, List<HexTile> corners, double hexScale){
         edges.removeIf(edge -> {
-            for(HexTile tile: tiles){
+            for (HexTile tile: tiles) {
                 double[][] edgeCoords = new double[6][2];
                 double calcX4 = tile.x + (sqrt(3) / 4) * hexScale;
                 edgeCoords[0] = new double[]{calcX4, tile.y + 0.75 * hexScale};
@@ -137,7 +174,6 @@ public class BoardController {
                     }
                 }
             }
-
             return true;
         });
 
@@ -154,12 +190,11 @@ public class BoardController {
                 cornerCoords[5] = new double[]{calcX_2, tile.y  + 0.5 * hexScale};
 
                 for(int i = 0; i < 6; i++) {
-                    if(abs(corner.x - cornerCoords[i][0]) < 1 && abs(corner.y - cornerCoords[i][1]) < 1 ) {
+                    if (abs(corner.x - cornerCoords[i][0]) < 1 && abs(corner.y - cornerCoords[i][1]) < 1 ) {
                         return false;
                     }
                 }
             }
-
             return true;
         });
     }
@@ -170,8 +205,7 @@ public class BoardController {
                 new double[]{1.0, 0.5, -0.5, -1.0, -0.5, 0.5},
                 hexTile.x + this.fieldPane.getPrefWidth() / 2,
                 -hexTile.y + this.fieldPane.getPrefHeight() / 2,
-                hexTile.type,
-                hexTile.number
+                hexTile.type, hexTile.number
         );
 
         Circle hexView = new Circle(gameStorage.getHexScale()/8);
@@ -186,14 +220,13 @@ public class BoardController {
         eventHexView.setFill(Color.gray(0,0.1));
         this.fieldPane.getChildren().add(eventHexView);
 
-        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView);
+        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView, robberService);
         this.tileControllers.add(newHexTileController);
     }
 
     private void loadEdge(HexTile edge){
         Circle circ = new Circle(gameStorage.getHexScale() / 16.5);
         circ.setFill(STANDARD_COLOR);
-
         circ.setLayoutX(edge.x + this.fieldPane.getPrefWidth() / 2);
         circ.setLayoutY(-edge.y + this.fieldPane.getPrefHeight() / 2);
         this.fieldPane.getChildren().add(circ);
@@ -278,27 +311,42 @@ public class BoardController {
         }
     }
 
+    public void disableBuild() {
+        for (BuildingPointController controller : buildingPointControllerHashMap.values()) {
+            controller.reset();
+        }
+        for (StreetPointController controller : streetPointControllerHashMap.values()) {
+            controller.reset();
+        }
+    }
+
     public void drawCanvasHexagon(double[] xPoints, double[] yPoints, double layoutX, double layoutY, String type, int number){
-        //Render Hex Tile image
-        //See "Size and Spacing" in the Hexagonal Grids Doku
+        // Render Hex Tile image
+        // See "Size and Spacing" in the Hexagonal Grids Doku
         double hexagonWidth = Math.sqrt(3) * gameStorage.getHexScale();
         double hexagonHeight = 2 * gameStorage.getHexScale();
-        Image image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + type + ".png")).toString());
+        Image image;
+        if (type != null) {
+            image = new Image(Objects.requireNonNull(getClass().getResource("ingame/" + type + ".png")).toString());
+        } else {
+            image = new Image(Objects.requireNonNull(getClass().getResource("ingame/random.png")).toString());
+        }
+
 
         mapRenderService.getGc().drawImage(image, layoutX - hexagonWidth/2, layoutY - hexagonHeight/2, hexagonWidth, hexagonHeight);
 
-        //Render number image
-        if(!type.equals("desert") && number >= 2) {
+        // Render number image
+        if(type != null && !type.equals("desert") && number >= 2) {
             String numberURL = "ingame/tile_" + number + ".png";
             Image numberImg = new Image(Objects.requireNonNull(getClass().getResource(numberURL)).toString());
 
             mapRenderService.getGc().drawImage(numberImg, layoutX - gameStorage.getHexScale() / 2.5 / 2, layoutY - gameStorage.getHexScale() / 2.5 / 2, gameStorage.getHexScale() / 2.5, gameStorage.getHexScale() / 2.5);
         }
 
-        //Render Hex tile borders
-        //Calculate new points depending on the canvas position and scale. More infos:
-        //https://stackoverflow.com/questions/31125511/scale-polygons-by-a-ratio-using-only-a-list-of-their-vertices
-        for(int i = 0; i < 6; i++){
+        // Render Hex tile borders
+        // Calculate new points depending on the canvas position and scale. More infos:
+        // https://stackoverflow.com/questions/31125511/scale-polygons-by-a-ratio-using-only-a-list-of-their-vertices
+        for (int i = 0; i < 6; i++) {
             //First convert point to point on canvas
             xPoints[i] += layoutX;
             yPoints[i] += layoutY;
@@ -313,7 +361,7 @@ public class BoardController {
     }
 
     public void stop() {
-        if(hextileRenderThread != null) this.hextileRenderThread.interrupt();
+        if (hextileRenderThread != null) this.hextileRenderThread.interrupt();
         this.buildingControllers.clear();
         this.streetPointControllers.clear();
         this.tileControllers.clear();

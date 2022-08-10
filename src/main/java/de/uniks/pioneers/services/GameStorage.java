@@ -16,13 +16,15 @@ import static de.uniks.pioneers.GameConstants.*;
 @Singleton
 public class GameStorage {
     @Inject EventListener eventListener;
+    private final AchievementService achievementService;
+
     private List<Tile> map;
     private List<Harbor> harbors;
     public List<String> tradeOptions = new ArrayList<>();
 
     private boolean customMap;
     private int mapRadius;
-    private  double hexScale = 75;
+    private double hexScale = 75;
     private double hexRadiusFactor = 3;
     private double zoomedIn = 1.4;
     private double zoomedOut = 1;
@@ -33,7 +35,9 @@ public class GameStorage {
     public ObservableMap<String, Integer> remainingBuildings = FXCollections.observableHashMap();
 
     @Inject
-    public GameStorage() {
+    public GameStorage(AchievementService achievementService) {
+        this.achievementService = achievementService;
+
         remainingBuildings.put(ROAD, 15);
         remainingBuildings.put(SETTLEMENT, 5);
         remainingBuildings.put(CITY, 4);
@@ -51,6 +55,10 @@ public class GameStorage {
 
     public double getHexScale() {
         return hexScale;
+    }
+
+    public void setHexScale(double hexScale) {
+        this.hexScale = hexScale;
     }
 
     public double getHexRadiusFactor() {
@@ -166,6 +174,10 @@ public class GameStorage {
     public void addToTradeOptions(String tradeOption) {
         if (!this.tradeOptions.contains(tradeOption)) {
             this.tradeOptions.add(tradeOption);
+        }
+
+        if(achievementService != null) {
+            achievementService.incrementProgress(HARBOR_ACHIEVEMENT);
         }
     }
 

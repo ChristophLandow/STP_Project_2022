@@ -79,7 +79,7 @@ class RobberServiceTest {
 
         HexTileController newRobberTile = new HexTileController(null,
                 new HexTile(0,0,0,0,false),
-                null , new Circle());
+                null , new Circle(), robberService);
 
         when(mapRenderService.getTileControllers()).thenReturn(new ArrayList<>());
 
@@ -91,7 +91,7 @@ class RobberServiceTest {
     @Test
     void robPlayer() {
         this.robberService.mapRenderService = mapRenderService;
-        robberService.moveRobber(new HexTileController(null, new HexTile(0,0,0,0,false), null , new Circle()));
+        robberService.moveRobber(new HexTileController(null, new HexTile(0,0,0,0,false), null , new Circle(), robberService));
 
         RobDto robInfo = new RobDto(0,0,0,"target");
 

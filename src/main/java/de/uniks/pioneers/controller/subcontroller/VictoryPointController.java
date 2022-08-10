@@ -4,8 +4,10 @@ import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Player;
 import de.uniks.pioneers.model.User;
+import de.uniks.pioneers.services.AchievementService;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.SpeechService;
+import de.uniks.pioneers.services.UserService;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +35,8 @@ public class VictoryPointController {
     @FXML ImageView firstImageView, secondImageView, thirdImageView;
     @FXML Circle firstColorCircle, secondColorCircle, thirdColorCircle;
     private final GameService gameService;
+    private final UserService userService;
+    private final AchievementService achievementService;
     private int victoryPoints, winnerPoints, secondPoints, thirdPoints;
     private List<User> users;
     private String winnerID, secondID, thirdID;
@@ -43,12 +47,13 @@ public class VictoryPointController {
     @Inject SpeechService speechService;
 
     @Inject
-    public VictoryPointController(GameService gameService) {
+    public VictoryPointController(GameService gameService, UserService userService, AchievementService achievementService) {
         this.gameService = gameService;
+        this.userService = userService;
+        this.achievementService = achievementService;
     }
 
     public void showVictoryPopUp(String winner) {
-
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/viewElements/VictoryPopUp.fxml"));
         loader.setControllerFactory(c -> this);
         Parent view = null;
@@ -84,10 +89,16 @@ public class VictoryPointController {
         gameService.players.addListener((MapChangeListener<? super String, ? super Player>) c -> {
             if(!gameService.wonGame) {
                 if(c.getValueAdded() != null && c.getValueAdded().victoryPoints() == victoryPoints) {
-                    speechService.play(GameConstants.SPEECH_WINNER);
                     gameService.wonGame = true;
                     winnerID = c.getKey();
                     winnerPoints = c.getValueAdded().victoryPoints();
+
+                    if(winnerID.equals(userService.getCurrentUser()._id())){
+                        achievementService.incrementProgress(GameConstants.WINNER_ACHIEVEMENT);
+                    }
+
+                    speechService.play(GameConstants.SPEECH_WINNER);
+
                     showVictoryPopUp(users.stream().filter(p -> p._id().equals(winnerID)).findFirst().orElseThrow().name());
                     checkSecondThird();
                 }
