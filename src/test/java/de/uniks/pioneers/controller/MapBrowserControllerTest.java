@@ -34,8 +34,8 @@ public class MapBrowserControllerTest extends ApplicationTest {
     final List<TileTemplate> tiles = new ArrayList<>();
     final List<HarborTemplate> harbors = new ArrayList<>();
 
-    final MapTemplate mapDummy1 = new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2",null,"1234",7,tiles, harbors);
-    final MapTemplate mapDummy2 = new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", null, "1234", 3, tiles, harbors);
+    final MapTemplate mapDummy1 = new MapTemplate("today","2022-07-19T14:47:42.402Z","map456","map2","", null,"1234",7,tiles, harbors);
+    final MapTemplate mapDummy2 = new MapTemplate("yesterday", "2022-07-24T14:47:42.402Z", "map123", "map", "", null, "1234", 3, tiles, harbors);
 
     @Spy
     App app = new App(null);

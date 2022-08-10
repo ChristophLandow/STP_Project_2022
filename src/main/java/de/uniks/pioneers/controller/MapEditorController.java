@@ -93,8 +93,8 @@ public class MapEditorController implements Controller{
             return null;
         }
         init();
-        this.tiles = mapService.loadMap(2);
-        display(2);
+        this.tiles = mapService.loadMap(5);
+        display(mapService.getCurrentMapSize());
 
         //add the popup to the pane
         this.saveMapPopUpController = saveMapPopUpControllerProvider.get();

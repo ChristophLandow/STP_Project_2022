@@ -29,6 +29,8 @@ public class MapService {
 
     private MapTemplate currentMap;
 
+    private int currentMapSize;
+
     private final UserService userService;
 
     private MapEditorController mapEditorController;
@@ -149,6 +151,16 @@ public class MapService {
             }
             editTiles.add(editTile);
         }
+        //find out the size of the map
+        int biggestCoordinate = 2;
+        for (EditTile et : editTiles) {
+            int q = et.hexTile.q;
+            int r = et.hexTile.r;
+            int s = et.hexTile.s;
+            int x = Math.max(q, Math.max(r, s));
+            biggestCoordinate = Math.max(biggestCoordinate, x);
+            this.currentMapSize = Math.min(biggestCoordinate, 8);
+        }
         return editTiles;
     }
 
@@ -163,5 +175,9 @@ public class MapService {
 
     public void setMapEditorController(MapEditorController mapEditorController) {
         this.mapEditorController = mapEditorController;
+    }
+
+    public int getCurrentMapSize() {
+        return this.currentMapSize;
     }
 }

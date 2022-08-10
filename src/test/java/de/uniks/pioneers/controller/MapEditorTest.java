@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.controller.PopUpController.SaveMapPopUpController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.MapService;
@@ -15,9 +16,13 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
+
+import javax.inject.Provider;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MapEditorTest extends ApplicationTest {
@@ -28,15 +33,21 @@ class MapEditorTest extends ApplicationTest {
     @Mock
     MapService mapService;
 
+    @Mock
+    SaveMapPopUpController saveMapPopUpController;
+
+    @Mock
+    Provider<SaveMapPopUpController> saveMapPopUpControllerProvider;
+
     @InjectMocks
     MapEditorController mapEditorController;
 
     @Override
     public void start(Stage stage){
-
+        when(saveMapPopUpControllerProvider.get()).thenReturn(saveMapPopUpController);
         app.start(stage);
         app.show(mapEditorController);
-
+        stage.centerOnScreen();
     }
 
     @Test
@@ -46,6 +57,8 @@ class MapEditorTest extends ApplicationTest {
         //place tiles
 
         //clickOn(600, 150);
+
+        WaitForAsyncUtils.waitForFxEvents();
 
         clickOn("#iceImageView");
         clickOn("#0,-1,1");
@@ -215,7 +228,7 @@ class MapEditorTest extends ApplicationTest {
         verifier.add(new EditTile(new HexTile(3, -1, -2, 1, false), fillerView1, fillerView2, null));
         verifier.add(new EditTile(new HexTile(3, 0, -3, 1, false), fillerView1, fillerView2, null));
 
-        assertTrue(compareTiles(verifier, mapEditorController.tiles));
+        assertTrue(compareTiles(verifier, (ArrayList<EditTile>) mapEditorController.tiles));
 
     }
 
