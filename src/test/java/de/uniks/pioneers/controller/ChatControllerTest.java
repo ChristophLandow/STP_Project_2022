@@ -131,23 +131,41 @@ class ChatControllerTest extends ApplicationTest {
 
         when(messageService.getOpenChatQueue()).thenReturn(chatQueue);
         when(messageService.getOpenChatCounter()).thenReturn(chatCounter);
-        when(groupService.getGroupsWithUser(any())).thenReturn(Observable.just(new ArrayList<>()));
-        when(groupService.createNewGroupWithOtherUser(any())).thenReturn(Observable.just(new GroupDto("","","",null,"")));
+        //when(groupService.getGroupsWithUser(any())).thenReturn(Observable.just(new ArrayList<>()));
+        //when(groupService.createNewGroupWithOtherUser(any())).thenReturn(Observable.just(new GroupDto("","","",null,"")));
 
         clickOn("#newUser");
-
-        Platform.runLater(()->{
-            chatQueue.add((userList.get(1)));
-            chatCounter.set(0);
-            clickOn("#newUser");
-        });
 
         TabPane chatTabPane = lookup("#chatTabPane").query();
 
         assertNotEquals(chatTabPane.getTabs().size(), 0);
         assertEquals(chatTabPane.getTabs().get(0).getText(), "Tom");
 
+        //Check removing of tab
+        ArrayList<User> tooManyOpenTabsList = new ArrayList();
+        tooManyOpenTabsList.add(new User("1","","",""));
+        tooManyOpenTabsList.add(new User("2","","",""));
+        tooManyOpenTabsList.add(new User("3","","",""));
+        tooManyOpenTabsList.add(new User("4","","",""));
+        tooManyOpenTabsList.add(new User("5","","",""));
+        when(messageService.getchatUserList()).thenReturn(tooManyOpenTabsList);
+
         clickOn("#newUser");
+        assertTrue(chatTabPane.getTabs().size() <= Constants.MAX_OPEN_CHATS);
+        clickOn("#newUser");
+        assertTrue(chatTabPane.getTabs().size() <= Constants.MAX_OPEN_CHATS);
+        clickOn("#newUser");
+        assertTrue(chatTabPane.getTabs().size() <= Constants.MAX_OPEN_CHATS);
+
+        when(messageService.userlistContains(any())).thenReturn(true);
+        when(messageService.getchatUserList()).thenReturn(new ArrayList<>());
+
+        clickOn("#newUser");
+        assertEquals(chatTabPane.getTabs().size(), 1);
+        clickOn("#newUser");
+        assertEquals(chatTabPane.getTabs().size(), 1);
+        clickOn("#newUser");
+        assertEquals(chatTabPane.getTabs().size(), 1);
     }
 
 }
