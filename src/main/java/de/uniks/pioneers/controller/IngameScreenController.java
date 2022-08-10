@@ -179,7 +179,7 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
+        ingameSelectController.init(gameStorage, ingameService, prefService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
 
         this.mapRenderService.isFinishedLoading().addListener(finishedMapRenderListener);

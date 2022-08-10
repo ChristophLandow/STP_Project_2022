@@ -79,22 +79,20 @@
    </Pane>
    <Rectangle fx:id="downRectangle" arcHeight="5.0" arcWidth="5.0" fill="#f4f4f4" height="19.0" layoutX="16.0" layoutY="652.0" stroke="#f4f4f4" strokeType="INSIDE" strokeWidth="0.0" width="715.0" />
    <Rectangle fx:id="upRectangle" arcHeight="5.0" arcWidth="5.0" fill="#f4f4f4" height="15.0" layoutX="16.0" stroke="#f4f4f4" strokeType="INSIDE" strokeWidth="0.0" width="715.0" />
-   <Pane fx:id="rightPane" layoutX="365.0" layoutY="625.0" prefHeight="60.0" prefWidth="60.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: white;" translateX="163.0" visible="false">
-      <children>
-         <ImageView fx:id="rightView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.18" scaleY="0.25">
-            <image>
-               <Image url="@../controller/ingame/dev_card_question_mark.png" />
-            </image>
-         </ImageView>
-      </children>
+   <Pane fx:id="rightPane" layoutX="365.0" layoutY="625.0" prefHeight="60.0" prefWidth="60.0"
+         style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: white;"
+         translateX="163.0" visible="false">
+      <ImageView fx:id="rightView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.18"
+                 scaleY="0.25">
+         <Image url="@../controller/ingame/dev_card_question_mark.png"/>
+      </ImageView>
    </Pane>
-   <Pane fx:id="leftPane" layoutX="297.0" layoutY="625.0" prefHeight="60.0" prefWidth="60.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: white;" translateX="163.0" visible="false">
-      <children>
-         <ImageView fx:id="leftView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.19" scaleY="0.26">
-            <image>
-               <Image url="@../controller/subcontroller/images/card_knight.png" />
-            </image>
-         </ImageView>
-      </children>
+   <Pane fx:id="leftPane" layoutX="297.0" layoutY="625.0" prefHeight="60.0" prefWidth="60.0"
+         style="-fx-border-color: black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: white;"
+         translateX="163.0" visible="false">
+      <ImageView fx:id="leftView" fitHeight="200.0" fitWidth="200.0" layoutX="-70.0" layoutY="-70.0" scaleX="0.19"
+                 scaleY="0.26">
+         <Image url="@../controller/subcontroller/images/card_knight.png"/>
+      </ImageView>
    </Pane>
 </Pane>

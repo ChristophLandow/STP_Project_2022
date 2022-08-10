@@ -22,7 +22,7 @@ import static de.uniks.pioneers.GameConstants.*;
 @Singleton
 public class GameService {
     public ObservableMap<String, Player> players = FXCollections.observableHashMap();
-    public ObservableMap<String, LargestArmy> largestArmy = FXCollections.observableHashMap();
+    public final ObservableMap<String, LargestArmy> largestArmy = FXCollections.observableHashMap();
     public final ObservableList<Member> members = FXCollections.observableArrayList();
     private ArrayList<User> users = new ArrayList<>();
     public ObservableList<Member> lobbyMembers;

@@ -224,7 +224,7 @@ class MapEditorTest extends ApplicationTest {
         if(a.size() != b.size()){return false;}
         int i = 0;
 
-        Boolean equal = true;
+        boolean equal = true;
         while(i < a.size()){
 
             EditTile tileA = a.get(i);
