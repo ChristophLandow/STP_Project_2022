@@ -50,7 +50,6 @@ public class IngamePlayerResourcesController {
     private MapChangeListener<String, Integer> resourceMapChangeListener;
     private MapChangeListener<String, Integer> devCardMapChangeListener;
     private ResourceAnimationController resourceAnimationController;
-    private IngameStateController ingameStateController;
 
     @Inject
     public IngamePlayerResourcesController(GameService gameService, ResourceService resourceService, UserService userService) {
@@ -82,7 +81,6 @@ public class IngamePlayerResourcesController {
     }
 
     public void init(IngameStateController ingameStateController) {
-        this.ingameStateController = ingameStateController;
         // set values to gui and setup listeners
         setImages();
 
