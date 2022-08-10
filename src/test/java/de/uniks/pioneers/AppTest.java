@@ -149,6 +149,10 @@ class AppTest extends ApplicationTest {
 
         Label titleLabel = lookup("#titleLabel").query();
         assertNotEquals(titleLabel,"Title");
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",CITY_ACHIEVEMENT,null,100)));
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",SETTLEMENT_ACHIEVEMENT,null,100)));
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",HARBOR_ACHIEVEMENT,null,100)));
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",WINNER_ACHIEVEMENT,null,100)));
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "roll the dice"));
