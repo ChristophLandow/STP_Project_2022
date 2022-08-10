@@ -20,6 +20,7 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -57,8 +58,6 @@ class MapEditorTest extends ApplicationTest {
         //place tiles
 
         //clickOn(600, 150);
-
-        WaitForAsyncUtils.waitForFxEvents();
 
         clickOn("#iceImageView");
         clickOn("#0,-1,1");
@@ -228,11 +227,11 @@ class MapEditorTest extends ApplicationTest {
         verifier.add(new EditTile(new HexTile(3, -1, -2, 1, false), fillerView1, fillerView2, null));
         verifier.add(new EditTile(new HexTile(3, 0, -3, 1, false), fillerView1, fillerView2, null));
 
-        assertTrue(compareTiles(verifier, (ArrayList<EditTile>) mapEditorController.tiles));
+        assertTrue(compareTiles(verifier, mapEditorController.tiles));
 
     }
 
-    private Boolean compareTiles(ArrayList<EditTile> a, ArrayList<EditTile> b){
+    private Boolean compareTiles(ArrayList<EditTile> a, List<EditTile> b){
 
         if(a.size() != b.size()){return false;}
         int i = 0;

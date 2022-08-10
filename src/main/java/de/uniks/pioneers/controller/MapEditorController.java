@@ -79,8 +79,7 @@ public class MapEditorController implements Controller{
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> display(newValue));
         this.mapService.setMapEditorController(this);
     }
-    @Override
-    public void stop() {}
+
     @Override
     public Parent render() {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/MapEditorScreen.fxml"));
@@ -94,7 +93,13 @@ public class MapEditorController implements Controller{
         }
         init();
         this.tiles = mapService.loadMap(5);
-        display(mapService.getCurrentMapSize());
+
+        // display for loading or for creating
+        if (mapService.getCurrentMap() != null) {
+            display(mapService.getCurrentMapSize());
+        } else {
+            display(2);
+        }
 
         //add the popup to the pane
         this.saveMapPopUpController = saveMapPopUpControllerProvider.get();
@@ -105,6 +110,11 @@ public class MapEditorController implements Controller{
         return parent;
 
 
+    }
+
+    @Override
+    public void stop() {
+        saveMapPopUpController.stop();
     }
     private void display(int size){
 
