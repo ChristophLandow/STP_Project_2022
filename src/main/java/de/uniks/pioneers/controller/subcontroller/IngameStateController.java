@@ -15,8 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-
-import javax.inject.Inject;
 import java.util.Objects;
 import java.util.Timer;
 
@@ -147,7 +145,7 @@ public class IngameStateController {
                     case ACCEPT -> {
                         this.setDisableEndTurn(true);
                         this.enableAccepting();
-                    };
+                    }
                     case MONOPOLY_MOVE -> {
                         this.setDisableEndTurn(true);
                         robberController.discardOrChoose(MONOPOLY_NUMBER);
