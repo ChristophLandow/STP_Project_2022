@@ -12,12 +12,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
 import static de.uniks.pioneers.GameConstants.*;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
