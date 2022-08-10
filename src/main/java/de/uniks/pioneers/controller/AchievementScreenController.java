@@ -20,7 +20,6 @@ import javax.inject.Provider;
 import java.io.IOException;
 
 import static de.uniks.pioneers.Constants.ACHIEVEMENTS_SCREEN_TITLE;
-import static de.uniks.pioneers.Constants.LOBBY_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class AchievementScreenController implements Controller {
@@ -98,22 +97,7 @@ public class AchievementScreenController implements Controller {
         setAchievement(longestRoadDateLabel, longestRoadBox, achievements.get(ROAD_ACHIEVEMENT), ROAD_ACHIEVEMENT);
         setAchievement(wildWestDateLabel, wildWestBox, achievements.get(SETTLEMENT_ACHIEVEMENT), SETTLEMENT_ACHIEVEMENT);
         setAchievement(chickenDinnerDateLabel, chickenDinnerBox, achievements.get(WINNER_ACHIEVEMENT), WINNER_ACHIEVEMENT);
-        //...for Harbor-Achievement extra, cause of lower progress lvl
-        if(achievements.get(HARBOR_ACHIEVEMENT).progress() == 50){
-            seaBuilderDateLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).unlockedAt());
-            Image image = new Image("de/uniks/pioneers/checkmark.png");
-            ImageView imageView = new ImageView();
-            imageView.setFitHeight(40);
-            imageView.setFitWidth(40);
-            imageView.setImage(image);
-            seaBuilderBox.getChildren().add(imageView);
-        } else {
-            Label statusLabel = new Label();
-            statusLabel.setText(achievements.get(HARBOR_ACHIEVEMENT).progress() + "/ 50");
-            statusLabel.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 20));
-            seaBuilderDateLabel.setText("");
-            seaBuilderBox.getChildren().add(statusLabel);
-        }
+        setAchievement(seaBuilderDateLabel, seaBuilderBox, achievements.get(HARBOR_ACHIEVEMENT), HARBOR_ACHIEVEMENT);
     }
 
     public void setAchievement(Label dateLabel, VBox box, Achievement achievement, String kind){
