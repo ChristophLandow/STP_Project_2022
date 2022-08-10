@@ -116,6 +116,12 @@ public class TimerService {
         this.initTradeCountdown(new Timer(), tradeTime);
     }
 
+    public void resetTradeTimer() {
+        tradeCountdownTimerTask.cancel();
+        tradeCountdownTimer.cancel();
+        tradeTimer.cancel();
+    }
+
     public void interruptBuildTimer() {
         remainingTurnTime = this.remainingTime;
         countdownTimerTask.cancel();

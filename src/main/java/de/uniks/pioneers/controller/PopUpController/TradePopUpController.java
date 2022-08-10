@@ -157,6 +157,7 @@ public class TradePopUpController implements Controller {
             }
             // disable cancel button to wait for a partner
             this.cancel.setDisable(true);
+            this.timerService.resetTradeTimer();
         };
 
         // setup eventHandler to cancel trade
@@ -197,6 +198,10 @@ public class TradePopUpController implements Controller {
         ingameService.tradeAccepted.addListener(tradeAcceptedChangeListener);
 
         // init timerService
+        initTimer();
+    }
+
+    private void initTimer() {
         this.timerService.setTradeTimer(new Timer());
         this.timerService.setTradeTimeLabel(this.timer);
         this.timer.setText("30");
@@ -267,6 +272,7 @@ public class TradePopUpController implements Controller {
     public void enableChoosePlayer() {
         this.playerElements.values().forEach(TradePopUpPlayerListElementController::setCheckmarkAction);
         this.cancel.setDisable(false);
+        initTimer();
     }
 
     private class TradeSpinnerFactory extends SpinnerValueFactory<Integer> {
