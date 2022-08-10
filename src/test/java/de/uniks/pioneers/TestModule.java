@@ -154,13 +154,11 @@ public class TestModule {
 
             @Override
             public Observable<User> getUser(String id) {
-
                 return Observable.just(new User(id,"TestUser_" + id,"online",""));
             }
 
             @Override
             public Observable<User> update(String id, UpdateUserDto dto) {
-
                 return Observable.just(new User(id,"TestUser",dto.status(),dto.avatar()));
             }
 
@@ -171,11 +169,11 @@ public class TestModule {
 
             @Override
             public Observable<List<User>> findAll() {
-
                 ArrayList<User> users = new ArrayList<>();
                 users.add(new User("000","TestUserA","online",null));
-                users.add(new User("000","TestUserB","online",null));
-                users.add(new User("000","TestUserC","online",null));
+                users.add(new User("001","TestUserB","online",null));
+                users.add(new User("002","TestUserC","online",null));
+                users.add(new User("003","TestUserD","online",null));
                 return Observable.just(users);
             }
         };
@@ -556,7 +554,7 @@ public class TestModule {
             @Override
             public Observable<List<Achievement>> getUserAchievements(String userId) {
                 ArrayList<Achievement> returnValue = new ArrayList<>();
-                returnValue.add(new Achievement("","",userId,ROAD_ACHIEVEMENT,null,0));
+                returnValue.add(new Achievement("","",userId,ROAD_ACHIEVEMENT,null,100));
                 returnValue.add(new Achievement("","",userId,SETTLEMENT_ACHIEVEMENT,null,0));
                 returnValue.add(new Achievement("","",userId,CITY_ACHIEVEMENT,null,0));
 

@@ -45,7 +45,6 @@ public class LobbyScreenController implements Controller {
     @FXML public Button NewGameButton;
 
     @Inject MessageService messageService;
-    @Inject Provider<LoginScreenController> loginScreenControllerProvider;
     @Inject Provider<EditProfileController> editProfileControllerProvider;
     @Inject Provider<LobbyUserlistController> userlistControllerProvider;
     @Inject Provider<RulesScreenController> rulesScreenControllerProvider;
@@ -68,11 +67,13 @@ public class LobbyScreenController implements Controller {
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
     private final StylesService stylesService;
+    private final AchievementService achievementService;
 
     @Inject
-    public LobbyScreenController(App app, StylesService stylesService) {
+    public LobbyScreenController(App app, StylesService stylesService, AchievementService achievementService) {
         this.app = app;
         this.stylesService = stylesService;
+        this.achievementService = achievementService;
     }
 
     @Override
@@ -117,6 +118,10 @@ public class LobbyScreenController implements Controller {
             Platform.exit();
             System.exit(0);
         });
+
+        if(achievementService != null) {
+            achievementService.initAchievementListener();
+        }
 
         // add listener to handle stages
         setupCreateGameListener();
@@ -214,8 +219,9 @@ public class LobbyScreenController implements Controller {
         // set status offline after logout (leaving lobby)
         userService.editProfile(null, null, null, "offline")
                 .subscribe();
-        LoginScreenController loginController = loginScreenControllerProvider.get();
-        app.show(loginController);
+
+        appStage.close();
+        Platform.runLater(() -> new App().start(new Stage()));
     }
 
     public void showNewGameLobby(Game game, String password, String hexColor) {

@@ -11,7 +11,6 @@ import de.uniks.pioneers.services.ResourceService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.robot.Robot;
@@ -101,10 +100,7 @@ public class StreetPointController {
             CreateBuildingDto newBuilding = new CreateBuildingDto(uploadCoords[0], uploadCoords[1], uploadCoords[2], uploadCoords[3], "road");
             disposable.add(ingameService.postMove(gameService.game.get()._id(), new CreateMoveDto(this.action, null, null, null, null, newBuilding))
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(move -> {
-                        Pane fieldPane = (Pane) this.view.getScene().getRoot().lookup("#fieldPane");
-                        fieldPane.getChildren().forEach(this::reset);
-                    }));
+                    .subscribe());
         }
 
         ingameSelectController.resetSelect();
@@ -130,10 +126,10 @@ public class StreetPointController {
         }
     }
 
-    private void reset(Node node) {
-        node.setOnMouseClicked(null);
-        node.setOnMouseEntered(null);
-        node.setOnMouseExited(null);
+    public void reset() {
+        this.view.setOnMouseClicked(null);
+        this.view.setOnMouseEntered(null);
+        this.view.setOnMouseExited(null);
 
         this.view.setFill(STANDARD_COLOR);
     }
@@ -157,7 +153,6 @@ public class StreetPointController {
 
             fieldPane.getChildren().add(street);
 
-            this.reset(this.eventView);
             this.view.setVisible(false);
             this.view.setRadius(0);
 

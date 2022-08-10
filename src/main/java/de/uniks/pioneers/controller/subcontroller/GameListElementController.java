@@ -9,6 +9,7 @@ import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.EventHandlerService;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.UserService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,13 +36,15 @@ public class GameListElementController implements Controller {
     private final App app;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
     private final Provider<NewGameLobbyService> newGameLobbyServiceProvider;
+    private final UserService userService;
     public final SimpleObjectProperty<User> creator = new SimpleObjectProperty<>();
     public final SimpleObjectProperty<Game> game = new SimpleObjectProperty<>();
 
     @Inject
-    public GameListElementController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider) {
+    public GameListElementController(App app, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<NewGameLobbyService> newGameLobbyServiceProvider, UserService userService) {
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
         this.newGameLobbyServiceProvider = newGameLobbyServiceProvider;
+        this.userService = userService;
         this.game.addListener((game, oldVal, newVal) -> setDataToGameListElement());
         this.app = app;
     }
@@ -95,7 +98,7 @@ public class GameListElementController implements Controller {
                     try {
                         node = loader.load();
                         JoinGamePopUpController joinGamePopUpController = loader.getController();
-                        joinGamePopUpController.init(this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get(), new EventHandlerService());
+                        joinGamePopUpController.init(this.app, newGameLobbyServiceProvider.get(), lobbyScreenControllerProvider.get(), game.get(), new EventHandlerService(), userService);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
