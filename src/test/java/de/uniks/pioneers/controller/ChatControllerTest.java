@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.Constants;
 import de.uniks.pioneers.controller.subcontroller.ChatTabController;
 import de.uniks.pioneers.controller.subcontroller.ChatUserlistController;
 import de.uniks.pioneers.dto.Event;
@@ -29,8 +30,7 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -118,6 +118,9 @@ class ChatControllerTest extends ApplicationTest {
 
     @Test
     void test() {
+        SimpleIntegerProperty chatCounter = new SimpleIntegerProperty(Constants.OPEN_CHATS_COUNTER_MAX_VALUE+10);
+        ObservableList<User> chatQueue = FXCollections.observableArrayList();
+
         User testUser = new User("1", "Steve", "online", null);
         when(userlistService.getCurrentUser()).thenReturn(testUser);
 
@@ -126,12 +129,19 @@ class ChatControllerTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
 
-        when(messageService.getOpenChatQueue()).thenReturn(FXCollections.observableArrayList(userList.get(1)));
-        when(messageService.getOpenChatCounter()).thenReturn(new SimpleIntegerProperty(0));
+        when(messageService.getOpenChatQueue()).thenReturn(chatQueue);
+        when(messageService.getOpenChatCounter()).thenReturn(chatCounter);
         when(groupService.getGroupsWithUser(any())).thenReturn(Observable.just(new ArrayList<>()));
         when(groupService.createNewGroupWithOtherUser(any())).thenReturn(Observable.just(new GroupDto("","","",null,"")));
 
         clickOn("#newUser");
+        messageService.getchatUserList().add(new User("2", "Test User", "online", null));
+
+        Platform.runLater(()->{
+            chatQueue.add((userList.get(1)));
+            chatCounter.set(0);
+            clickOn("#newUser");
+        });
 
         TabPane chatTabPane = lookup("#chatTabPane").query();
 
