@@ -67,11 +67,13 @@ public class LobbyScreenController implements Controller {
     private ChangeListener<Boolean> createGameListener;
     private Stage createNewGameStage;
     private final StylesService stylesService;
+    private final AchievementService achievementService;
 
     @Inject
-    public LobbyScreenController(App app, StylesService stylesService) {
+    public LobbyScreenController(App app, StylesService stylesService, AchievementService achievementService) {
         this.app = app;
         this.stylesService = stylesService;
+        this.achievementService = achievementService;
     }
 
     @Override
@@ -116,6 +118,10 @@ public class LobbyScreenController implements Controller {
             Platform.exit();
             System.exit(0);
         });
+
+        if(achievementService != null) {
+            achievementService.initAchievementListener();
+        }
 
         // add listener to handle stages
         setupCreateGameListener();

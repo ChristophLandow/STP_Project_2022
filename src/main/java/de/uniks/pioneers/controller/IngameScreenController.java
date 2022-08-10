@@ -179,9 +179,7 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        this.achievementPopUpController.init();
-
-        ingameSelectController.init(gameStorage, ingameService, prefService, roadFrame, settlementFrame, cityFrame);
+        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
 
         this.mapRenderService.isFinishedLoading().addListener(finishedMapRenderListener);
@@ -232,6 +230,7 @@ public class IngameScreenController implements Controller {
                 ingamePlayerController.renderPlayer(c.getValueAdded());
             }
         });
+
         victoryPointController.init(users, root, leaveGameController);
 
         gameService.members.addListener((ListChangeListener<? super Member>) c -> {
@@ -280,6 +279,8 @@ public class IngameScreenController implements Controller {
         // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
+
+        this.achievementPopUpController.init();
     }
 
     private void renderBuilding(Building building) {
@@ -332,7 +333,6 @@ public class IngameScreenController implements Controller {
         mapRenderService.stop();
         boardController.stop();
         achievementPopUpController.stop();
-        achievementService.stop();
     }
 
     public void setUsers(List<User> users) {

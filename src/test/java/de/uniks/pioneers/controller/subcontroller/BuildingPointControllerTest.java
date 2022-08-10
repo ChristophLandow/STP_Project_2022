@@ -48,8 +48,11 @@ class BuildingPointControllerTest extends ApplicationTest {
     @Mock
     ResourceService resourceService;
 
+    @Mock
+    AchievementService achievementService;
+
     @Spy
-    GameStorage gameStorage = new GameStorage();
+    GameStorage gameStorage = new GameStorage(achievementService);
 
     @Mock
     IngameSelectController ingameSelectController;
