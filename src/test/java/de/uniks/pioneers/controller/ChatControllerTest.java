@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,11 +23,14 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,15 +67,17 @@ class ChatControllerTest extends ApplicationTest {
 
     @InjectMocks
     ChatController chatController;
+    ObservableList<User> userList = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage stage) {
-        ObservableList<User> userList = FXCollections.observableArrayList();
+
         when(userlistService.getUsers()).thenReturn(userList);
         when(userlistControllerProvider.get()).thenReturn(new ChatUserlistController(userService, messageService, userlistService, eventListener));
         chatTabController.chattingWith = new User("123", "Tom", "online", null);
         app.start(stage);
         app.show(chatController);
+        stage.centerOnScreen();
         verify(eventHandlerService, atLeastOnce()).setEnterEventHandler(any(), any());
         verify(stylesService, atLeastOnce()).setStyleSheets(any());
     }
@@ -108,6 +114,29 @@ class ChatControllerTest extends ApplicationTest {
             chatController.addTab(testUser);
             verify(groupService).getGroupsWithUser("1");
         });
+    }
+
+    @Test
+    void test() {
+        User testUser = new User("1", "Steve", "online", null);
+        when(userlistService.getCurrentUser()).thenReturn(testUser);
+
+        userList.add(testUser);
+        userList.add(new User("2", "Test User", "online", null));
+
+        WaitForAsyncUtils.waitForFxEvents();
+
+        when(messageService.getOpenChatQueue()).thenReturn(FXCollections.observableArrayList(userList.get(1)));
+        when(messageService.getOpenChatCounter()).thenReturn(new SimpleIntegerProperty(0));
+        when(groupService.getGroupsWithUser(any())).thenReturn(Observable.just(new ArrayList<>()));
+        when(groupService.createNewGroupWithOtherUser(any())).thenReturn(Observable.just(new GroupDto("","","",null,"")));
+
+        clickOn("#newUser");
+
+        TabPane chatTabPane = lookup("#chatTabPane").query();
+
+        assertNotEquals(chatTabPane.getTabs().size(), 0);
+        assertEquals(chatTabPane.getTabs().get(0).getText(), "Test User");
     }
 
 }
