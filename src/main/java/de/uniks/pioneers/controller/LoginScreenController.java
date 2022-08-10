@@ -46,11 +46,12 @@ public class LoginScreenController implements Controller {
     private final Provider<RulesScreenController> rulesScreenControllerProvider;
     private final PrefService prefService;
     private final StylesService stylesService;
-
     private final EventHandlerService eventHandlerService;
 
     @Inject
-    public LoginScreenController(App app, LoginService loginService, Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider, Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService, StylesService stylesService, EventHandlerService eventHandlerService) {
+    public LoginScreenController(App app, LoginService loginService, EventHandlerService eventHandlerService,
+                                 Provider<SignUpScreenController> signUpScreenControllerProvider, Provider<LobbyScreenController> lobbyScreenControllerProvider,
+                                 Provider<RulesScreenController> rulesScreenControllerProvider, PrefService prefService, StylesService stylesService) {
         this.app = app;
         this.loginService = loginService;
         this.signUpScreenControllerProvider = signUpScreenControllerProvider;

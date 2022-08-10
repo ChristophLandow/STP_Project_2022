@@ -21,12 +21,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
-import static de.uniks.pioneers.GameConstants.*;
+import static de.uniks.pioneers.GameConstants.DEV_KNIGHT;
+import static de.uniks.pioneers.GameConstants.LARGEST_ARMY;
 
 public class IngamePlayerListElementController {
     @FXML public HBox playerBox;
