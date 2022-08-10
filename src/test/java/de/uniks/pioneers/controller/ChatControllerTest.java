@@ -137,6 +137,8 @@ class ChatControllerTest extends ApplicationTest {
 
         assertNotEquals(chatTabPane.getTabs().size(), 0);
         assertEquals(chatTabPane.getTabs().get(0).getText(), "Test User");
+
+        clickOn("#newUser");
     }
 
 }
