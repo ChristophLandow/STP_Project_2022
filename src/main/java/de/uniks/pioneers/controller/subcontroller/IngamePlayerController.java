@@ -27,12 +27,12 @@ public class IngamePlayerController {
     private final SVGPath citySVG;
     private final SVGPath houseSVG;
     private final ImageView tradeImageView;
-    private final ImageView hourglassImageView;
+    private final ImageView turnImageView;
     private final ImageView nextTurnImageView;
 
     public IngamePlayerController(UserService userService, LeaveGameController leaveGameController, Provider<IngamePlayerListElementController> elementProvider, ListView<Node> playerListView,
                                    Provider<IngamePlayerListSpectatorController> spectatorProvider, Game game, ImageView hammerImageView, Label streetCountLabel, Label houseCountLabel,
-                                   Label cityCountLabel, SVGPath streetSVG, SVGPath citySVG, SVGPath houseSVG, ImageView tradeImageView, ImageView hourglassImageView, ImageView nextTurnImageView) {
+                                   Label cityCountLabel, SVGPath streetSVG, SVGPath citySVG, SVGPath houseSVG, ImageView tradeImageView, ImageView turnImageView, ImageView nextTurnImageView) {
         this.userService = userService;
         this.leaveGameController = leaveGameController;
         this.elementProvider = elementProvider;
@@ -47,7 +47,7 @@ public class IngamePlayerController {
         this.citySVG = citySVG;
         this.houseSVG = houseSVG;
         this.tradeImageView = tradeImageView;
-        this.hourglassImageView = hourglassImageView;
+        this.turnImageView = turnImageView;
         this.nextTurnImageView = nextTurnImageView;
     }
 
@@ -78,7 +78,7 @@ public class IngamePlayerController {
                 citySVG.setVisible(false);
                 houseSVG.setVisible(false);
                 tradeImageView.setVisible(false);
-                hourglassImageView.setVisible(false);
+                turnImageView.setVisible(false);
                 nextTurnImageView.setVisible(false);
             }
 

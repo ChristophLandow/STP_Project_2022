@@ -1,10 +1,9 @@
 package de.uniks.pioneers.controller.subcontroller;
 
-import de.uniks.pioneers.model.DevelopmentCard;
-import de.uniks.pioneers.model.Player;
-import de.uniks.pioneers.model.Resources;
+import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.ResourceService;
+import de.uniks.pioneers.services.UserService;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -26,13 +25,15 @@ import static de.uniks.pioneers.GameConstants.*;
 
 public class ResourceAnimationController {
     private final GameService gameService;
+    private final UserService userService;
+    private final IngameStateController ingameStateController;
     private final ResourceNewAnimationController resourceNewAnimationController;
     private final ResourceRemovedAnimationController resourceRemovedAnimationController;
     private final DevCardNewAnimationController devCardNewAnimationController;
-    private final DevCardRemovedAnimationController devCardRemovedAnimationController;
-    private ImageView carbonView, fishView, iceView, polarbearView, whaleView, knightView, roadView, plentyView, monopolyView, vpointView;
-    private Player valueAdded;
-    private Player valueRemoved;
+    private final DevCardPlayedAnimationController devCardPlayedAnimationController;
+    private final LargestArmyAnimationController largestArmyAnimationController;
+    private ImageView carbonView, fishView, iceView, polarbearView, whaleView, knightView, roadView, plentyView, monopolyView, vpointView, largestArmyView;
+    private Player valueAddedMe, valueRemovedMe, valueAddedOther, valueRemovedOther;
     private boolean me;
     private int knightOld;
     private int roadOld;
@@ -45,16 +46,20 @@ public class ResourceAnimationController {
     private int monopolyNew;
     private int vpointNew;
 
-    public ResourceAnimationController(Pane root, GameService gameService, ResourceService resourceService) {
+    public ResourceAnimationController(Pane root, GameService gameService, ResourceService resourceService, UserService userService, IngameStateController ingameStateController) {
         this.gameService = gameService;
+        this.userService = userService;
+        this.ingameStateController = ingameStateController;
         this.resourceNewAnimationController = new ResourceNewAnimationController(root, resourceService);
         this.resourceRemovedAnimationController = new ResourceRemovedAnimationController(root, resourceService, this);
         this.devCardNewAnimationController = new DevCardNewAnimationController(root, resourceService);
-        this.devCardRemovedAnimationController = new DevCardRemovedAnimationController(root, resourceService);
+        this.devCardPlayedAnimationController = new DevCardPlayedAnimationController(root, gameService);
+        this.largestArmyAnimationController = new LargestArmyAnimationController(root);
         this.me = false;
 
         this.addPlayerListener();
         this.addMoveActionListener();
+        this.addArmyListener();
     }
 
     private void initCards() {
@@ -69,6 +74,8 @@ public class ResourceAnimationController {
         plentyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_year-of-plenty.png")).toString()));
         monopolyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_monopoly.png")).toString()));
         vpointView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/card_victory-point.png")).toString()));
+
+        largestArmyView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("images/Largest_Hunter_Group.png")).toString()));
     }
 
     private void addPlayerListener() {
@@ -78,9 +85,17 @@ public class ResourceAnimationController {
                 String key = c.getKey();
                 if (key.equals(gameService.me)) {
                     if (c.wasRemoved() && c.wasAdded()) {
-                        this.valueAdded = c.getValueAdded();
-                        this.valueRemoved = c.getValueRemoved();
+                        this.valueAddedMe = c.getValueAdded();
+                        this.valueRemovedMe = c.getValueRemoved();
                         this.me = true;
+                        initCards();
+                    }
+                } else {
+                    if (c.wasRemoved() && c.wasAdded()) {
+                        this.valueAddedOther = c.getValueAdded();
+                        this.valueRemovedOther = c.getValueRemoved();
+                        initCards();
+                        this.handleDevCards(-1);
                     }
                 }
             }
@@ -90,11 +105,16 @@ public class ResourceAnimationController {
     private void addMoveActionListener() {
         gameService.moveAction.addListener((observable, oldValue, newValue) -> {
             if(me) {
-                initCards();
                 me = false;
-
                 this.handleResources(gameService.moveAction.get());
-                this.handleDevCards();
+            }
+        });
+    }
+
+    private void addArmyListener() {
+        gameService.largestArmy.addListener((MapChangeListener<? super String, ? super LargestArmy>) c -> {
+            if (c.getValueAdded().id().equals(userService.getCurrentUser()._id())) {
+                largestArmyAnimationController.largestArmyAnimationOne(largestArmyView);
             }
         });
     }
@@ -102,7 +122,7 @@ public class ResourceAnimationController {
     public void handleResources(String moveAction) {
         int counter = 0;
 
-        Resources resources = valueAdded.resources();
+        Resources resources = valueAddedMe.resources();
         int brick = resources.brick();
         int grain = resources.grain();
         int ore = resources.ore();
@@ -113,7 +133,7 @@ public class ResourceAnimationController {
         resourceNewAnimationController.setResourceCounts(ore, lumber, brick, wool, grain);
         resourceRemovedAnimationController.setResourceCounts(ore, lumber, brick, wool, grain);
 
-        resources = valueRemoved.resources();
+        resources = valueRemovedMe.resources();
         int oldBrick = resources.brick();
         int oldGrain = resources.grain();
         int oldOre = resources.ore();
@@ -160,10 +180,22 @@ public class ResourceAnimationController {
             counter += 1;
             resourceNewAnimationController.newResourceCardAnimation(whaleView, counter, 5, moveAction);
         }
+
+        this.handleDevCards(counter);
     }
 
-    public void handleDevCards() {
-        List<DevelopmentCard> devCardsNew = valueAdded.developmentCards();
+    public void handleDevCards(int counter) {
+        List<DevelopmentCard> devCardsNew;
+        List<DevelopmentCard> devCardsOld;
+
+        if(counter < 0) {
+            devCardsNew = valueAddedOther.developmentCards();
+            devCardsOld = valueRemovedOther.developmentCards();
+        } else {
+            devCardsNew = valueAddedMe.developmentCards();
+            devCardsOld = valueRemovedMe.developmentCards();
+        }
+
         knightNew = 0;
         roadNew = 0;
         plentyNew = 0;
@@ -183,9 +215,7 @@ public class ResourceAnimationController {
         }
 
         devCardNewAnimationController.setCardCounts(knightNew, roadNew, plentyNew, monopolyNew, vpointNew);
-        devCardRemovedAnimationController.setCardCounts(knightNew, roadNew, plentyNew, monopolyNew, vpointNew);
 
-        List<DevelopmentCard> devCardsOld = valueRemoved.developmentCards();
         knightOld = 0;
         roadOld = 0;
         plentyOld = 0;
@@ -203,33 +233,41 @@ public class ResourceAnimationController {
                 case DEV_UNKNOWN -> unknownOld += 1;
             }
         }
+
+        if(knightNew > knightOld || roadNew > roadOld || plentyNew > plentyOld || monopolyNew > monopolyOld || vpointNew > vpointOld) {
+            if(counter > 0) {
+                disableEndTurnButton((counter * 1000L) + 1250);
+            } else if (!(vpointNew > vpointOld)) {
+                handlePlayedDevCards();
+            }
+        } else if (counter > 0) {
+            disableEndTurnButton(counter * 1000L);
+        }
     }
 
     public void handleNewDevCards() {
         if (knightNew > knightOld) {
-            devCardNewAnimationController.newDevCardAnimationOne(knightView, 1, 1);
+            devCardNewAnimationController.newDevCardAnimationOne(knightView, 1);
         } else if (roadNew > roadOld) {
-            devCardNewAnimationController.newDevCardAnimationOne(roadView, 1, 2);
+            devCardNewAnimationController.newDevCardAnimationOne(roadView, 2);
         } else if (plentyNew > plentyOld) {
-            devCardNewAnimationController.newDevCardAnimationOne(plentyView, 1, 3);
+            devCardNewAnimationController.newDevCardAnimationOne(plentyView, 3);
         } else if (monopolyNew > monopolyOld) {
-            devCardNewAnimationController.newDevCardAnimationOne(monopolyView, 1, 4);
+            devCardNewAnimationController.newDevCardAnimationOne(monopolyView, 4);
         } else if (vpointNew > vpointOld) {
-            devCardNewAnimationController.newDevCardAnimationOne(vpointView, 1, 5);
+            devCardNewAnimationController.newDevCardAnimationOne(vpointView, 5);
         }
     }
 
-    public void handleRemovedDevCards() {
-        if (knightOld > knightNew) {
-            devCardRemovedAnimationController.removedDevCardAnimationOne(knightView, 1, 1);
-        } else if (roadOld > roadNew) {
-            devCardRemovedAnimationController.removedDevCardAnimationOne(roadView, 1, 2);
-        } else if (plentyOld > plentyNew) {
-            devCardRemovedAnimationController.removedDevCardAnimationOne(plentyView, 1, 3);
-        } else if (monopolyOld > monopolyNew) {
-            devCardRemovedAnimationController.removedDevCardAnimationOne(monopolyView, 1, 4);
-        } else if (vpointOld > vpointNew) {
-            devCardRemovedAnimationController.removedDevCardAnimationOne(vpointView, 1, 5);
+    public void handlePlayedDevCards() {
+        if (knightNew > knightOld) {
+            devCardPlayedAnimationController.playedDevCardAnimationOne(knightView, 1);
+        } else if (roadNew > roadOld) {
+            devCardPlayedAnimationController.playedDevCardAnimationOne(roadView, 2);
+        } else if (plentyNew > plentyOld) {
+            devCardPlayedAnimationController.playedDevCardAnimationOne(plentyView, 3);
+        } else if (monopolyNew > monopolyOld) {
+            devCardPlayedAnimationController.playedDevCardAnimationOne(monopolyView, 4);
         }
     }
 
@@ -266,4 +304,23 @@ public class ResourceAnimationController {
         });
         timeline.play();
     }
+
+    public void disableEndTurnButton(Long time) {
+        ExpectedMove move = ingameStateController.ingameService.getExpectedMove();
+        if(move.action().equals(BUILD) && move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            new Thread(() -> {
+                try {
+                    ingameStateController.setDisableEndTurn(true);
+                    Thread.sleep(time+100);
+                    ingameStateController.setDisableEndTurn(false);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+        } else if (move.players().get(0).equals(userService.getCurrentUser()._id())) {
+            ingameStateController.setTime(time);
+            ingameStateController.setDisableEndTurn(true);
+        }
+    }
 }
+

@@ -12,12 +12,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
 import static de.uniks.pioneers.GameConstants.*;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
@@ -37,13 +39,14 @@ public class BoardController {
     private final UserService userService;
     private final ResourceService resourceService;
     private final MapRenderService mapRenderService;
-    public SimpleObjectProperty<Game> game;
-    private Thread hextileRenderThread;
-    final BoardGenerator generator = new BoardGenerator();
+    public  SimpleObjectProperty<Game> game;
+    private final RobberService robberService;
+    private  Thread hextileRenderThread;
+   final BoardGenerator generator = new BoardGenerator();
 
     @Inject
     public BoardController(IngameService ingameService, UserService userService, IngameSelectController ingameSelectController,
-                           GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService){
+                           GameStorage gameStorage, GameService gameService, ResourceService resourceService, MapRenderService mapRenderService, RobberService robberService){
         this.ingameService = ingameService;
         this.ingameSelectController = ingameSelectController;
         this.gameService = gameService;
@@ -51,6 +54,7 @@ public class BoardController {
         this.gameStorage = gameStorage;
         this.resourceService = resourceService;
         this.mapRenderService = mapRenderService;
+        this.robberService = robberService;
     }
 
     public void buildMapPreview(MapTemplate mapTemplate, Pane fieldPane) {
@@ -216,7 +220,7 @@ public class BoardController {
         eventHexView.setFill(Color.gray(0,0.1));
         this.fieldPane.getChildren().add(eventHexView);
 
-        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView);
+        HexTileController newHexTileController = new HexTileController(fieldPane, hexTile, hexView, eventHexView, robberService);
         this.tileControllers.add(newHexTileController);
     }
 

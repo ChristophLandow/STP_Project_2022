@@ -3,6 +3,7 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.ResourceService;
+import de.uniks.pioneers.services.UserService;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.MapChangeListener;
@@ -40,6 +41,7 @@ public class IngamePlayerResourcesController {
 
     private final GameService gameService;
     private final ResourceService resourceService;
+    private final UserService userService;
     private Map<String, Label> resourceLabelMap;
     private Map<String, Pane> resourcePaneMap;
     private Map<String, Label> devLabelMap;
@@ -50,9 +52,10 @@ public class IngamePlayerResourcesController {
     private ResourceAnimationController resourceAnimationController;
 
     @Inject
-    public IngamePlayerResourcesController(GameService gameService, ResourceService resourceService) {
+    public IngamePlayerResourcesController(GameService gameService, ResourceService resourceService, UserService userService) {
         this.gameService = gameService;
         this.resourceService = resourceService;
+        this.userService = userService;
     }
 
     public void stop() {
@@ -77,7 +80,7 @@ public class IngamePlayerResourcesController {
         }
     }
 
-    public void init() {
+    public void init(IngameStateController ingameStateController) {
         // set values to gui and setup listeners
         setImages();
 
@@ -118,7 +121,7 @@ public class IngamePlayerResourcesController {
         resourceService.myResources.addListener(resourceMapChangeListener);
         resourceService.myDevCards.addListener(devCardMapChangeListener);
         resourceService.notEnoughResources.addListener(enoughResourcesListener);
-        this.resourceAnimationController = new ResourceAnimationController(root, gameService, resourceService);
+        this.resourceAnimationController = new ResourceAnimationController(root, gameService, resourceService, userService, ingameStateController);
     }
 
     private void setImages() {

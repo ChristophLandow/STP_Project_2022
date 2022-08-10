@@ -3,7 +3,6 @@ package de.uniks.pioneers.controller.subcontroller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.services.*;
-import de.uniks.pioneers.model.Harbor;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,10 +20,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +48,10 @@ class BuildingPointControllerTest extends ApplicationTest {
     ResourceService resourceService;
 
     @Mock
-    GameStorage gameStorage;
+    AchievementService achievementService;
+
+    @Spy
+    GameStorage gameStorage = new GameStorage(achievementService);
 
     @Mock
     IngameSelectController ingameSelectController;
@@ -114,10 +114,6 @@ class BuildingPointControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testCheckSettlementSpot(){
-    }
-
-    @Test
     void checkTradeOptions() {
         List<Harbor> harborList = new ArrayList<>();
         harborList.add(new Harbor(-1,-1,2,"grain", 7));
@@ -169,5 +165,6 @@ class BuildingPointControllerTest extends ApplicationTest {
         buildingPointController.checkTradeOptions();
         buildingPointController.uploadCoords = new int[]{-1, 2, -1, 0};
         buildingPointController.checkTradeOptions();
+        assertEquals(gameStorage.tradeOptions.size(), 6);
     }
 }

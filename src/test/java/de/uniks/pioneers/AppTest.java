@@ -4,7 +4,9 @@ import de.uniks.pioneers.dto.Event;
 import de.uniks.pioneers.dto.MessageDto;
 import de.uniks.pioneers.dto.RobDto;
 import de.uniks.pioneers.model.*;
+import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +21,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import org.testfx.matcher.control.TextMatchers;
 import org.testfx.util.WaitForAsyncUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -141,7 +144,15 @@ class AppTest extends ApplicationTest {
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 0, 0, 0, 0, 0), new RemainingBuildings(5, 4, 15), 0, 0, new ArrayList<>())));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "0", "000", "000", FOUNDING_ROLL, 3, null, null, null, null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove[]{new ExpectedMove(FOUNDING_ROLL, List.of(new String[]{"001", "002", "003"}))}), null)));
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",ROAD_ACHIEVEMENT,null,100)));
         sleep(3000);
+
+        Label titleLabel = lookup("#titleLabel").query();
+        assertNotEquals(titleLabel,"Title");
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",CITY_ACHIEVEMENT,null,100)));
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",SETTLEMENT_ACHIEVEMENT,null,100)));
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",HARBOR_ACHIEVEMENT,null,100)));
+        TestModule.achievementSubject.onNext(new Event<>(".updated", new Achievement("","","id",WINNER_ACHIEVEMENT,null,100)));
 
         WaitForAsyncUtils.waitForFxEvents();
         verifyThat("#situationLabel", LabeledMatchers.hasText("TestUser_001:\n" + "roll the dice"));
@@ -410,6 +421,47 @@ class AppTest extends ApplicationTest {
         rightPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, false, true)))));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "38", "000", "000", BUILD, 0, null, null, null, null, "new")));
-        sleep(4000);
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "21", "000", "000", BUILD, 0, null, null, null, null, null)));
+
+        // play dev card other
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(ROLL, List.of("001"))), null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "001", ROLL, 8, null, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(BUILD, List.of("001"))), null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "001", ROLL, 8, null, null, null, null, null)));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "001", BUILD, 8, null, null, null, null, "knight")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "001", BUILD, 8, null, null, null, null, "knight")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "001", BUILD, 8, null, null, null, null, "knight")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 5, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "21", "000", "001", BUILD, 0, null, null, null, null, null)));
+
+        // play dev card
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(ROLL, List.of("000"))), null)));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "000", ROLL, 9, null, null, null, null, null)));
+        TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(BUILD, List.of("000"))), null)));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        clickOn("#hammerPane");
+        WaitForAsyncUtils.waitForFxEvents();
+        Pane leftPane = lookup("#leftPane").query();
+        Platform.runLater(() -> {
+            leftPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null));
+            clickOn("#knightView");
+            clickOn("#playButton");
+        });
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "000", BUILD, 8, null, null, null, null, "knight")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "000", BUILD, 8, null, null, null, null, "knight")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "000", BUILD, 8, null, null, null, null, "knight")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 3, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "27", "000", "000", BUILD, 8, null, null, null, null, "knight")));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "000", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 5, 0, List.of(new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false), new DevelopmentCard(DEV_KNIGHT, true, false)))));
+
+        // victory
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "001", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 8, 0, List.of(new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false), new DevelopmentCard(DEV_KNIGHT, false, false)))));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "002", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 9, 0, new ArrayList<>())));
+        TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000", "003", "#ff0000", true, 3, new Resources(0, 1, 1, 2, 1, 0), new RemainingBuildings(2, 4, 14), 10, 0, new ArrayList<>())));
     }
 }

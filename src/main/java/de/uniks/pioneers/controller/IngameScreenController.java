@@ -51,7 +51,7 @@ public class IngameScreenController implements Controller {
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
     @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
-    @FXML public ImageView tradeImageView, hourglassImageView, nextTurnImageView, leftDiceImageView, rightDiceImageView, hammerImageView, leftView, rightView;
+    @FXML public ImageView tradeImageView, turnImageView, nextTurnImageView, nextTurnDisabledImageView, leftDiceImageView, rightDiceImageView, hammerImageView, leftView, rightView;
     @FXML public ListView<Node> playerListView;
     @FXML public Rectangle downRectangle, upRectangle;
     @FXML public Canvas mapCanvas;
@@ -119,7 +119,7 @@ public class IngameScreenController implements Controller {
         this.achievementService = achievementService;
         this.diceSubcontroller = diceSubcontroller;
         this.ingameSelectController = new IngameSelectController();
-        this.boardController = new BoardController(ingameService, userService, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService);
+        this.boardController = new BoardController(ingameService, userService, ingameSelectController, gameStorage, gameService, resourceService, mapRenderService, robberService);
         this.boardController.game = game;
 
         finishedMapRenderListener = (observable, oldValue, newValue) -> {
@@ -180,9 +180,7 @@ public class IngameScreenController implements Controller {
         gameChatController.render();
         gameChatController.init();
 
-        this.achievementPopUpController.init();
-
-        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
+        ingameSelectController.init(gameStorage, ingameService, prefService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
 
         this.tradePopUpController = tradePopUpControllerProvider.get();
@@ -202,8 +200,8 @@ public class IngameScreenController implements Controller {
         // set dice subcontroller
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
-        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, timerService, ingameService, resourceService, gameService, userService, robberController);
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, robberController, hourglassImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController, tradePopUpController);
+        this.ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, timerService, ingameService, resourceService, gameService, userService, robberController, false);
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, robberController, turnImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController, resourceService);
         this.timerService.init(ingameSelectController, ingameDevelopmentCardController);
         // init game attributes and event listeners
         gameService.initGame();
@@ -225,7 +223,7 @@ public class IngameScreenController implements Controller {
         );
 
         ingamePlayerController = new IngamePlayerController(userService, leaveGameController, elementProvider, playerListView, spectatorProvider, game.get(), hammerImageView, streetCountLabel,
-                houseCountLabel, cityCountLabel, streetSVG, citySVG, houseSVG, tradeImageView, hourglassImageView, nextTurnImageView);
+                houseCountLabel, cityCountLabel, streetSVG, citySVG, houseSVG, tradeImageView, turnImageView, nextTurnImageView);
 
         // add change listeners
         // players change listener
@@ -235,6 +233,7 @@ public class IngameScreenController implements Controller {
                 ingamePlayerController.renderPlayer(c.getValueAdded());
             }
         });
+
         victoryPointController.init(users, root, leaveGameController);
 
         gameService.members.addListener((ListChangeListener<? super Member>) c -> {
@@ -278,11 +277,13 @@ public class IngameScreenController implements Controller {
         IngamePlayerResourcesController ingamePlayerResourcesController = resourcesControllerProvider.get();
         ingamePlayerResourcesController.root = this.root;
         ingamePlayerResourcesController.render();
-        ingamePlayerResourcesController.init();
+        ingamePlayerResourcesController.init(ingameStateController);
 
         // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();
         tradeOfferPopUpController.init();
+
+        this.achievementPopUpController.init();
     }
 
     private void renderBuilding(Building building) {
@@ -335,7 +336,6 @@ public class IngameScreenController implements Controller {
         mapRenderService.stop();
         boardController.stop();
         achievementPopUpController.stop();
-        achievementService.stop();
     }
 
     public void setUsers(List<User> users) {
