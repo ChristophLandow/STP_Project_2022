@@ -5,7 +5,6 @@ import de.uniks.pioneers.controller.PopUpController.AchievementPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
-import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
@@ -28,10 +27,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+
 import javax.inject.Provider;
 import java.util.List;
 
-import static de.uniks.pioneers.GameConstants.*;
+import static de.uniks.pioneers.GameConstants.BUILD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
