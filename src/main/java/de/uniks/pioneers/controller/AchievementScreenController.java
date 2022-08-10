@@ -4,6 +4,7 @@ import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.services.AchievementService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +24,6 @@ import static de.uniks.pioneers.Constants.ACHIEVEMENTS_SCREEN_TITLE;
 import static de.uniks.pioneers.GameConstants.*;
 
 public class AchievementScreenController implements Controller {
-
-
     @FXML Label cityPlanerDateLabel;
     @FXML Label longestRoadDateLabel;
     @FXML Label seaBuilderDateLabel;
@@ -38,19 +37,22 @@ public class AchievementScreenController implements Controller {
     @FXML VBox chickenDinnerBox;
     private final AchievementService achievemetService;
     private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    private final StylesService stylesService;
     private final App app;
     private ObservableMap<String, Achievement> achievements;
 
     @Inject
-    public AchievementScreenController(App app, AchievementService achievementService, Provider<LobbyScreenController> lobbyScreenControllerProvider){
+    public AchievementScreenController(App app, StylesService stylesService, AchievementService achievementService, Provider<LobbyScreenController> lobbyScreenControllerProvider){
         this.achievemetService = achievementService;
         this.lobbyScreenControllerProvider = lobbyScreenControllerProvider;
+        this.stylesService = stylesService;
         this.app = app;
     }
 
     @Override
     public void init() {
         app.getStage().setTitle(ACHIEVEMENTS_SCREEN_TITLE);
+        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets());
     }
 
     @Override
@@ -101,7 +103,7 @@ public class AchievementScreenController implements Controller {
     }
 
     public void setAchievement(Label dateLabel, VBox box, Achievement achievement, String kind){
-        if(achievement.progress() == 100){
+        if(achievement.progress() >= 100){
             dateLabel.setText(achievement.unlockedAt());
             Image image = new Image("de/uniks/pioneers/checkmark.png");
             ImageView imageView = new ImageView();

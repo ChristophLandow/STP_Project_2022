@@ -37,7 +37,7 @@ public class AchievementService {
         this.eventListener = eventListener;
         this.userService = userService;
         this.achievementsApiService = achievementsApiService;
-        initAchievementListener();
+
     }
 
     public void initAchievementListener(){
