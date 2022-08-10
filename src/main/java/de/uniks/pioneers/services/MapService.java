@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
+import static de.uniks.pioneers.EditorConstants.RANDOM;
 
 @Singleton
 public class MapService {
@@ -88,9 +89,12 @@ public class MapService {
         for (EditTile et : editTiles) {
             if (!et.hexTile.type.equals("") && et.active) {
                 int x = et.hexTile.q;
-                int y = et.hexTile.r;
-                int z = et.hexTile.s;
+                int y = et.hexTile.s;
+                int z = et.hexTile.r;
                 String type = et.hexTile.type;
+                if (type.equals(RANDOM)) {
+                    type = null;
+                }
                 int number = et.hexTile.number;
                 TileTemplate tileTemplate = new TileTemplate(x, y, z, type, number);
                 tiles.add(tileTemplate);
@@ -105,8 +109,8 @@ public class MapService {
             //check if there is a harbor
             if (!et.currentHarborType.equals("") && et.active){
                 int x = et.hexTile.q;
-                int y = et.hexTile.r;
-                int z = et.hexTile.s;
+                int y = et.hexTile.s;
+                int z = et.hexTile.r;
                 String type = et.currentHarborType.replace("harbour_", "");
                 //check if the harbour is a 3:1
                 if (type.equals("general")) {
@@ -131,8 +135,11 @@ public class MapService {
         Polygon tile = mapEditorController.setView(scale);
         //set the tiles
         for (TileTemplate tt : mapTemplate.tiles()) {
-            HexTile hexTile = new HexTile(tt.x(), tt.y(), tt.z(), scale, top);
+            HexTile hexTile = new HexTile(tt.x(), tt.z(), tt.y(), scale, top);
             hexTile.type = tt.type();
+            if (hexTile.type == null) {
+                hexTile.type = RANDOM;
+            }
             hexTile.number = tt.numberToken();
             ImageView numberView = mapEditorController.setNumberView(hexTile, scale);
             EditTile editTile = new EditTile(hexTile, tile, numberView, this.mapEditorController);
