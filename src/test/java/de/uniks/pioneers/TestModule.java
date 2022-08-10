@@ -555,8 +555,8 @@ public class TestModule {
             public Observable<List<Achievement>> getUserAchievements(String userId) {
                 ArrayList<Achievement> returnValue = new ArrayList<>();
                 returnValue.add(new Achievement("","",userId,ROAD_ACHIEVEMENT,null,100));
-                returnValue.add(new Achievement("","",userId,SETTLEMENT_ACHIEVEMENT,null,0));
-                returnValue.add(new Achievement("","",userId,CITY_ACHIEVEMENT,null,0));
+                returnValue.add(new Achievement("","",userId,SETTLEMENT_ACHIEVEMENT,null,100));
+                returnValue.add(new Achievement("","",userId,CITY_ACHIEVEMENT,null,100));
 
                 return Observable.just(returnValue);
             }
