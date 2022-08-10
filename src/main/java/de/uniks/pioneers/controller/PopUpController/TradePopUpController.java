@@ -155,10 +155,15 @@ public class TradePopUpController implements Controller {
             } else {
                 ingameService.tradeWithPlayers();
             }
+            // disable cancel button to wait for a partner
+            this.cancel.setDisable(true);
         };
 
         // setup eventHandler to cancel trade
-        cancelHandler = event -> stop();
+        cancelHandler = event -> {
+            ingameService.finishTrade();
+            stop();
+        };
 
         // add event handler to buttons
         tradeWithBank.addEventHandler(MouseEvent.MOUSE_CLICKED, bankHandler);
@@ -175,8 +180,6 @@ public class TradePopUpController implements Controller {
                     TradePopUpPlayerListElementController playerAccepted = playerElements.get(s.userId());
                     if(playerAccepted != null && s.resources() != null) {
                         playerAccepted.displayAcceptedMark();
-//                        ingameService.confirmTrade(s.userId());
-//                        Platform.runLater(this::stop);
                     }
                 });
             }
@@ -263,6 +266,7 @@ public class TradePopUpController implements Controller {
 
     public void enableChoosePlayer() {
         this.playerElements.values().forEach(TradePopUpPlayerListElementController::setCheckmarkAction);
+        this.cancel.setDisable(false);
     }
 
     private class TradeSpinnerFactory extends SpinnerValueFactory<Integer> {

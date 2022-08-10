@@ -70,19 +70,14 @@ public class TradePopUpPlayerListElementController {
         final String resourceURL = "/de/uniks/pioneers/controller/subcontroller/images/trade_accepted.png";
         final Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
         acceptedMark.setImage(img);
-//        Platform.runLater(() ->{
-//            try {
-//                TimeUnit.SECONDS.sleep(2);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        });
     }
 
     public void setCheckmarkAction() {
-        this.acceptedMark.setOnMouseClicked(event -> {
-            ingameService.acceptPartner(acceptedMark.getId());
-            ingameService.tradeAccepted.set(true);
-        });
+        if (this.acceptedMark.getImage() != null) {
+            this.acceptedMark.setOnMouseClicked(event -> {
+                ingameService.acceptPartner(acceptedMark.getId());
+                ingameService.tradeAccepted.set(true);
+            });
+        }
     }
 }

@@ -84,7 +84,7 @@ public class TradeOfferPopUpController implements Controller {
     private EventHandler<MouseEvent> acceptHandler;
     private EventHandler<MouseEvent> declineHandler;
     private EventHandler<WindowEvent> closeStageHandler;
-    private ChangeListener<Boolean> tradeOfferListener;
+    private ChangeListener<Boolean> tradeOfferedChangeListener;
     private ListChangeListener<Move> tradeAcceptedListener;
 
 
@@ -104,7 +104,7 @@ public class TradeOfferPopUpController implements Controller {
         popUpStage.setTitle("trade offer");
 
         // create listener for trade offer
-        tradeOfferListener = ((observable, oldValue, newValue) -> {
+        tradeOfferedChangeListener = ((observable, oldValue, newValue) -> {
             if (oldValue.equals(false) && newValue.equals(true)) {
                 show();
             } else if (oldValue.equals(true) && newValue.equals(false)) {
@@ -123,7 +123,7 @@ public class TradeOfferPopUpController implements Controller {
         };
 
         // add listeners for trade is offered and trade is accepted
-        ingameService.tradeIsOffered.addListener(tradeOfferListener);
+        ingameService.tradeIsOffered.addListener(tradeOfferedChangeListener);
         // ingameService.offerMoves.addListener(tradeAcceptedListener);
     }
 
@@ -203,22 +203,18 @@ public class TradeOfferPopUpController implements Controller {
 
         // invoke event handlers for accept and decline trade offer
         acceptHandler = e -> ingameService.makeOffer();
-        declineHandler = e -> { disposable.add(
-                ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(GameConstants.OFFER))
-                        .observeOn(FX_SCHEDULER)
-                        .doOnError(Throwable::printStackTrace)
-                        .subscribe()
-        );
+        declineHandler = e -> {
+            ingameService.decline();
             ingameService.tradeIsOffered.set(false);
         };
 
         // decline trade when closing stage
         closeStageHandler = e -> { disposable.add(
-                ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(GameConstants.OFFER))
-                        .observeOn(FX_SCHEDULER)
-                        .doOnError(Throwable::printStackTrace)
-                        .subscribe()
-        );
+            ingameService.postMove(ingameService.game.get()._id(), new CreateMoveDto(GameConstants.OFFER))
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(Throwable::printStackTrace)
+                    .subscribe()
+            );
             ingameService.tradeIsOffered.set(false);
         };
 
@@ -239,7 +235,7 @@ public class TradeOfferPopUpController implements Controller {
             accept.removeEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
             decline.removeEventHandler(MouseEvent.MOUSE_CLICKED, declineHandler);
             popUpStage.removeEventHandler(WindowEvent.ANY, closeStageHandler);
-            ingameService.tradeIsOffered.removeListener(tradeOfferListener);
+            ingameService.tradeIsOffered.removeListener(tradeOfferedChangeListener);
             ingameService.offerMoves.removeListener(tradeAcceptedListener);
         }catch (NullPointerException ignored){
 

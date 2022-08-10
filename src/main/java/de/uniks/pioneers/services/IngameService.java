@@ -133,6 +133,14 @@ public class IngameService {
         );
     }
 
+    public void decline() {
+        disposable.add(postMove(game.get()._id(), new CreateMoveDto(OFFER))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe(move -> tradeIsOffered.set(false))
+        );
+    }
+
     public void initTrade() {
         trade = new HashMap<>();
     }
@@ -146,7 +154,7 @@ public class IngameService {
         );
     }
 
-    public void declineTrade() {
+    public void finishTrade() {
         System.out.println("decline trade"); // TODO
         if (currentExpectedMove.get().action().equals(ACCEPT)) {
             disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT))

@@ -82,7 +82,7 @@ public class GameService {
                         System.out.println(move); // TODO
                         if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
                             ingameService.tradeOffer.set(move);
-                        } else if(move.action().equals(OFFER) && move.partner().equals(me)) {
+                        } else if(move.action().equals(OFFER)) {
                             ingameService.offerMoves.add(move);
                         }
 
