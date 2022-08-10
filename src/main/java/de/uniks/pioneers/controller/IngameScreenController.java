@@ -181,7 +181,7 @@ public class IngameScreenController implements Controller {
 
         this.achievementPopUpController.init();
 
-        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
+        ingameSelectController.init(gameStorage, ingameService, prefService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
 
         this.mapRenderService.isFinishedLoading().addListener(finishedMapRenderListener);
