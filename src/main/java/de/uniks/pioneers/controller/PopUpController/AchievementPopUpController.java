@@ -70,8 +70,6 @@ public class AchievementPopUpController implements Controller {
         return view;
     }
 
-
-
     public void showPopUp(String title, String description){
         Pane root = (Pane) achievementPane.getParent();
 

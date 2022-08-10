@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.PopUpController.AchievementPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradeOfferPopUpController;
 import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.controller.subcontroller.*;
+import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.model.Game;
 import de.uniks.pioneers.model.User;
