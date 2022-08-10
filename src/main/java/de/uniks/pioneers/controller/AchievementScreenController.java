@@ -104,7 +104,7 @@ public class AchievementScreenController implements Controller {
 
     public void setAchievement(Label dateLabel, VBox box, Achievement achievement, String kind){
         if(achievement.progress() >= 100){
-            dateLabel.setText(achievement.unlockedAt());
+            dateLabel.setText(achievement.unlockedAt().substring(0,10));
             Image image = new Image("de/uniks/pioneers/checkmark.png");
             ImageView imageView = new ImageView();
             imageView.setFitHeight(40);

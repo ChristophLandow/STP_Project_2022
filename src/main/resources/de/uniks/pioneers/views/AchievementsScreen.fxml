@@ -23,7 +23,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label prefHeight="30.0" prefWidth="206.0" text="100 citys build">
+      <Label prefHeight="30.0" prefWidth="206.0" text="100 citys built">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -51,12 +51,12 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label prefHeight="30.0" prefWidth="206.0" text="100 roads build">
+      <Label prefHeight="30.0" prefWidth="206.0" text="100 roads built">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="longestRoadDateLabel" prefHeight="30.0" prefWidth="140.0" text="26-06-2022">
+      <Label fx:id="longestRoadDateLabel" prefHeight="30.0" prefWidth="140.0" text="xx.xx.xxxx">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -75,7 +75,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label prefHeight="30.0" prefWidth="206.0" text="50 harbors build">
+      <Label prefHeight="30.0" prefWidth="206.0" text="50 harbors built">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -99,7 +99,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Label prefHeight="30.0" prefWidth="206.0" text="100 settlements build">
+      <Label prefHeight="30.0" prefWidth="206.0" text="100 settlements built">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
