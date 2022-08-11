@@ -62,7 +62,6 @@ public class MapEditorController implements Controller{
     private final App app;
     private final Provider<MapBrowserController> mapBrowserControllerProvider;
 
-    private final StylesService stylesService;
 
     @Inject
     public MapEditorController(MapService mapService, UserService userService, App app, Provider<MapBrowserController> mapBrowserControllerProvider, StylesService stylesService){
@@ -71,14 +70,10 @@ public class MapEditorController implements Controller{
         this.userService = userService;
         this.app = app;
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
-        this.stylesService = stylesService;
         this.boardGenerator = new BoardGenerator();
     }
     @Override
     public void init() {
-        String globalStyles = "/de/uniks/pioneers/styles/globalStyles.css";
-        String globalStylesDark = "/de/uniks/pioneers/styles/globalStylesDark.css";
-        stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), globalStyles, globalStylesDark);
 
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, mapService.getCurrentMapSize());

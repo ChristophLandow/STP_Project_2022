@@ -42,8 +42,6 @@ public class SaveMapPopUpController implements Controller {
 
     private final MapService mapService;
 
-    private final StylesService stylesService;
-
     private List<EditTile> editTiles = new ArrayList<>();
     private final App app;
 
@@ -52,15 +50,11 @@ public class SaveMapPopUpController implements Controller {
     public SaveMapPopUpController(Provider<MapBrowserController> mapBrowserControllerProvider, MapService mapService, StylesService stylesService, App app) {
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.mapService = mapService;
-        this.stylesService = stylesService;
         this.app = app;
     }
 
     @Override
     public void init() {
-        String globalStyles = "/de/uniks/pioneers/styles/globalStyles.css";
-        String globalStylesDark = "/de/uniks/pioneers/styles/globalStylesDark.css";
-        stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), globalStyles, globalStylesDark);
     }
 
     @Override
