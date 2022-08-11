@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.*?>
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-   <ScrollPane fx:id="rulesScrollPane" hbarPolicy="NEVER" layoutX="-8.0" pannable="true" prefHeight="600.0" prefWidth="800.0" styleClass="text-id" vvalue="1.0">
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="3172.0" prefWidth="809.0">
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass=".anchorPane_id" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.RulesScreenController">
+   <ScrollPane fx:id="rulesScrollPane" hbarPolicy="NEVER" pannable="true" prefHeight="600.0" prefWidth="800.0" styleClass="text-id" vvalue="0.52">
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="3978.0" prefWidth="809.0">
          <Text layoutX="298.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="PIONEERS">
             <font>
                <Font name="System Bold" size="51.0" />
@@ -67,7 +70,7 @@
                <Font name="System Bold" size="24.0" />
             </font>
          </Text>
-         <Text layoutX="13.0" layoutY="1913.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Trade: By clicking on the Trade button, the trade popup will open and the player can either propose a trade to all other players with conditions to be chosen OR make a trade with the bank according to predefined conditions. " wrappingWidth="756.205078125">
+         <Text layoutX="13.0" layoutY="1913.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Trade: By clicking on the Trade button, the trade popup will open and the player can either propose a trade to all other players with conditions to be chosen OR make a trade with the bank according to predefined conditions. You can always exchange with the bank in the ratio 4:1, with a corresponding harbor also 3:1 or even 2:1." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
@@ -77,55 +80,55 @@
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2240.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Build: By clicking on the corresponding icon and then on the building point, each Sieleer can build igloos oder roads." wrappingWidth="756.205078125">
+         <Text layoutX="16.0" layoutY="2251.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Build: By clicking on the corresponding icon and then on the building point, each Sieleer can build igloos oder roads. The construction costs in resources can be found at the very bottom of this rulebook." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2458.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Buy cards: Clicking on the hammer icon will open a popup where you can choose whether you want to buy a hunter or a random development card." wrappingWidth="756.205078125">
+         <Text layoutX="16.0" layoutY="2535.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- Buy cards: Clicking on the hammer icon will open a popup where you can choose whether you want to buy a hunter or a random development card. The cost for a Development Card in resources can be found at the very bottom of this rulebook." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2702.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Play cards: If you have a development card you can play it by clicking on it. " wrappingWidth="756.205078125">
+         <Text layoutX="20.0" layoutY="2840.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="- Play cards: If you have a development card you can play it by clicking on it. " wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="14.0" layoutY="2742.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Upgrade: By clicking on the station icon and then clicking on a previously built igloo, an igloo can be upgraded to a station." wrappingWidth="756.205078125">
+         <Text layoutX="16.0" layoutY="2911.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-Upgrade: By clicking on the station icon and then clicking on a previously built igloo, an igloo can be upgraded to a station. The upgrade costs in resources can be found at the very bottom of this rulebook." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <Text layoutX="21.0" layoutY="2959.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically." wrappingWidth="756.205078125">
+         <Text layoutX="20.0" layoutY="3220.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="-End turn: By clicking on the End Turn icon, a player can end his turn at any time. It is now the next player's turn. When the visible countdown expires, the button will be pressed automatically." wrappingWidth="756.205078125">
             <font>
                <Font size="18.0" />
             </font>
          </Text>
-         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="336.0" layoutY="3027.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="346.0" layoutY="3287.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/nextButton.png" />
          </ImageView>
-         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="326.0" layoutY="2783.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="333.0" layoutY="3016.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/upgrade.png" />
          </ImageView>
-         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="167.0" layoutY="2523.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="167.0" layoutY="2624.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/HammerButton.png" />
          </ImageView>
-         <Text layoutX="294.0" layoutY="2599.0" strokeType="OUTSIDE" strokeWidth="0.0" text="→">
+         <Text layoutX="282.0" layoutY="2704.0" strokeType="OUTSIDE" strokeWidth="0.0" text="→">
             <font>
                <Font size="74.0" />
             </font>
          </Text>
-         <ImageView fitHeight="337.0" fitWidth="291.0" layoutX="334.0" layoutY="2410.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="337.0" fitWidth="291.0" layoutX="325.0" layoutY="2510.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../controller/ingame/card_question_mark.png" />
          </ImageView>
-         <ImageView fitHeight="113.0" fitWidth="106.0" layoutX="468.0" layoutY="2516.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="113.0" fitWidth="106.0" layoutX="482.0" layoutY="2617.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../controller/subcontroller/images/card_knight.png" />
          </ImageView>
-         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="270.0" layoutY="2281.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="284.0" layoutY="2333.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/buildIgloo.png" />
          </ImageView>
-         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="392.0" layoutY="2281.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="99.0" fitWidth="140.0" layoutX="394.0" layoutY="2333.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/buildStreet.png" />
          </ImageView>
          <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="298.0" layoutY="1684.0" pickOnBounds="true" preserveRatio="true">
@@ -137,30 +140,30 @@
          <ImageView fitHeight="61.0" fitWidth="180.0" layoutX="300.0" layoutY="1419.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/normalRoll.png" />
          </ImageView>
-         <Text layoutX="284.0" layoutY="3154.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 9 : Next Turn Button">
+         <Text layoutX="284.0" layoutY="3414.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 9 : Next Turn Button">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="248.0" layoutY="2908.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 8 : Upgrade igloo to station button">
+         <Text layoutX="256.0" layoutY="3154.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 8 : Upgrade igloo to station button">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="188.0" layoutY="2659.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 7 : Buy cards button and opening selection of cards">
+         <Text layoutX="186.0" layoutY="2773.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 7 : Buy cards button and opening selection of cards">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <Text layoutX="239.0" layoutY="2415.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 6 : Build Igloo and build Street Button">
+         <Text layoutX="238.0" layoutY="2467.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 6 : Build Igloo and build Street Button">
             <font>
                <Font size="14.0" />
             </font>
          </Text>
-         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="312.0" layoutY="1996.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="310.0" layoutY="2023.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../rules/tradeButton.png" />
          </ImageView>
-         <Text layoutX="305.0" layoutY="2170.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 5 : Trade Button">
+         <Text layoutX="307.0" layoutY="2206.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 5 : Trade Button">
             <font>
                <Font size="14.0" />
             </font>
@@ -186,6 +189,151 @@
          <Text layoutX="124.0" layoutY="819.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text=" Fig No. 1 :  (From left to right) Victory points and color, avatar and name, event cards, action cards, placed hunters and longest road." wrappingWidth="515.6396484375">
             <font>
                <Font size="14.0" />
+            </font>
+         </Text>
+         <Text layoutX="14.0" layoutY="3471.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="Build prices" wrappingWidth="756.205078125">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+         </Text>
+         <Text layoutX="134.0" layoutY="3555.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x Street">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="253.0" layoutY="3555.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="=">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3511.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_fish.png" />
+         </ImageView>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="435.0" layoutY="3512.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_ice.png" />
+         </ImageView>
+         <Text layoutX="291.0" layoutY="3556.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="394.0" layoutY="3555.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="27.0" layoutY="3506.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/buildStreet.png" />
+         </ImageView>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="28.0" layoutY="3610.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/buildIgloo.png" />
+         </ImageView>
+         <Text layoutX="138.0" layoutY="3660.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x Igloo">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="253.0" layoutY="3661.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="=">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3616.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_fish.png" />
+         </ImageView>
+         <Text layoutX="286.0" layoutY="3661.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="428.0" layoutY="3714.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_carbon.png" />
+         </ImageView>
+         <Text layoutX="390.0" layoutY="3674.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="534.0" layoutY="3616.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_polarbear.png" />
+         </ImageView>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="647.0" layoutY="3616.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_whale.png" />
+         </ImageView>
+         <Text layoutX="500.0" layoutY="3661.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="619.0" layoutY="3661.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="29.0" layoutY="3708.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/STationButton.png" />
+         </ImageView>
+         <Text layoutX="129.0" layoutY="3758.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x Station">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="253.0" layoutY="3758.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="=">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3714.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_whale.png" />
+         </ImageView>
+         <Text layoutX="286.0" layoutY="3758.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="2x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="394.0" layoutY="3758.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="3x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="428.0" layoutY="3617.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_ice.png" />
+         </ImageView>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="31.0" layoutY="3828.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/ingame/dev_card_question_mark.png" />
+         </ImageView>
+         <Text layoutX="129.0" layoutY="3878.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x Development Card">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="363.0" layoutY="3877.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="=">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="454.0" layoutY="3834.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_polarbear.png" />
+         </ImageView>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="559.0" layoutY="3834.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_whale.png" />
+         </ImageView>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="664.0" layoutY="3832.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_carbon.png" />
+         </ImageView>
+         <Text layoutX="416.0" layoutY="3878.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="523.0" layoutY="3878.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
+            </font>
+         </Text>
+         <Text layoutX="633.0" layoutY="3877.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1x ">
+            <font>
+               <Font name="System Bold" size="20.0" />
             </font>
          </Text>
       </AnchorPane>
