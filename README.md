@@ -149,12 +149,12 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
   - [X] Music
   - [X] Speech Instructions
   - [X] Hotkeys
-  - [ ] Development Cards
-  - [ ] Achievements
-- [ ] Map Browser
-  - [ ] Creating Custom Maps
-  - [ ] Editing Maps
-  - [ ] Voting for Maps
+  - [X] Development Cards
+  - [X] Achievements
+- [X] Map Browser
+  - [X] Creating Custom Maps
+  - [X] Editing Maps
+  - [X] Voting for Maps
 
 <p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
@@ -167,6 +167,10 @@ To play Pioneers you need an account. If you don't have an account yet, you can 
 - Version 3.0
   - improved test coverage
 - Version 3.1
+- Version 4.0
+  - added custom maps -> create, edit and play them
+  - added achievement system
+  - added development cards -> buying and playing them
 
 <p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
