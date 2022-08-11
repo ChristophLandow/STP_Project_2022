@@ -62,7 +62,6 @@ public class AchievementScreenControllerTest extends ApplicationTest {
         achievements.put(WINNER_ACHIEVEMENT,new Achievement("test", "test","test","test","test",33));
         achievements.put(SETTLEMENT_ACHIEVEMENT,new Achievement("test", "test","test","test","test",33));
         achievements.put(ROAD_ACHIEVEMENT,new Achievement("test", "test","test","test","test",33));
-        //when(achievementService.getMapLoadedChecker()).thenReturn(new SimpleBooleanProperty(true));
         when(achievementService.getAchievements()).thenReturn(achievements);
         when(achievementService.getChecker()).thenReturn(true);
         achievementScreenController.render();
