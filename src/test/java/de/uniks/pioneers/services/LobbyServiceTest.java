@@ -28,6 +28,9 @@ class LobbyServiceTest {
     @Mock
     GameApiService gameApiService;
 
+    @Mock
+    RefreshService refreshService;
+
     @InjectMocks
     LobbyService lobbyService;
 
