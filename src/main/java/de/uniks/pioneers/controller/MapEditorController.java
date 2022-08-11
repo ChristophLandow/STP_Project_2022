@@ -60,21 +60,26 @@ public class MapEditorController implements Controller{
     public String selection = "";
     public  String resMod = "";
     private final App app;
+
+    private final StylesService stylesService;
     private final Provider<MapBrowserController> mapBrowserControllerProvider;
 
 
     @Inject
-    public MapEditorController(MapService mapService, UserService userService, App app, Provider<MapBrowserController> mapBrowserControllerProvider, StylesService stylesService){
+    public MapEditorController(MapService mapService, UserService userService, App app, Provider<MapBrowserController> mapBrowserControllerProvider, StylesService stylesService, StylesService stylesService1){
 
         this.mapService = mapService;
         this.userService = userService;
         this.app = app;
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
+        this.stylesService = stylesService;
         this.boardGenerator = new BoardGenerator();
     }
     @Override
     public void init() {
-
+        String darkStyle = "de/uniks/pioneers/styles/Darkmode_MapEditor.css";
+        String style = "de/uniks/pioneers/styles/MapEditor.css";
+        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), style, darkStyle);
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, mapService.getCurrentMapSize());
         this.sizeSpinner.setValueFactory(valueFactory);

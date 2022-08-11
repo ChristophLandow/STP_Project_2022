@@ -1,0 +1,22 @@
+#tilesAnchorPane{
+    -fx-border-color: BLACK;
+    -fx-background-color:  #424242;
+}
+
+#numbersAnchorPane{
+    -fx-border-color: RED;
+    -fx-background-color:  #424242;
+}
+
+#harborsAnchorPane{
+    -fx-border-color: BLACK;
+    -fx-background-color:  #424242;
+}
+
+#mapEditorAnchorPane{
+    -fx-background-color:  #424242;
+}
+
+#mapScrollPane{
+    -fx-background-color:  #424242;
+}
