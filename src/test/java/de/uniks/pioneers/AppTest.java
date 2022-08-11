@@ -386,9 +386,9 @@ class AppTest extends ApplicationTest {
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(OFFER, List.of("002")), new ExpectedMove(ACCEPT, List.of("000")), new ExpectedMove(BUILD, List.of("000"))), null)));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "002", OFFER, 0, null, null, new Resources(null,1,-1,0,0,0), "000", null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(ACCEPT, List.of("000")), new ExpectedMove(BUILD, List.of("000"))), null)));
-        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "35", "000", "000", ACCEPT, 0, null, null, null, "002", null)));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","002","#0000ff", true,3, new Resources(0,2,0,0,1,1), new RemainingBuildings(3,4,13), 2, 0, new ArrayList<>())));
         TestModule.gamePlayerSubject.onNext(new Event<>(".updated", new Player("000","000","#ff0000", true,3, new Resources(0,1,3,3,2,2), new RemainingBuildings(3,4,13), 2, 0, new ArrayList<>())));
+        TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "35", "000", "000", ACCEPT, 0, null, null, null, "002", null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(BUILD, List.of("000"))), null)));
         WaitForAsyncUtils.waitForFxEvents();
 
