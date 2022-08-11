@@ -3,9 +3,11 @@ package de.uniks.pioneers.controller;
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
 import de.uniks.pioneers.services.StylesService;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
@@ -16,6 +18,9 @@ import static de.uniks.pioneers.Constants.RULES_SCREEN_TITLE;
 
 @Singleton
 public class RulesScreenController implements Controller {
+
+    @FXML
+    ScrollPane rulesScrollPane;
     private final App app;
     private final StylesService stylesService;
     private Stage stage;
@@ -61,6 +66,7 @@ public class RulesScreenController implements Controller {
             this.stage.toFront();
         }
         app.setIcons(stage);
+        rulesScrollPane.setVvalue(0);
     }
 
     @Override

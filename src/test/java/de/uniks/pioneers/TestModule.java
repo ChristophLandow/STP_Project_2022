@@ -490,33 +490,33 @@ public class TestModule {
             public Observable<List<MapTemplate>> getMaps() {
                 ArrayList<MapTemplate> returnValue = new ArrayList<>();
 
-                returnValue.add(new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null));
+                returnValue.add(new MapTemplate("yesterday", "today", "map123", "nice template", "", null, "1234", 3, null, null));
 
-                returnValue.add(new MapTemplate("","","","","","",0,null, null));
+                returnValue.add(new MapTemplate("","","","","","","",0, null, null));
                 return Observable.just(returnValue);
             }
 
             @Override
             public Observable<MapTemplate> getMap(String id) {
-                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", "", null, "1234", 3, null, null);
                 return Observable.just(mapTemplate);
             }
 
             @Override
             public Observable<MapTemplate> deleteMap(String id) {
-                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", null, "1234", 3, null, null);
+                MapTemplate mapTemplate = new MapTemplate("yesterday", "today", "map123", "nice template", "", null, "1234", 3, null, null);
                 return Observable.just(mapTemplate);
             }
 
             @Override
             public Observable<MapTemplate> createMap(CreateMapTemplateDto createMapTemplateDto) {
-                MapTemplate mapTemplate = new MapTemplate("1", "1", "1", "1", null, "1", 1, null, null);
+                MapTemplate mapTemplate = new MapTemplate("1", "1", "1", "1", "1", null, "1", 1, null, null);
                 return Observable.just(mapTemplate);
             }
 
             @Override
             public Observable<MapTemplate> updateMap(String id, UpdateMapTemplateDto updateMapTemplateDto){
-                MapTemplate mapTemplate = new MapTemplate("1", "1", "1", "1", null, "1", 1, null, null);
+                MapTemplate mapTemplate = new MapTemplate("1", "1", "1", "1", "1", null, "1", 1, null, null);
                 return Observable.just(mapTemplate);
             }
         };

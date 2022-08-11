@@ -7,6 +7,7 @@ public record MapTemplate(
         String updatedAt,
         String _id,
         String name,
+        String description,
         String icon,
         String createdBy,
         int votes,
