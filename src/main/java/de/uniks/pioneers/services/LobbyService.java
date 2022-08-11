@@ -15,14 +15,17 @@ import java.util.List;
 public class LobbyService {
     private final AuthApiService authApiService;
     private final GameApiService gameApiService;
+    private final RefreshService refreshService;
 
     @Inject
-    public LobbyService(AuthApiService authApiService, GameApiService gameApiService) {
+    public LobbyService(AuthApiService authApiService, GameApiService gameApiService, RefreshService refreshService) {
         this.authApiService = authApiService;
         this.gameApiService = gameApiService;
+        this.refreshService = refreshService;
     }
 
     public Observable<LogoutResult> logout() {
+        this.refreshService.stopRefreshCycle();
         return authApiService.logout();
     }
 

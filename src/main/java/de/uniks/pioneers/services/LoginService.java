@@ -16,12 +16,15 @@ public class LoginService {
     private final UserService userService;
     private final PrefService prefService;
 
+    private final RefreshService refreshService;
+
     @Inject
-    public LoginService(AuthApiService authApiService, TokenStorage tokenStorage, UserService userService, PrefService prefService) {
+    public LoginService(AuthApiService authApiService, TokenStorage tokenStorage, UserService userService, PrefService prefService, RefreshService refreshService) {
         this.authApiService = authApiService;
         this.tokenStorage = tokenStorage;
         this.userService = userService;
         this.prefService = prefService;
+        this.refreshService = refreshService;
     }
 
     public Observable<LoginResult> login(String userName, String password) {
@@ -30,6 +33,8 @@ public class LoginService {
                     tokenStorage.setAccessToken(result.accessToken());
                     tokenStorage.setRefreshToken(result.refreshToken());
                     userService.setCurrentUser(new User(result._id(), result.name(), result.status(), result.avatar()));
+                    this.refreshService.startRefreshCycle();
+
                 });
     }
 
@@ -45,6 +50,7 @@ public class LoginService {
                     tokenStorage.setAccessToken(result.accessToken());
                     tokenStorage.setRefreshToken(result.refreshToken());
                     userService.setCurrentUser(new User(result._id(), result.name(), result.status(), result.avatar()));
+                    this.refreshService.startRefreshCycle();
                 });
     }
 
