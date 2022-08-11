@@ -99,6 +99,7 @@ public class IngameScreenController implements Controller {
     private TradeOfferPopUpController tradeOfferPopUpController;
     public IngameDevelopmentCardController ingameDevelopmentCardController;
     public IngameSelectController ingameSelectController;
+    private TradePopUpController tradePopUpController;
 
     @Inject
     public IngameScreenController(App app, DiceSubcontroller diceSubcontroller, IngameService ingameService, GameStorage gameStorage, UserService userService, ResourceService resourceService,
@@ -182,6 +183,8 @@ public class IngameScreenController implements Controller {
         ingameSelectController.init(gameStorage, ingameService, prefService, roadFrame, settlementFrame, cityFrame);
         leaveGameController.init(this, gameChatController);
 
+        this.tradePopUpController = tradePopUpControllerProvider.get();
+
         this.mapRenderService.isFinishedLoading().addListener(finishedMapRenderListener);
 
         // set timeLabel of timer
@@ -198,7 +201,7 @@ public class IngameScreenController implements Controller {
         this.diceSubcontroller.init();
         this.diceSubcontroller.setLeftDiceView(this.leftDiceImageView).setRightDiceView(this.rightDiceImageView);
         this.ingameDevelopmentCardController = new IngameDevelopmentCardController(app.getStage(), hammerPane, leftPane, rightPane, hammerImageView, leftView, rightView, timerService, ingameService, resourceService, gameService, userService, robberController, false);
-        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, robberController, turnImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController, resourceService);
+        this.ingameStateController = new IngameStateController(userService, ingameService, timerService, boardController, turnPane, robberController, turnImageView, situationLabel, diceSubcontroller, game.get(), ingameSelectController, mapRenderService, robberService, speechService, ingameDevelopmentCardController, resourceService, tradePopUpController);
         this.timerService.init(ingameSelectController, ingameDevelopmentCardController);
         // init game attributes and event listeners
         gameService.initGame();
@@ -355,7 +358,6 @@ public class IngameScreenController implements Controller {
         ExpectedMove expectedMove = ingameService.getExpectedMove();
         if (expectedMove.action().equals(BUILD) && Objects.requireNonNull(expectedMove.players().get(0)).equals(gameService.me)) {
             speechService.play(GameConstants.SPEECH_TRADE);
-            TradePopUpController tradePopUpController = tradePopUpControllerProvider.get();
             tradePopUpController.show();
         }
     }
