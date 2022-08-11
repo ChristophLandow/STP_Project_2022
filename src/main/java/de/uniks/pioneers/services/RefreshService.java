@@ -3,9 +3,7 @@ package de.uniks.pioneers.services;
 import de.uniks.pioneers.dto.RefreshDto;
 import de.uniks.pioneers.model.LoginResult;
 import de.uniks.pioneers.rest.AuthApiService;
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Timer;

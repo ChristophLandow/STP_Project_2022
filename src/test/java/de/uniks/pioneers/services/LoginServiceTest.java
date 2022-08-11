@@ -51,6 +51,7 @@ class LoginServiceTest {
 
         verify(authApiService).login(new LoginDto("LoginServiceTestUser","12345678"));
         verify(userService, atLeastOnce()).setCurrentUser(any());
+        verify(refreshService, atLeastOnce()).startRefreshCycle();
 
     }
 
