@@ -202,14 +202,16 @@ public class TradePopUpController implements Controller {
     }
 
     private void initTimer() {
-        this.timerService.setTradeTimer(new Timer());
-        this.timerService.setTradeTimeLabel(this.timer);
-        this.timer.setText("30");
-        this.timer.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (Integer.parseInt(newValue) <= 0) {
-                stop();
-            }
-        });
+        if (this.timer != null) {
+            this.timerService.setTradeTimer(new Timer());
+            this.timerService.setTradeTimeLabel(this.timer);
+            this.timer.setText("30");
+            this.timer.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (Integer.parseInt(newValue) <= 0) {
+                    stop();
+                }
+            });
+        }
     }
 
     @Override
