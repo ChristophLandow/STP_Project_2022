@@ -67,6 +67,7 @@ public class ChatTabController {
         chatBox.heightProperty().addListener(u->scrollPane.setVvalue(1D));
 
         Tab chatTab = new Tab(this.chattingWith.name(), scrollPane);
+        chatTab.setId("newTab");
         chatTab.setOnClosed(this.chatController::removeTab);
         chatTab.setClosable(true);
 
@@ -123,9 +124,6 @@ public class ChatTabController {
             if(c.wasAdded()){
                 c.getAddedSubList().forEach(this::renderMessage);
             }
-            else if(c.wasRemoved()){
-                c.getList().forEach(this::deleteMessage);
-            }
         });
 
         currentUser = userService.getCurrentUser();
@@ -148,9 +146,7 @@ public class ChatTabController {
                         if (messageEvent.event().endsWith(".created")){
                             messages.add(message);
                         }
-                        else if (messageEvent.event().endsWith(".deleted")){
-                            messages.removeIf(m->m._id().equals(message._id()));
-                        } else if (messageEvent.event().endsWith(".updated")) {
+                        else if (messageEvent.event().endsWith(".updated")) {
                             messages.replaceAll(m->m.sender().equals(message.sender()) ? message : m);
                             updateMessage(message);
                         }
@@ -186,17 +182,6 @@ public class ChatTabController {
 
             chatMessages.add(newMessage);
         }
-    }
-
-
-    public void deleteMessage(MessageDto message){
-        chatMessages.removeIf(m->{
-            if(m.getMessageID().equals(message._id())){
-                m.stop();
-                return true;
-            }
-            return false;
-        });
     }
 
     public void updateMessage(MessageDto message){
