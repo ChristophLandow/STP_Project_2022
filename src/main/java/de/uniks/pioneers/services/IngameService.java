@@ -34,8 +34,9 @@ public class IngameService {
     private java.util.Map<String, Integer> trade = new HashMap<>();
 
     public final SimpleBooleanProperty tradeIsOffered = new SimpleBooleanProperty(false);
+    public final SimpleBooleanProperty tradeAccepted = new SimpleBooleanProperty(false);
     public final SimpleObjectProperty<Move> tradeOffer = new SimpleObjectProperty<>();
-    public ObservableList<Move> tradeAccepted = FXCollections.observableArrayList();
+    public ObservableList<Move> offerMoves = FXCollections.observableArrayList();
     private IngameScreenController actualIngameController;
 
     @Inject
@@ -112,7 +113,7 @@ public class IngameService {
         );
     }
 
-    public void acceptOffer() {
+    public void makeOffer() {
         Resources offer = tradeOffer.get().resources();
 
         int lumber = offer.lumber() == null ? 0 : offer.lumber() * -1;
@@ -130,19 +131,27 @@ public class IngameService {
         );
     }
 
+    public void decline() {
+        disposable.add(postMove(game.get()._id(), new CreateMoveDto(OFFER))
+                .observeOn(FX_SCHEDULER)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe(move -> tradeIsOffered.set(false))
+        );
+    }
+
     public void initTrade() {
         trade = new HashMap<>();
     }
 
-    public void confirmTrade(String playerId) {
+    public void acceptPartner(String playerId) {
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(move -> tradeAccepted = FXCollections.emptyObservableList())
+                .subscribe(move -> offerMoves = FXCollections.emptyObservableList())
         );
     }
 
-    public void declineTrade() {
+    public void finishTrade() {
         if (currentExpectedMove.get().action().equals(ACCEPT)) {
             disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT))
                     .observeOn(FX_SCHEDULER)

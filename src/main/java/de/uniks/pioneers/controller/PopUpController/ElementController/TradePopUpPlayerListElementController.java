@@ -1,21 +1,19 @@
 package de.uniks.pioneers.controller.PopUpController.ElementController;
 
 import de.uniks.pioneers.Main;
-import de.uniks.pioneers.services.GameService;
+import de.uniks.pioneers.services.IngameService;
 import de.uniks.pioneers.services.UserService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -24,6 +22,7 @@ public class TradePopUpPlayerListElementController {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final UserService userService;
+    private final IngameService ingameService;
 
     @FXML
     public Label playerNameLabel;
@@ -33,8 +32,9 @@ public class TradePopUpPlayerListElementController {
     public ImageView acceptedMark;
 
     @Inject
-    public TradePopUpPlayerListElementController(UserService userService, GameService gameService) {
+    public TradePopUpPlayerListElementController(UserService userService, IngameService ingameService) {
         this.userService = userService;
+        this.ingameService = ingameService;
     }
 
     public Parent render() {
@@ -57,6 +57,7 @@ public class TradePopUpPlayerListElementController {
                         playerAvatar.setImage(new Image(user.avatar()));
                     }
                     playerNameLabel.setText(user.name());
+                    acceptedMark.setId(userId);
                 })
         );
     }
@@ -69,12 +70,14 @@ public class TradePopUpPlayerListElementController {
         final String resourceURL = "/de/uniks/pioneers/controller/subcontroller/images/trade_accepted.png";
         final Image img = new Image(Objects.requireNonNull(getClass().getResource(resourceURL)).toString());
         acceptedMark.setImage(img);
-        Platform.runLater(() ->{
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+    }
+
+    public void setCheckmarkAction() {
+        if (this.acceptedMark.getImage() != null) {
+            this.acceptedMark.setOnMouseClicked(event -> {
+                ingameService.acceptPartner(acceptedMark.getId());
+                ingameService.tradeAccepted.set(true);
+            });
+        }
     }
 }

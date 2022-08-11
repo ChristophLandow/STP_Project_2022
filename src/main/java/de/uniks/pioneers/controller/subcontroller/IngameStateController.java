@@ -2,6 +2,7 @@ package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.GameConstants;
 import de.uniks.pioneers.controller.BoardController;
+import de.uniks.pioneers.controller.PopUpController.TradePopUpController;
 import de.uniks.pioneers.dto.CreateMoveDto;
 import de.uniks.pioneers.model.ExpectedMove;
 import de.uniks.pioneers.model.Game;
@@ -14,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-
 import java.util.Objects;
 import java.util.Timer;
 
@@ -37,6 +37,8 @@ public class IngameStateController {
     private final Game game;
     private final IngameDevelopmentCardController ingameDevelopmentCardController;
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private final TradePopUpController tradePopUpController;
+
     private final RobberService robberService;
     private final SpeechService speechService;
     private final SimpleBooleanProperty nextDisabled;
@@ -45,7 +47,8 @@ public class IngameStateController {
 
     public IngameStateController(UserService userService, IngameService ingameService, TimerService timerService, BoardController boardController, Pane turnPane, RobberController robberController,
                                  ImageView turnImageView, Label situationLabel, DiceSubcontroller diceSubcontroller, Game game, IngameSelectController ingameSelectController, MapRenderService mapRenderService,
-                                 RobberService robberService, SpeechService speechService, IngameDevelopmentCardController ingameDevelopmentCardController, ResourceService resourceService) {
+                                 RobberService robberService, SpeechService speechService, IngameDevelopmentCardController ingameDevelopmentCardController, ResourceService resourceService,
+                                 TradePopUpController tradePopUpController) {
         this.userService = userService;
         this.ingameService = ingameService;
         this.timerService = timerService;
@@ -61,6 +64,7 @@ public class IngameStateController {
         this.diceSubcontroller = diceSubcontroller;
         this.game = game;
         this.ingameDevelopmentCardController = ingameDevelopmentCardController;
+        this.tradePopUpController = tradePopUpController;
         this.nextDisabled = new SimpleBooleanProperty();
         this.addDisableListener();
 
@@ -137,7 +141,10 @@ public class IngameStateController {
                         ingameService.tradeIsOffered.set(true);
                         speechService.play(SPEECH_TRADEOFFER);
                     }
-                    case ACCEPT -> this.setDisableEndTurn(true);
+                    case ACCEPT -> {
+                        this.setDisableEndTurn(true);
+                        this.enableAccepting();
+                    }
                     case MONOPOLY_MOVE -> {
                         this.setDisableEndTurn(true);
                         robberController.discardOrChoose(MONOPOLY_NUMBER);
@@ -153,6 +160,10 @@ public class IngameStateController {
             this.setSituationLabel(move.players().get(0), move.action());
             this.placeRobber(currentState.robber(), move.action());
         }
+    }
+
+    private void enableAccepting() {
+        this.tradePopUpController.enableChoosePlayer();
     }
 
     private void enableHexagonPoints(){
