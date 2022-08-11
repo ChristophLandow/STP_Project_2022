@@ -67,6 +67,7 @@ public class ChatTabController {
         chatBox.heightProperty().addListener(u->scrollPane.setVvalue(1D));
 
         Tab chatTab = new Tab(this.chattingWith.name(), scrollPane);
+        chatTab.setId("newTab");
         chatTab.setOnClosed(this.chatController::removeTab);
         chatTab.setClosable(true);
 
