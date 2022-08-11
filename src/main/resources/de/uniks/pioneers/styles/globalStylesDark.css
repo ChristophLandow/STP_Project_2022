@@ -68,3 +68,7 @@
 .text-id {
     -fx-fill: white;
 }
+
+.anchorPane_id {
+    -fx-background-color:  #424242;
+}
