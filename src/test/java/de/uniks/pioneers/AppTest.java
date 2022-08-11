@@ -382,6 +382,7 @@ class AppTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
 
         // test trade with players
+
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "33", "000", "000", BUILD, 0, null, null, new Resources(null,-1,1,0,0,0), null, null)));
         TestModule.gameStateSubject.onNext(new Event<>(".updated", new State("2022-05-18T18:12:59.114Z", "000", List.of(new ExpectedMove(OFFER, List.of("002")), new ExpectedMove(ACCEPT, List.of("000")), new ExpectedMove(BUILD, List.of("000"))), null)));
         TestModule.gameMoveSubject.onNext(new Event<>(".created", new Move("2022-05-18T18:12:59.114Z", "34", "000", "002", OFFER, 0, null, null, new Resources(null,1,-1,0,0,0), "000", null)));
