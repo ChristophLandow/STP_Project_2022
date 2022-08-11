@@ -74,7 +74,7 @@ public class MapEditorController implements Controller{
     public void init() {
 
         SpinnerValueFactory<Integer> valueFactory = //
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, 2);
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, mapService.getCurrentMapSize());
         this.sizeSpinner.setValueFactory(valueFactory);
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> display(newValue));
         this.mapService.setMapEditorController(this);
