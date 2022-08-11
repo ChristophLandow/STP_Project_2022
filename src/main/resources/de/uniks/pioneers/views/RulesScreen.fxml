@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.RulesScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass=".anchorPane_id" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pioneers.controller.RulesScreenController">
    <ScrollPane fx:id="rulesScrollPane" hbarPolicy="NEVER" pannable="true" prefHeight="600.0" prefWidth="800.0" styleClass="text-id" vvalue="0.52">
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="3978.0" prefWidth="809.0">
          <Text layoutX="298.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="PIONEERS">
@@ -206,13 +206,11 @@
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3511.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_fish.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3511.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_fish.png" />
          </ImageView>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="435.0" layoutY="3512.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_ice.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="435.0" layoutY="3512.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_ice.png" />
          </ImageView>
          <Text layoutX="291.0" layoutY="3556.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
             <font>
@@ -224,13 +222,11 @@
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="27.0" layoutY="3506.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../rules/buildStreet.png"/>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="27.0" layoutY="3506.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/buildStreet.png" />
          </ImageView>
-         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="28.0" layoutY="3610.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../rules/buildIgloo.png"/>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="28.0" layoutY="3610.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/buildIgloo.png" />
          </ImageView>
          <Text layoutX="138.0" layoutY="3660.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x Igloo">
             <font>
@@ -242,31 +238,27 @@
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3616.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_fish.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3616.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_fish.png" />
          </ImageView>
          <Text layoutX="286.0" layoutY="3661.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
             <font>
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="428.0" layoutY="3714.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_carbon.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="428.0" layoutY="3714.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_carbon.png" />
          </ImageView>
          <Text layoutX="390.0" layoutY="3674.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
             <font>
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="534.0" layoutY="3616.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_polarbear.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="534.0" layoutY="3616.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_polarbear.png" />
          </ImageView>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="647.0" layoutY="3616.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_whale.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="647.0" layoutY="3616.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_whale.png" />
          </ImageView>
          <Text layoutX="500.0" layoutY="3661.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
             <font>
@@ -278,9 +270,8 @@
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="29.0" layoutY="3708.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../rules/STationButton.png"/>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="29.0" layoutY="3708.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../rules/STationButton.png" />
          </ImageView>
          <Text layoutX="129.0" layoutY="3758.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x Station">
             <font>
@@ -292,9 +283,8 @@
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3714.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_whale.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="321.0" layoutY="3714.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_whale.png" />
          </ImageView>
          <Text layoutX="286.0" layoutY="3758.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="2x ">
             <font>
@@ -306,13 +296,11 @@
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="428.0" layoutY="3617.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_ice.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="428.0" layoutY="3617.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_ice.png" />
          </ImageView>
-         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="31.0" layoutY="3828.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/ingame/dev_card_question_mark.png"/>
+         <ImageView fitHeight="84.0" fitWidth="85.0" layoutX="31.0" layoutY="3828.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/ingame/dev_card_question_mark.png" />
          </ImageView>
          <Text layoutX="129.0" layoutY="3878.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x Development Card">
             <font>
@@ -324,17 +312,14 @@
                <Font name="System Bold" size="20.0" />
             </font>
          </Text>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="454.0" layoutY="3834.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_polarbear.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="454.0" layoutY="3834.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_polarbear.png" />
          </ImageView>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="559.0" layoutY="3834.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_whale.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="559.0" layoutY="3834.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_whale.png" />
          </ImageView>
-         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="664.0" layoutY="3832.0" pickOnBounds="true"
-                    preserveRatio="true">
-            <Image url="@../controller/subcontroller/images/card_carbon.png"/>
+         <ImageView fitHeight="72.0" fitWidth="71.0" layoutX="664.0" layoutY="3832.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/subcontroller/images/card_carbon.png" />
          </ImageView>
          <Text layoutX="416.0" layoutY="3878.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-id" text="1x ">
             <font>
