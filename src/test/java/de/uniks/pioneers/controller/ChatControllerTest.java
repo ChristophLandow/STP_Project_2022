@@ -38,7 +38,7 @@ class ChatControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
 
-    @Mock
+    @Mock(name = "userlistControllerProvider")
     Provider<ChatUserlistController> userlistControllerProvider;
 
     @Mock
@@ -109,15 +109,19 @@ class ChatControllerTest extends ApplicationTest {
         groupList.add(new GroupDto("yesterday", "now", "1234", memberList, "Test"));
         when(groupService.getGroupsWithUser(anyString())).thenReturn(Observable.just(groupList));
         when(messageService.getChatMessages(anyString())).thenReturn(Observable.just(messageList));
+
         when(eventListener.listen(anyString(), any())).thenReturn(Observable.just(new Event<>("Test", new MessageDto("yesterday", "yesterday", "1", "1", "Test!"))));
         Platform.runLater(() -> {
             chatController.addTab(testUser);
             verify(groupService).getGroupsWithUser("1");
         });
+
+        messageList.add(new MessageDto("","","2","1","Hello"));
+        chatTabController.updateMessage(new MessageDto("","","2","1","Hello"));
     }
 
     @Test
-    void test() {
+    void openChatFromUserlist() {
         SimpleIntegerProperty chatCounter = new SimpleIntegerProperty(Constants.OPEN_CHATS_COUNTER_MAX_VALUE+10);
         ObservableList<User> chatQueue = FXCollections.observableArrayList();
 
@@ -131,8 +135,6 @@ class ChatControllerTest extends ApplicationTest {
 
         when(messageService.getOpenChatQueue()).thenReturn(chatQueue);
         when(messageService.getOpenChatCounter()).thenReturn(chatCounter);
-        //when(groupService.getGroupsWithUser(any())).thenReturn(Observable.just(new ArrayList<>()));
-        //when(groupService.createNewGroupWithOtherUser(any())).thenReturn(Observable.just(new GroupDto("","","",null,"")));
 
         clickOn("#newUser");
 
@@ -157,6 +159,7 @@ class ChatControllerTest extends ApplicationTest {
         clickOn("#newUser");
         assertTrue(chatTabPane.getTabs().size() <= Constants.MAX_OPEN_CHATS);
 
+        //Check opening a tab that already exists
         when(messageService.userlistContains(any())).thenReturn(true);
         when(messageService.getchatUserList()).thenReturn(new ArrayList<>());
 

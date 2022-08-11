@@ -44,8 +44,8 @@ public class ChatController implements Controller {
     private final StylesService stylesService;
     private final EventListener eventListener;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final Provider<LobbyScreenController> lobbyScreenControllerProvider;
-    private final Provider<ChatUserlistController> userlistControllerProvider;
+    @Inject Provider<LobbyScreenController> lobbyScreenControllerProvider;
+    @Inject Provider<ChatUserlistController> userlistControllerProvider;
     private final ObservableList<ChatTabController> chatTabControllers = FXCollections.observableArrayList(new ArrayList<>());
     private final ListChangeListener<ChatTabController> listChangeListener = c -> sendButtonBinding();
     private String currentGroupId;
