@@ -61,6 +61,11 @@ public class MapService {
     public void updateOrCreateMap(List<EditTile> editTiles, String name, String description) {
         List<HarborTemplate> harborTemplates = this.getHarbors(editTiles);
         List<TileTemplate> tileTemplates = this.getTiles(editTiles);
+        // check if the map is not too big
+        if (tileTemplates.size() > 100 || harborTemplates.size() > 100) {
+            handleSaveError();
+            return;
+        }
         // if the map is null, create a new one
         if (this.getCurrentMap() != null) {
             //if the map belongs to the current player, update it
