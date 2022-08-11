@@ -169,6 +169,10 @@ class ChatControllerTest extends ApplicationTest {
         assertEquals(chatTabPane.getTabs().size(), 1);
         clickOn("#newUser");
         assertEquals(chatTabPane.getTabs().size(), 1);
+
+        //close tab
+        clickOn(app.getStage().getX() + 60, app.getStage().getY() + 35);
+        assertEquals(chatTabPane.getTabs().size(), 0);
     }
 
 }
