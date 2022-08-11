@@ -77,7 +77,6 @@ public class IngameStateController {
         // enable corresponding user to perform their action
         if(currentState.expectedMoves().size() > 0) {
             ExpectedMove move = currentState.expectedMoves().get(0);
-            System.out.println(currentState.expectedMoves()); // TODO
             ingameService.setExpectedMove(move);
 
             assert move.players().get(0)!=null;

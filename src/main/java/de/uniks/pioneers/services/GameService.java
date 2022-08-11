@@ -79,7 +79,6 @@ public class GameService {
                     final Move move = moveEvent.data();
                     if(moveEvent.event().endsWith(".created")) {
                         this.moves.add(move);
-                        System.out.println(move); // TODO
                         if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
                             ingameService.tradeOffer.set(move);
                         } else if(move.action().equals(OFFER)) {

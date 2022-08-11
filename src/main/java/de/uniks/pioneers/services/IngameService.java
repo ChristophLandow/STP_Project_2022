@@ -103,7 +103,6 @@ public class IngameService {
         }
     }
     public void tradeWithPlayers() {
-        System.out.println("Trade with players"); // TODO
         Resources offer = new Resources(trade.get("walknochen"), trade.get("packeis"),
                 trade.get("kohle"), trade.get("fisch"), trade.get("fell"));
 
@@ -115,7 +114,6 @@ public class IngameService {
     }
 
     public void makeOffer() {
-        System.out.println("make offer"); // TODO
         Resources offer = tradeOffer.get().resources();
 
         int lumber = offer.lumber() == null ? 0 : offer.lumber() * -1;
@@ -146,7 +144,6 @@ public class IngameService {
     }
 
     public void acceptPartner(String playerId) {
-        System.out.println("accept partner"); // TODO
         disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT, playerId))
                 .observeOn(FX_SCHEDULER)
                 .doOnError(Throwable::printStackTrace)
@@ -155,7 +152,6 @@ public class IngameService {
     }
 
     public void finishTrade() {
-        System.out.println("decline trade"); // TODO
         if (currentExpectedMove.get().action().equals(ACCEPT)) {
             disposable.add(postMove(game.get()._id(), new CreateMoveDto(ACCEPT))
                     .observeOn(FX_SCHEDULER)
