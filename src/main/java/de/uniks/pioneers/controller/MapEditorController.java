@@ -2,18 +2,25 @@ package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.controller.PopUpController.SaveMapPopUpController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
+import de.uniks.pioneers.model.MapTemplate;
+import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.services.BoardGenerator;
 import de.uniks.pioneers.services.MapService;
+import de.uniks.pioneers.services.StylesService;
+import de.uniks.pioneers.services.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
@@ -30,15 +37,24 @@ import java.util.Objects;
 import static de.uniks.pioneers.EditorConstants.*;
 
 public class MapEditorController implements Controller{
+    @FXML public AnchorPane mapEditorAnchorPane;
     @FXML ImageView whaleImageView, iceImageView, fishImageView, randomImageView, desertImageView, icebearImageView, rockImageView;
     @FXML Circle Circle2, Circle3, Circle4, Circle5, Circle6, Circle8, Circle9, Circle10, Circle11, Circle12;
     @FXML ImageView harborFish, harborCoal, harborIce, harborPolar, harborWhale, harborGeneric;
     @FXML public Pane scrollPaneAnchorPane;
     @FXML Button buttonToMaps, buttonSave, deleteButton;
     @FXML Spinner<Integer> sizeSpinner;
+
+    @Inject Provider<SaveMapPopUpController> saveMapPopUpControllerProvider;
     private final MapService mapService;
+
+    private final UserService userService;
     public final BoardGenerator boardGenerator;
-    public final ArrayList<EditTile> tiles = new ArrayList<>();
+
+    private SaveMapPopUpController saveMapPopUpController;
+
+    public List<EditTile> tiles = new ArrayList<>();
+
     List<HexTile> frame = new ArrayList<>();
     final List<Polygon> tileViews = new ArrayList<>();
     public String selection = "";
@@ -46,10 +62,12 @@ public class MapEditorController implements Controller{
     private final App app;
     private final Provider<MapBrowserController> mapBrowserControllerProvider;
 
+
     @Inject
-    public MapEditorController(MapService mapService, App app, Provider<MapBrowserController> mapBrowserControllerProvider){
+    public MapEditorController(MapService mapService, UserService userService, App app, Provider<MapBrowserController> mapBrowserControllerProvider, StylesService stylesService){
 
         this.mapService = mapService;
+        this.userService = userService;
         this.app = app;
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.boardGenerator = new BoardGenerator();
@@ -58,12 +76,12 @@ public class MapEditorController implements Controller{
     public void init() {
 
         SpinnerValueFactory<Integer> valueFactory = //
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, 2);
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, mapService.getCurrentMapSize());
         this.sizeSpinner.setValueFactory(valueFactory);
         this.sizeSpinner.valueProperty().addListener((observable, oldValue, newValue) -> display(newValue));
+        this.mapService.setMapEditorController(this);
     }
-    @Override
-    public void stop() {}
+
     @Override
     public Parent render() {
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/MapEditorScreen.fxml"));
@@ -76,8 +94,29 @@ public class MapEditorController implements Controller{
             return null;
         }
         init();
-        display(2);
+        this.tiles = mapService.loadMap(5);
+
+        // display for loading or for creating
+        if (mapService.getCurrentMap() != null) {
+            display(mapService.getCurrentMapSize());
+        } else {
+            display(2);
+        }
+
+        //add the popup to the pane
+        this.saveMapPopUpController = saveMapPopUpControllerProvider.get();
+        Node savePopUp = this.saveMapPopUpController.render();
+        if (savePopUp != null) {
+            this.mapEditorAnchorPane.getChildren().add(savePopUp);
+        }
         return parent;
+
+
+    }
+
+    @Override
+    public void stop() {
+        saveMapPopUpController.stop();
     }
     private void display(int size){
 
@@ -110,13 +149,7 @@ public class MapEditorController implements Controller{
                     break;
                 }
             }
-            Polygon tile = new Polygon();
-            tile.getPoints().addAll(0.0*scale, scale,
-                    (Math.sqrt(3)/2)*scale,0.5*scale,
-                    (Math.sqrt(3)/2)*scale,-0.5*scale,
-                    0.0*scale,-1.0*scale,
-                    (-Math.sqrt(3)/2)*scale,-0.5*scale,
-                    (-Math.sqrt(3)/2)*scale,0.5*scale);
+            Polygon tile = setView(scale);
             tile.setId(hexTile.q + "," + hexTile.r + "," + hexTile.s);
 
             if(!hexTile.type.equals("")){
@@ -127,16 +160,7 @@ public class MapEditorController implements Controller{
                 tile.setFill(Paint.valueOf("#2D9BE7"));
                 tile.setStroke(Paint.valueOf("#000000"));
             }
-            ImageView numberView = new ImageView();
-            numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 33);
-            numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 33);
-            numberView.setScaleX(scale*0.01);
-            numberView.setScaleY(scale*0.01);
-            if(hexTile.number != 0){
-
-                Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + hexTile.number + ".png")).toString());
-                numberView.setImage(image);
-            }
+            ImageView numberView = setNumberView(hexTile, scale);
 
             tile.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2);
             tile.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2);
@@ -167,9 +191,19 @@ public class MapEditorController implements Controller{
         this.app.show(mapBrowserController);
     }
     public void save(){
-        mapService.updateOrCreateMap(tiles);
-        MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
-        this.app.show(mapBrowserController);
+        MapTemplate currentMap = mapService.getCurrentMap();
+        User currentUser = userService.getCurrentUser();
+        this.saveMapPopUpController.setMapEditorController(this);
+        this.saveMapPopUpController.setTiles(tiles);
+        //check if the popup has to be opened or not
+        if (currentMap == null || !currentMap.createdBy().equals(currentUser._id())) {
+            //open popup
+            this.saveMapPopUpController.showSavePopUp();
+        } else {
+            mapService.updateOrCreateMap(tiles, currentMap.name(), currentMap.description());
+            MapBrowserController mapBrowserController = mapBrowserControllerProvider.get();
+            this.app.show(mapBrowserController);
+        }
     }
     public void randomize() {
         for(EditTile tile : this.tiles){
@@ -338,5 +372,32 @@ public class MapEditorController implements Controller{
         this.harborCoal.setImage(image);}
     public void selectDelete() {
         this.selection = DELETE;
-        resetSelectionUI();}
+        resetSelectionUI();
+    }
+
+    public ImageView setNumberView(HexTile hexTile, double scale) {
+        ImageView numberView = new ImageView();
+        numberView.setLayoutX(hexTile.x + this.scrollPaneAnchorPane.getPrefWidth() / 2 - 33);
+        numberView.setLayoutY(-hexTile.y + this.scrollPaneAnchorPane.getPrefHeight() / 2 - 33);
+        numberView.setScaleX(scale*0.01);
+        numberView.setScaleY(scale*0.01);
+        if(hexTile.number != 0){
+
+            Image image = new Image(Objects.requireNonNull(Main.class.getResource("controller/ingame/" + "tile_" + hexTile.number + ".png")).toString());
+            numberView.setImage(image);
+        }
+       return numberView;
+    }
+
+    public Polygon setView(double scale) {
+        Polygon tile = new Polygon();
+        tile.getPoints().addAll(0.0*scale, scale,
+                (Math.sqrt(3)/2)*scale,0.5*scale,
+                (Math.sqrt(3)/2)*scale,-0.5*scale,
+                0.0*scale,-1.0*scale,
+                (-Math.sqrt(3)/2)*scale,-0.5*scale,
+                (-Math.sqrt(3)/2)*scale,0.5*scale);
+        return tile;
+    }
+
 }

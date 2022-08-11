@@ -1,6 +1,7 @@
 package de.uniks.pioneers.controller;
 
 import de.uniks.pioneers.App;
+import de.uniks.pioneers.controller.PopUpController.SaveMapPopUpController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.MapService;
@@ -15,9 +16,14 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
+
+import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MapEditorTest extends ApplicationTest {
@@ -28,15 +34,21 @@ class MapEditorTest extends ApplicationTest {
     @Mock
     MapService mapService;
 
+    @Mock
+    SaveMapPopUpController saveMapPopUpController;
+
+    @Mock
+    Provider<SaveMapPopUpController> saveMapPopUpControllerProvider;
+
     @InjectMocks
     MapEditorController mapEditorController;
 
     @Override
     public void start(Stage stage){
-
+        when(saveMapPopUpControllerProvider.get()).thenReturn(saveMapPopUpController);
         app.start(stage);
         app.show(mapEditorController);
-
+        stage.centerOnScreen();
     }
 
     @Test
@@ -219,7 +231,7 @@ class MapEditorTest extends ApplicationTest {
 
     }
 
-    private Boolean compareTiles(ArrayList<EditTile> a, ArrayList<EditTile> b){
+    private Boolean compareTiles(ArrayList<EditTile> a, List<EditTile> b){
 
         if(a.size() != b.size()){return false;}
         int i = 0;
