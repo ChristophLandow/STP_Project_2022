@@ -27,10 +27,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+
 import javax.inject.Provider;
 import java.util.List;
 
-import static de.uniks.pioneers.GameConstants.*;
+import static de.uniks.pioneers.GameConstants.BUILD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -106,6 +107,9 @@ class IngameScreenControllerTest extends ApplicationTest {
     TimerService timerService;
 
     @Mock
+    PrefService prefService;
+
+    @Mock
     AchievementService achievementService;
 
     @Mock
@@ -165,7 +169,7 @@ class IngameScreenControllerTest extends ApplicationTest {
 
         gameStorage.selectedBuilding = "";
         ingameSelectController = new IngameSelectController();
-        ingameSelectController.init(gameStorage, ingameService, roadFrame, settlementFrame, cityFrame);
+        ingameSelectController.init(gameStorage, ingameService, prefService, roadFrame, settlementFrame, cityFrame);
         ingameScreenController.ingameSelectController = ingameSelectController;
         Platform.runLater(() -> ingameScreenController.ingameDevelopmentCardController = new IngameDevelopmentCardController(ingameScreenController.getApp().getStage(), ingameScreenController.hammerPane, ingameScreenController.leftPane, ingameScreenController.rightPane, ingameScreenController.hammerImageView, ingameScreenController.leftView, ingameScreenController.rightView, timerService, ingameService, new ResourceService(), gameService, userService, robberController, false));
 

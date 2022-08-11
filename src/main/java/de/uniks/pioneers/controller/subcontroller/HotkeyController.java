@@ -304,8 +304,9 @@ public class HotkeyController implements Controller, Initializable {
                     continue;
                 }
                 //....as intended
-                if(variant.equals(varaint2)){
+                if (variant.equals(varaint2)) {
                     equalHotkeys = true;
+                    break;
                 }
             }
         }
