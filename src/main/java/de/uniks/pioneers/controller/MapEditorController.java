@@ -82,7 +82,6 @@ public class MapEditorController implements Controller{
         if (this.app.getStage().getScene() != null) {
             stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), style, darkStyle);
         }
-        //stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), style, darkStyle);
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, mapService.getCurrentMapSize());
         this.sizeSpinner.setValueFactory(valueFactory);

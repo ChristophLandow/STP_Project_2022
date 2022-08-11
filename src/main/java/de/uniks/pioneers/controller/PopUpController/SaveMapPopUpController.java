@@ -42,19 +42,26 @@ public class SaveMapPopUpController implements Controller {
 
     private final MapService mapService;
 
+    private final StylesService stylesService;
+
     private List<EditTile> editTiles = new ArrayList<>();
     private final App app;
 
 
     @Inject
-    public SaveMapPopUpController(Provider<MapBrowserController> mapBrowserControllerProvider, MapService mapService, StylesService stylesService, App app) {
+    public SaveMapPopUpController(Provider<MapBrowserController> mapBrowserControllerProvider, MapService mapService, StylesService stylesService, StylesService stylesService1, App app) {
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.mapService = mapService;
+        this.stylesService = stylesService;
         this.app = app;
     }
 
     @Override
     public void init() {
+        String style = "de/uniks/pioneers/styles/saveMapPopUp.css";
+        String darkStyle = "de/uniks/pioneers/styles/DarkMode_saveMapPopUp.css";
+        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), style, darkStyle);
+
     }
 
     @Override
