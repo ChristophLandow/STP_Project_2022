@@ -79,7 +79,10 @@ public class MapEditorController implements Controller{
     public void init() {
         String darkStyle = "de/uniks/pioneers/styles/Darkmode_MapEditor.css";
         String style = "de/uniks/pioneers/styles/MapEditor.css";
-        stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), style, darkStyle);
+        if (this.app.getStage().getScene() != null) {
+            stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), style, darkStyle);
+        }
+        //stylesService.setStyleSheets(this.app.getStage().getScene().getStylesheets(), style, darkStyle);
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 8, mapService.getCurrentMapSize());
         this.sizeSpinner.setValueFactory(valueFactory);

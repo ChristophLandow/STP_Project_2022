@@ -5,6 +5,7 @@ import de.uniks.pioneers.controller.PopUpController.SaveMapPopUpController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.services.MapService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Polygon;
@@ -23,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MapEditorTest extends ApplicationTest {
@@ -33,6 +36,9 @@ class MapEditorTest extends ApplicationTest {
 
     @Mock
     MapService mapService;
+
+    @Mock
+    StylesService stylesService;
 
     @Mock
     SaveMapPopUpController saveMapPopUpController;
