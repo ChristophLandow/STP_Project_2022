@@ -6,6 +6,7 @@ import de.uniks.pioneers.model.Achievement;
 import de.uniks.pioneers.rest.AchievementsApiService;
 import de.uniks.pioneers.ws.EventListener;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
@@ -27,11 +28,16 @@ public class AchievementService {
     private final ObservableMap<String, Achievement> achievements = FXCollections.observableHashMap();
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    private final SimpleBooleanProperty checkMapLoaded =  new SimpleBooleanProperty(false);
+    private Boolean ckeckMapLoadedToo = false;
+
+
     @Inject
     public AchievementService(EventListener eventListener, UserService userService, AchievementsApiService achievementsApiService) {
         this.eventListener = eventListener;
         this.userService = userService;
         this.achievementsApiService = achievementsApiService;
+
     }
 
     public void initAchievementListener(){
@@ -64,6 +70,8 @@ public class AchievementService {
         addAchievement(HARBOR_ACHIEVEMENT);
         addAchievement(ROAD_ACHIEVEMENT);
         addAchievement(SETTLEMENT_ACHIEVEMENT);
+        checkMapLoaded.set(true);
+        ckeckMapLoadedToo = true;
     }
 
     private void addAchievement(String id){
@@ -92,5 +100,13 @@ public class AchievementService {
 
     public void stop(){
         disposable.dispose();
+    }
+
+    public SimpleBooleanProperty getMapLoadedChecker(){
+        return this.checkMapLoaded;
+    }
+
+    public Boolean getChecker(){
+        return this.ckeckMapLoadedToo;
     }
 }
