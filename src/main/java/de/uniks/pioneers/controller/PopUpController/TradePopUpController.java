@@ -273,7 +273,9 @@ public class TradePopUpController implements Controller {
         if (playerElements != null) {
             this.playerElements.values().forEach(TradePopUpPlayerListElementController::setCheckmarkAction);
         }
-        this.cancel.setDisable(false);
+        if (this.cancel != null) {
+            this.cancel.setDisable(false);
+        }
         initTimer();
     }
 
