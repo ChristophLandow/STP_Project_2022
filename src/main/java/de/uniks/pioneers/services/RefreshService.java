@@ -47,7 +47,7 @@ public class RefreshService {
         this.timer.cancel();
     }
 
-    private Observable<LoginResult> sendRefresh(){
+    public Observable<LoginResult> sendRefresh(){
         return authApiService.refresh(new RefreshDto(tokenStorage.getRefreshToken()))
                 .doOnNext(result -> {
                     tokenStorage.setAccessToken(result.accessToken());

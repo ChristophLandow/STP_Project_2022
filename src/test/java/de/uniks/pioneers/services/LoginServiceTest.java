@@ -26,6 +26,8 @@ class LoginServiceTest {
     AuthApiService authApiService;
     @Mock
     PrefService prefService;
+    @Mock
+    RefreshService refreshService;
     @InjectMocks
     LoginService loginService;
 

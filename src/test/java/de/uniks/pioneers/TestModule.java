@@ -10,6 +10,7 @@ import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.*;
 import de.uniks.pioneers.services.NewGameLobbyService;
 import de.uniks.pioneers.services.PrefService;
+import de.uniks.pioneers.services.RefreshService;
 import de.uniks.pioneers.services.TokenStorage;
 import de.uniks.pioneers.ws.EventListener;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
@@ -569,6 +570,23 @@ public class TestModule {
             @Override
             public Observable<Achievement> updateAchievement(String userId, String id, UpdateAchievementDto dto) {
                 return Observable.just(new Achievement("","",userId,id,null, dto.progress()));
+            }
+        };
+    }
+
+    @Provides
+    @Singleton
+    RefreshService refreshService(){
+        return new RefreshService(null, this.authApiService()) {
+
+
+            @Override
+            public void startRefreshCycle(){}
+            @Override
+            public void stopRefreshCycle(){}
+            @Override
+            public Observable<LoginResult> sendRefresh(){
+                return Observable.just(new LoginResult("000", "TestUser", "online", null, "accessToken", "refreshToken"));
             }
         };
     }
