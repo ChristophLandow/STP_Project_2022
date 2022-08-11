@@ -7,9 +7,9 @@ import de.uniks.pioneers.controller.MapBrowserController;
 import de.uniks.pioneers.controller.MapEditorController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.services.MapService;
+import de.uniks.pioneers.services.StylesService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -42,19 +42,25 @@ public class SaveMapPopUpController implements Controller {
 
     private final MapService mapService;
 
+    private final StylesService stylesService;
+
     private List<EditTile> editTiles = new ArrayList<>();
     private final App app;
 
 
     @Inject
-    public SaveMapPopUpController(Provider<MapBrowserController> mapBrowserControllerProvider, MapService mapService, App app) {
+    public SaveMapPopUpController(Provider<MapBrowserController> mapBrowserControllerProvider, MapService mapService, StylesService stylesService, App app) {
         this.mapBrowserControllerProvider = mapBrowserControllerProvider;
         this.mapService = mapService;
+        this.stylesService = stylesService;
         this.app = app;
     }
 
     @Override
     public void init() {
+        String globalStyles = "/de/uniks/pioneers/styles/globalStyles.css";
+        String globalStylesDark = "/de/uniks/pioneers/styles/globalStylesDark.css";
+        stylesService.setStyleSheets(app.getStage().getScene().getStylesheets(), globalStyles, globalStylesDark);
     }
 
     @Override
