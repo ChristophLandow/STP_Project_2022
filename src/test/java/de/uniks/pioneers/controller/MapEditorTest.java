@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.util.WaitForAsyncUtils;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
@@ -55,6 +54,8 @@ class MapEditorTest extends ApplicationTest {
         app.start(stage);
         app.show(mapEditorController);
         stage.centerOnScreen();
+        verify(stylesService, atLeastOnce()).setStyleSheets(any(), anyString(), anyString());
+        verify(mapService, atLeastOnce()).getCurrentMap();
     }
 
     @Test
