@@ -101,6 +101,8 @@ public class BoardGenerator {
             return new ImageView(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_fish.png")).toString());
         } else if (type.equals("grain")) {
             return new ImageView(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbour_whale.png")).toString());
+        } else if (type.equals("random")) {
+            return new ImageView(Objects.requireNonNull(Main.class.getResource("controller/ingame/harbor_random.png")).toString());
         } else {
             return null;
         }
