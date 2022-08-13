@@ -33,13 +33,15 @@ public class MapService {
     private int currentMapSize;
 
     private final UserService userService;
+    private final MapBrowserService mapBrowserService;
 
     private MapEditorController mapEditorController;
 
     @Inject
-    public MapService(MapApiService mapApiService, UserService userService) {
+    public MapService(MapApiService mapApiService, UserService userService, MapBrowserService mapBrowserService) {
         this.mapApiService = mapApiService;
         this.userService = userService;
+        this.mapBrowserService = mapBrowserService;
     }
 
     public Observable<MapTemplate> saveMap(List<TileTemplate> tiles, List<HarborTemplate> harbors) {
@@ -73,19 +75,19 @@ public class MapService {
                 this.saveMap(tileTemplates, harborTemplates)
                         .observeOn(FX_SCHEDULER)
                         .doOnError(err -> handleSaveError())
-                        .subscribe();
+                        .subscribe(mapBrowserService::updateOwnMap);
             } else {
                 //if the map belongs to someone else, create a new one
                 this.createMap(name, null, description, tileTemplates, harborTemplates)
                         .observeOn(FX_SCHEDULER)
                         .doOnError(err -> handleSaveError())
-                        .subscribe();
+                        .subscribe(mapBrowserService::addOwnMap);
             }
         } else {
             this.createMap(name, null, description, tileTemplates, harborTemplates)
                     .observeOn(FX_SCHEDULER)
                     .doOnError(err -> handleSaveError())
-                    .subscribe();
+                    .subscribe(mapBrowserService::addOwnMap);
         }
     }
 

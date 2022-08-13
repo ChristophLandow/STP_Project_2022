@@ -25,7 +25,6 @@ public class MapBrowserService {
     private final ObservableList<MapTemplate> maps = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<MapTemplate> updateMaps = FXCollections.observableList(new ArrayList<>());
     private final HashMap<String, MapTemplate> templateHashMap = new HashMap<>();
-    private final ObservableList<String> mapNames = FXCollections.observableList(new ArrayList<>());
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final EventListener eventListener;
     private final MapApiService mapApiService;
@@ -54,12 +53,10 @@ public class MapBrowserService {
 
                     if(event.event().endsWith(".created")){
                         maps.add(mapTemplate);
-                        mapNames.add(mapTemplate.name());
                         templateHashMap.put(mapTemplate._id(), mapTemplate);
                     }
                     else if(event.event().endsWith(".deleted")){
                         maps.remove(mapTemplate);
-                        mapNames.removeIf(mapName -> mapName.equals(mapTemplate.name()));
                         templateHashMap.remove(mapTemplate._id());
                     }
                     else if(event.event().endsWith(".updated")){
@@ -67,6 +64,16 @@ public class MapBrowserService {
                         templateHashMap.replace(mapTemplate._id(), mapTemplate);
                     }
                 }));
+    }
+
+    public void addOwnMap(MapTemplate mapTemplate){
+        maps.add(mapTemplate);
+        templateHashMap.put(mapTemplate._id(), mapTemplate);
+    }
+
+    public void updateOwnMap(MapTemplate mapTemplate){
+        updateMaps.add(mapTemplate);
+        templateHashMap.replace(mapTemplate._id(), mapTemplate);
     }
 
     public ObservableList<MapTemplate> getMaps() {
