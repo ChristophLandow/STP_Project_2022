@@ -11,22 +11,26 @@ import de.uniks.pioneers.model.TileTemplate;
 import de.uniks.pioneers.model.User;
 import de.uniks.pioneers.rest.MapApiService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.util.WaitForAsyncUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MapServiceTest {
@@ -40,60 +44,75 @@ class MapServiceTest {
     @Mock
     MapEditorController mapEditorController;
 
+    @Mock
+    MapBrowserService mapBrowserService;
+
     @InjectMocks
     MapService mapService;
 
+
+    @BeforeAll
+    static void initJfxRuntime() {
+        Platform.startup(() -> {});
+    }
+
     @Test
     void updateOrCreateMap() {
-        /*//create and set test elements
+        //create and set test elements
         List<EditTile> editTiles = new ArrayList<>();
+        HexTile hexTile = new HexTile(1, 1, 1, 1, false);
+        hexTile.type = "desert";
+        hexTile.number = 1;
+        Polygon view1 = new Polygon();
+        ImageView view2 = new ImageView();
+        EditTile editTile = new EditTile(hexTile, view1, view2, null);
+        editTile.currentHarborType = "harbour_ore";
+        editTile.currentHarborSide = 1;
+        editTiles.add(editTile);
+
+        //objects for checking
         List<HarborTemplate> harbors = new ArrayList<>();
         List<TileTemplate> tiles = new ArrayList<>();
         harbors.add(new HarborTemplate(1, 1, 1, "ore", 1));
-        tiles.add(new TileTemplate(1, 1, 1, "desert", 2));
-        Polygon view1 = new Polygon();
-        javafx.scene.image.ImageView view2 = new ImageView();
-        editTiles.add(new EditTile(new HexTile(1, 1, 1, 1, false), view1, view2, null));
-        MapTemplate map = new MapTemplate("1", "1", "123", "1", "1", null, "123", 0, tiles, harbors);
+        tiles.add(new TileTemplate(1, 1, 1, "desert", 1));
+        MapTemplate map = new MapTemplate("1", "1", "1", "testMap", "map for testing", null, "1", 0,  tiles, harbors);
+        User user = new User("1", "1", "online", null);
 
-        // prepare methods for the test
-        User currentUser = new User("123", "Jeff", "online", null);
-        userService.setCurrentUser(currentUser);
-        when(userService.getCurrentUser()).thenReturn(currentUser);
-        //when(mapService.createMap("mapo", null, "cool map", any(), any())).thenReturn(Observable.just(map));
-        //when(mapService.createMap(anyString(), any(), anyString(), any(), any())).thenReturn(Observable.just(map));
+        //prepare needed methods
+        when(mapService.createMap("testMap", null, "map for testing", tiles, harbors ))
+                .thenReturn(Observable.just(map));
+        doNothing().when(mapBrowserService).addOwnMap(map);
 
+        //call the function for creating, because the map is null
+        mapService.updateOrCreateMap(editTiles, "testMap", "map for testing");
 
+        //check if the map is correct
+        verify(mapApiService)
+                .createMap(new CreateMapTemplateDto("testMap", null, "map for testing", tiles, harbors));
 
-
-
-
-
-        //change the owner of the map
-        map = new MapTemplate("1", "1", "123", "1", "1", null, "456", 0, tiles, harbors);
+        //set current map
         mapService.setCurrentMap(map);
 
+        //needed stubbings
+        when(userService.getCurrentUser()).thenReturn(user);
         when(mapService.saveMap(any(), any())).thenReturn(Observable.just(map));
+        doNothing().when(mapBrowserService).updateOwnMap(map);
 
-        // call function
-        mapService.updateOrCreateMap(editTiles, "mapo", "cool map");
+        //call the function
+        mapService.updateOrCreateMap(editTiles, "no new name", "no new description");
 
-        // check if the map will be updated, because it is your map
-        //verify(mapApiService).updateMap("123", new UpdateMapTemplateDto("1", null, "1", null, null ));
+        //check if the map is updated
+        verify(mapApiService).updateMap(any(), any());
 
-        //change the owner of the map
-        map = new MapTemplate("1", "1", "123", "1", "1", null, "123", 0, tiles, harbors);
-        mapService.setCurrentMap(map);
+        //set current map to map from another user
+        MapTemplate map2 = new MapTemplate("1", "1", "1", "testMap", "map for testing", null, "2", 0,  tiles, harbors);
+        mapService.setCurrentMap(map2);
 
-        // call the function
-        mapService.updateOrCreateMap(editTiles, "1", "1");
+        //call the function
+        mapService.updateOrCreateMap(editTiles, "testMap", "map for testing");
 
-        // check if the map is updated because you are the owner
-        verify(mapApiService).updateMap("123", new UpdateMapTemplateDto("1", null, "1", tiles, null));*/
-
-
-
-
+        //check if a new map is created
+        verify(mapApiService, atLeast(2)).createMap(new CreateMapTemplateDto("testMap", null, "map for testing", tiles, harbors));
     }
 
     @Test
