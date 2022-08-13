@@ -9,14 +9,11 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -25,7 +22,6 @@ public class MapBrowserService {
     private final ObservableList<MapTemplate> maps = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<MapTemplate> updateMaps = FXCollections.observableList(new ArrayList<>());
     private final HashMap<String, MapTemplate> templateHashMap = new HashMap<>();
-    private final ObservableList<String> mapNames = FXCollections.observableList(new ArrayList<>());
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final EventListener eventListener;
     private final MapApiService mapApiService;
@@ -54,12 +50,10 @@ public class MapBrowserService {
 
                     if(event.event().endsWith(".created")){
                         maps.add(mapTemplate);
-                        mapNames.add(mapTemplate.name());
                         templateHashMap.put(mapTemplate._id(), mapTemplate);
                     }
                     else if(event.event().endsWith(".deleted")){
                         maps.remove(mapTemplate);
-                        mapNames.removeIf(mapName -> mapName.equals(mapTemplate.name()));
                         templateHashMap.remove(mapTemplate._id());
                     }
                     else if(event.event().endsWith(".updated")){
@@ -67,6 +61,16 @@ public class MapBrowserService {
                         templateHashMap.replace(mapTemplate._id(), mapTemplate);
                     }
                 }));
+    }
+
+    public void addOwnMap(MapTemplate mapTemplate){
+        maps.add(mapTemplate);
+        templateHashMap.put(mapTemplate._id(), mapTemplate);
+    }
+
+    public void updateOwnMap(MapTemplate mapTemplate){
+        updateMaps.add(mapTemplate);
+        templateHashMap.replace(mapTemplate._id(), mapTemplate);
     }
 
     public ObservableList<MapTemplate> getMaps() {
@@ -92,7 +96,6 @@ public class MapBrowserService {
     public void vote(String id, CreateVoteDto voteMove){
         disposable.add(voteApiService.createVote(id,voteMove)
                 .observeOn(FX_SCHEDULER)
-                .doOnError(this::handleHttpError)
                 .subscribe()
         );
     }
@@ -101,18 +104,7 @@ public class MapBrowserService {
         disposable.add(
                 voteApiService.deleteVotesOfUser(mapId,userId)
                         .observeOn(FX_SCHEDULER)
-                        .doOnError(this::handleHttpError)
                         .subscribe()
         );
-    }
-
-    private  void handleHttpError(Throwable exception) throws IOException {
-        String errorBody;
-        if (exception instanceof HttpException httpException) {
-            errorBody = Objects.requireNonNull(Objects.requireNonNull(httpException.response()).errorBody()).string();
-        } else {
-            return;
-        }
-        System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 }
