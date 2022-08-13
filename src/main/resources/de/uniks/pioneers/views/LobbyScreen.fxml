@@ -24,8 +24,8 @@
       <Image url="@/de/uniks/pioneers/question_mark_icon.jpg" />
    </ImageView>
    <Button fx:id="EditProfileButton" layoutX="150.0" layoutY="550.0" mnemonicParsing="false" onAction="#editProfile" text="Edit Profile" />
-   <Button fx:id="LogoutButton" layoutX="267.0" layoutY="550.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
-   <Button fx:id="NewGameButton" layoutX="530.0" layoutY="550.0" mnemonicParsing="false" onAction="#newGame" text="New Game" />
+   <Button fx:id="LogoutButton" layoutX="240.0" layoutY="550.0" mnemonicParsing="false" onAction="#logout" prefHeight="26.0" prefWidth="75.0" text="Logout" />
+   <Button fx:id="NewGameButton" layoutX="514.0" layoutY="550.0" mnemonicParsing="false" onAction="#newGame" prefHeight="26.0" prefWidth="97.0" text="New Game" />
     <ScrollPane hbarPolicy="NEVER" layoutX="100.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0" style="-fx-border-color: black;">
         <VBox fx:id="UsersVBox" prefHeight="400.0" prefWidth="280.0">
            <padding>
@@ -36,6 +36,6 @@
     <ScrollPane fx:id="gameScrollPane" hbarPolicy="NEVER" layoutX="420.0" layoutY="130.0" prefHeight="400.0" prefWidth="280.0" style="-fx-border-color: black;">
         <ListView fx:id="listViewGames" maxWidth="280.0" minWidth="280.0" prefHeight="400.0" prefWidth="280.0" />
     </ScrollPane>
-   <Button fx:id="MapEditorButton" layoutX="498.0" layoutY="44.0" mnemonicParsing="false" onAction="#openMapEditor" prefHeight="25.0" prefWidth="64.0" text="Maps" />
-   <Button layoutX="604.0" layoutY="46.0" mnemonicParsing="false" onAction="#openAchievements" text="Achivements" />
+   <Button fx:id="MapEditorButton" layoutX="527.0" layoutY="42.0" mnemonicParsing="false" onAction="#openMapEditor" prefHeight="26.0" prefWidth="66.0" text="Maps" />
+   <Button layoutX="611.0" layoutY="42.0" mnemonicParsing="false" onAction="#openAchievements" text="Achivements" />
 </Pane>
