@@ -9,11 +9,14 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static de.uniks.pioneers.Constants.FX_SCHEDULER;
 
@@ -96,6 +99,7 @@ public class MapBrowserService {
     public void vote(String id, CreateVoteDto voteMove){
         disposable.add(voteApiService.createVote(id,voteMove)
                 .observeOn(FX_SCHEDULER)
+                .doOnError(this::handleHttpError)
                 .subscribe()
         );
     }
@@ -104,7 +108,18 @@ public class MapBrowserService {
         disposable.add(
                 voteApiService.deleteVotesOfUser(mapId,userId)
                         .observeOn(FX_SCHEDULER)
+                        .doOnError(this::handleHttpError)
                         .subscribe()
         );
+    }
+
+    private  void handleHttpError(Throwable exception) throws IOException {
+        String errorBody;
+        if (exception instanceof HttpException httpException) {
+            errorBody = Objects.requireNonNull(Objects.requireNonNull(httpException.response()).errorBody()).string();
+        } else {
+            return;
+        }
+        System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 }

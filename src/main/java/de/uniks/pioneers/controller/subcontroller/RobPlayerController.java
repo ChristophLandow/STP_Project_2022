@@ -172,7 +172,18 @@ public class RobPlayerController implements Controller {
 
     public void okClicked(){
         User userChosen = robberService.getRobbingCandidates().get(this.playerListView.getSelectionModel().getSelectedIndex());
-        disposable.add(this.robberService.robPlayer(userChosen._id()).observeOn(FX_SCHEDULER).subscribe(move -> stop()));
+        disposable.add(this.robberService.robPlayer(userChosen._id()).observeOn(FX_SCHEDULER).subscribe(move -> stop(), this::handleHttpError));
+    }
+
+    private  void handleHttpError(Throwable exception) throws IOException {
+        String errorBody;
+        if (exception instanceof HttpException httpException) {
+            errorBody = Objects.requireNonNull(Objects.requireNonNull(httpException.response()).errorBody()).string();
+        } else {
+            return;
+        }
+
+        System.out.println("!!!An Http Error appeared!!!\n" + errorBody);
     }
 
 }
