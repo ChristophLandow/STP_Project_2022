@@ -61,11 +61,6 @@ class MapEditorTest extends ApplicationTest {
     @Test
     public void createMap(){
 
-
-        //place tiles
-
-        //clickOn(600, 150);
-
         clickOn("#iceImageView");
         clickOn("#0,-1,1");
         clickOn("#whaleImageView");
@@ -97,12 +92,8 @@ class MapEditorTest extends ApplicationTest {
         clickOn("#Circle9");
         clickOn("#0,1,-1");
 
-        //clickOn("#sizeSpinner");
-        //mapEditorController.sizeSpinner.increment();
-        //mapEditorController.sizeSpinner.setEditable(true);
         write("\t\t\t");
         press(KeyCode.UP);
-
 
         clickOn("#Circle10");
         clickOn("#2,-3,1");
@@ -235,6 +226,14 @@ class MapEditorTest extends ApplicationTest {
         verifier.add(new EditTile(new HexTile(3, 0, -3, 1, false), fillerView1, fillerView2, null));
 
         assertTrue(compareTiles(verifier, mapEditorController.tiles));
+
+        clickOn("#randomButton");
+
+        Boolean filled = true;
+        for(EditTile tile : mapEditorController.tiles){
+            if(tile.hexTile.type.equals("") && !tile.isblocked()){filled = false;}
+        }
+        assertTrue(filled);
 
     }
 
