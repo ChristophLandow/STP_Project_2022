@@ -117,8 +117,6 @@ public class MapEditorController implements Controller{
             this.mapEditorAnchorPane.getChildren().add(savePopUp);
         }
         return parent;
-
-
     }
 
     @Override
