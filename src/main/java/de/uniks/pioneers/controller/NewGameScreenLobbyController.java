@@ -170,6 +170,7 @@ public class NewGameScreenLobbyController implements Controller {
             boardSizeLabel.setVisible(false);
             victoryPointsLabel.setVisible(false);
             victoryPointSpinner.setVisible(false);
+            mapComboBox.setVisible(false);
         }
         Node messageTextNode = this.messageText;
         eventHandlerService.setEnterEventHandler(messageTextNode, this.sendButton);
