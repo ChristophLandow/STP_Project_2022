@@ -47,17 +47,24 @@ class MapServiceTest {
     @Mock
     MapBrowserService mapBrowserService;
 
+
     @InjectMocks
     MapService mapService;
 
 
-    @BeforeAll
+    //@BeforeAll
     static void initJfxRuntime() {
         Platform.startup(() -> {});
     }
 
     @Test
     void updateOrCreateMap() {
+        // needed method to initialize the toolkid because of IllegalStateException
+        try {
+            initJfxRuntime();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
         //create and set test elements
         List<EditTile> editTiles = new ArrayList<>();
         HexTile hexTile = new HexTile(1, 1, 1, 1, false);
