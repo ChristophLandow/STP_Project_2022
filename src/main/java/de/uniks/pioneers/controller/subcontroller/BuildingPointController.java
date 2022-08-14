@@ -42,7 +42,7 @@ public class BuildingPointController {
     public int[] uploadCoords = new int[4];
     public final ArrayList<StreetPointController> adjacentStreets = new ArrayList<>();
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private Building building = null;
+    public Building building = null;
     private User owner = null;
     public SVGPath displayedBuilding = null;
 

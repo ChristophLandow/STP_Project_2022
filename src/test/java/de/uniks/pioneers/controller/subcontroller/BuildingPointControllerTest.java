@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 import java.util.List;
-
 import static de.uniks.pioneers.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,6 +36,9 @@ class BuildingPointControllerTest extends ApplicationTest {
 
     @Mock
     Circle view;
+
+    @Mock
+    Pane fiedpane;
 
     @Mock
     IngameService ingameService;
@@ -62,7 +64,6 @@ class BuildingPointControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) {
         app.start(stage);
-        //app.show(buildingPointController);
 
     }
 
@@ -89,6 +90,13 @@ class BuildingPointControllerTest extends ApplicationTest {
         gameStorage.remainingBuildings.put(SETTLEMENT, 5);
         gameStorage.remainingBuildings.put(CITY, 4);
         when(resourceService.checkResourcesSettlement()).thenReturn(true);
+        assertFalse(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
+        verify(ingameSelectController, atLeastOnce()).resetSelect();
+
+        buildingPointController.building = new Building(0,0,0, "", 3, SETTLEMENT, "", "");
+        gameStorage.selectedBuilding = CITY;
+        when(resourceService.checkCity()).thenReturn(true);
+        when(gameStorage.getHarbors()).thenReturn(new ArrayList<>());
         assertFalse(buildingPointController.checkPosition(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, MouseButton.PRIMARY, 1, false, false, false, false, false, false, false, false, true, false, null)));
         verify(ingameSelectController, atLeastOnce()).resetSelect();
     }
