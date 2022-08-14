@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LobbyServiceTest {
@@ -37,8 +35,9 @@ class LobbyServiceTest {
     @Test
     void logout() {
         when(authApiService.logout()).thenReturn(Observable.just(new LogoutResult()));
-        lobbyService.logout();
+        lobbyService.logout().subscribe();
         verify(authApiService).logout();
+        verify(refreshService, atLeastOnce()).stopRefreshCycle();
     }
 
     @Test

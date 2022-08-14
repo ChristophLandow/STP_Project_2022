@@ -51,7 +51,14 @@ public class IngameScreenController implements Controller {
     @FXML public VBox messageVBox;
     @FXML public TextField sendMessageField;
     @FXML public Label streetCountLabel, houseCountLabel, cityCountLabel, timeLabel, situationLabel;
-    @FXML public ImageView tradeImageView, turnImageView, nextTurnImageView, nextTurnDisabledImageView, leftDiceImageView, rightDiceImageView, hammerImageView, leftView, rightView;
+    @FXML public ImageView tradeImageView;
+    @FXML public ImageView turnImageView;
+    @FXML public ImageView nextTurnImageView;
+    @FXML public ImageView leftDiceImageView;
+    @FXML public ImageView rightDiceImageView;
+    @FXML public ImageView hammerImageView;
+    @FXML public ImageView leftView;
+    @FXML public ImageView rightView;
     @FXML public ListView<Node> playerListView;
     @FXML public Rectangle downRectangle, upRectangle;
     @FXML public Canvas mapCanvas;

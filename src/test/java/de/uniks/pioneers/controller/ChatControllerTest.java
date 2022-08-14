@@ -67,7 +67,7 @@ class ChatControllerTest extends ApplicationTest {
 
     @InjectMocks
     ChatController chatController;
-    ObservableList<User> userList = FXCollections.observableArrayList();
+    final ObservableList<User> userList = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage stage) {
@@ -144,7 +144,7 @@ class ChatControllerTest extends ApplicationTest {
         assertEquals(chatTabPane.getTabs().get(0).getText(), "Tom");
 
         //Check removing of tab
-        ArrayList<User> tooManyOpenTabsList = new ArrayList();
+        ArrayList<User> tooManyOpenTabsList = new ArrayList<>();
         tooManyOpenTabsList.add(new User("1","","",""));
         tooManyOpenTabsList.add(new User("2","","",""));
         tooManyOpenTabsList.add(new User("3","","",""));
