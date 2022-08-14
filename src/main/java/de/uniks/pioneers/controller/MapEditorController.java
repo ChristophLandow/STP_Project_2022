@@ -66,7 +66,7 @@ public class MapEditorController implements Controller{
 
 
     @Inject
-    public MapEditorController(MapService mapService, UserService userService, App app, Provider<MapBrowserController> mapBrowserControllerProvider, StylesService stylesService, StylesService stylesService1){
+    public MapEditorController(MapService mapService, UserService userService, App app, Provider<MapBrowserController> mapBrowserControllerProvider, StylesService stylesService){
 
         this.mapService = mapService;
         this.userService = userService;

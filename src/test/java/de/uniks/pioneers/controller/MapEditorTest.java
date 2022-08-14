@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -229,7 +227,7 @@ class MapEditorTest extends ApplicationTest {
 
         clickOn("#randomButton");
 
-        Boolean filled = true;
+        boolean filled = true;
         for(EditTile tile : mapEditorController.tiles){
             if(tile.hexTile.type.equals("") && !tile.isblocked()){filled = false;}
         }

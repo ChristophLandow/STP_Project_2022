@@ -66,9 +66,6 @@ class LobbyScreenControllerTest extends ApplicationTest {
     @Mock
     StylesService stylesService;
 
-    @Mock
-    EventHandlerService eventHandlerService;
-
     @InjectMocks
     LobbyScreenController lobbyScreenController;
 
@@ -99,6 +96,7 @@ class LobbyScreenControllerTest extends ApplicationTest {
         app.start(stage);
         app.show(lobbyScreenController);
         verify(stylesService).setStyleSheets(any(), anyString(), anyString());
+        verify(prefService, atLeastOnce()).getSavedGame();
     }
 
     @Test
