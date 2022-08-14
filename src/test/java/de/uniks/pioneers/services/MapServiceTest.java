@@ -4,7 +4,6 @@ import de.uniks.pioneers.controller.MapEditorController;
 import de.uniks.pioneers.controller.subcontroller.EditTile;
 import de.uniks.pioneers.controller.subcontroller.HexTile;
 import de.uniks.pioneers.dto.CreateMapTemplateDto;
-import de.uniks.pioneers.dto.UpdateMapTemplateDto;
 import de.uniks.pioneers.model.HarborTemplate;
 import de.uniks.pioneers.model.MapTemplate;
 import de.uniks.pioneers.model.TileTemplate;
@@ -14,17 +13,12 @@ import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Polygon;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.util.WaitForAsyncUtils;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +46,7 @@ class MapServiceTest {
     MapService mapService;
 
 
-    //@BeforeAll
+
     static void initJfxRuntime() {
         Platform.startup(() -> {});
     }
