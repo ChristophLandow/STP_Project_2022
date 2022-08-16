@@ -81,7 +81,7 @@ public class GameService {
                         this.moves.add(move);
                         if(move.action().equals(BUILD) && move.resources() != null && !Objects.equals(move.userId(), me)) {
                             ingameService.tradeOffer.set(move);
-                        } else if(move.action().equals(OFFER)) {
+                        } else if(move.action().equals(OFFER) && !move.userId().equals(me)) {
                             ingameService.offerMoves.add(move);
                         }
 
