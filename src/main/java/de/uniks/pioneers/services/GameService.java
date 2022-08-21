@@ -1,5 +1,6 @@
 package de.uniks.pioneers.services;
 
+import de.uniks.pioneers.controller.subcontroller.IngamePlayerResourcesController;
 import de.uniks.pioneers.model.*;
 import de.uniks.pioneers.rest.GameApiService;
 import de.uniks.pioneers.ws.EventListener;
@@ -10,7 +11,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ public class GameService {
 
     @Inject
     EventListener eventListener;
+    private IngamePlayerResourcesController ingamePlayerResourcesController;
 
     @Inject
     public GameService(GameApiService gameApiService, UserService userService, IngameService ingameService, ResourceService resourceService) {
@@ -58,11 +59,6 @@ public class GameService {
         moveAction = new SimpleStringProperty();
         wonGame = false;
         ingameService.game.set(game.get());
-        // REST - get buildings from server
-        disposable.add(ingameService.getAllBuildings(game.get()._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(buildings::setAll,
-                        Throwable::printStackTrace));
 
         // init players listener
         this.initPlayerListener();
@@ -165,6 +161,13 @@ public class GameService {
                         resourceService.myResources.putAll(players.get(me).resources().normalize().createObservableMap());
                         resourceService.myDevCards.putAll(resourceService.getDevCardMap(players.get(me).developmentCards()));
                     }
+
+                    disposable.add(ingameService.getAllBuildings(game._id())
+                            .observeOn(FX_SCHEDULER)
+                            .subscribe(buildings::setAll,
+                                    Throwable::printStackTrace));
+
+                    ingamePlayerResourcesController.initDataToElement(players.get(me));
                 }, Throwable::printStackTrace));
     }
 
@@ -230,5 +233,9 @@ public class GameService {
 
     public Game getGame() {
         return game.get();
+    }
+
+    public void setResourceController(IngamePlayerResourcesController ingamePlayerResourcesController) {
+        this.ingamePlayerResourcesController = ingamePlayerResourcesController;
     }
 }
