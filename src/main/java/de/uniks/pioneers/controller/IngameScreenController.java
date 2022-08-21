@@ -30,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -285,6 +284,7 @@ public class IngameScreenController implements Controller {
         ingamePlayerResourcesController.root = this.root;
         ingamePlayerResourcesController.render();
         ingamePlayerResourcesController.init(ingameStateController);
+        gameService.setResourceController(ingamePlayerResourcesController);
 
         // setup controller for trade offer controller
         tradeOfferPopUpController = tradeOfferPopUpControllerProvider.get();

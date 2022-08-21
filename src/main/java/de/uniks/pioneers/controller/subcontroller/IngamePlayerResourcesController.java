@@ -1,6 +1,8 @@
 package de.uniks.pioneers.controller.subcontroller;
 
 import de.uniks.pioneers.Main;
+import de.uniks.pioneers.model.Player;
+import de.uniks.pioneers.model.Resources;
 import de.uniks.pioneers.services.GameService;
 import de.uniks.pioneers.services.ResourceService;
 import de.uniks.pioneers.services.UserService;
@@ -18,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
@@ -223,6 +224,56 @@ public class IngamePlayerResourcesController {
                 }
             }
         });
+    }
+
+    public void initDataToElement(Player me) {
+        resourcesHBox.getChildren().clear();
+        Resources resources = me.resources();
+
+        int brick = resources.brick() == null ? 0 : resources.brick();
+        int grain = resources.grain() == null ? 0 : resources.grain();
+        int ore = resources.ore() == null ? 0 : resources.ore();
+        int lumber = resources.lumber() == null ? 0 : resources.lumber();
+        int wool = resources.wool() == null ? 0 : resources.wool();
+
+        if (lumber > 0) {
+            resourcesHBox.getChildren().add(resourcePaneMap.get("lumber"));
+        }
+        if (grain > 0) {
+            resourcesHBox.getChildren().add(resourcePaneMap.get("grain"));
+        }
+        if (wool > 0) {
+            resourcesHBox.getChildren().add(resourcePaneMap.get("wool"));
+        }
+        if (brick > 0) {
+            resourcesHBox.getChildren().add(resourcePaneMap.get("brick"));
+        }
+        if (ore > 0) {
+            resourcesHBox.getChildren().add(resourcePaneMap.get("ore"));
+        }
+
+        fischCount.setText(String.valueOf(lumber));
+        packeisCount.setText(String.valueOf(brick));
+        fellCount.setText(String.valueOf(wool));
+        kohleCount.setText(String.valueOf(ore));
+        walknochenCount.setText(String.valueOf(grain));
+
+        HashMap<String, Integer> devCardMap = resourceService.getDevCardMap(me.developmentCards());
+        if(devCardMap.get(DEV_KNIGHT) > 0) {
+            invokeDevCardElement(DEV_KNIGHT, devCardMap.get(DEV_KNIGHT));
+        }
+        if(devCardMap.get(DEV_ROAD) > 0) {
+            invokeDevCardElement(DEV_ROAD, devCardMap.get(DEV_ROAD));
+        }
+        if(devCardMap.get(DEV_PLENTY) > 0) {
+            invokeDevCardElement(DEV_PLENTY, devCardMap.get(DEV_PLENTY));
+        }
+        if(devCardMap.get(DEV_MONOPOLY) > 0) {
+            invokeDevCardElement(DEV_MONOPOLY, devCardMap.get(DEV_MONOPOLY));
+        }
+        if(devCardMap.get(DEV_VPOINT) > 0) {
+            invokeDevCardElement(DEV_VPOINT, devCardMap.get(DEV_VPOINT));
+        }
     }
 }
 
