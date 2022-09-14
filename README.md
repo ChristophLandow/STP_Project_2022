@@ -48,7 +48,7 @@
 </div>
 
 <br><br>
-Project Pioneers is a contract work for Deadly Birds Society to develop a modern clone of Settlers of Catan. Among other things, it features a comprehensive chat function and the possibility to play online with other settlers.
+Version of "The Settlers of Catan" created in the course of the Softwaretechnik Praktikum 2022 of the University of Kassel
 
 <p style="text-align: right;">(<a href="#top">back to top</a>)</p>
 
